@@ -1,6 +1,5 @@
 import serial
 import time
-from vpython import *
 
 serialComm = serial.Serial('COM3', 9600)
 serialComm.timeout = 1
