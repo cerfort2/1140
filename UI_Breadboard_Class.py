@@ -7,15 +7,18 @@ serialComm.timeout = 1
 class Operations():
     def __init__(self):
         pass
+    
+    def changeLight(self, color): #Function to change breadboard light color
+        light = "lights"
+        serialComm.write(light.encode())
+        time.sleep(1.2)
+        check = str(color).lower()
+        serialComm.write(check.encode())
 
-    def changeLight(color):
-        serialComm.write(color.encode())
-        time.sleep(.5)
+    def changeCrossroad(self): #Function to change breadboard crossroad status
+        status = "crossroad"
+        serialComm.write(status.encode())
 
-    def changeCrossroad(toggle):
-        serialComm.write(toggle.encode())
-        time.sleep(.5)
-
-    def changeSwitch(toggle):
-        serialComm.write(toggle.encode())
-        time.sleep(.5)
+    def changeSwitch(self): #Function to change breadboard switch status
+        status = "switch"
+        serialComm.write(status.encode())
