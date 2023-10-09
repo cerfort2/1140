@@ -34,6 +34,197 @@
     <property name="currentIndex">
      <number>0</number>
     </property>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Main Page - Automatic</string>
+     </attribute>
+     <widget class="QListWidget" name="listWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>121</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Red Line Wayside</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Green Line Wayside</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_5">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>70</y>
+        <width>101</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Select Light</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Light 1</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_6">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>70</y>
+        <width>121</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Select Crossroad</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Crossroad 1</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_7">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>70</y>
+        <width>101</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Select Switch</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Switch 1</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>110</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Light Status</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>110</y>
+        <width>141</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Crossroad Status</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>110</y>
+        <width>121</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Switch Status</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="listWidget_7">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>50</y>
+        <width>81</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_12">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>30</y>
+        <width>91</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Blocks Occupied</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="listWidget_8">
+      <property name="geometry">
+       <rect>
+        <x>780</x>
+        <y>50</y>
+        <width>81</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>780</x>
+        <y>30</y>
+        <width>81</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Track Failures</string>
+      </property>
+     </widget>
+    </widget>
     <widget class="QWidget" name="tab">
      <attribute name="title">
       <string>Main Page - Manual</string>
@@ -234,197 +425,6 @@
       <property name="geometry">
        <rect>
         <x>770</x>
-        <y>30</y>
-        <width>81</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Track Failures</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab_2">
-     <attribute name="title">
-      <string>Main Page - Automatic</string>
-     </attribute>
-     <widget class="QListWidget" name="listWidget_3">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>121</width>
-        <height>61</height>
-       </rect>
-      </property>
-      <item>
-       <property name="text">
-        <string>Red Line Wayside</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Green Line Wayside</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QComboBox" name="comboBox_5">
-      <property name="geometry">
-       <rect>
-        <x>170</x>
-        <y>70</y>
-        <width>101</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <item>
-       <property name="text">
-        <string>Select Light</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Light 1</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QComboBox" name="comboBox_6">
-      <property name="geometry">
-       <rect>
-        <x>330</x>
-        <y>70</y>
-        <width>121</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <item>
-       <property name="text">
-        <string>Select Crossroad</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Crossroad 1</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QComboBox" name="comboBox_7">
-      <property name="geometry">
-       <rect>
-        <x>500</x>
-        <y>70</y>
-        <width>101</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <item>
-       <property name="text">
-        <string>Select Switch</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Switch 1</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QLabel" name="label">
-      <property name="geometry">
-       <rect>
-        <x>170</x>
-        <y>110</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Light Status</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_2">
-      <property name="geometry">
-       <rect>
-        <x>320</x>
-        <y>110</y>
-        <width>141</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Crossroad Status</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_9">
-      <property name="geometry">
-       <rect>
-        <x>500</x>
-        <y>110</y>
-        <width>121</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Switch Status</string>
-      </property>
-     </widget>
-     <widget class="QListWidget" name="listWidget_7">
-      <property name="geometry">
-       <rect>
-        <x>650</x>
-        <y>50</y>
-        <width>81</width>
-        <height>131</height>
-       </rect>
-      </property>
-      <property name="editTriggers">
-       <set>QAbstractItemView::NoEditTriggers</set>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_12">
-      <property name="geometry">
-       <rect>
-        <x>650</x>
-        <y>30</y>
-        <width>91</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Blocks Occupied</string>
-      </property>
-     </widget>
-     <widget class="QListWidget" name="listWidget_8">
-      <property name="geometry">
-       <rect>
-        <x>780</x>
-        <y>50</y>
-        <width>81</width>
-        <height>131</height>
-       </rect>
-      </property>
-      <property name="editTriggers">
-       <set>QAbstractItemView::NoEditTriggers</set>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_13">
-      <property name="geometry">
-       <rect>
-        <x>780</x>
         <y>30</y>
         <width>81</width>
         <height>20</height>
