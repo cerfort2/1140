@@ -404,6 +404,7 @@ class Ui_MainWindow(object):
         self.comboBox_8.currentIndexChanged.connect(self.trackChangeTest)
 
         self.pushButton_4.setText(_translate("MainWindow", "Toggle Occupancy"))
+        self.pushButton_4.clicked.connect(self.toggleOccu)
 
         self.comboBox_9.setItemText(0, _translate("MainWindow", "Select Light"))
         self.comboBox_9.setItemText(1, _translate("MainWindow", "Light 1"))
@@ -440,6 +441,7 @@ class Ui_MainWindow(object):
         self.listWidget_10.itemClicked.connect(lambda item=cross: self.changeCrossroad(item.text()))
 
         self.pushButton_5.setText(_translate("MainWindow", "Toggle Track Failure"))
+        self.pushButton_5.clicked.connect(self.toggleFailure)
 
         #For Selection of Switch list
         __sortingEnabled = self.listWidget_11.isSortingEnabled()
