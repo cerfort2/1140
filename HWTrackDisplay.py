@@ -64,7 +64,6 @@ class Ui_MainWindow(object):
         self.listWidget_7.setGeometry(QtCore.QRect(650, 50, 81, 131))
         self.listWidget_7.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.listWidget_7.setObjectName("listWidget_7") #Block Occupancy List
-        self.listWidget_7.setDisabled(True)
 
         self.label_12 = QtWidgets.QLabel(parent=self.tab_2)
         self.label_12.setGeometry(QtCore.QRect(650, 30, 91, 20))
@@ -74,7 +73,6 @@ class Ui_MainWindow(object):
         self.listWidget_8.setGeometry(QtCore.QRect(780, 50, 81, 131))
         self.listWidget_8.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.listWidget_8.setObjectName("listWidget_8") #Track Failures List
-        self.listWidget_8.setDisabled(True)
 
         self.label_13 = QtWidgets.QLabel(parent=self.tab_2)
         self.label_13.setGeometry(QtCore.QRect(780, 30, 81, 20))
@@ -150,7 +148,6 @@ class Ui_MainWindow(object):
         self.listWidget_5.setGeometry(QtCore.QRect(630, 50, 81, 131))
         self.listWidget_5.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.listWidget_5.setObjectName("listWidget_5") #Blocks Occupied List
-        self.listWidget_5.setDisabled(True)
 
         self.label_10 = QtWidgets.QLabel(parent=self.tab)
         self.label_10.setGeometry(QtCore.QRect(630, 30, 91, 20))
@@ -160,7 +157,6 @@ class Ui_MainWindow(object):
         self.listWidget_6.setGeometry(QtCore.QRect(770, 50, 81, 131))
         self.listWidget_6.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.listWidget_6.setObjectName("listWidget_6") #Track Failures List
-        self.listWidget_6.setDisabled(True)
 
         self.label_11 = QtWidgets.QLabel(parent=self.tab)
         self.label_11.setGeometry(QtCore.QRect(770, 30, 81, 20))
@@ -404,7 +400,7 @@ class Ui_MainWindow(object):
         self.comboBox_8.currentIndexChanged.connect(self.trackChangeTest)
 
         self.pushButton_4.setText(_translate("MainWindow", "Toggle Occupancy"))
-        self.pushButton_4.clicked.connect(self.toggleOccu)
+        self.pushButton_4.clicked.connect(lambda: self.toggleOccu(self.comboBox_8.currentText()))
 
         self.comboBox_9.setItemText(0, _translate("MainWindow", "Select Light"))
         self.comboBox_9.setItemText(1, _translate("MainWindow", "Light 1"))
@@ -441,7 +437,7 @@ class Ui_MainWindow(object):
         self.listWidget_10.itemClicked.connect(lambda item=cross: self.changeCrossroad(item.text()))
 
         self.pushButton_5.setText(_translate("MainWindow", "Toggle Track Failure"))
-        self.pushButton_5.clicked.connect(self.toggleFailure)
+        self.pushButton_5.clicked.connect(lambda: self.toggleFailure(self.comboBox_8.currentText()))
 
         #For Selection of Switch list
         __sortingEnabled = self.listWidget_11.isSortingEnabled()
@@ -634,10 +630,32 @@ class Ui_MainWindow(object):
                 self.Switch2 = "left"
             else:
                 self.Switch2 = "right"
-    def toggleOccu(self):
-        return
-    def toggleFailure(self):
-        return
+    def toggleOccu(self, value):
+        item = self.listWidget_5.findItems(value, QtCore.Qt.MatchFlag.MatchExactly)
+        if item:
+            # If the item is found, remove it
+            row = self.listWidget_5.row(item[0])
+            self.listWidget_5.takeItem(row)
+            self.listWidget_7.takeItem(row)
+        else:
+            # If the item is not found, add it
+            new_item = QtWidgets.QListWidgetItem(value)
+            self.listWidget_5.addItem(new_item)
+            new_item2 = QtWidgets.QListWidgetItem(value)
+            self.listWidget_7.addItem(new_item2)
+    def toggleFailure(self, value):
+        item = self.listWidget_6.findItems(value, QtCore.Qt.MatchFlag.MatchExactly)
+        if item:
+            # If the item is found, remove it
+            row = self.listWidget_6.row(item[0])
+            self.listWidget_6.takeItem(row)
+            self.listWidget_8.takeItem(row)
+        else:
+            # If the item is not found, add it
+            new_item = QtWidgets.QListWidgetItem(value)
+            self.listWidget_6.addItem(new_item)
+            new_item2 = QtWidgets.QListWidgetItem(value)
+            self.listWidget_8.addItem(new_item2)
     
 
 
