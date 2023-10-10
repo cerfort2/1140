@@ -1,5 +1,6 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 from UI_Breadboard_Class import Operations
+from PyQt6.QtWidgets import QFileDialog
 
 operate = Operations() #Class to perform operations on the breadboard
 
@@ -99,12 +100,12 @@ class Ui_MainWindow(object):
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.BrushStyle.NoBrush)
         item.setBackground(brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 0, 0))
+        brush = QtGui.QBrush(QtGui.QColor(255, 12, 12))
         brush.setStyle(QtCore.Qt.BrushStyle.NoBrush)
         item.setForeground(brush)
         self.listWidget_2.addItem(item)
         item = QtWidgets.QListWidgetItem()
-        brush = QtGui.QBrush(QtGui.QColor(85, 255, 0))
+        brush = QtGui.QBrush(QtGui.QColor(85, 255, 120))
         brush.setStyle(QtCore.Qt.BrushStyle.NoBrush)
         item.setForeground(brush)
         self.listWidget_2.addItem(item)
@@ -288,6 +289,13 @@ class Ui_MainWindow(object):
         self.pushButton_3.setGeometry(QtCore.QRect(0, 0, 201, 41))
         self.pushButton_3.setObjectName("pushButton_3") #Open PLC code button
 
+        self.label_4 = QtWidgets.QLabel(parent=self.centralwidget) #File location label
+        self.label_4.setGeometry(QtCore.QRect(220, 10, 241, 21))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_4.setFont(font)
+        self.label_4.setObjectName("label_4")
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)
         self.statusbar.setObjectName("statusbar") #Don't edit 
@@ -465,6 +473,9 @@ class Ui_MainWindow(object):
 
         #PLC Code opener button
         self.pushButton_3.setText(_translate("MainWindow", "Open PLC Code"))
+        self.label_4.setText("PLC Path Location")
+
+        self.pushButton_3.clicked.connect(self.openArduinoFile)
     
     #Functions to be used in all
     def defaultCrossroad(self, text):
@@ -494,6 +505,18 @@ class Ui_MainWindow(object):
             operate.changeLight(self.Light1)
         elif text == "Light 2":
             operate.changeLight(self.Light2)
+    def openArduinoFile(self):
+        dialog = QFileDialog()
+        dialog.setNameFilter("Arduino File (*.ino)")
+        dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+
+        dialogSuccessful = dialog.exec()
+
+        if dialogSuccessful:
+            fileLocation = dialog.selectedFiles()[0]
+            with open(fileLocation) as file:
+                self.label_4.setText(file.read())
+
 
     #Functions all to ensure Manual mode is Good
     def crossChangeManual(self): #Checks if still selecting crossroad to grey out button
