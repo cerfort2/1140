@@ -277,14 +277,21 @@ class Ui_MainWindow(object):
         item = self.listWidget_3.item(1)
         item.setText(_translate("MainWindow", "Green Line Wayside"))
         self.listWidget_3.setSortingEnabled(__sortingEnabled)
+        self.listWidget_3.itemClicked.connect(self.checkListAutomatic)
+
         self.comboBox_5.setItemText(0, _translate("MainWindow", "Select Light"))
         self.comboBox_5.setItemText(1, _translate("MainWindow", "Light 1"))
+
         self.comboBox_6.setItemText(0, _translate("MainWindow", "Select Crossroad"))
         self.comboBox_6.setItemText(1, _translate("MainWindow", "Crossroad 1"))
+
         self.comboBox_7.setItemText(0, _translate("MainWindow", "Select Switch"))
         self.comboBox_7.setItemText(1, _translate("MainWindow", "Switch 1"))
+
         self.label_12.setText(_translate("MainWindow", "Blocks Occupied"))
+
         self.label_13.setText(_translate("MainWindow", "Track Failures"))
+
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Main Page - Automatic"))
 
 
@@ -483,7 +490,12 @@ class Ui_MainWindow(object):
 
 
     #Functions for Automatic Mode
-
+    def checkListAutomatic(self): #Checks if a wayside is selected or not to grey out combo boxes or not
+        if self.listWidget_3.currentItem() is not None:
+            self.enableCombosAutomatic()
+    def enableCombosAutomatic(self): #Enables all combo boxes in Automatic tab
+        for combo_box in [self.comboBox_5, self.comboBox_6, self.comboBox_7, self.listWidget_7, self.listWidget_8]:
+            combo_box.setEnabled(True)
     
 
 
