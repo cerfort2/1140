@@ -317,10 +317,10 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QSpinBox" name="mph_3"/>
+        <widget class="QSpinBox" name="mph_box"/>
        </item>
        <item row="1" column="1">
-        <widget class="QComboBox" name="comboBox_5">
+        <widget class="QComboBox" name="route_box">
          <item>
           <property name="text">
            <string>1</string>
@@ -349,11 +349,11 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QSpinBox" name="spinBox_3"/>
+        <widget class="QSpinBox" name="authority_box"/>
        </item>
       </layout>
      </widget>
-     <widget class="QComboBox" name="comboBox_6">
+     <widget class="QComboBox" name="train_sel">
       <property name="geometry">
        <rect>
         <x>90</x>
@@ -474,19 +474,19 @@
         </widget>
        </item>
        <item row="1" column="2">
-        <widget class="QLineEdit" name="lineEdit_11"/>
+        <widget class="QLineEdit" name="position_tb"/>
        </item>
        <item row="0" column="2">
-        <widget class="QLineEdit" name="lineEdit_12"/>
+        <widget class="QLineEdit" name="destination_tb"/>
        </item>
        <item row="2" column="2">
-        <widget class="QLineEdit" name="lineEdit_13"/>
+        <widget class="QLineEdit" name="departure_time_tb"/>
        </item>
        <item row="3" column="2">
-        <widget class="QLineEdit" name="lineEdit_14"/>
+        <widget class="QLineEdit" name="eta_tb"/>
        </item>
        <item row="4" column="2">
-        <widget class="QLineEdit" name="lineEdit_15"/>
+        <widget class="QLineEdit" name="throughput_tb"/>
        </item>
       </layout>
      </widget>
@@ -503,7 +503,7 @@
        <string>Current Schedule</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBox_3">
+     <widget class="QCheckBox" name="manual_mode">
       <property name="geometry">
        <rect>
         <x>660</x>
