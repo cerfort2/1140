@@ -7,9 +7,9 @@ class Ui_MainWindow(object):
 
     Light1 = "green"
     Light2 = "red"
-    Switch1 = "right"
+    Switch1 = "left"
     Switch2 = "left"
-    Crossroad1 = "on"
+    Crossroad1 = "off"
     Crossroad2 = "off"
 
     def setupUi(self, MainWindow):
@@ -187,28 +187,36 @@ class Ui_MainWindow(object):
         self.comboBox_8.addItem("")
         self.comboBox_8.addItem("")
         self.comboBox_8.addItem("")
+        self.comboBox_8.setDisabled(True)
 
         self.pushButton_4 = QtWidgets.QPushButton(parent=self.tab_3)
         self.pushButton_4.setGeometry(QtCore.QRect(10, 160, 111, 51))
         self.pushButton_4.setObjectName("pushButton_4") #Toggle Occupancy
+        self.pushButton_4.setDisabled(True)
 
         self.comboBox_9 = QtWidgets.QComboBox(parent=self.tab_3)
         self.comboBox_9.setGeometry(QtCore.QRect(170, 10, 101, 22))
         self.comboBox_9.setObjectName("comboBox_9") #Select Light
         self.comboBox_9.addItem("")
         self.comboBox_9.addItem("")
+        self.comboBox_9.addItem("")
+        self.comboBox_9.setDisabled(True)
 
         self.comboBox_10 = QtWidgets.QComboBox(parent=self.tab_3)
         self.comboBox_10.setGeometry(QtCore.QRect(310, 10, 121, 22))
         self.comboBox_10.setObjectName("comboBox_10") #Select Crossroad
         self.comboBox_10.addItem("")
         self.comboBox_10.addItem("")
+        self.comboBox_10.addItem("")
+        self.comboBox_10.setDisabled(True)
 
         self.comboBox_11 = QtWidgets.QComboBox(parent=self.tab_3)
         self.comboBox_11.setGeometry(QtCore.QRect(470, 10, 101, 22))
         self.comboBox_11.setObjectName("comboBox_11") #Select Switch
         self.comboBox_11.addItem("")
         self.comboBox_11.addItem("")
+        self.comboBox_11.addItem("")
+        self.comboBox_11.setDisabled(True)
 
         self.listWidget_4 = QtWidgets.QListWidget(parent=self.tab_3)
         self.listWidget_4.setGeometry(QtCore.QRect(170, 50, 91, 41))
@@ -226,6 +234,7 @@ class Ui_MainWindow(object):
         brush.setStyle(QtCore.Qt.BrushStyle.NoBrush)
         item.setForeground(brush)
         self.listWidget_4.addItem(item)
+        self.listWidget_4.setDisabled(True)
 
         self.listWidget_10 = QtWidgets.QListWidget(parent=self.tab_3)
         self.listWidget_10.setGeometry(QtCore.QRect(340, 50, 41, 41))
@@ -234,15 +243,23 @@ class Ui_MainWindow(object):
         self.listWidget_10.addItem(item)
         item = QtWidgets.QListWidgetItem()
         self.listWidget_10.addItem(item)
+        self.listWidget_10.setDisabled(True)
 
         self.listWidget_11 = QtWidgets.QListWidget(parent=self.tab_3)
         self.listWidget_11.setGeometry(QtCore.QRect(470, 50, 91, 41))
         self.listWidget_11.setObjectName("listWidget_11") #Select Switch to change to
+        item = QtWidgets.QListWidgetItem()
+        self.listWidget_11.addItem(item)
+        item = QtWidgets.QListWidgetItem()
+        self.listWidget_11.addItem(item)
+        self.listWidget_11.setDisabled(True)
 
         self.pushButton_5 = QtWidgets.QPushButton(parent=self.tab_3)
         self.pushButton_5.setGeometry(QtCore.QRect(160, 160, 111, 51))
         self.pushButton_5.setObjectName("pushButton_5") #Toggle Track Failure
+        self.pushButton_5.setDisabled(True)
 
+        #Dont change any below
         self.label_3 = QtWidgets.QLabel(parent=self.tab_3)
         self.label_3.setGeometry(QtCore.QRect(670, 0, 161, 41))
         font = QtGui.QFont()
@@ -251,7 +268,6 @@ class Ui_MainWindow(object):
         font.setUnderline(True)
         self.label_3.setFont(font)
         self.label_3.setObjectName("label_3") #Inputs for CTC label (No need to edit)
-
         self.tableWidget = QtWidgets.QTableWidget(parent=self.tab_3)
         self.tableWidget.setGeometry(QtCore.QRect(650, 50, 211, 91))
         self.tableWidget.setObjectName("tableWidget") #Displays Suggested speed and authority
@@ -267,13 +283,15 @@ class Ui_MainWindow(object):
         self.tableWidget.setItem(0, 0, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setItem(1, 0, item)
+        self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
 
 
-
+        #Whole UI Stuff
         self.tabWidget.addTab(self.tab_3, "")
         self.pushButton_3 = QtWidgets.QPushButton(parent=self.centralwidget)
         self.pushButton_3.setGeometry(QtCore.QRect(0, 0, 201, 41))
         self.pushButton_3.setObjectName("pushButton_3") #Open PLC code button
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)
         self.statusbar.setObjectName("statusbar") #Don't edit 
@@ -377,32 +395,60 @@ class Ui_MainWindow(object):
         item = self.listWidget_9.item(1)
         item.setText(_translate("MainWindow", "Green Line Wayside"))
         self.listWidget_9.setSortingEnabled(__sortingEnabled)
+        self.listWidget_9.itemClicked.connect(self.checkListTest)
+
         self.comboBox_8.setItemText(0, _translate("MainWindow", "Track Selection"))
         self.comboBox_8.setItemText(1, _translate("MainWindow", "A"))
         self.comboBox_8.setItemText(2, _translate("MainWindow", "B"))
         self.comboBox_8.setItemText(3, _translate("MainWindow", "C"))
+        self.comboBox_8.currentIndexChanged.connect(self.trackChangeTest)
+
         self.pushButton_4.setText(_translate("MainWindow", "Toggle Occupancy"))
+
         self.comboBox_9.setItemText(0, _translate("MainWindow", "Select Light"))
         self.comboBox_9.setItemText(1, _translate("MainWindow", "Light 1"))
+        self.comboBox_9.setItemText(2, _translate("MainWindow", "Light 2"))
+        self.comboBox_9.currentIndexChanged.connect(self.lightChangeTest)
+
         self.comboBox_10.setItemText(0, _translate("MainWindow", "Select Crossroad"))
         self.comboBox_10.setItemText(1, _translate("MainWindow", "Crossroad 1"))
+        self.comboBox_10.setItemText(2, _translate("MainWindow", "Crossroad 2"))
+        self.comboBox_10.currentIndexChanged.connect(self.crossChangeTest)
+
         self.comboBox_11.setItemText(0, _translate("MainWindow", "Select Switch"))
         self.comboBox_11.setItemText(1, _translate("MainWindow", "Switch 1"))
+        self.comboBox_11.setItemText(2, _translate("MainWindow", "Switch 2"))
+        self.comboBox_11.currentIndexChanged.connect(self.switchChangeTest)
+        self.comboBox_11.currentTextChanged.connect(self.switchSelection)
+
         __sortingEnabled = self.listWidget_4.isSortingEnabled()
         self.listWidget_4.setSortingEnabled(False)
-        item = self.listWidget_4.item(0)
-        item.setText(_translate("MainWindow", "Red"))
-        item = self.listWidget_4.item(1)
-        item.setText(_translate("MainWindow", "Green"))
+        redTest = self.listWidget_4.item(0)
+        redTest.setText(_translate("MainWindow", "Red"))
+        redTest = self.listWidget_4.item(1)
+        redTest.setText(_translate("MainWindow", "Green"))
         self.listWidget_4.setSortingEnabled(__sortingEnabled)
+        self.listWidget_4.itemClicked.connect(lambda item=redTest: self.changeLight(item.text()))
+
         __sortingEnabled = self.listWidget_10.isSortingEnabled()
         self.listWidget_10.setSortingEnabled(False)
-        item = self.listWidget_10.item(0)
-        item.setText(_translate("MainWindow", "On"))
-        item = self.listWidget_10.item(1)
-        item.setText(_translate("MainWindow", "Off"))
+        cross = self.listWidget_10.item(0)
+        cross.setText(_translate("MainWindow", "On"))
+        cross = self.listWidget_10.item(1)
+        cross.setText(_translate("MainWindow", "Off"))
         self.listWidget_10.setSortingEnabled(__sortingEnabled)
+        self.listWidget_10.itemClicked.connect(lambda item=cross: self.changeCrossroad(item.text()))
+
         self.pushButton_5.setText(_translate("MainWindow", "Toggle Track Failure"))
+
+        #For Selection of Switch list
+        __sortingEnabled = self.listWidget_11.isSortingEnabled()
+        self.listWidget_11.setSortingEnabled(__sortingEnabled)
+        switch = self.listWidget_11.item(0)
+        switch = self.listWidget_11.item(1)
+        self.listWidget_11.itemClicked.connect(lambda item=switch: self.changeSwitch(item.text()))
+
+        #Below is for Displaying CTC Info given
         self.label_3.setText(_translate("MainWindow", "Inputs from CTC"))
         item = self.tableWidget.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "Suggested Speed"))
@@ -521,7 +567,75 @@ class Ui_MainWindow(object):
             combo_box.setEnabled(True)
 
     #Functions for Test Bench
-
+    def checkListTest(self): #Checks if a wayside is selected or not to grey out combo boxes or not
+        if self.listWidget_9.currentItem() is not None:
+            self.enableCombosTest()
+    def enableCombosTest(self): #enables all the combo boxes and lists in manual mode
+        for combo_box in [self.comboBox_9, self.comboBox_10, self.comboBox_11, self.comboBox_8]:
+            combo_box.setEnabled(True)
+    def crossChangeTest(self): #Checks if still selecting crossroad to grey out list
+        if self.comboBox_10.currentText() == "Select Crossroad":
+            self.listWidget_10.setDisabled(True)
+        else:
+            self.listWidget_10.setDisabled(False)
+    def switchChangeTest(self): #Checks if still selecting switch to grey out list
+        if self.comboBox_11.currentText() == "Select Switch":
+            self.listWidget_11.setDisabled(True)
+        else:
+            self.listWidget_11.setDisabled(False)
+    def lightChangeTest(self): #Checks if still selecting light to grey out list
+        if self.comboBox_9.currentText() == "Select Light":
+            self.listWidget_4.setDisabled(True)
+        else:
+            self.listWidget_4.setDisabled(False)
+    def trackChangeTest(self):
+        if self.comboBox_8.currentText() == "Track Selection":
+            self.pushButton_4.setDisabled(True)
+            self.pushButton_5.setDisabled(True)
+        else:
+            self.pushButton_4.setDisabled(False)
+            self.pushButton_5.setDisabled(False)
+    def changeLight(self, item):
+        if self.comboBox_9.currentText() == "Light 1":
+            self.Light1 = item
+        elif self.comboBox_9.currentText() == "Light 2":
+            self.Light2 = item
+    def changeCrossroad(self, item):
+        if self.comboBox_10.currentText() == "Crossroad 1":
+            self.Crossroad1 = str(item).lower()
+        elif self.comboBox_10.currentText() == "Crossroad 2":
+            self.Crossroad2 = str(item).lower()
+    def switchSelection(self, item):
+        if item == "Switch 1":
+            temp = self.listWidget_11.item(0)
+            temp.setText("A->B")
+            temp = self.listWidget_11.item(1)
+            temp.setText("A<->C")
+        elif item == "Switch 2":
+            temp = self.listWidget_11.item(0)
+            temp.setText("B->D")
+            temp = self.listWidget_11.item(1)
+            temp.setText("B->E")
+        else:
+            temp = self.listWidget_11.item(0)
+            temp.setText("")
+            temp = self.listWidget_11.item(1)
+            temp.setText("")
+    def changeSwitch(self, item):
+        if self.comboBox_11.currentText() == "Switch 1":
+            if item == "A->B":
+                self.Switch1 = "right"
+            else:
+                self.Switch1 = "left"
+        elif self.comboBox_11.currentText() == "Switch 2":
+            if item == "B->D":
+                self.Switch2 = "left"
+            else:
+                self.Switch2 = "right"
+    def toggleOccu(self):
+        return
+    def toggleFailure(self):
+        return
     
 
 
