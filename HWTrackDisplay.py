@@ -1,10 +1,10 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
-from UI_Breadboard_Class import Operations
+#from UI_Breadboard_Class import Operations
 from PyQt6.QtWidgets import QFileDialog
 import subprocess
 import os
 
-operate = Operations() #Class to perform operations on the breadboard
+#operate = Operations() #Class to perform operations on the breadboard
 
 class Ui_MainWindow(object):
 
@@ -382,8 +382,8 @@ class Ui_MainWindow(object):
         self.pushButton_2.clicked.connect(self.switchUpdater)
 
         #Toggles that block occupancy has been changed
-        self.listWidget_5.model().rowsInserted.connect(lambda: self.changeOccu)
-        self.listWidget_5.model().rowsRemoved.connect(lambda: self.changeOccu)
+        self.listWidget_5.model().rowsInserted.connect(self.changeOccu)
+        self.listWidget_5.model().rowsRemoved.connect(self.changeOccu)
 
         self.comboBox_4.setItemText(0, _translate("MainWindow", "Select Switch"))
         self.comboBox_4.setItemText(1, _translate("MainWindow", "Switch 1"))

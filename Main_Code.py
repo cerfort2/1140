@@ -1,6 +1,7 @@
 import sys
 from HWTrackDisplay import Ui_MainWindow
 from PyQt6 import QtWidgets
+from PyQt6.QtCore import QTimer
 
 def booleanTest():
     print("hi")
@@ -12,7 +13,4 @@ ui = Ui_MainWindow()
 ui.setupUi(MainWindow)
 MainWindow.show()
 
-if(ui.updatedOccu == "yes"):
-    booleanTest
-
-sys.exit(app.exec())
+timer = Qtimer()
