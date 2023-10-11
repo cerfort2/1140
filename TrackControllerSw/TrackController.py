@@ -7,7 +7,7 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-
+from PyQt6.QtGui import QPixmap
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -200,7 +200,7 @@ class Ui_MainWindow(object):
         self.dataTB.setLineWidth(2)
         self.dataTB.setMidLineWidth(2)
         self.dataTB.setObjectName("dataTB")
-        self.dataTB.setColumnCount(2)
+        self.dataTB.setColumnCount(1)
         self.dataTB.setRowCount(6)
         item = QtWidgets.QTableWidgetItem()
         self.dataTB.setVerticalHeaderItem(0, item)
@@ -217,32 +217,19 @@ class Ui_MainWindow(object):
         item = QtWidgets.QTableWidgetItem()
         self.dataTB.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
-        self.dataTB.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
         self.dataTB.setItem(0, 0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.dataTB.setItem(0, 1, item)
         item = QtWidgets.QTableWidgetItem()
         self.dataTB.setItem(1, 0, item)
         item = QtWidgets.QTableWidgetItem()
-        self.dataTB.setItem(1, 1, item)
-        item = QtWidgets.QTableWidgetItem()
         self.dataTB.setItem(2, 0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.dataTB.setItem(2, 1, item)
         item = QtWidgets.QTableWidgetItem()
         self.dataTB.setItem(3, 0, item)
         item = QtWidgets.QTableWidgetItem()
-        self.dataTB.setItem(3, 1, item)
-        item = QtWidgets.QTableWidgetItem()
         self.dataTB.setItem(4, 0, item)
         item = QtWidgets.QTableWidgetItem()
-        self.dataTB.setItem(4, 1, item)
-        item = QtWidgets.QTableWidgetItem()
         self.dataTB.setItem(5, 0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.dataTB.setItem(5, 1, item)
-        self.dataTB.horizontalHeader().setDefaultSectionSize(130)
+        self.dataTB.horizontalHeader().setCascadingSectionResizes(False)
+        self.dataTB.horizontalHeader().setDefaultSectionSize(210)
         self.dataTB.horizontalHeader().setMinimumSectionSize(39)
         self.sectionTB = QtWidgets.QComboBox(parent=self.testBench)
         self.sectionTB.setGeometry(QtCore.QRect(30, 10, 101, 22))
@@ -341,6 +328,35 @@ class Ui_MainWindow(object):
         self.pageSelection.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    ########################################################################################
+
+        #Self defined button action
+        self.toggleDirection.clicked.connect(self.toggle_direction_handler)
+        self.toggleCrossroad.clicked.connect(self.toggle_crossroad_handler)
+        self.greenButton.clicked.connect(self.toggle_green_handler)
+        self.redButton.clicked.connect(self.toggle_red_handler)
+        pixmap = QPixmap("1140\TrackControllerSw\left.jpg")
+        self.switchDirection.setPixmap(pixmap)
+        pixmap = QPixmap("1140\TrackControllerSw\crosso.jpg")
+        self.crossroadStatus.setPixmap(pixmap)
+
+    def toggle_direction_handler(self):
+        print("Toggle Direction button clicked")
+
+    def toggle_crossroad_handler(self):
+        print("Toggle Crossroad button clicked")
+
+    def toggle_green_handler(self):
+        self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
+        print("Green button clicked")
+
+    def toggle_red_handler(self):
+        self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
+        print("Red button clicked")
+
+    ########################################################################################
+
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -370,31 +386,31 @@ class Ui_MainWindow(object):
         self.failData.setText(_translate("MainWindow", "No Failures"))
         self.faiLab.setText(_translate("MainWindow", "Failures:"))
         self.pageSelection.setTabText(self.pageSelection.indexOf(self.mainPage), _translate("MainWindow", "Main Page"))
+        item = self.dataTB.verticalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Track Section:"))
+        item = self.dataTB.verticalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Section Occupation:"))
+        item = self.dataTB.verticalHeaderItem(2)
+        item.setText(_translate("MainWindow", "Section Failure:"))
+        item = self.dataTB.verticalHeaderItem(3)
+        item.setText(_translate("MainWindow", "Suggested Speed:"))
+        item = self.dataTB.verticalHeaderItem(4)
+        item.setText(_translate("MainWindow", "Authority:"))
+        item = self.dataTB.verticalHeaderItem(5)
+        item.setText(_translate("MainWindow", "Route:"))
         __sortingEnabled = self.dataTB.isSortingEnabled()
         self.dataTB.setSortingEnabled(False)
         item = self.dataTB.item(0, 0)
-        item.setText(_translate("MainWindow", "Track Section :"))
-        item = self.dataTB.item(0, 1)
         item.setText(_translate("MainWindow", "A"))
         item = self.dataTB.item(1, 0)
-        item.setText(_translate("MainWindow", "Section Occupation :"))
-        item = self.dataTB.item(1, 1)
         item.setText(_translate("MainWindow", "Not Occupied"))
         item = self.dataTB.item(2, 0)
-        item.setText(_translate("MainWindow", "Section Failure :"))
-        item = self.dataTB.item(2, 1)
         item.setText(_translate("MainWindow", "No Failure"))
         item = self.dataTB.item(3, 0)
-        item.setText(_translate("MainWindow", "Suggested Speed :"))
-        item = self.dataTB.item(3, 1)
         item.setText(_translate("MainWindow", "30m/s"))
         item = self.dataTB.item(4, 0)
-        item.setText(_translate("MainWindow", "Authority :"))
-        item = self.dataTB.item(4, 1)
         item.setText(_translate("MainWindow", "10"))
         item = self.dataTB.item(5, 0)
-        item.setText(_translate("MainWindow", "Route :"))
-        item = self.dataTB.item(5, 1)
         item.setText(_translate("MainWindow", "1"))
         self.dataTB.setSortingEnabled(__sortingEnabled)
         self.sectionTB.setItemText(0, _translate("MainWindow", "Section A"))
@@ -437,3 +453,8 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec())
+
+
+
+
+    

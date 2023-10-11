@@ -594,47 +594,45 @@
       <property name="midLineWidth">
        <number>2</number>
       </property>
+      <attribute name="horizontalHeaderCascadingSectionResizes">
+       <bool>false</bool>
+      </attribute>
       <attribute name="horizontalHeaderMinimumSectionSize">
        <number>39</number>
       </attribute>
       <attribute name="horizontalHeaderDefaultSectionSize">
-       <number>130</number>
+       <number>210</number>
       </attribute>
       <row>
        <property name="text">
-        <string/>
+        <string>Track Section:</string>
        </property>
       </row>
       <row>
        <property name="text">
-        <string/>
+        <string>Section Occupation:</string>
        </property>
       </row>
       <row>
        <property name="text">
-        <string/>
+        <string>Section Failure:</string>
        </property>
       </row>
       <row>
        <property name="text">
-        <string/>
+        <string>Suggested Speed:</string>
        </property>
       </row>
       <row>
        <property name="text">
-        <string/>
+        <string>Authority:</string>
        </property>
       </row>
       <row>
        <property name="text">
-        <string/>
+        <string>Route:</string>
        </property>
       </row>
-      <column>
-       <property name="text">
-        <string/>
-       </property>
-      </column>
       <column>
        <property name="text">
         <string/>
@@ -642,60 +640,30 @@
       </column>
       <item row="0" column="0">
        <property name="text">
-        <string>Track Section :</string>
-       </property>
-      </item>
-      <item row="0" column="1">
-       <property name="text">
         <string>A</string>
        </property>
       </item>
       <item row="1" column="0">
-       <property name="text">
-        <string>Section Occupation :</string>
-       </property>
-      </item>
-      <item row="1" column="1">
        <property name="text">
         <string>Not Occupied</string>
        </property>
       </item>
       <item row="2" column="0">
        <property name="text">
-        <string>Section Failure :</string>
-       </property>
-      </item>
-      <item row="2" column="1">
-       <property name="text">
         <string>No Failure</string>
        </property>
       </item>
       <item row="3" column="0">
-       <property name="text">
-        <string>Suggested Speed :</string>
-       </property>
-      </item>
-      <item row="3" column="1">
        <property name="text">
         <string>30m/s</string>
        </property>
       </item>
       <item row="4" column="0">
        <property name="text">
-        <string>Authority :</string>
-       </property>
-      </item>
-      <item row="4" column="1">
-       <property name="text">
         <string>10</string>
        </property>
       </item>
       <item row="5" column="0">
-       <property name="text">
-        <string>Route :</string>
-       </property>
-      </item>
-      <item row="5" column="1">
        <property name="text">
         <string>1</string>
        </property>
