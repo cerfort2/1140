@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow
+from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow, QFileDialog
 from PyQt6 import QtCore, QtGui, QtWidgets
 import pandas as pd
 from customUI import Ui_MainWindow
@@ -19,6 +19,13 @@ from customUI import Ui_MainWindow
 
 #comboBox = Block box
 # comboBox_2 = Line Box
+
+class line():
+    def __init__(self,name):
+        self.name = name
+        self.blocks = []
+    def addBlock(self,blk):
+        self.blocks.append(blk)
 
 class block():
     def __init__(self,name):
@@ -47,56 +54,49 @@ class block():
         self.limit = limit
     def setElevation(self, elevation):
         self.elevation = elevation
-    
 
-db = pd.read_csv("Track Layout.csv")
-blocks =[]
 occupied = ["A2","E13","H33","H25"] #debug array
-numOfRows = len(db.index) # change this to exclude empty indexed rows
+ # change this to exclude empty indexed rows
 metersToFeet = 3.28084
 kmhrTomihr = 0.621371
 
-#Instantiate Blocks
-for i in range(numOfRows):
-    if(not (db.isna().at[i,"Section"])):
-        name = db.at[i,"Section"]+str(int(db.at[i, "Block Number"]))
-        length = db.at[i,"Block Length (m)"]
-        grade = db.at[i,"Block Grade (%)"]
-        limit = db.at[i,"Speed Limit (Km/Hr)"]
-        elevation = db.at[i,"ELEVATION (M)"]
 
-
-        blk = block(name)
-        blk.setElevation(elevation)
-        blk.setLimit(limit)
-        blk.setLength(length)
-        blk.setGrade(grade)
-        blocks.append(blk)
-
-#Set self.occupied values
-for x in blocks:
-    if(x.name in occupied):
-        x.toggleOccupied()
 
 class functionalUI(Ui_MainWindow):
-    def update(self):
-        self.comboBox_2.currentIndexChanged.connect(self.lineChange)
-        self.comboBox.currentIndexChanged.connect(self.blockChange)
+    def __init__(self) -> None:
+        super().__init__()
+        self.lines = []
 
-        
+    def update(self):
+
+        self.comboBox_2.activated.connect(self.lineChange)
+        self.comboBox.currentIndexChanged.connect(self.blockChange)
+        self.pushButton.clicked.connect(self.buttonPress)
+
+
+
     def lineChange(self):
         #Clear the Blocks
         self.comboBox.clear()
-        # Add the blocks associated witht that line
-        if(self.comboBox_2.currentText() == "Red Line"):
-            for blk in blocks:
-                self.comboBox.addItem(blk.name)
+
+        # Add the blocks associated with that line
+        currentLineName = self.comboBox_2.currentText()
+
+        for l in self.lines:
+            if(l.name == currentLineName):
+                for blk in l.blocks:
+                    self.comboBox.addItem(blk.name)
 
 
     def blockChange(self):
         currentBlockName = self.comboBox.currentText()
+        currentLineName = self.comboBox_2.currentText()
 
-        for b in blocks:
+        for l in self.lines:
+            if(l.name == currentLineName):
+                break
+
+        for b in l.blocks:
             if (b.name == currentBlockName):
                 break
 
@@ -115,6 +115,45 @@ class functionalUI(Ui_MainWindow):
         self.tableWidget.item(4,0).setText(str(round(b.elevation*metersToFeet,3)) + " feet")
         #limit
         self.tableWidget.item(5,0).setText(str(round(b.limit*kmhrTomihr,3)) + " mi/hr")
+    
+
+    def buttonPress(self):
+        fd = QFileDialog()
+        path, _ = fd.getOpenFileName(None, 'Select a file:')
+        db = pd.read_csv(path)
+        numOfRows = len(db.index)
+
+        #instantiate line:
+        newLine = line(db.at[0,"Line"] + " Line")
+
+        #Instantiate Blocks
+        for i in range(numOfRows):
+            if(not (db.isna().at[i,"Section"])):
+                name = db.at[i,"Section"]+str(int(db.at[i, "Block Number"]))
+                length = db.at[i,"Block Length (m)"]
+                grade = db.at[i,"Block Grade (%)"]
+                limit = db.at[i,"Speed Limit (Km/Hr)"]
+                elevation = db.at[i,"ELEVATION (M)"]
+
+
+                blk = block(name)
+                blk.setElevation(elevation)
+                blk.setLimit(limit)
+                blk.setLength(length)
+                blk.setGrade(grade)
+                newLine.addBlock(blk)
+    
+        #Set self.occupied values
+        for x in newLine.blocks:
+            if(x.name in occupied):
+                x.toggleOccupied()
+        
+
+        self.comboBox_2.addItem(newLine.name)
+        self.lines.append(newLine)
+
+
+        
         
         
 
