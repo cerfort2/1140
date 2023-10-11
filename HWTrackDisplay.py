@@ -1,20 +1,21 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
-#from UI_Breadboard_Class import Operations
+from UI_Breadboard_Class import Operations
 from PyQt6.QtWidgets import QFileDialog
 import subprocess
-import os
 
-#operate = Operations() #Class to perform operations on the breadboard
+operate = Operations() #Class to perform operations on the breadboard
 
 class Ui_MainWindow(object):
 
-    updatedOccu = "no"
     Light1 = "green"
     Light2 = "red"
     Switch1 = "left"
     Switch2 = "left"
     Crossroad1 = "off"
     Crossroad2 = "off"
+    BlockA = False
+    BlockB = False
+    BlockC = False
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -382,8 +383,8 @@ class Ui_MainWindow(object):
         self.pushButton_2.clicked.connect(self.switchUpdater)
 
         #Toggles that block occupancy has been changed
-        self.listWidget_5.model().rowsInserted.connect(self.changeOccu)
-        self.listWidget_5.model().rowsRemoved.connect(self.changeOccu)
+        self.listWidget_5.model().rowsInserted.connect(self.plcCode)
+        self.listWidget_5.model().rowsRemoved.connect(self.plcCode)
 
         self.comboBox_4.setItemText(0, _translate("MainWindow", "Select Switch"))
         self.comboBox_4.setItemText(1, _translate("MainWindow", "Switch 1"))
@@ -520,10 +521,23 @@ class Ui_MainWindow(object):
             self.label_4.setText(fileLocation)
             arduino = "C:\Program Files (x86)\Arduino\\arduino.exe"
             command = f'"{arduino}" "{fileLocation}"'
-            subprocess.run(command, shell=True)
-    def changeOccu(self):
-        self.updatedOccu = "yes"
-            
+            subprocess.run(command, shell=True)        
+    def plcCode(self):
+        self.BlockA = False
+        self.BlockB = False
+        self.BlockC = False
+        items = [str(self.listWidget_5.item(i).text()) for i in range(self.listWidget_5.count())]
+        for element in items:
+            if element == "A":
+                self.BlockA = True
+            elif element == "B":
+                self.BlockB = True
+            elif element == "C":
+                self.BlockC = True
+        
+        
+        
+
 
 
     #Functions all to ensure Manual mode is Good
