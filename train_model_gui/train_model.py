@@ -16,6 +16,9 @@ from train_model_setup import Ui_Dialog
 class train_model():
 
     def __init__(self):
+        pass
+
+    def display(self):
         app = QtWidgets.QApplication(sys.argv)
         Dialog = QtWidgets.QDialog()
         ui = Ui_Dialog()
@@ -23,19 +26,9 @@ class train_model():
         Dialog.show()
         sys.exit(app.exec())
 
-    def update_schedule(self):
-        return
-
-
-    def calc_throughput(self, passengers):
-        #self.throughput = passengers/time_elapsed
-        return
+    def update_vals(self):
+        pass
         
-    def close_track(self, track_num):
-        return
-    
-    def schedule_train(self):
-        return
-
-
+        
 new_model_ui = train_model()
+new_model_ui.display()
