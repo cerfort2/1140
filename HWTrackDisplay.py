@@ -8,6 +8,7 @@ operate = Operations() #Class to perform operations on the breadboard
 
 class Ui_MainWindow(object):
 
+    updatedOccu = "no"
     Light1 = "green"
     Light2 = "red"
     Switch1 = "left"
@@ -380,6 +381,10 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText(_translate("MainWindow", "Toggle Switch"))
         self.pushButton_2.clicked.connect(self.switchUpdater)
 
+        #Toggles that block occupancy has been changed
+        self.listWidget_5.model().rowsInserted.connect(lambda: self.changeOccu)
+        self.listWidget_5.model().rowsRemoved.connect(lambda: self.changeOccu)
+
         self.comboBox_4.setItemText(0, _translate("MainWindow", "Select Switch"))
         self.comboBox_4.setItemText(1, _translate("MainWindow", "Switch 1"))
         self.comboBox_4.setItemText(2, _translate("MainWindow", "Switch 2"))
@@ -390,8 +395,6 @@ class Ui_MainWindow(object):
         self.label_10.setText(_translate("MainWindow", "Blocks Occupied"))
         self.label_11.setText(_translate("MainWindow", "Track Failures"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Main Page - Manual"))
-
-
 
         #Test Bench UI
         __sortingEnabled = self.listWidget_9.isSortingEnabled()
@@ -518,7 +521,8 @@ class Ui_MainWindow(object):
             arduino = "C:\Program Files (x86)\Arduino\\arduino.exe"
             command = f'"{arduino}" "{fileLocation}"'
             subprocess.run(command, shell=True)
-
+    def changeOccu(self):
+        self.updatedOccu = "yes"
             
 
 
@@ -687,11 +691,11 @@ class Ui_MainWindow(object):
 
 
 
-if __name__ == "__main__":
+"""if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec()) """
