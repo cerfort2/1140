@@ -14,22 +14,9 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(220,220,220);</string>
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QRadioButton" name="modeButton">
-    <property name="geometry">
-     <rect>
-      <x>680</x>
-      <y>10</y>
-      <width>121</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Automatic Mode</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="name">
     <property name="geometry">
      <rect>
@@ -64,7 +51,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);</string>
+     <string notr="true">background-color: rgb(220, 220, 220);</string>
     </property>
     <property name="tabPosition">
      <enum>QTabWidget::North</enum>
@@ -73,7 +60,7 @@
      <enum>QTabWidget::Triangular</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="Sections" stdset="0">
      <number>2</number>
@@ -185,7 +172,7 @@
        </property>
       </item>
      </widget>
-     <widget class="QFrame" name="frame">
+     <widget class="QFrame" name="switchFrame">
       <property name="geometry">
        <rect>
         <x>430</x>
@@ -193,6 +180,9 @@
         <width>351</width>
         <height>271</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -231,7 +221,7 @@
         <string>Toggle Direction</string>
        </property>
       </widget>
-      <widget class="QComboBox" name="section_2">
+      <widget class="QComboBox" name="switchSelect">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -252,7 +242,7 @@
        </item>
       </widget>
      </widget>
-     <widget class="QFrame" name="frame_2">
+     <widget class="QFrame" name="crossroadFrame">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -261,13 +251,16 @@
         <height>271</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <widget class="QLabel" name="switchDirection_2">
+      <widget class="QLabel" name="crossroadStatus">
        <property name="geometry">
         <rect>
          <x>90</x>
@@ -298,7 +291,7 @@
         <string>Toggle Crossroad</string>
        </property>
       </widget>
-      <widget class="QComboBox" name="section_3">
+      <widget class="QComboBox" name="crossroadSelect">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -319,7 +312,7 @@
        </item>
       </widget>
      </widget>
-     <widget class="QFrame" name="frame_3">
+     <widget class="QFrame" name="signalFrame">
       <property name="geometry">
        <rect>
         <x>430</x>
@@ -327,6 +320,9 @@
         <width>351</width>
         <height>271</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -390,7 +386,7 @@
         <bool>false</bool>
        </property>
       </widget>
-      <widget class="QComboBox" name="section_4">
+      <widget class="QComboBox" name="signalSelect">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -411,17 +407,84 @@
        </item>
       </widget>
      </widget>
-     <zorder>frame</zorder>
+     <widget class="QRadioButton" name="modeButton">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>10</y>
+        <width>121</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Automatic Mode</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="nextStation">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>10</y>
+        <width>91</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 0, 0);</string>
+      </property>
+      <property name="lineWidth">
+       <number>1</number>
+      </property>
+      <property name="midLineWidth">
+       <number>0</number>
+      </property>
+      <property name="text">
+       <string>Station ...</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="statText">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>0</y>
+        <width>91</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="lineWidth">
+       <number>1</number>
+      </property>
+      <property name="midLineWidth">
+       <number>0</number>
+      </property>
+      <property name="text">
+       <string>Next Station:</string>
+      </property>
+     </widget>
+     <zorder>switchFrame</zorder>
      <zorder>sectionData</zorder>
      <zorder>section</zorder>
-     <zorder>frame_2</zorder>
-     <zorder>frame_3</zorder>
+     <zorder>crossroadFrame</zorder>
+     <zorder>signalFrame</zorder>
+     <zorder>modeButton</zorder>
+     <zorder>nextStation</zorder>
+     <zorder>statText</zorder>
     </widget>
     <widget class="QWidget" name="testBench">
      <attribute name="title">
       <string>Test Bench</string>
      </attribute>
-     <widget class="QTableWidget" name="sectionData_3">
+     <widget class="QTableWidget" name="dataTB">
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -549,7 +612,7 @@
        </property>
       </item>
      </widget>
-     <widget class="QComboBox" name="section_5">
+     <widget class="QComboBox" name="sectionTB">
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -569,7 +632,7 @@
        </property>
       </item>
      </widget>
-     <widget class="QFrame" name="frame_4">
+     <widget class="QFrame" name="switchTB">
       <property name="geometry">
        <rect>
         <x>430</x>
@@ -584,7 +647,7 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <widget class="QComboBox" name="section_6">
+      <widget class="QComboBox" name="switchSelectTB">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -604,7 +667,7 @@
         </property>
        </item>
       </widget>
-      <widget class="QTableWidget" name="tableWidget">
+      <widget class="QTableWidget" name="switchData">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -612,6 +675,9 @@
          <width>351</width>
          <height>51</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
        <attribute name="horizontalHeaderDefaultSectionSize">
         <number>150</number>
@@ -643,7 +709,7 @@
        </item>
       </widget>
      </widget>
-     <widget class="QFrame" name="frame_5">
+     <widget class="QFrame" name="crossroadTB">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -658,7 +724,7 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <widget class="QComboBox" name="section_7">
+      <widget class="QComboBox" name="crossroadSelectTB">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -678,7 +744,7 @@
         </property>
        </item>
       </widget>
-      <widget class="QTableWidget" name="tableWidget_3">
+      <widget class="QTableWidget" name="crossroadData">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -686,6 +752,9 @@
          <width>351</width>
          <height>51</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
        <attribute name="horizontalHeaderDefaultSectionSize">
         <number>150</number>
@@ -717,7 +786,7 @@
        </item>
       </widget>
      </widget>
-     <widget class="QFrame" name="frame_6">
+     <widget class="QFrame" name="signalTB">
       <property name="geometry">
        <rect>
         <x>430</x>
@@ -732,7 +801,7 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <widget class="QComboBox" name="section_8">
+      <widget class="QComboBox" name="signalSelectTB">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -752,7 +821,7 @@
         </property>
        </item>
       </widget>
-      <widget class="QTableWidget" name="tableWidget_2">
+      <widget class="QTableWidget" name="signalData">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -760,6 +829,9 @@
          <width>351</width>
          <height>51</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
        <attribute name="horizontalHeaderDefaultSectionSize">
         <number>150</number>
@@ -793,57 +865,6 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QLabel" name="statText">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>0</y>
-      <width>91</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="lineWidth">
-     <number>1</number>
-    </property>
-    <property name="midLineWidth">
-     <number>0</number>
-    </property>
-    <property name="text">
-     <string>Next Station:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="statText_2">
-    <property name="geometry">
-     <rect>
-      <x>410</x>
-      <y>10</y>
-      <width>91</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-color: rgb(0, 0, 0);</string>
-    </property>
-    <property name="lineWidth">
-     <number>1</number>
-    </property>
-    <property name="midLineWidth">
-     <number>0</number>
-    </property>
-    <property name="text">
-     <string>Station ...</string>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -855,12 +876,11 @@
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources>
   <include location="Images/left.qrc"/>
   <include location="Images/crosso.qrc"/>
-  <include location="Images/right.qrc"/>
+  <include location="Images/crosso.qrc"/>
   <include location="Images/crossc.qrc"/>
  </resources>
  <connections/>

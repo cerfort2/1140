@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="crosso">
+    <file>crosso.jpg</file>
+  </qresource>
+</RCC>
