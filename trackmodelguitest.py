@@ -24,8 +24,13 @@ class line():
     def __init__(self,name):
         self.name = name
         self.blocks = []
+        self.occupied = []
     def addBlock(self,blk):
         self.blocks.append(blk)
+    def addOccupied(self, blk_name):
+        self.occupied.append(blk_name)
+    def addOccupiedList(self,blkname_list):
+        self.occupied += blkname_list
 
 class block():
     def __init__(self,name):
@@ -55,8 +60,9 @@ class block():
     def setElevation(self, elevation):
         self.elevation = elevation
 
-occupied = ["A2","E13","H33","H25"] #debug array
- # change this to exclude empty indexed rows
+occupied_debug = ["A2","E13","H33","H25", "R72"] #debug array
+
+
 metersToFeet = 3.28084
 kmhrTomihr = 0.621371
 
@@ -86,6 +92,12 @@ class functionalUI(Ui_MainWindow):
             if(l.name == currentLineName):
                 for blk in l.blocks:
                     self.comboBox.addItem(blk.name)
+
+                self.listWidget.clear()
+                self.listWidget.addItems(l.occupied)
+
+
+                
 
 
     def blockChange(self):
@@ -145,7 +157,8 @@ class functionalUI(Ui_MainWindow):
     
         #Set self.occupied values
         for x in newLine.blocks:
-            if(x.name in occupied):
+            if(x.name in occupied_debug):
+                newLine.addOccupied(x.name)
                 x.toggleOccupied()
         
 
@@ -196,6 +209,5 @@ ui = functionalUI()
 ui.setupUi(MainWindow)
 ui.update()
 MainWindow.show()
-
 # # Start the event loop.
 app.exec()
