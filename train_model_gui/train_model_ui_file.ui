@@ -1,0 +1,800 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1130</width>
+    <height>589</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QPushButton" name="emergency_brake">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>460</y>
+     <width>491</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>30</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>EMERGENCY BRAKE</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="time_label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>131</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>System Time: </string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="curr_time">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>10</y>
+     <width>91</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>XX:XX:XX</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="play_button">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Play</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pause_button">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>70</y>
+     <width>121</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>Main Page</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Test Bench</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="passenger_count_label">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>70</y>
+     <width>171</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Passenger Count: </string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="power_label">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>110</y>
+     <width>71</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Power:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="current_velocity_label">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>150</y>
+     <width>161</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Current Velocity:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="authority_label">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>190</y>
+     <width>101</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Authority:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="air_conditioning_label">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>230</y>
+     <width>161</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Air Conditioning:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="acceleration_label">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>270</y>
+     <width>121</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Acceleration:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="train_vars_title">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>30</y>
+     <width>211</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>24</pointsize>
+     <underline>true</underline>
+    </font>
+   </property>
+   <property name="text">
+    <string>Train Variables</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="train_failures_title">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>350</y>
+     <width>201</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>24</pointsize>
+     <underline>true</underline>
+    </font>
+   </property>
+   <property name="text">
+    <string>Train Failures</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="engine_failure_label">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>390</y>
+     <width>151</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Engine Failure:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="signal_pickup_failure_title">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>470</y>
+     <width>201</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Signal Pickup Failure:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="brake_failure_label">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>430</y>
+     <width>131</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Brake Failure:</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="brake_button">
+   <property name="geometry">
+    <rect>
+     <x>910</x>
+     <y>440</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="signal_button">
+   <property name="geometry">
+    <rect>
+     <x>980</x>
+     <y>480</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="engine_button">
+   <property name="geometry">
+    <rect>
+     <x>920</x>
+     <y>400</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="passenger_count">
+   <property name="geometry">
+    <rect>
+     <x>950</x>
+     <y>70</y>
+     <width>171</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>0 People</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="power">
+   <property name="geometry">
+    <rect>
+     <x>850</x>
+     <y>110</y>
+     <width>171</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>0 Watts</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="current_velocity">
+   <property name="geometry">
+    <rect>
+     <x>940</x>
+     <y>150</y>
+     <width>171</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>0 MPH</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="authority">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>190</y>
+     <width>171</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>0 Meters</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="air_conditioning">
+   <property name="geometry">
+    <rect>
+     <x>940</x>
+     <y>230</y>
+     <width>171</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>0 Degrees</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="acceleration">
+   <property name="geometry">
+    <rect>
+     <x>910</x>
+     <y>270</y>
+     <width>171</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>0 M/S^2</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="announcement">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>10</y>
+     <width>341</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="html">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;holder announcement&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="announcement_label">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>20</y>
+     <width>141</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Current 
+Announcement</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="enviromental_vars_title">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>100</y>
+     <width>341</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>24</pointsize>
+     <underline>true</underline>
+    </font>
+   </property>
+   <property name="text">
+    <string>Environmental Variables</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="slope_label">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>150</y>
+     <width>61</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Slope:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="elevation_label">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>190</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Elevation:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="curr_environment_label">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>230</y>
+     <width>201</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Current Environment:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="slope">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>150</y>
+     <width>171</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>0 Degrees</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="elevation">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>190</y>
+     <width>171</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>0 Feet</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="environment">
+   <property name="geometry">
+    <rect>
+     <x>630</x>
+     <y>230</y>
+     <width>171</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>In Tunnel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="enviromental_vars_title_2">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>290</y>
+     <width>241</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>24</pointsize>
+     <underline>true</underline>
+    </font>
+   </property>
+   <property name="text">
+    <string>Lights and Doors</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="right_door_label">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>380</y>
+     <width>111</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Right Door:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="left_door_label">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>330</y>
+     <width>111</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Left Door:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="inside_light_label">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>330</y>
+     <width>131</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Inside Lights:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="outside_light_label">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>380</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Outside Lights:</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="inside_lights">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>340</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="outside_lights">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>390</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="left_door">
+   <property name="geometry">
+    <rect>
+     <x>710</x>
+     <y>340</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="right_door">
+   <property name="geometry">
+    <rect>
+     <x>710</x>
+     <y>390</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="closed_door_text">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>315</y>
+     <width>61</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+     <underline>true</underline>
+    </font>
+   </property>
+   <property name="text">
+    <string>Closed?</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
