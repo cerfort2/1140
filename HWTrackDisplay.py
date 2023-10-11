@@ -1,6 +1,8 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 from UI_Breadboard_Class import Operations
 from PyQt6.QtWidgets import QFileDialog
+import subprocess
+import os
 
 operate = Operations() #Class to perform operations on the breadboard
 
@@ -290,7 +292,7 @@ class Ui_MainWindow(object):
         self.pushButton_3.setObjectName("pushButton_3") #Open PLC code button
 
         self.label_4 = QtWidgets.QLabel(parent=self.centralwidget) #File location label
-        self.label_4.setGeometry(QtCore.QRect(220, 10, 241, 21))
+        self.label_4.setGeometry(QtCore.QRect(220, 10, 650, 21))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.label_4.setFont(font)
@@ -509,13 +511,15 @@ class Ui_MainWindow(object):
         dialog = QFileDialog()
         dialog.setNameFilter("Arduino File (*.ino)")
         dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
-
         dialogSuccessful = dialog.exec()
-
         if dialogSuccessful:
             fileLocation = dialog.selectedFiles()[0]
-            with open(fileLocation) as file:
-                self.label_4.setText(file.read())
+            self.label_4.setText(fileLocation)
+            arduino = "C:\Program Files (x86)\Arduino\\arduino.exe"
+            command = f'"{arduino}" "{fileLocation}"'
+            subprocess.run(command, shell=True)
+
+            
 
 
     #Functions all to ensure Manual mode is Good
@@ -679,7 +683,7 @@ class Ui_MainWindow(object):
             self.listWidget_6.addItem(new_item)
             new_item2 = QtWidgets.QListWidgetItem(value)
             self.listWidget_8.addItem(new_item2)
-    
+
 
 
 
