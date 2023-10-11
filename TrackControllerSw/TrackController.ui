@@ -69,89 +69,6 @@
      <attribute name="title">
       <string>Main Page</string>
      </attribute>
-     <widget class="QTableWidget" name="sectionData">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>50</y>
-        <width>331</width>
-        <height>261</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 255, 255);</string>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
-      </property>
-      <property name="lineWidth">
-       <number>2</number>
-      </property>
-      <property name="midLineWidth">
-       <number>2</number>
-      </property>
-      <attribute name="horizontalHeaderMinimumSectionSize">
-       <number>39</number>
-      </attribute>
-      <attribute name="horizontalHeaderDefaultSectionSize">
-       <number>130</number>
-      </attribute>
-      <row>
-       <property name="text">
-        <string/>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string/>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string/>
-       </property>
-      </row>
-      <column>
-       <property name="text">
-        <string/>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string/>
-       </property>
-      </column>
-      <item row="0" column="0">
-       <property name="text">
-        <string>Track Section :</string>
-       </property>
-      </item>
-      <item row="0" column="1">
-       <property name="text">
-        <string>A</string>
-       </property>
-      </item>
-      <item row="1" column="0">
-       <property name="text">
-        <string>Section Occupation :</string>
-       </property>
-      </item>
-      <item row="1" column="1">
-       <property name="text">
-        <string>Not Occupied</string>
-       </property>
-      </item>
-      <item row="2" column="0">
-       <property name="text">
-        <string>Section Failure :</string>
-       </property>
-      </item>
-      <item row="2" column="1">
-       <property name="text">
-        <string>No Failure</string>
-       </property>
-      </item>
-     </widget>
      <widget class="QComboBox" name="section">
       <property name="geometry">
        <rect>
@@ -471,14 +388,186 @@
        <string>Next Station:</string>
       </property>
      </widget>
+     <widget class="QFrame" name="dataFrame">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>40</y>
+        <width>351</width>
+        <height>271</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLabel" name="sectionData">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>10</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-color: rgb(0, 0, 0);</string>
+       </property>
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="midLineWidth">
+        <number>0</number>
+       </property>
+       <property name="text">
+        <string>A</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="secLab">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>91</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="midLineWidth">
+        <number>0</number>
+       </property>
+       <property name="text">
+        <string>Section:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="occupationData">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>40</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-color: rgb(0, 0, 0);</string>
+       </property>
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="midLineWidth">
+        <number>0</number>
+       </property>
+       <property name="text">
+        <string>Unoccupied</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="occLab">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>30</y>
+         <width>91</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="midLineWidth">
+        <number>0</number>
+       </property>
+       <property name="text">
+        <string>Occupation:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="failData">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>70</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-color: rgb(0, 0, 0);</string>
+       </property>
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="midLineWidth">
+        <number>0</number>
+       </property>
+       <property name="text">
+        <string>No Failures</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="faiLab">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>60</y>
+         <width>91</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="midLineWidth">
+        <number>0</number>
+       </property>
+       <property name="text">
+        <string>Failures:</string>
+       </property>
+      </widget>
+     </widget>
      <zorder>switchFrame</zorder>
-     <zorder>sectionData</zorder>
      <zorder>section</zorder>
      <zorder>crossroadFrame</zorder>
      <zorder>signalFrame</zorder>
      <zorder>modeButton</zorder>
      <zorder>nextStation</zorder>
      <zorder>statText</zorder>
+     <zorder>dataFrame</zorder>
     </widget>
     <widget class="QWidget" name="testBench">
      <attribute name="title">
