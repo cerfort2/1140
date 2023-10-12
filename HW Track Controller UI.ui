@@ -49,12 +49,12 @@
       </property>
       <item>
        <property name="text">
-        <string>Red Line Wayside</string>
+        <string>Red Line</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Green Line Wayside</string>
+        <string>Green Line</string>
        </property>
       </item>
      </widget>
@@ -170,6 +170,31 @@
        <string>Track Failures</string>
       </property>
      </widget>
+     <widget class="QComboBox" name="comboBox_14">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>110</y>
+        <width>121</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Select Wayside</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Wayside 1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Wayside 2</string>
+       </property>
+      </item>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -186,12 +211,12 @@
       </property>
       <item>
        <property name="text">
-        <string>Red Line Wayside</string>
+        <string>Red Line</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Green Line Wayside</string>
+        <string>Green Line</string>
        </property>
       </item>
      </widget>
@@ -380,6 +405,31 @@
        <string>Track Failures</string>
       </property>
      </widget>
+     <widget class="QComboBox" name="comboBox_12">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>120</y>
+        <width>121</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Select Wayside</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Wayside 1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Wayside 2</string>
+       </property>
+      </item>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
@@ -396,19 +446,19 @@
       </property>
       <item>
        <property name="text">
-        <string>Red Line Wayside</string>
+        <string>Red Line</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Green Line Wayside</string>
+        <string>Green Line</string>
        </property>
       </item>
      </widget>
      <widget class="QComboBox" name="comboBox_8">
       <property name="geometry">
        <rect>
-        <x>90</x>
+        <x>310</x>
         <y>110</y>
         <width>101</width>
         <height>22</height>
@@ -438,7 +488,7 @@
      <widget class="QPushButton" name="pushButton_4">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>210</x>
         <y>160</y>
         <width>111</width>
         <height>51</height>
@@ -588,7 +638,7 @@
      <widget class="QPushButton" name="pushButton_5">
       <property name="geometry">
        <rect>
-        <x>160</x>
+        <x>400</x>
         <y>160</y>
         <width>111</width>
         <height>51</height>
@@ -650,6 +700,31 @@
       <item row="1" column="0">
        <property name="text">
         <string>60 m</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_13">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>110</y>
+        <width>121</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Select Wayside</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Wayside 1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Wayside 2</string>
        </property>
       </item>
      </widget>

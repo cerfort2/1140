@@ -64,6 +64,14 @@ class Ui_MainWindow(object):
         self.comboBox_7.addItem("")
         self.comboBox_7.setDisabled(True)
 
+        self.comboBox = QtWidgets.QComboBox(parent=self.tab_2)
+        self.comboBox.setGeometry(QtCore.QRect(10, 110, 121, 22))
+        self.comboBox.setObjectName("comboBox") #Wayside Selector
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.setDisabled(True)
+
         self.label = QtWidgets.QLabel(parent=self.tab_2)
         self.label.setGeometry(QtCore.QRect(170, 110, 101, 21))
         self.listWidget_7 = QtWidgets.QListWidget(parent=self.tab_2)
@@ -124,6 +132,14 @@ class Ui_MainWindow(object):
         self.comboBox_2.addItem("")
         self.comboBox_2.setDisabled(True)
 
+        self.comboBox_12 = QtWidgets.QComboBox(parent=self.tab)
+        self.comboBox_12.setGeometry(QtCore.QRect(10, 110, 121, 22))
+        self.comboBox_12.setObjectName("comboBox_12") #Wayside Selector
+        self.comboBox_12.addItem("")
+        self.comboBox_12.addItem("")
+        self.comboBox_12.addItem("")
+        self.comboBox_12.setDisabled(True)
+
         self.pushButton = QtWidgets.QPushButton(parent=self.tab)
         self.pushButton.setGeometry(QtCore.QRect(320, 120, 101, 51))
         self.pushButton.setObjectName("pushButton") #Toggle Crossroad
@@ -183,7 +199,7 @@ class Ui_MainWindow(object):
         self.listWidget_9.addItem(item)
 
         self.comboBox_8 = QtWidgets.QComboBox(parent=self.tab_3)
-        self.comboBox_8.setGeometry(QtCore.QRect(90, 110, 101, 22))
+        self.comboBox_8.setGeometry(QtCore.QRect(310, 110, 101, 22))
         self.comboBox_8.setObjectName("comboBox_8") #Track selections
         self.comboBox_8.addItem("")
         self.comboBox_8.addItem("")
@@ -192,7 +208,7 @@ class Ui_MainWindow(object):
         self.comboBox_8.setDisabled(True)
 
         self.pushButton_4 = QtWidgets.QPushButton(parent=self.tab_3)
-        self.pushButton_4.setGeometry(QtCore.QRect(10, 160, 111, 51))
+        self.pushButton_4.setGeometry(QtCore.QRect(210, 160, 111, 51))
         self.pushButton_4.setObjectName("pushButton_4") #Toggle Occupancy
         self.pushButton_4.setDisabled(True)
 
@@ -219,6 +235,14 @@ class Ui_MainWindow(object):
         self.comboBox_11.addItem("")
         self.comboBox_11.addItem("")
         self.comboBox_11.setDisabled(True)
+
+        self.comboBox_13 = QtWidgets.QComboBox(parent=self.tab_3)
+        self.comboBox_13.setGeometry(QtCore.QRect(10, 110, 121, 22))
+        self.comboBox_13.setObjectName("comboBox") #Wayside Selector
+        self.comboBox_13.addItem("")
+        self.comboBox_13.addItem("")
+        self.comboBox_13.addItem("")
+        self.comboBox_13.setDisabled(True)
 
         self.listWidget_4 = QtWidgets.QListWidget(parent=self.tab_3)
         self.listWidget_4.setGeometry(QtCore.QRect(170, 50, 91, 41))
@@ -257,7 +281,7 @@ class Ui_MainWindow(object):
         self.listWidget_11.setDisabled(True)
 
         self.pushButton_5 = QtWidgets.QPushButton(parent=self.tab_3)
-        self.pushButton_5.setGeometry(QtCore.QRect(160, 160, 111, 51))
+        self.pushButton_5.setGeometry(QtCore.QRect(400, 160, 111, 51))
         self.pushButton_5.setObjectName("pushButton_5") #Toggle Track Failure
         self.pushButton_5.setDisabled(True)
 
@@ -316,9 +340,9 @@ class Ui_MainWindow(object):
         __sortingEnabled = self.listWidget_3.isSortingEnabled()
         self.listWidget_3.setSortingEnabled(False)
         item = self.listWidget_3.item(0)
-        item.setText(_translate("MainWindow", "Red Line Wayside"))
+        item.setText(_translate("MainWindow", "Red Line"))
         item = self.listWidget_3.item(1)
-        item.setText(_translate("MainWindow", "Green Line Wayside"))
+        item.setText(_translate("MainWindow", "Green Line"))
         self.listWidget_3.setSortingEnabled(__sortingEnabled)
         self.listWidget_3.itemClicked.connect(self.checkListAutomatic)
 
@@ -326,6 +350,11 @@ class Ui_MainWindow(object):
         self.comboBox_5.setItemText(1, _translate("MainWindow", "Light 1"))
         self.comboBox_5.setItemText(2, _translate("MainWindow", "Light 2"))
         self.comboBox_5.currentTextChanged.connect(self.defaultLight)
+
+        self.comboBox.setItemText(0, _translate("MainWindow", "Select Wayside"))
+        self.comboBox.setItemText(1, _translate("MainWindow", "Wayside 1"))
+        self.comboBox.setItemText(2, _translate("MainWindow", "Wayside 2"))
+        self.comboBox.currentIndexChanged.connect(self.checkWaysideSelectionAutomatic)
 
 
         self.comboBox_6.setItemText(0, _translate("MainWindow", "Select Crossroad"))
@@ -350,9 +379,9 @@ class Ui_MainWindow(object):
         __sortingEnabled = self.listWidget.isSortingEnabled()
         self.listWidget.setSortingEnabled(False)
         item = self.listWidget.item(0)
-        item.setText(_translate("MainWindow", "Red Line Wayside"))
+        item.setText(_translate("MainWindow", "Red Line"))
         item = self.listWidget.item(1)
-        item.setText(_translate("MainWindow", "Green Line Wayside"))
+        item.setText(_translate("MainWindow", "Green Line"))
         self.listWidget.setSortingEnabled(__sortingEnabled)
         self.listWidget.itemClicked.connect(self.checkListManual)
 
@@ -383,6 +412,11 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText(_translate("MainWindow", "Toggle Switch"))
         self.pushButton_2.clicked.connect(self.switchUpdater)
 
+        self.comboBox_12.setItemText(0, _translate("MainWindow", "Select Wayside"))
+        self.comboBox_12.setItemText(1, _translate("MainWindow", "Wayside 1"))
+        self.comboBox_12.setItemText(2, _translate("MainWindow", "Wayside 2"))
+        self.comboBox_12.currentIndexChanged.connect(self.checkWaysideSelectionManual)
+
         #Toggles that block occupancy has been changed
         self.listWidget_5.model().rowsInserted.connect(self.plcCode)
         self.listWidget_5.model().rowsRemoved.connect(self.plcCode)
@@ -402,9 +436,9 @@ class Ui_MainWindow(object):
         __sortingEnabled = self.listWidget_9.isSortingEnabled()
         self.listWidget_9.setSortingEnabled(False)
         item = self.listWidget_9.item(0)
-        item.setText(_translate("MainWindow", "Red Line Wayside"))
+        item.setText(_translate("MainWindow", "Red Line"))
         item = self.listWidget_9.item(1)
-        item.setText(_translate("MainWindow", "Green Line Wayside"))
+        item.setText(_translate("MainWindow", "Green Line"))
         self.listWidget_9.setSortingEnabled(__sortingEnabled)
         self.listWidget_9.itemClicked.connect(self.checkListTest)
 
@@ -432,6 +466,11 @@ class Ui_MainWindow(object):
         self.comboBox_11.setItemText(2, _translate("MainWindow", "Switch 2"))
         self.comboBox_11.currentIndexChanged.connect(self.switchChangeTest)
         self.comboBox_11.currentTextChanged.connect(self.switchSelection)
+
+        self.comboBox_13.setItemText(0, _translate("MainWindow", "Select Wayside"))
+        self.comboBox_13.setItemText(1, _translate("MainWindow", "Wayside 1"))
+        self.comboBox_13.setItemText(2, _translate("MainWindow", "Wayside 2"))
+        self.comboBox_13.currentIndexChanged.connect(self.checkWaysideSelectionTest)
 
         __sortingEnabled = self.listWidget_4.isSortingEnabled()
         self.listWidget_4.setSortingEnabled(False)
@@ -559,6 +598,9 @@ class Ui_MainWindow(object):
             self.Switch2 = "right"
         elif self.BlockB:
             self.Crossroad2 = "on"
+        elif self.BlockC or not self.BlockB or not self.BlockA:
+            self.Crossroad2 = "off"
+            self.Crossroad1 = "off"
         
         
     #Functions all to ensure Manual mode is Good
@@ -579,10 +621,15 @@ class Ui_MainWindow(object):
             self.listWidget_2.setDisabled(False)
     def checkListManual(self): #Checks if a wayside is selected or not to grey out combo boxes or not
         if self.listWidget.currentItem() is not None:
-            self.enableCombosManual()
-    def enableCombosManual(self): #enables all the combo boxes and lists in manual mode
-        for combo_box in [self.comboBox_2, self.comboBox_3, self.comboBox_4, self.listWidget_5, self.listWidget_6]:
-            combo_box.setEnabled(True)
+            self.comboBox_12.setEnabled(True)
+    def checkWaysideSelectionManual(self): #Checks if still selecting crossroad to grey out button
+        if self.comboBox_12.currentText() == "Select Wayside":
+            for combo_box in [self.comboBox_2, self.comboBox_3, self.comboBox_4, self.listWidget_5, self.listWidget_6]:
+                combo_box.setDisabled(True)
+        else:
+            for combo_box in [self.comboBox_2, self.comboBox_3, self.comboBox_4, self.listWidget_5, self.listWidget_6]:
+                combo_box.setEnabled(True)
+
     def crossroadUpdater(self):
         if self.comboBox_3.currentText() == "Crossroad 1":
             if self.Crossroad1 == "off":
@@ -622,21 +669,32 @@ class Ui_MainWindow(object):
             operate.changeLight(self.Light2)
 
 
+
     #Functions for Automatic Mode
     def checkListAutomatic(self): #Checks if a wayside is selected or not to grey out combo boxes or not
         if self.listWidget_3.currentItem() is not None:
-            self.enableCombosAutomatic()
-    def enableCombosAutomatic(self): #Enables all combo boxes in Automatic tab
-        for combo_box in [self.comboBox_5, self.comboBox_6, self.comboBox_7, self.listWidget_7, self.listWidget_8]:
-            combo_box.setEnabled(True)
+            self.comboBox.setEnabled(True)
+    def checkWaysideSelectionAutomatic(self): #Checks if still selecting crossroad to grey out button
+        if self.comboBox.currentText() == "Select Wayside":
+            for combo_box in [self.comboBox_5, self.comboBox_6, self.comboBox_7, self.listWidget_7, self.listWidget_8]:
+                combo_box.setDisabled(True)
+        else:
+            for combo_box in [self.comboBox_5, self.comboBox_6, self.comboBox_7, self.listWidget_7, self.listWidget_8]:
+                combo_box.setEnabled(True)
+
+
 
     #Functions for Test Bench
     def checkListTest(self): #Checks if a wayside is selected or not to grey out combo boxes or not
         if self.listWidget_9.currentItem() is not None:
-            self.enableCombosTest()
-    def enableCombosTest(self): #enables all the combo boxes and lists in manual mode
-        for combo_box in [self.comboBox_9, self.comboBox_10, self.comboBox_11, self.comboBox_8]:
-            combo_box.setEnabled(True)
+            self.comboBox_13.setEnabled(True)
+    def checkWaysideSelectionTest(self): #Checks if still selecting crossroad to grey out button
+        if self.comboBox_13.currentText() == "Select Wayside":
+            for combo_box in [self.comboBox_9, self.comboBox_10, self.comboBox_11, self.comboBox_8]:
+                combo_box.setDisabled(True)
+        else:
+            for combo_box in [self.comboBox_9, self.comboBox_10, self.comboBox_11, self.comboBox_8]:
+                combo_box.setEnabled(True)
     def crossChangeTest(self): #Checks if still selecting crossroad to grey out list
         if self.comboBox_10.currentText() == "Select Crossroad":
             self.listWidget_10.setDisabled(True)
