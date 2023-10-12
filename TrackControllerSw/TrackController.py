@@ -69,7 +69,7 @@ class Ui_MainWindow(object):
         self.leftSection.setMidLineWidth(0)
         self.leftSection.setObjectName("leftSection")
         self.rightSection = QtWidgets.QLabel(parent=self.switchFrame)
-        self.rightSection.setGeometry(QtCore.QRect(250, 140, 91, 21))
+        self.rightSection.setGeometry(QtCore.QRect(240, 140, 111, 21))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.rightSection.setFont(font)
@@ -393,6 +393,7 @@ class Ui_MainWindow(object):
 
 
     def toggle_direction_handler(self):
+        #Toggles direction of switch given current state
         self.direc = not self.direc
         section_index = self.section.currentIndex()
         switch_index = self.switchSelect.currentIndex()
@@ -403,7 +404,7 @@ class Ui_MainWindow(object):
         self.switchDirection.setPixmap(pixmap)
 
     def toggle_crossroad_handler(self):
-        
+        #Toggles state of current crossroad
         section_index = self.section.currentIndex()
         crossroad_index = self.crossroadSelect.currentIndex()
         self.cross[section_index] = not self.cross[section_index]
@@ -414,12 +415,14 @@ class Ui_MainWindow(object):
         self.crossroadStatus.setPixmap(pixmap)
 
     def green_handler(self):
+        #Turns signal green
         section_index = self.section.currentIndex()
         signal_index = self.signalSelect.currentIndex()
         self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
         self.sig[section_index] = False
 
     def red_handler(self):
+        #Turns signal red
         section_index = self.section.currentIndex()
         signal_index = self.signalSelect.currentIndex()
         self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
@@ -427,6 +430,7 @@ class Ui_MainWindow(object):
         
 
     def apply_handler(self):
+        #If apply is pressed on tb data is saved
         sectionTB_index = self.sectionTB.currentIndex()
         switchTB_index = self.switchSelectTB.currentIndex()
         crossroadTB_index = self.crossroadSelectTB.currentIndex()
@@ -450,6 +454,7 @@ class Ui_MainWindow(object):
         self.failures[sectionTB_index] = text
     
     def newSection(self):
+        #Based on section data is updated or hidden
         section_index = self.section.currentIndex()
         self.sectionData.setText(self.section.currentText())
         self.occupationData.setText(self.occupation[section_index])
@@ -473,6 +478,7 @@ class Ui_MainWindow(object):
             self.rightSection.show()
             self.toggleDirection.show()
         else:
+            #any index past 0 does not have a switch
             if(section_index == 1):
                 pixmap = QPixmap("")
                 self.switchDirection.setPixmap(pixmap)
@@ -487,6 +493,7 @@ class Ui_MainWindow(object):
                 self.toggleDirection.hide()
 
     def newSectionTB(self):
+        #Based on tb section data is updated or hidden
         text = QTableWidgetItem(self.sectionTB.currentText())
         self.dataTB.setItem(0,0,text)
         section_index = self.sectionTB.currentIndex()
@@ -515,7 +522,9 @@ class Ui_MainWindow(object):
                 self.switchStatusTB.hide()
 
     def pageChange(self):
+        #If page is changed updates need to be made based on current or changed data
         if(self.pageSelection.currentIndex() == 0):
+            #main page data
             section_index = self.section.currentIndex()
             self.sectionData.setText(self.section.currentText())
             self.nextStation.setText(self.station)
@@ -553,6 +562,7 @@ class Ui_MainWindow(object):
                     self.rightSection.hide()
                     self.toggleDirection.hide()
         else:
+            #tb page data
             text = QTableWidgetItem(self.sectionTB.currentText())
             self.dataTB.setItem(0,0,text)
             section_index = self.sectionTB.currentIndex()
@@ -579,9 +589,11 @@ class Ui_MainWindow(object):
                     self.switchStatusTB.hide()
                 else:
                     self.switchStatusTB.hide()
+        #calls mode handler to update automatic mode actions
         self.mode_handler()
 
     def mode_handler(self):
+        #based on automatic or manule mode changes are made
         if(self.modeButton.isChecked()):
             self.toggleDirection.hide()
             self.toggleCrossroad.hide()
@@ -611,9 +623,8 @@ class Ui_MainWindow(object):
             else:
                 self.sig[self.section.currentIndex()] = False
                 self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
-                
-
         else:
+            #Returns hidden buttons when unpressed
             if(self.section.currentIndex() == 0):
                 self.toggleDirection.show()
             self.toggleCrossroad.show()

@@ -188,9 +188,9 @@
       <widget class="QLabel" name="rightSection">
        <property name="geometry">
         <rect>
-         <x>250</x>
+         <x>240</x>
          <y>140</y>
-         <width>91</width>
+         <width>111</width>
          <height>21</height>
         </rect>
        </property>
