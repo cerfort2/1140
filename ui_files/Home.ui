@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>392</width>
+    <height>441</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QWidget" name="verticalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>69</x>
+     <y>89</y>
+     <width>281</width>
+     <height>351</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>1</number>
+    </property>
+    <property name="sizeConstraint">
+     <enum>QLayout::SetNoConstraint</enum>
+    </property>
+    <item>
+     <widget class="QPushButton" name="ctc">
+      <property name="text">
+       <string>CTC</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="track_model">
+      <property name="text">
+       <string>Track Model</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="track_controller">
+      <property name="text">
+       <string>Track Controller (Software)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="train_model">
+      <property name="text">
+       <string>Train Model</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="train_controller">
+      <property name="text">
+       <string>Train Controller (Software)</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>70</y>
+     <width>81</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Select Module</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
