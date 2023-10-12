@@ -361,8 +361,8 @@ class Ui_MainWindow(object):
         self.sectionTB.setItemText(1, "Section 6-10")
         self.sectionTB.setItemText(2, "Section 11-15")
         self.sectionData.setText(self.section.currentText())
-        self.occupationData.setText("...")
-        self.failData.setText("...")
+        self.occupationData.setText("Unoccupied")
+        self.failData.setText("No failures")
 
         #Switch Toggle Signal
         self.toggleDirection.clicked.connect(self.toggle_direction_handler)
@@ -387,9 +387,14 @@ class Ui_MainWindow(object):
         self.direc = False
         self.cross = [False, False, False]
         self.sig = [False, False, False]
-        self.station = ""
-        self.occupation = ["...","...","..."]
-        self.failures = ["...","...","..."]
+        self.station = "Station B"
+        self.occupation = ["Unoccupied","Unoccupied","Unoccupied"]
+        self.failures = ["No failures","No failures","No failures"]
+        #images
+        self.left = QPixmap("1140\TrackControllerSw\left.jpg")
+        self.right = QPixmap("1140\TrackControllerSw\light.jpg")
+        self.open = QPixmap("1140\TrackControllerSw\crosso.jpg")
+        self.closed = QPixmap("1140\TrackControllerSw\crossc.jpg")
 
 
     def toggle_direction_handler(self):
@@ -398,10 +403,9 @@ class Ui_MainWindow(object):
         section_index = self.section.currentIndex()
         switch_index = self.switchSelect.currentIndex()
         if(self.direc):
-            pixmap = QPixmap("1140\TrackControllerSw\light.jpg")
+            self.switchDirection.setPixmap(self.right)
         else:
-            pixmap = QPixmap("1140\TrackControllerSw\left.jpg")
-        self.switchDirection.setPixmap(pixmap)
+            self.switchDirection.setPixmap(self.left)
 
     def toggle_crossroad_handler(self):
         #Toggles state of current crossroad
@@ -409,10 +413,9 @@ class Ui_MainWindow(object):
         crossroad_index = self.crossroadSelect.currentIndex()
         self.cross[section_index] = not self.cross[section_index]
         if(self.cross[section_index]):
-            pixmap = QPixmap("1140\TrackControllerSw\crossc.jpg")
+            self.crossroadStatus.setPixmap(self.closed)
         else:
-            pixmap = QPixmap("1140\TrackControllerSw\crosso.jpg")
-        self.crossroadStatus.setPixmap(pixmap)
+            self.crossroadStatus.setPixmap(self.open)
 
     def green_handler(self):
         #Turns signal green
@@ -460,20 +463,19 @@ class Ui_MainWindow(object):
         self.occupationData.setText(self.occupation[section_index])
         self.failData.setText(self.failures[section_index])
         if(self.cross[section_index]):
-            pixmap = QPixmap("1140\TrackControllerSw\crossc.jpg")
+            self.crossroadStatus.setPixmap(self.closed)
         else:
-            pixmap = QPixmap("1140\TrackControllerSw\crosso.jpg")
-        self.crossroadStatus.setPixmap(pixmap)
+            self.crossroadStatus.setPixmap(self.open)
         if(self.sig[section_index]):
             self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
         else:
             self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
         if(section_index == 0):
             if(self.direc):
-                pixmap = QPixmap("1140\TrackControllerSw\light.jpg")
+                self.switchDirection.setPixmap(self.right)
             else:
-                pixmap = QPixmap("1140\TrackControllerSw\left.jpg")
-            self.switchDirection.setPixmap(pixmap)
+                self.switchDirection.setPixmap(self.left)
+            
             self.leftSection.show()
             self.rightSection.show()
             self.toggleDirection.show()
@@ -531,20 +533,18 @@ class Ui_MainWindow(object):
             self.occupationData.setText(self.occupation[section_index])
             self.failData.setText(self.failures[section_index])
             if(self.cross[section_index]):
-                pixmap = QPixmap("1140\TrackControllerSw\crossc.jpg")
+                self.crossroadStatus.setPixmap(self.closed)
             else:
-                pixmap = QPixmap("1140\TrackControllerSw\crosso.jpg")
-            self.crossroadStatus.setPixmap(pixmap)
+                self.crossroadStatus.setPixmap(self.open)
             if(self.sig[section_index]):
                 self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
             else:
                 self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
             if(section_index == 0):
                 if(self.direc):
-                    pixmap = QPixmap("1140\TrackControllerSw\light.jpg")
+                    self.switchDirection.setPixmap(self.right)
                 else:
-                    pixmap = QPixmap("1140\TrackControllerSw\left.jpg")
-                self.switchDirection.setPixmap(pixmap)
+                    self.switchDirection.setPixmap(self.left)
                 self.leftSection.show()
                 self.rightSection.show()
                 self.toggleDirection.show()
@@ -602,21 +602,17 @@ class Ui_MainWindow(object):
             if(self.nextStation.text() == "Station B"):
                 self.direc = False
                 if(self.section.currentIndex() == 0):
-                    pixmap = QPixmap("1140\TrackControllerSw\left.jpg")
-                    self.switchDirection.setPixmap(pixmap)
+                    self.switchDirection.setPixmap(self.left)
             if(self.nextStation.text() == "Station C"):
                 self.direc = True
                 if(self.section.currentIndex() == 0):
-                    pixmap = QPixmap("1140\TrackControllerSw\light.jpg")
-                    self.switchDirection.setPixmap(pixmap)
+                    self.switchDirection.setPixmap(self.right)
             if(self.occupationData.text() == "Occupied"):
                 self.cross[self.section.currentIndex()] = True
-                pixmap = QPixmap("1140\TrackControllerSw\crossc.jpg")
-                self.crossroadStatus.setPixmap(pixmap)
+                self.crossroadStatus.setPixmap(self.closed)
             if(self.occupationData.text() == "Unoccupied"):
                 self.cross[self.section.currentIndex()] = False
-                pixmap = QPixmap("1140\TrackControllerSw\crosso.jpg")
-                self.crossroadStatus.setPixmap(pixmap)
+                self.crossroadStatus.setPixmap(self.open)
             if(self.failData.text() == "Failure"):
                 self.sig[self.section.currentIndex()] = True
                 self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
