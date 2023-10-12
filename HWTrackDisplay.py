@@ -16,6 +16,7 @@ class Ui_MainWindow(object):
     BlockA = False
     BlockB = False
     BlockC = False
+    BlockE = False
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -534,12 +535,32 @@ class Ui_MainWindow(object):
                 self.BlockB = True
             elif element == "C":
                 self.BlockC = True
+
+        if self.BlockA:
+            if not self.BlockB:
+                self.Switch1 = "right"
+            else:
+                self.Switch1 = "left"
+        else:
+            if self.BlockC:
+                self.Switch1 = "left"
+            else:
+                self.Switch1 = "right"
+        
+        if self.Switch1 == "right":
+            self.Light1 = "red"
+            self.Light2 = "green"
+        elif self.Switch1 == "left":
+            self.Light1 = "green"
+            self.Light2 = "red"
+        
+        if self.BlockB or self.BlockA:
+            self.Crossroad1 = "on"
+            self.Switch2 = "right"
+        elif self.BlockB:
+            self.Crossroad2 = "on"
         
         
-        
-
-
-
     #Functions all to ensure Manual mode is Good
     def crossChangeManual(self): #Checks if still selecting crossroad to grey out button
         if self.comboBox_3.currentText() == "Select Crossroad":
@@ -653,7 +674,7 @@ class Ui_MainWindow(object):
             temp = self.listWidget_11.item(0)
             temp.setText("A->B")
             temp = self.listWidget_11.item(1)
-            temp.setText("A<->C")
+            temp.setText("C->A")
         elif item == "Switch 2":
             temp = self.listWidget_11.item(0)
             temp.setText("B->D")
