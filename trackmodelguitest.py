@@ -3,34 +3,21 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 import pandas as pd
 from customUI import Ui_MainWindow
 
-
-# Only needed for access to command line arguments
-
-
-# You need one (and only one) QApplication instance per application.
-# Pass in sys.argv to allow command line arguments for your app.
-# If you know you won't use command line arguments QApplication([]) works too.
-
 ## TO CONVERT UI TO PY
 # open terminal at folder with ui
 # pyuic6 -x -o test.py mainwindow.ui
 #profit
 #################
 
-#comboBox = Block box
-# comboBox_2 = Line Box
+#comboBox_4 = Block box
+# comboBox_3 = Line Box
 
 class line():
     def __init__(self,name):
         self.name = name
         self.blocks = []
-        self.occupied = []
     def addBlock(self,blk):
         self.blocks.append(blk)
-    def addOccupied(self, blk_name):
-        self.occupied.append(blk_name)
-    def addOccupiedList(self,blkname_list):
-        self.occupied += blkname_list
 
 class block():
     def __init__(self,name):
@@ -49,8 +36,10 @@ class block():
         # self.crossroad = attributes[10] #bool
         # self.heater = attributes[11] #bool
         # self.failure = attributes[12] #bool
-    def toggleOccupied(self):
-        self.occupied = not self.occupied
+    def setOccupied(self):
+        self.occupied = True
+    def clearOccupied(self):
+        self.occupied = False
     def setLength(self,length):
         self.length = length
     def setGrade(self,grade):
@@ -60,7 +49,7 @@ class block():
     def setElevation(self, elevation):
         self.elevation = elevation
 
-occupied_debug = ["A2","E13","H33","H25", "R72"] #debug array
+#debug array
 
 
 metersToFeet = 3.28084
@@ -72,37 +61,63 @@ class functionalUI(Ui_MainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.lines = []
+        self.occupied_debug = []
+
 
     def update(self):
+        self.comboBox_3.activated.connect(self.lineChange)
+        self.comboBox_4.currentIndexChanged.connect(self.blockChange)
+        self.pushButton_2.clicked.connect(self.buttonPress)
+        self.lineEdit.returnPressed.connect(self.tbChange)
+        self.updateOccupancy()
 
-        self.comboBox_2.activated.connect(self.lineChange)
-        self.comboBox.currentIndexChanged.connect(self.blockChange)
-        self.pushButton.clicked.connect(self.buttonPress)
 
+        # #tb
+        # self.comboBox_5.activated.connect(self.lineChange)
+        # self.comboBox_6.currentIndexChanged.connect(self.blockChange)
 
+    def tbChange(self):
+        tbInfo = self.lineEdit.displayText().split(',')
+    
+        for l in self.lines:
+            if(l.name == tbInfo[0]):
+                break
+
+        tbInfo.pop(0)
+
+        self.occupied_debug += tbInfo
+        self.updateOccupancy()
 
     def lineChange(self):
         #Clear the Blocks
-        self.comboBox.clear()
+        self.comboBox_4.clear()
+        self.listWidget_2.clear()
+
+        # #tb
+        # self.comboBox_6.clear()
+
 
         # Add the blocks associated with that line
-        currentLineName = self.comboBox_2.currentText()
+        currentLineName = self.comboBox_3.currentText()
 
         for l in self.lines:
             if(l.name == currentLineName):
                 for blk in l.blocks:
-                    self.comboBox.addItem(blk.name)
-
-                self.listWidget.clear()
-                self.listWidget.addItems(l.occupied)
+                    self.comboBox_4.addItem(blk.name)
+                    if(blk.occupied):
+                        self.listWidget_2.addItem(blk.name)
+                    # #tb
+                    # self.comboBox_6.addItem(blk.name)
 
 
                 
 
 
     def blockChange(self):
-        currentBlockName = self.comboBox.currentText()
-        currentLineName = self.comboBox_2.currentText()
+        currentBlockName = self.comboBox_4.currentText()
+        currentLineName = self.comboBox_3.currentText()
+        # tbLineName = self.comboBox_5.currentText()
+        # tbBlockName = self.comboBox_6.currentText()
 
         for l in self.lines:
             if(l.name == currentLineName):
@@ -112,21 +127,45 @@ class functionalUI(Ui_MainWindow):
             if (b.name == currentBlockName):
                 break
 
+        # for tbl in self.lines:
+        #     if tbl.name == tbLineName:
+        #         break
+        
+        # for tbb in tbl.blocks:
+        #     if tbb.name == tbBlockName:
+        #         break
+
         #name
-        self.tableWidget.item(0,0).setText(currentBlockName)
+        self.tableWidget_3.item(0,0).setText(currentBlockName)
         #occupancy
         if(b.occupied):
-            self.tableWidget.item(1,0).setCheckState(QtCore.Qt.CheckState.Checked)
+            self.tableWidget_3.item(1,0).setCheckState(QtCore.Qt.CheckState.Checked)
         else:
-            self.tableWidget.item(1,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
+            self.tableWidget_3.item(1,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
         #length
-        self.tableWidget.item(2,0).setText(str(round(b.length * metersToFeet,3)) +" feet")
+        self.tableWidget_3.item(2,0).setText(str(round(b.length * metersToFeet,3)) +" feet")
         #grade
-        self.tableWidget.item(3,0).setText(str(b.grade) + "%")
+        self.tableWidget_3.item(3,0).setText(str(b.grade) + "%")
         #elevation
-        self.tableWidget.item(4,0).setText(str(round(b.elevation*metersToFeet,3)) + " feet")
+        self.tableWidget_3.item(4,0).setText(str(round(b.elevation*metersToFeet,3)) + " feet")
         #limit
-        self.tableWidget.item(5,0).setText(str(round(b.limit*kmhrTomihr,3)) + " mi/hr")
+        self.tableWidget_3.item(5,0).setText(str(round(b.limit*kmhrTomihr,3)) + " mi/hr")
+
+
+        # #tb
+        # #name
+        # self.tableWidget_4.item(0,0).setText(tbBlockName)
+        # #occupancy
+        # if(self.tableWidget_4.item(1,0).checkState() == QtCore.Qt.CheckState.Checked):
+        #     l.occupied += tbb.name
+        # #length
+        # self.tableWidget_4.item(2,0).setText(str(round(tbb.length * metersToFeet,3)) +" feet")
+        # #grade
+        # self.tableWidget_4.item(3,0).setText(str(tbb.grade) + "%")
+        # #elevation
+        # self.tableWidget_4.item(4,0).setText(str(round(tbb.elevation*metersToFeet,3)) + " feet")
+        # #limit
+        # self.tableWidget_4.item(5,0).setText(str(round(tbb.limit*kmhrTomihr,3)) + " mi/hr")
     
 
     def buttonPress(self):
@@ -154,54 +193,27 @@ class functionalUI(Ui_MainWindow):
                 blk.setLength(length)
                 blk.setGrade(grade)
                 newLine.addBlock(blk)
-    
-        #Set self.occupied values
-        for x in newLine.blocks:
-            if(x.name in occupied_debug):
-                newLine.addOccupied(x.name)
-                x.toggleOccupied()
         
 
-        self.comboBox_2.addItem(newLine.name)
+        self.comboBox_3.addItem(newLine.name)
+
+        # #tb
+        # self.comboBox_5.addItem(newLine.name)
+
         self.lines.append(newLine)
 
+        self.updateOccupancy()
 
-        
-        
-        
-
-
-        
-
-    
-
-
-# app = QApplication([])
-
-# # Create a Qt widget, which will be our window.
-
-# class MainScreen(QMainWindow):
-#     def __init__(self):
-#         super().__init__()
-#         self.setWindowTitle("Track Model")
-
-#     def initDropdown(self):
-#         dropdown = QComboBox()
-#         # dropdown.addItems([List of Block names])
-#         dropdown.addItem("Option 1")
-#         dropdown.addItem("Option 2")
-#         dropdown.activated.connect(self.update)
-#         self.setCentralWidget(dropdown)
-
-#     def update(self):
-#         pass
-        
+    def updateOccupancy(self):
+        for line in self.lines:
+            for blk in line.blocks:
+                if (blk.name in self.occupied_debug):
+                    blk.setOccupied()
+                else:
+                    blk.clearOccupied()
 
 
-# window = MainScreen()
-# window.initDropdown()
 
-# window.show()  # IMPORTANT!!!!! Windows are hidden by default.
 
 app = QApplication([])
 MainWindow = QMainWindow()
