@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>787</width>
+    <width>920</width>
     <height>608</height>
    </rect>
   </property>
@@ -19,514 +19,464 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>791</width>
+      <width>911</width>
       <height>591</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="ctc_mainpage">
      <attribute name="title">
       <string>Main Page</string>
      </attribute>
-     <widget class="QComboBox" name="comboBox">
+     <widget class="QPushButton" name="import_schedule_btn">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>30</y>
-        <width>131</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <item>
-       <property name="text">
-        <string>Select Train</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Train 1</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Train 2</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Train 3</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Train 4</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Train 5</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QWidget" name="gridLayoutWidget">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>70</y>
-        <width>251</width>
-        <height>181</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string>Authority (Feet)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Route (Track #)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label">
-         <property name="autoFillBackground">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>Suggested Velocity (MPH)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QSpinBox" name="mph"/>
-       </item>
-       <item row="1" column="1">
-        <widget class="QComboBox" name="comboBox_2">
-         <item>
-          <property name="text">
-           <string>1</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>3</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>4</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>5</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QSpinBox" name="spinBox"/>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QPushButton" name="pushButton">
-      <property name="geometry">
-       <rect>
-        <x>280</x>
-        <y>260</y>
-        <width>101</width>
-        <height>24</height>
+        <x>240</x>
+        <y>0</y>
+        <width>241</width>
+        <height>71</height>
        </rect>
       </property>
       <property name="text">
        <string>Import Schedule</string>
       </property>
      </widget>
-     <widget class="QWidget" name="gridLayoutWidget_2">
+     <widget class="QTreeWidget" name="schedule">
       <property name="geometry">
        <rect>
-        <x>390</x>
-        <y>60</y>
-        <width>381</width>
-        <height>201</height>
+        <x>10</x>
+        <y>320</y>
+        <width>511</width>
+        <height>231</height>
        </rect>
       </property>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="3" column="1">
-        <widget class="QLabel" name="label_13">
+      <column>
+       <property name="text">
+        <string>Train</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Departing From</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Arriving To</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Departure Time</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>ETA</string>
+       </property>
+      </column>
+     </widget>
+     <widget class="QPushButton" name="dispatch_train_btn">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>231</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Dispatch Train</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>210</y>
+        <width>160</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QCheckBox" name="manual_mode_btn">
          <property name="text">
-          <string>Hrs:Mins:Secs</string>
+          <string>Manual Mode</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_8">
+       <item>
+        <widget class="QCheckBox" name="auto_mode_btn">
          <property name="text">
-          <string>Departure Time</string>
+          <string>Automatic Mode</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="maint_mode_btn">
+         <property name="text">
+          <string>Maintenance Mode</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>289</y>
+        <width>511</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Current Schedule</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="lines_box">
+         <item>
+          <property name="text">
+           <string>Blue Line</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Red Line</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Green Line</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QComboBox" name="occupancy_line_box">
+      <property name="geometry">
+       <rect>
+        <x>770</x>
+        <y>10</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Blue Line</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Red Line</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Green Line</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QWidget" name="gridLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>90</y>
+        <width>291</width>
+        <height>171</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>Select Destination Station</string>
          </property>
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="label_8">
          <property name="text">
-          <string>Destination</string>
+          <string>Select Line</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>Position</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
         <widget class="QLabel" name="label_9">
          <property name="text">
-          <string>Estimated Time of Arrival</string>
+          <string>Select Departure Station</string>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>(Station#)</string>
-         </property>
+        <widget class="QComboBox" name="manual_dispatch_line">
+         <item>
+          <property name="text">
+           <string>Blue Line</string>
+          </property>
+         </item>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLabel" name="label_11">
-         <property name="text">
-          <string>(x,y)</string>
-         </property>
-        </widget>
+        <widget class="QComboBox" name="manual_dispatch_departure"/>
        </item>
        <item row="2" column="1">
-        <widget class="QLabel" name="label_12">
-         <property name="text">
-          <string>Hrs:Mins:Secs</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>Throughput</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLabel" name="label_14">
-         <property name="text">
-          <string>Passengers per hour</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QLineEdit" name="lineEdit"/>
-       </item>
-       <item row="0" column="2">
-        <widget class="QLineEdit" name="lineEdit_2"/>
-       </item>
-       <item row="2" column="2">
-        <widget class="QLineEdit" name="lineEdit_3"/>
-       </item>
-       <item row="3" column="2">
-        <widget class="QLineEdit" name="lineEdit_4"/>
-       </item>
-       <item row="4" column="2">
-        <widget class="QLineEdit" name="lineEdit_5"/>
+        <widget class="QComboBox" name="manual_dispatch_destination"/>
        </item>
       </layout>
      </widget>
-     <widget class="QLabel" name="label_4">
+     <widget class="QWidget" name="verticalLayoutWidget_4">
       <property name="geometry">
        <rect>
-        <x>390</x>
-        <y>30</y>
-        <width>101</width>
-        <height>16</height>
+        <x>550</x>
+        <y>40</y>
+        <width>321</width>
+        <height>511</height>
        </rect>
       </property>
-      <property name="text">
-       <string>Current Schedule</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="checkBox">
-      <property name="geometry">
-       <rect>
-        <x>680</x>
-        <y>20</y>
-        <width>101</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Manual Mode</string>
-      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>OCCUPANCY</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTableWidget" name="tableWidget">
+         <row/>
+         <column>
+          <property name="text">
+           <string>Occupied</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Infrastructure</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Block Status</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
     <widget class="QWidget" name="ctc_testbench">
      <attribute name="title">
       <string>Test Bench</string>
      </attribute>
-     <widget class="QWidget" name="gridLayoutWidget_5">
+     <widget class="QWidget" name="gridLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>70</y>
-        <width>251</width>
-        <height>181</height>
+        <x>50</x>
+        <y>40</y>
+        <width>321</width>
+        <height>191</height>
        </rect>
       </property>
-      <layout class="QGridLayout" name="gridLayout_5">
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_29">
-         <property name="text">
-          <string>Authority (Feet)</string>
-         </property>
-        </widget>
-       </item>
+      <layout class="QGridLayout" name="gridLayout">
        <item row="1" column="0">
-        <widget class="QLabel" name="label_30">
+        <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Route (Track #)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_31">
-         <property name="autoFillBackground">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>Suggested Velocity (MPH)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QSpinBox" name="mph_box"/>
-       </item>
-       <item row="1" column="1">
-        <widget class="QComboBox" name="route_box">
-         <item>
-          <property name="text">
-           <string>1</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>2</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>3</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>4</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>5</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QSpinBox" name="authority_box"/>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QComboBox" name="train_sel">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>30</y>
-        <width>131</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <item>
-       <property name="text">
-        <string>Select Train</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Train 1</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Train 2</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Train 3</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Train 4</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Train 5</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QWidget" name="gridLayoutWidget_6">
-      <property name="geometry">
-       <rect>
-        <x>350</x>
-        <y>70</y>
-        <width>381</width>
-        <height>201</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_6">
-       <item row="3" column="1">
-        <widget class="QLabel" name="label_32">
-         <property name="text">
-          <string>Hrs:Mins:Secs</string>
+          <string>Set Crossing State</string>
          </property>
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="label_33">
+        <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>Departure Time</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_34">
-         <property name="text">
-          <string>Destination</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_35">
-         <property name="text">
-          <string>Position</string>
+          <string>Set Track Failure</string>
          </property>
         </widget>
        </item>
        <item row="3" column="0">
-        <widget class="QLabel" name="label_36">
+        <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>Estimated Time of Arrival</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="label_37">
-         <property name="text">
-          <string>(Station#)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="label_38">
-         <property name="text">
-          <string>(x,y)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="label_39">
-         <property name="text">
-          <string>Hrs:Mins:Secs</string>
+          <string>Set Maintenance Clearance</string>
          </property>
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QLabel" name="label_40">
+        <widget class="QLabel" name="label_6">
          <property name="text">
-          <string>Throughput</string>
+          <string>Set Block Occupancy</string>
          </property>
         </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Set Switch State</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="comboBox"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="comboBox_2"/>
+       </item>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="comboBox_3"/>
+       </item>
+       <item row="3" column="1">
+        <widget class="QComboBox" name="comboBox_4"/>
        </item>
        <item row="4" column="1">
-        <widget class="QLabel" name="label_41">
-         <property name="text">
-          <string>Passengers per hour</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QLineEdit" name="position_tb"/>
-       </item>
-       <item row="0" column="2">
-        <widget class="QLineEdit" name="destination_tb"/>
-       </item>
-       <item row="2" column="2">
-        <widget class="QLineEdit" name="departure_time_tb"/>
-       </item>
-       <item row="3" column="2">
-        <widget class="QLineEdit" name="eta_tb"/>
-       </item>
-       <item row="4" column="2">
-        <widget class="QLineEdit" name="throughput_tb"/>
+        <widget class="QComboBox" name="comboBox_5"/>
        </item>
       </layout>
      </widget>
-     <widget class="QLabel" name="label_42">
+     <widget class="QWidget" name="verticalLayoutWidget_2">
       <property name="geometry">
        <rect>
-        <x>350</x>
-        <y>40</y>
-        <width>101</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Current Schedule</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="manual_mode">
-      <property name="geometry">
-       <rect>
-        <x>660</x>
-        <y>30</y>
-        <width>101</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Manual Mode</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_3">
-      <property name="geometry">
-       <rect>
-        <x>240</x>
+        <x>50</x>
         <y>260</y>
-        <width>101</width>
-        <height>24</height>
+        <width>251</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_11">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>TICKET SALES (hourly)</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QComboBox" name="comboBox_6">
+           <item>
+            <property name="text">
+             <string>Blue Line</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboBox_7"/>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="spinBox"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>110</y>
+        <width>160</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QCheckBox" name="manual_mode_btn_tb">
+         <property name="text">
+          <string>Manual Mode</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="auto_mode_btn_tb">
+         <property name="text">
+          <string>Automatic Mode</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="maint_mode_btn_tb">
+         <property name="text">
+          <string>Maintenance Mode</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="gridLayoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>370</y>
+        <width>291</width>
+        <height>181</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3"/>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>340</y>
+        <width>261</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Change Train Data</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::AutoText</enum>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_12">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>380</y>
+        <width>289</width>
+        <height>179</height>
        </rect>
       </property>
       <property name="text">
-       <string>Import Schedule</string>
+       <string>TextLabel</string>
       </property>
      </widget>
     </widget>
