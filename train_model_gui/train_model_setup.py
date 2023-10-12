@@ -10,6 +10,16 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 
 class Ui_Dialog(object):
+
+    def __init__(self):
+        self.sysTime = "00:00:00"
+        self.passengers = "10"
+        self.power_val = "23"
+        self.velo = "28"
+        self.auth = "280"
+        self.temp = "68"
+        self.accelerate = "-2"
+
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(1130, 589)
@@ -280,7 +290,7 @@ class Ui_Dialog(object):
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.emergency_brake.setText(_translate("Dialog", "EMERGENCY BRAKE"))
         self.time_label.setText(_translate("Dialog", "System Time: "))
-        self.curr_time.setText(_translate("Dialog", "XX:XX:XX"))
+        self.curr_time.setText(_translate("Dialog", self.sysTime))
         self.play_button.setText(_translate("Dialog", "Play"))
         self.pause_button.setText(_translate("Dialog", "Pause"))
         self.comboBox.setItemText(0, _translate("Dialog", "Main Page"))
@@ -296,12 +306,12 @@ class Ui_Dialog(object):
         self.engine_failure_label.setText(_translate("Dialog", "Engine Failure:"))
         self.signal_pickup_failure_title.setText(_translate("Dialog", "Signal Pickup Failure:"))
         self.brake_failure_label.setText(_translate("Dialog", "Brake Failure:"))
-        self.passenger_count.setText(_translate("Dialog", "0 People"))
-        self.power.setText(_translate("Dialog", "0 Watts"))
-        self.current_velocity.setText(_translate("Dialog", "0 MPH"))
-        self.authority.setText(_translate("Dialog", "0 Meters"))
-        self.air_conditioning.setText(_translate("Dialog", "0 Degrees"))
-        self.acceleration.setText(_translate("Dialog", "0 M/S^2"))
+        self.passenger_count.setText(_translate("Dialog", self.passengers + " People"))
+        self.power.setText(_translate("Dialog", self.power_val + " Watts"))
+        self.current_velocity.setText(_translate("Dialog", self.velo + " MPH"))
+        self.authority.setText(_translate("Dialog", self.auth + " Meters"))
+        self.air_conditioning.setText(_translate("Dialog", self.temp + " Degrees F"))
+        self.acceleration.setText(_translate("Dialog", self.accelerate + " M/S^2"))
         self.announcement.setHtml(_translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
