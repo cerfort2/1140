@@ -8,6 +8,7 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QTableWidgetItem
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -38,6 +39,7 @@ class Ui_MainWindow(object):
         self.section.setObjectName("section")
         self.section.addItem("")
         self.section.addItem("")
+        self.section.addItem("")
         self.switchFrame = QtWidgets.QFrame(parent=self.mainPage)
         self.switchFrame.setGeometry(QtCore.QRect(430, 40, 351, 271))
         self.switchFrame.setStyleSheet("background-color: rgb(255, 255, 255);")
@@ -45,7 +47,7 @@ class Ui_MainWindow(object):
         self.switchFrame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.switchFrame.setObjectName("switchFrame")
         self.switchDirection = QtWidgets.QLabel(parent=self.switchFrame)
-        self.switchDirection.setGeometry(QtCore.QRect(120, 110, 131, 91))
+        self.switchDirection.setGeometry(QtCore.QRect(120, 90, 131, 131))
         self.switchDirection.setObjectName("switchDirection")
         self.toggleDirection = QtWidgets.QPushButton(parent=self.switchFrame)
         self.toggleDirection.setGeometry(QtCore.QRect(130, 30, 101, 24))
@@ -57,7 +59,24 @@ class Ui_MainWindow(object):
         self.switchSelect.setGeometry(QtCore.QRect(0, 0, 101, 22))
         self.switchSelect.setObjectName("switchSelect")
         self.switchSelect.addItem("")
-        self.switchSelect.addItem("")
+        self.leftSection = QtWidgets.QLabel(parent=self.switchFrame)
+        self.leftSection.setGeometry(QtCore.QRect(10, 140, 91, 21))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.leftSection.setFont(font)
+        self.leftSection.setStyleSheet("border-color: rgb(0, 0, 0);")
+        self.leftSection.setLineWidth(1)
+        self.leftSection.setMidLineWidth(0)
+        self.leftSection.setObjectName("leftSection")
+        self.rightSection = QtWidgets.QLabel(parent=self.switchFrame)
+        self.rightSection.setGeometry(QtCore.QRect(250, 140, 91, 21))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.rightSection.setFont(font)
+        self.rightSection.setStyleSheet("border-color: rgb(0, 0, 0);")
+        self.rightSection.setLineWidth(1)
+        self.rightSection.setMidLineWidth(0)
+        self.rightSection.setObjectName("rightSection")
         self.crossroadFrame = QtWidgets.QFrame(parent=self.mainPage)
         self.crossroadFrame.setGeometry(QtCore.QRect(20, 340, 351, 271))
         self.crossroadFrame.setStyleSheet("background-color: rgb(255, 255, 255);")
@@ -76,7 +95,6 @@ class Ui_MainWindow(object):
         self.crossroadSelect = QtWidgets.QComboBox(parent=self.crossroadFrame)
         self.crossroadSelect.setGeometry(QtCore.QRect(0, 0, 101, 22))
         self.crossroadSelect.setObjectName("crossroadSelect")
-        self.crossroadSelect.addItem("")
         self.crossroadSelect.addItem("")
         self.signalFrame = QtWidgets.QFrame(parent=self.mainPage)
         self.signalFrame.setGeometry(QtCore.QRect(430, 340, 351, 271))
@@ -104,27 +122,9 @@ class Ui_MainWindow(object):
         self.signalSelect.setGeometry(QtCore.QRect(0, 0, 101, 22))
         self.signalSelect.setObjectName("signalSelect")
         self.signalSelect.addItem("")
-        self.signalSelect.addItem("")
         self.modeButton = QtWidgets.QRadioButton(parent=self.mainPage)
         self.modeButton.setGeometry(QtCore.QRect(660, 10, 121, 20))
         self.modeButton.setObjectName("modeButton")
-        self.nextStation = QtWidgets.QLabel(parent=self.mainPage)
-        self.nextStation.setGeometry(QtCore.QRect(390, 10, 91, 21))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.nextStation.setFont(font)
-        self.nextStation.setStyleSheet("border-color: rgb(0, 0, 0);")
-        self.nextStation.setLineWidth(1)
-        self.nextStation.setMidLineWidth(0)
-        self.nextStation.setObjectName("nextStation")
-        self.statText = QtWidgets.QLabel(parent=self.mainPage)
-        self.statText.setGeometry(QtCore.QRect(300, 0, 91, 41))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.statText.setFont(font)
-        self.statText.setLineWidth(1)
-        self.statText.setMidLineWidth(0)
-        self.statText.setObjectName("statText")
         self.dataFrame = QtWidgets.QFrame(parent=self.mainPage)
         self.dataFrame.setGeometry(QtCore.QRect(20, 40, 351, 271))
         self.dataFrame.setStyleSheet("background-color: rgb(255, 255, 255);")
@@ -132,7 +132,7 @@ class Ui_MainWindow(object):
         self.dataFrame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.dataFrame.setObjectName("dataFrame")
         self.sectionData = QtWidgets.QLabel(parent=self.dataFrame)
-        self.sectionData.setGeometry(QtCore.QRect(100, 10, 91, 21))
+        self.sectionData.setGeometry(QtCore.QRect(100, 10, 131, 21))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.sectionData.setFont(font)
@@ -149,7 +149,7 @@ class Ui_MainWindow(object):
         self.secLab.setMidLineWidth(0)
         self.secLab.setObjectName("secLab")
         self.occupationData = QtWidgets.QLabel(parent=self.dataFrame)
-        self.occupationData.setGeometry(QtCore.QRect(100, 40, 91, 21))
+        self.occupationData.setGeometry(QtCore.QRect(100, 40, 131, 21))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.occupationData.setFont(font)
@@ -166,7 +166,7 @@ class Ui_MainWindow(object):
         self.occLab.setMidLineWidth(0)
         self.occLab.setObjectName("occLab")
         self.failData = QtWidgets.QLabel(parent=self.dataFrame)
-        self.failData.setGeometry(QtCore.QRect(100, 70, 91, 21))
+        self.failData.setGeometry(QtCore.QRect(100, 70, 131, 21))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.failData.setFont(font)
@@ -182,14 +182,31 @@ class Ui_MainWindow(object):
         self.faiLab.setLineWidth(1)
         self.faiLab.setMidLineWidth(0)
         self.faiLab.setObjectName("faiLab")
+        self.nextStation = QtWidgets.QLabel(parent=self.mainPage)
+        self.nextStation.setGeometry(QtCore.QRect(410, 10, 161, 21))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.nextStation.setFont(font)
+        self.nextStation.setStyleSheet("border-color: rgb(0, 0, 0);")
+        self.nextStation.setLineWidth(1)
+        self.nextStation.setMidLineWidth(0)
+        self.nextStation.setObjectName("nextStation")
+        self.stattext = QtWidgets.QLabel(parent=self.mainPage)
+        self.stattext.setGeometry(QtCore.QRect(310, 0, 91, 41))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.stattext.setFont(font)
+        self.stattext.setLineWidth(1)
+        self.stattext.setMidLineWidth(0)
+        self.stattext.setObjectName("stattext")
         self.switchFrame.raise_()
         self.section.raise_()
         self.crossroadFrame.raise_()
         self.signalFrame.raise_()
         self.modeButton.raise_()
-        self.nextStation.raise_()
-        self.statText.raise_()
         self.dataFrame.raise_()
+        self.nextStation.raise_()
+        self.stattext.raise_()
         self.pageSelection.addTab(self.mainPage, "")
         self.testBench = QtWidgets.QWidget()
         self.testBench.setObjectName("testBench")
@@ -236,6 +253,7 @@ class Ui_MainWindow(object):
         self.sectionTB.setObjectName("sectionTB")
         self.sectionTB.addItem("")
         self.sectionTB.addItem("")
+        self.sectionTB.addItem("")
         self.switchTB = QtWidgets.QFrame(parent=self.testBench)
         self.switchTB.setGeometry(QtCore.QRect(430, 40, 351, 71))
         self.switchTB.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
@@ -245,24 +263,19 @@ class Ui_MainWindow(object):
         self.switchSelectTB.setGeometry(QtCore.QRect(0, 0, 101, 22))
         self.switchSelectTB.setObjectName("switchSelectTB")
         self.switchSelectTB.addItem("")
-        self.switchSelectTB.addItem("")
-        self.switchData = QtWidgets.QTableWidget(parent=self.switchTB)
-        self.switchData.setGeometry(QtCore.QRect(0, 20, 351, 51))
-        self.switchData.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.switchData.setObjectName("switchData")
-        self.switchData.setColumnCount(2)
-        self.switchData.setRowCount(1)
-        item = QtWidgets.QTableWidgetItem()
-        self.switchData.setVerticalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.switchData.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.switchData.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.switchData.setItem(0, 0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.switchData.setItem(0, 1, item)
-        self.switchData.horizontalHeader().setDefaultSectionSize(150)
+        self.stattext_4 = QtWidgets.QLabel(parent=self.switchTB)
+        self.stattext_4.setGeometry(QtCore.QRect(40, 30, 121, 41))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.stattext_4.setFont(font)
+        self.stattext_4.setLineWidth(1)
+        self.stattext_4.setMidLineWidth(0)
+        self.stattext_4.setObjectName("stattext_4")
+        self.switchStatusTB = QtWidgets.QComboBox(parent=self.switchTB)
+        self.switchStatusTB.setGeometry(QtCore.QRect(140, 40, 101, 22))
+        self.switchStatusTB.setObjectName("switchStatusTB")
+        self.switchStatusTB.addItem("")
+        self.switchStatusTB.addItem("")
         self.crossroadTB = QtWidgets.QFrame(parent=self.testBench)
         self.crossroadTB.setGeometry(QtCore.QRect(20, 340, 351, 71))
         self.crossroadTB.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
@@ -272,24 +285,19 @@ class Ui_MainWindow(object):
         self.crossroadSelectTB.setGeometry(QtCore.QRect(0, 0, 101, 22))
         self.crossroadSelectTB.setObjectName("crossroadSelectTB")
         self.crossroadSelectTB.addItem("")
-        self.crossroadSelectTB.addItem("")
-        self.crossroadData = QtWidgets.QTableWidget(parent=self.crossroadTB)
-        self.crossroadData.setGeometry(QtCore.QRect(0, 20, 351, 51))
-        self.crossroadData.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.crossroadData.setObjectName("crossroadData")
-        self.crossroadData.setColumnCount(2)
-        self.crossroadData.setRowCount(1)
-        item = QtWidgets.QTableWidgetItem()
-        self.crossroadData.setVerticalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.crossroadData.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.crossroadData.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.crossroadData.setItem(0, 0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.crossroadData.setItem(0, 1, item)
-        self.crossroadData.horizontalHeader().setDefaultSectionSize(150)
+        self.stattext_3 = QtWidgets.QLabel(parent=self.crossroadTB)
+        self.stattext_3.setGeometry(QtCore.QRect(30, 30, 121, 41))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.stattext_3.setFont(font)
+        self.stattext_3.setLineWidth(1)
+        self.stattext_3.setMidLineWidth(0)
+        self.stattext_3.setObjectName("stattext_3")
+        self.crossroadStatusTB = QtWidgets.QComboBox(parent=self.crossroadTB)
+        self.crossroadStatusTB.setGeometry(QtCore.QRect(160, 40, 101, 22))
+        self.crossroadStatusTB.setObjectName("crossroadStatusTB")
+        self.crossroadStatusTB.addItem("")
+        self.crossroadStatusTB.addItem("")
         self.signalTB = QtWidgets.QFrame(parent=self.testBench)
         self.signalTB.setGeometry(QtCore.QRect(430, 340, 351, 71))
         self.signalTB.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
@@ -299,24 +307,33 @@ class Ui_MainWindow(object):
         self.signalSelectTB.setGeometry(QtCore.QRect(0, 0, 101, 22))
         self.signalSelectTB.setObjectName("signalSelectTB")
         self.signalSelectTB.addItem("")
-        self.signalSelectTB.addItem("")
-        self.signalData = QtWidgets.QTableWidget(parent=self.signalTB)
-        self.signalData.setGeometry(QtCore.QRect(0, 20, 351, 51))
-        self.signalData.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.signalData.setObjectName("signalData")
-        self.signalData.setColumnCount(2)
-        self.signalData.setRowCount(1)
-        item = QtWidgets.QTableWidgetItem()
-        self.signalData.setVerticalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.signalData.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.signalData.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.signalData.setItem(0, 0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.signalData.setItem(0, 1, item)
-        self.signalData.horizontalHeader().setDefaultSectionSize(150)
+        self.stattext_5 = QtWidgets.QLabel(parent=self.signalTB)
+        self.stattext_5.setGeometry(QtCore.QRect(40, 30, 121, 41))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.stattext_5.setFont(font)
+        self.stattext_5.setLineWidth(1)
+        self.stattext_5.setMidLineWidth(0)
+        self.stattext_5.setObjectName("stattext_5")
+        self.signalStatusTB = QtWidgets.QComboBox(parent=self.signalTB)
+        self.signalStatusTB.setGeometry(QtCore.QRect(140, 40, 101, 22))
+        self.signalStatusTB.setObjectName("signalStatusTB")
+        self.signalStatusTB.addItem("")
+        self.signalStatusTB.addItem("")
+        self.applyTB = QtWidgets.QPushButton(parent=self.testBench)
+        self.applyTB.setGeometry(QtCore.QRect(330, 450, 131, 71))
+        self.applyTB.setObjectName("applyTB")
+        self.stattext_2 = QtWidgets.QLabel(parent=self.testBench)
+        self.stattext_2.setGeometry(QtCore.QRect(310, 0, 91, 41))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.stattext_2.setFont(font)
+        self.stattext_2.setLineWidth(1)
+        self.stattext_2.setMidLineWidth(0)
+        self.stattext_2.setObjectName("stattext_2")
+        self.lineEdit = QtWidgets.QLineEdit(parent=self.testBench)
+        self.lineEdit.setGeometry(QtCore.QRect(410, 10, 113, 22))
+        self.lineEdit.setObjectName("lineEdit")
         self.pageSelection.addTab(self.testBench, "")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
@@ -328,34 +345,284 @@ class Ui_MainWindow(object):
         self.pageSelection.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    ########################################################################################
+        ######################################################################################## 
 
-        #Self defined button action
-        self.toggleDirection.clicked.connect(self.toggle_direction_handler)
-        self.toggleCrossroad.clicked.connect(self.toggle_crossroad_handler)
-        self.greenButton.clicked.connect(self.toggle_green_handler)
-        self.redButton.clicked.connect(self.toggle_red_handler)
+        #Set up images and texts
         pixmap = QPixmap("1140\TrackControllerSw\left.jpg")
         self.switchDirection.setPixmap(pixmap)
         pixmap = QPixmap("1140\TrackControllerSw\crosso.jpg")
         self.crossroadStatus.setPixmap(pixmap)
+        self.leftSection.setText("Section 6-10")
+        self.rightSection.setText("Section 11-15")
+        self.section.setItemText(0, "Section 1-5")
+        self.section.setItemText(1, "Section 6-10")
+        self.section.setItemText(2, "Section 11-15")
+        self.sectionTB.setItemText(0, "Section 1-5")
+        self.sectionTB.setItemText(1, "Section 6-10")
+        self.sectionTB.setItemText(2, "Section 11-15")
+        self.sectionData.setText(self.section.currentText())
+        self.occupationData.setText("...")
+        self.failData.setText("...")
+
+        #Switch Toggle Signal
+        self.toggleDirection.clicked.connect(self.toggle_direction_handler)
+        #Crossroad Toggle Signal
+        self.toggleCrossroad.clicked.connect(self.toggle_crossroad_handler)
+        #Green button
+        self.greenButton.clicked.connect(self.green_handler)
+        #Red button
+        self.redButton.clicked.connect(self.red_handler)
+        #Apply Button
+        self.applyTB.clicked.connect(self.apply_handler)
+        #Change section
+        self.section.currentIndexChanged.connect(self.newSection)
+        #Change TB section
+        self.sectionTB.currentIndexChanged.connect(self.newSectionTB)
+        #Change page
+        self.pageSelection.currentChanged.connect(self.pageChange)
+        #Mode
+        self.modeButton.toggled.connect(self.mode_handler)
+
+        #variables
+        self.direc = False
+        self.cross = [False, False, False]
+        self.sig = [False, False, False]
+        self.station = ""
+        self.occupation = ["...","...","..."]
+        self.failures = ["...","...","..."]
+
 
     def toggle_direction_handler(self):
-        print("Toggle Direction button clicked")
+        self.direc = not self.direc
+        section_index = self.section.currentIndex()
+        switch_index = self.switchSelect.currentIndex()
+        if(self.direc):
+            pixmap = QPixmap("1140\TrackControllerSw\light.jpg")
+        else:
+            pixmap = QPixmap("1140\TrackControllerSw\left.jpg")
+        self.switchDirection.setPixmap(pixmap)
 
     def toggle_crossroad_handler(self):
-        print("Toggle Crossroad button clicked")
+        
+        section_index = self.section.currentIndex()
+        crossroad_index = self.crossroadSelect.currentIndex()
+        self.cross[section_index] = not self.cross[section_index]
+        if(self.cross[section_index]):
+            pixmap = QPixmap("1140\TrackControllerSw\crossc.jpg")
+        else:
+            pixmap = QPixmap("1140\TrackControllerSw\crosso.jpg")
+        self.crossroadStatus.setPixmap(pixmap)
 
-    def toggle_green_handler(self):
+    def green_handler(self):
+        section_index = self.section.currentIndex()
+        signal_index = self.signalSelect.currentIndex()
         self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
-        print("Green button clicked")
+        self.sig[section_index] = False
 
-    def toggle_red_handler(self):
+    def red_handler(self):
+        section_index = self.section.currentIndex()
+        signal_index = self.signalSelect.currentIndex()
         self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
-        print("Red button clicked")
+        self.sig[section_index] = True
+        
+
+    def apply_handler(self):
+        sectionTB_index = self.sectionTB.currentIndex()
+        switchTB_index = self.switchSelectTB.currentIndex()
+        crossroadTB_index = self.crossroadSelectTB.currentIndex()
+        signalTB_index = self.signalSelectTB.currentIndex()
+        if(self.switchStatusTB.currentIndex() == 0):
+            self.direc = False
+        else:
+            self.direc = True
+        if(self.crossroadStatusTB.currentIndex() == 0):
+            self.cross[sectionTB_index] = False
+        else:
+            self.cross[sectionTB_index] = True
+        if(self.signalStatusTB.currentIndex() == 0):
+            self.sig[sectionTB_index] = False
+        else:
+            self.sig[sectionTB_index] = True
+        self.station = self.lineEdit.text()
+        text = (self.dataTB.item(1,0)).text()
+        self.occupation[sectionTB_index] = text
+        text = (self.dataTB.item(2,0)).text()
+        self.failures[sectionTB_index] = text
+    
+    def newSection(self):
+        section_index = self.section.currentIndex()
+        self.sectionData.setText(self.section.currentText())
+        self.occupationData.setText(self.occupation[section_index])
+        self.failData.setText(self.failures[section_index])
+        if(self.cross[section_index]):
+            pixmap = QPixmap("1140\TrackControllerSw\crossc.jpg")
+        else:
+            pixmap = QPixmap("1140\TrackControllerSw\crosso.jpg")
+        self.crossroadStatus.setPixmap(pixmap)
+        if(self.sig[section_index]):
+            self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
+        else:
+            self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
+        if(section_index == 0):
+            if(self.direc):
+                pixmap = QPixmap("1140\TrackControllerSw\light.jpg")
+            else:
+                pixmap = QPixmap("1140\TrackControllerSw\left.jpg")
+            self.switchDirection.setPixmap(pixmap)
+            self.leftSection.show()
+            self.rightSection.show()
+            self.toggleDirection.show()
+        else:
+            if(section_index == 1):
+                pixmap = QPixmap("")
+                self.switchDirection.setPixmap(pixmap)
+                self.leftSection.hide()
+                self.rightSection.hide()
+                self.toggleDirection.hide()
+            else:
+                pixmap = QPixmap("")
+                self.switchDirection.setPixmap(pixmap)
+                self.leftSection.hide()
+                self.rightSection.hide()
+                self.toggleDirection.hide()
+
+    def newSectionTB(self):
+        text = QTableWidgetItem(self.sectionTB.currentText())
+        self.dataTB.setItem(0,0,text)
+        section_index = self.sectionTB.currentIndex()
+        text = QTableWidgetItem(self.occupation[section_index])
+        self.dataTB.setItem(1,0,text)
+        text = QTableWidgetItem(self.failures[section_index])
+        self.dataTB.setItem(2,0,text)
+        if(self.cross[section_index]):
+            self.crossroadStatusTB.setCurrentIndex(1)
+        else:
+            self.crossroadStatusTB.setCurrentIndex(0)
+        if(self.sig[section_index]):
+            self.signalStatusTB.setCurrentIndex(1)
+        else:
+            self.signalStatusTB.setCurrentIndex(0)
+        if(section_index == 0):
+            if(self.direc):
+                self.switchStatusTB.setCurrentIndex(1)
+            else:
+                self.switchStatusTB.setCurrentIndex(0)
+            self.switchStatusTB.show()
+        else:
+            if(section_index == 1):
+                self.switchStatusTB.hide()
+            else:
+                self.switchStatusTB.hide()
+
+    def pageChange(self):
+        if(self.pageSelection.currentIndex() == 0):
+            section_index = self.section.currentIndex()
+            self.sectionData.setText(self.section.currentText())
+            self.nextStation.setText(self.station)
+            self.occupationData.setText(self.occupation[section_index])
+            self.failData.setText(self.failures[section_index])
+            if(self.cross[section_index]):
+                pixmap = QPixmap("1140\TrackControllerSw\crossc.jpg")
+            else:
+                pixmap = QPixmap("1140\TrackControllerSw\crosso.jpg")
+            self.crossroadStatus.setPixmap(pixmap)
+            if(self.sig[section_index]):
+                self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
+            else:
+                self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
+            if(section_index == 0):
+                if(self.direc):
+                    pixmap = QPixmap("1140\TrackControllerSw\light.jpg")
+                else:
+                    pixmap = QPixmap("1140\TrackControllerSw\left.jpg")
+                self.switchDirection.setPixmap(pixmap)
+                self.leftSection.show()
+                self.rightSection.show()
+                self.toggleDirection.show()
+            else:
+                if(section_index == 1):
+                    pixmap = QPixmap("")
+                    self.switchDirection.setPixmap(pixmap)
+                    self.leftSection.hide()
+                    self.rightSection.hide()
+                    self.toggleDirection.hide()
+                else:
+                    pixmap = QPixmap("")
+                    self.switchDirection.setPixmap(pixmap)
+                    self.leftSection.hide()
+                    self.rightSection.hide()
+                    self.toggleDirection.hide()
+        else:
+            text = QTableWidgetItem(self.sectionTB.currentText())
+            self.dataTB.setItem(0,0,text)
+            section_index = self.sectionTB.currentIndex()
+            text = QTableWidgetItem(self.occupation[section_index])
+            self.dataTB.setItem(1,0,text)
+            text = QTableWidgetItem(self.failures[section_index])
+            self.dataTB.setItem(2,0,text)
+            if(self.cross[section_index]):
+                self.crossroadStatusTB.setCurrentIndex(1)
+            else:
+                self.crossroadStatusTB.setCurrentIndex(0)
+            if(self.sig[section_index]):
+                self.signalStatusTB.setCurrentIndex(1)
+            else:
+                self.signalStatusTB.setCurrentIndex(0)
+            if(section_index == 0):
+                if(self.direc):
+                    self.switchStatusTB.setCurrentIndex(1)
+                else:
+                    self.switchStatusTB.setCurrentIndex(0)
+                self.switchStatusTB.show()
+            else:
+                if(section_index == 1):
+                    self.switchStatusTB.hide()
+                else:
+                    self.switchStatusTB.hide()
+        self.mode_handler()
+
+    def mode_handler(self):
+        if(self.modeButton.isChecked()):
+            self.toggleDirection.hide()
+            self.toggleCrossroad.hide()
+            self.greenButton.hide()
+            self.redButton.hide()
+            if(self.nextStation.text() == "Station B"):
+                self.direc = False
+                if(self.section.currentIndex() == 0):
+                    pixmap = QPixmap("1140\TrackControllerSw\left.jpg")
+                    self.switchDirection.setPixmap(pixmap)
+            if(self.nextStation.text() == "Station C"):
+                self.direc = True
+                if(self.section.currentIndex() == 0):
+                    pixmap = QPixmap("1140\TrackControllerSw\light.jpg")
+                    self.switchDirection.setPixmap(pixmap)
+            if(self.occupationData.text() == "Occupied"):
+                self.cross[self.section.currentIndex()] = True
+                pixmap = QPixmap("1140\TrackControllerSw\crossc.jpg")
+                self.crossroadStatus.setPixmap(pixmap)
+            if(self.occupationData.text() == "Unoccupied"):
+                self.cross[self.section.currentIndex()] = False
+                pixmap = QPixmap("1140\TrackControllerSw\crosso.jpg")
+                self.crossroadStatus.setPixmap(pixmap)
+            if(self.failData.text() == "Failure"):
+                self.sig[self.section.currentIndex()] = True
+                self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
+            else:
+                self.sig[self.section.currentIndex()] = False
+                self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
+                
+
+        else:
+            if(self.section.currentIndex() == 0):
+                self.toggleDirection.show()
+            self.toggleCrossroad.show()
+            self.greenButton.show()
+            self.redButton.show()
+
+
 
     ########################################################################################
-
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -363,28 +630,28 @@ class Ui_MainWindow(object):
         self.name.setText(_translate("MainWindow", "Track Controller"))
         self.section.setItemText(0, _translate("MainWindow", "Section A"))
         self.section.setItemText(1, _translate("MainWindow", "Section B"))
+        self.section.setItemText(2, _translate("MainWindow", "Section C"))
         self.switchDirection.setText(_translate("MainWindow", "<html><head/><body><p><img src=\":/left/left.jpg\"/></p></body></html>"))
         self.toggleDirection.setText(_translate("MainWindow", "Toggle Direction"))
         self.switchSelect.setItemText(0, _translate("MainWindow", "Switch 1"))
-        self.switchSelect.setItemText(1, _translate("MainWindow", "Switch 2"))
+        self.leftSection.setText(_translate("MainWindow", "Left"))
+        self.rightSection.setText(_translate("MainWindow", "Right"))
         self.crossroadStatus.setText(_translate("MainWindow", "<html><head/><body><p><img src=\":/crossc/crossc.jpg\"/></p></body></html>"))
         self.toggleCrossroad.setText(_translate("MainWindow", "Toggle Crossroad"))
         self.crossroadSelect.setItemText(0, _translate("MainWindow", "Crossroad 1"))
-        self.crossroadSelect.setItemText(1, _translate("MainWindow", "Crossroad 2"))
         self.greenButton.setText(_translate("MainWindow", "Green"))
         self.redButton.setText(_translate("MainWindow", "Red"))
         self.signalState.setText(_translate("MainWindow", "Current Signal"))
         self.signalSelect.setItemText(0, _translate("MainWindow", "Signal 1"))
-        self.signalSelect.setItemText(1, _translate("MainWindow", "Signal 2"))
         self.modeButton.setText(_translate("MainWindow", "Automatic Mode"))
-        self.nextStation.setText(_translate("MainWindow", "Station ..."))
-        self.statText.setText(_translate("MainWindow", "Next Station:"))
         self.sectionData.setText(_translate("MainWindow", "A"))
         self.secLab.setText(_translate("MainWindow", "Section:"))
         self.occupationData.setText(_translate("MainWindow", "Unoccupied"))
         self.occLab.setText(_translate("MainWindow", "Occupation:"))
         self.failData.setText(_translate("MainWindow", "No Failures"))
         self.faiLab.setText(_translate("MainWindow", "Failures:"))
+        self.nextStation.setText(_translate("MainWindow", "..."))
+        self.stattext.setText(_translate("MainWindow", "Next Station:"))
         self.pageSelection.setTabText(self.pageSelection.indexOf(self.mainPage), _translate("MainWindow", "Main Page"))
         item = self.dataTB.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "Track Section:"))
@@ -415,33 +682,22 @@ class Ui_MainWindow(object):
         self.dataTB.setSortingEnabled(__sortingEnabled)
         self.sectionTB.setItemText(0, _translate("MainWindow", "Section A"))
         self.sectionTB.setItemText(1, _translate("MainWindow", "Section B"))
+        self.sectionTB.setItemText(2, _translate("MainWindow", "Section C"))
         self.switchSelectTB.setItemText(0, _translate("MainWindow", "Switch 1"))
-        self.switchSelectTB.setItemText(1, _translate("MainWindow", "Switch 2"))
-        __sortingEnabled = self.switchData.isSortingEnabled()
-        self.switchData.setSortingEnabled(False)
-        item = self.switchData.item(0, 0)
-        item.setText(_translate("MainWindow", "Switch Status :"))
-        item = self.switchData.item(0, 1)
-        item.setText(_translate("MainWindow", "Left"))
-        self.switchData.setSortingEnabled(__sortingEnabled)
+        self.stattext_4.setText(_translate("MainWindow", "Switch Status:"))
+        self.switchStatusTB.setItemText(0, _translate("MainWindow", "Left"))
+        self.switchStatusTB.setItemText(1, _translate("MainWindow", "Right"))
         self.crossroadSelectTB.setItemText(0, _translate("MainWindow", "Crossroad 1"))
-        self.crossroadSelectTB.setItemText(1, _translate("MainWindow", "Crossroad 2"))
-        __sortingEnabled = self.crossroadData.isSortingEnabled()
-        self.crossroadData.setSortingEnabled(False)
-        item = self.crossroadData.item(0, 0)
-        item.setText(_translate("MainWindow", "Crossroad Status :"))
-        item = self.crossroadData.item(0, 1)
-        item.setText(_translate("MainWindow", "Open"))
-        self.crossroadData.setSortingEnabled(__sortingEnabled)
+        self.stattext_3.setText(_translate("MainWindow", "Crossroad Status:"))
+        self.crossroadStatusTB.setItemText(0, _translate("MainWindow", "Open"))
+        self.crossroadStatusTB.setItemText(1, _translate("MainWindow", "Closed"))
         self.signalSelectTB.setItemText(0, _translate("MainWindow", "Signal 1"))
-        self.signalSelectTB.setItemText(1, _translate("MainWindow", "Signal 2"))
-        __sortingEnabled = self.signalData.isSortingEnabled()
-        self.signalData.setSortingEnabled(False)
-        item = self.signalData.item(0, 0)
-        item.setText(_translate("MainWindow", "Signal Status :"))
-        item = self.signalData.item(0, 1)
-        item.setText(_translate("MainWindow", "Green"))
-        self.signalData.setSortingEnabled(__sortingEnabled)
+        self.stattext_5.setText(_translate("MainWindow", "Signal Status:"))
+        self.signalStatusTB.setItemText(0, _translate("MainWindow", "Green"))
+        self.signalStatusTB.setItemText(1, _translate("MainWindow", "Red"))
+        self.applyTB.setText(_translate("MainWindow", "Apply Changes"))
+        self.stattext_2.setText(_translate("MainWindow", "Next Station:"))
+        self.lineEdit.setText(_translate("MainWindow", "..."))
         self.pageSelection.setTabText(self.pageSelection.indexOf(self.testBench), _translate("MainWindow", "Test Bench"))
 
 
@@ -453,8 +709,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec())
-
-
-
-
-    

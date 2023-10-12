@@ -88,6 +88,11 @@
         <string>Section B</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>Section C</string>
+       </property>
+      </item>
      </widget>
      <widget class="QFrame" name="switchFrame">
       <property name="geometry">
@@ -111,9 +116,9 @@
        <property name="geometry">
         <rect>
          <x>120</x>
-         <y>110</y>
+         <y>90</y>
          <width>131</width>
-         <height>91</height>
+         <height>131</height>
         </rect>
        </property>
        <property name="text">
@@ -152,11 +157,60 @@
          <string>Switch 1</string>
         </property>
        </item>
-       <item>
-        <property name="text">
-         <string>Switch 2</string>
-        </property>
-       </item>
+      </widget>
+      <widget class="QLabel" name="leftSection">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>140</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-color: rgb(0, 0, 0);</string>
+       </property>
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="midLineWidth">
+        <number>0</number>
+       </property>
+       <property name="text">
+        <string>Left</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="rightSection">
+       <property name="geometry">
+        <rect>
+         <x>250</x>
+         <y>140</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-color: rgb(0, 0, 0);</string>
+       </property>
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="midLineWidth">
+        <number>0</number>
+       </property>
+       <property name="text">
+        <string>Right</string>
+       </property>
       </widget>
      </widget>
      <widget class="QFrame" name="crossroadFrame">
@@ -220,11 +274,6 @@
        <item>
         <property name="text">
          <string>Crossroad 1</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Crossroad 2</string>
         </property>
        </item>
       </widget>
@@ -317,11 +366,6 @@
          <string>Signal 1</string>
         </property>
        </item>
-       <item>
-        <property name="text">
-         <string>Signal 2</string>
-        </property>
-       </item>
       </widget>
      </widget>
      <widget class="QRadioButton" name="modeButton">
@@ -335,57 +379,6 @@
       </property>
       <property name="text">
        <string>Automatic Mode</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="nextStation">
-      <property name="geometry">
-       <rect>
-        <x>390</x>
-        <y>10</y>
-        <width>91</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-color: rgb(0, 0, 0);</string>
-      </property>
-      <property name="lineWidth">
-       <number>1</number>
-      </property>
-      <property name="midLineWidth">
-       <number>0</number>
-      </property>
-      <property name="text">
-       <string>Station ...</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="statText">
-      <property name="geometry">
-       <rect>
-        <x>300</x>
-        <y>0</y>
-        <width>91</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="lineWidth">
-       <number>1</number>
-      </property>
-      <property name="midLineWidth">
-       <number>0</number>
-      </property>
-      <property name="text">
-       <string>Next Station:</string>
       </property>
      </widget>
      <widget class="QFrame" name="dataFrame">
@@ -411,7 +404,7 @@
         <rect>
          <x>100</x>
          <y>10</y>
-         <width>91</width>
+         <width>131</width>
          <height>21</height>
         </rect>
        </property>
@@ -462,7 +455,7 @@
         <rect>
          <x>100</x>
          <y>40</y>
-         <width>91</width>
+         <width>131</width>
          <height>21</height>
         </rect>
        </property>
@@ -513,7 +506,7 @@
         <rect>
          <x>100</x>
          <y>70</y>
-         <width>91</width>
+         <width>131</width>
          <height>21</height>
         </rect>
        </property>
@@ -560,14 +553,65 @@
        </property>
       </widget>
      </widget>
+     <widget class="QLabel" name="nextStation">
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>10</y>
+        <width>161</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 0, 0);</string>
+      </property>
+      <property name="lineWidth">
+       <number>1</number>
+      </property>
+      <property name="midLineWidth">
+       <number>0</number>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="stattext">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>0</y>
+        <width>91</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="lineWidth">
+       <number>1</number>
+      </property>
+      <property name="midLineWidth">
+       <number>0</number>
+      </property>
+      <property name="text">
+       <string>Next Station:</string>
+      </property>
+     </widget>
      <zorder>switchFrame</zorder>
      <zorder>section</zorder>
      <zorder>crossroadFrame</zorder>
      <zorder>signalFrame</zorder>
      <zorder>modeButton</zorder>
-     <zorder>nextStation</zorder>
-     <zorder>statText</zorder>
      <zorder>dataFrame</zorder>
+     <zorder>nextStation</zorder>
+     <zorder>stattext</zorder>
     </widget>
     <widget class="QWidget" name="testBench">
      <attribute name="title">
@@ -688,6 +732,11 @@
         <string>Section B</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>Section C</string>
+       </property>
+      </item>
      </widget>
      <widget class="QFrame" name="switchTB">
       <property name="geometry">
@@ -718,50 +767,48 @@
          <string>Switch 1</string>
         </property>
        </item>
-       <item>
-        <property name="text">
-         <string>Switch 2</string>
-        </property>
-       </item>
       </widget>
-      <widget class="QTableWidget" name="switchData">
+      <widget class="QLabel" name="stattext_4">
        <property name="geometry">
         <rect>
-         <x>0</x>
-         <y>20</y>
-         <width>351</width>
-         <height>51</height>
+         <x>40</x>
+         <y>30</y>
+         <width>121</width>
+         <height>41</height>
         </rect>
        </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
        </property>
-       <attribute name="horizontalHeaderDefaultSectionSize">
-        <number>150</number>
-       </attribute>
-       <row>
-        <property name="text">
-         <string/>
-        </property>
-       </row>
-       <column>
-        <property name="text">
-         <string/>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string/>
-        </property>
-       </column>
-       <item row="0" column="0">
-        <property name="text">
-         <string>Switch Status :</string>
-        </property>
-       </item>
-       <item row="0" column="1">
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="midLineWidth">
+        <number>0</number>
+       </property>
+       <property name="text">
+        <string>Switch Status:</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="switchStatusTB">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>40</y>
+         <width>101</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <item>
         <property name="text">
          <string>Left</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Right</string>
         </property>
        </item>
       </widget>
@@ -795,50 +842,48 @@
          <string>Crossroad 1</string>
         </property>
        </item>
-       <item>
-        <property name="text">
-         <string>Crossroad 2</string>
-        </property>
-       </item>
       </widget>
-      <widget class="QTableWidget" name="crossroadData">
+      <widget class="QLabel" name="stattext_3">
        <property name="geometry">
         <rect>
-         <x>0</x>
-         <y>20</y>
-         <width>351</width>
-         <height>51</height>
+         <x>30</x>
+         <y>30</y>
+         <width>121</width>
+         <height>41</height>
         </rect>
        </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
        </property>
-       <attribute name="horizontalHeaderDefaultSectionSize">
-        <number>150</number>
-       </attribute>
-       <row>
-        <property name="text">
-         <string/>
-        </property>
-       </row>
-       <column>
-        <property name="text">
-         <string/>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string/>
-        </property>
-       </column>
-       <item row="0" column="0">
-        <property name="text">
-         <string>Crossroad Status :</string>
-        </property>
-       </item>
-       <item row="0" column="1">
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="midLineWidth">
+        <number>0</number>
+       </property>
+       <property name="text">
+        <string>Crossroad Status:</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="crossroadStatusTB">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>40</y>
+         <width>101</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <item>
         <property name="text">
          <string>Open</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Closed</string>
         </property>
        </item>
       </widget>
@@ -872,53 +917,101 @@
          <string>Signal 1</string>
         </property>
        </item>
-       <item>
-        <property name="text">
-         <string>Signal 2</string>
-        </property>
-       </item>
       </widget>
-      <widget class="QTableWidget" name="signalData">
+      <widget class="QLabel" name="stattext_5">
        <property name="geometry">
         <rect>
-         <x>0</x>
-         <y>20</y>
-         <width>351</width>
-         <height>51</height>
+         <x>40</x>
+         <y>30</y>
+         <width>121</width>
+         <height>41</height>
         </rect>
        </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
        </property>
-       <attribute name="horizontalHeaderDefaultSectionSize">
-        <number>150</number>
-       </attribute>
-       <row>
-        <property name="text">
-         <string/>
-        </property>
-       </row>
-       <column>
-        <property name="text">
-         <string/>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string/>
-        </property>
-       </column>
-       <item row="0" column="0">
-        <property name="text">
-         <string>Signal Status :</string>
-        </property>
-       </item>
-       <item row="0" column="1">
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="midLineWidth">
+        <number>0</number>
+       </property>
+       <property name="text">
+        <string>Signal Status:</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="signalStatusTB">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>40</y>
+         <width>101</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <item>
         <property name="text">
          <string>Green</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Red</string>
+        </property>
+       </item>
       </widget>
+     </widget>
+     <widget class="QPushButton" name="applyTB">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>450</y>
+        <width>131</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Apply Changes</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="stattext_2">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>0</y>
+        <width>91</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="lineWidth">
+       <number>1</number>
+      </property>
+      <property name="midLineWidth">
+       <number>0</number>
+      </property>
+      <property name="text">
+       <string>Next Station:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit">
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>10</y>
+        <width>113</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
      </widget>
     </widget>
    </widget>
