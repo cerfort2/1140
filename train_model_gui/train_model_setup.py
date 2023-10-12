@@ -7,9 +7,30 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-
+import os
 
 class Ui_Dialog(object):
+    
+    def __init__(self):
+        self.authority_val = 240
+        self.curr_velo = 40
+        self.curr_people = 12
+        self.curr_watts = 130
+        self.environment_out = "In a tunnel"
+        self.slope_grade = 13
+        self.elevation_grade = 220
+        self.acceleration_out = 13.2
+        self.ac_val = 71
+        self.sys_time = "12:13:02"
+        self.engine_failure = False
+        self.brake_failure = True
+        self.signal_failure = False
+        self.left_door_val = False
+        self.right_door_val = True
+        self.inside_lights_val = True
+        self.outside_lights_val = True
+        self.announcement_val = "Welcome to UX Design 2"
+
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(1130, 589)
@@ -182,10 +203,11 @@ class Ui_Dialog(object):
         font.setPointSize(16)
         self.left_door_label.setFont(font)
         self.left_door_label.setObjectName("left_door_label")
-        self.inside_lights = QtWidgets.QRadioButton(parent=self.page_tab)
+        self.inside_lights = QtWidgets.QCheckBox(parent=self.page_tab)
         self.inside_lights.setGeometry(QtCore.QRect(510, 325, 16, 16))
         self.inside_lights.setText("")
         self.inside_lights.setObjectName("inside_lights")
+        self.inside_lights.setEnabled(False)
         self.enviromental_vars_title_2 = QtWidgets.QLabel(parent=self.page_tab)
         self.enviromental_vars_title_2.setGeometry(QtCore.QRect(380, 275, 241, 31))
         font = QtGui.QFont()
@@ -193,10 +215,11 @@ class Ui_Dialog(object):
         font.setUnderline(True)
         self.enviromental_vars_title_2.setFont(font)
         self.enviromental_vars_title_2.setObjectName("enviromental_vars_title_2")
-        self.left_door = QtWidgets.QRadioButton(parent=self.page_tab)
+        self.left_door = QtWidgets.QCheckBox(parent=self.page_tab)
         self.left_door.setGeometry(QtCore.QRect(680, 325, 16, 16))
         self.left_door.setText("")
         self.left_door.setObjectName("left_door")
+        self.left_door.setEnabled(False)
         self.right_door_label = QtWidgets.QLabel(parent=self.page_tab)
         self.right_door_label.setGeometry(QtCore.QRect(560, 365, 111, 31))
         font = QtGui.QFont()
@@ -215,28 +238,32 @@ class Ui_Dialog(object):
         font.setPointSize(16)
         self.inside_light_label.setFont(font)
         self.inside_light_label.setObjectName("inside_light_label")
-        self.outside_lights = QtWidgets.QRadioButton(parent=self.page_tab)
+        self.outside_lights = QtWidgets.QCheckBox(parent=self.page_tab)
         self.outside_lights.setGeometry(QtCore.QRect(530, 375, 16, 16))
         self.outside_lights.setText("")
         self.outside_lights.setObjectName("outside_lights")
-        self.right_door = QtWidgets.QRadioButton(parent=self.page_tab)
+        self.outside_lights.setEnabled(False)
+        self.right_door = QtWidgets.QCheckBox(parent=self.page_tab)
         self.right_door.setGeometry(QtCore.QRect(680, 375, 16, 16))
         self.right_door.setText("")
         self.right_door.setObjectName("right_door")
-        self.engine_button = QtWidgets.QRadioButton(parent=self.page_tab)
+        self.right_door.setEnabled(False)
+        self.engine_button = QtWidgets.QCheckBox(parent=self.page_tab)
         self.engine_button.setGeometry(QtCore.QRect(920, 350, 16, 16))
         self.engine_button.setText("")
         self.engine_button.setObjectName("engine_button")
+        self.engine_button.setEnabled(False)
         self.brake_failure_label = QtWidgets.QLabel(parent=self.page_tab)
         self.brake_failure_label.setGeometry(QtCore.QRect(770, 380, 131, 31))
         font = QtGui.QFont()
         font.setPointSize(16)
         self.brake_failure_label.setFont(font)
         self.brake_failure_label.setObjectName("brake_failure_label")
-        self.brake_button = QtWidgets.QRadioButton(parent=self.page_tab)
+        self.brake_button = QtWidgets.QCheckBox(parent=self.page_tab)
         self.brake_button.setGeometry(QtCore.QRect(910, 390, 16, 16))
         self.brake_button.setText("")
         self.brake_button.setObjectName("brake_button")
+        self.brake_button.setEnabled(False)
         self.signal_pickup_failure_title = QtWidgets.QLabel(parent=self.page_tab)
         self.signal_pickup_failure_title.setGeometry(QtCore.QRect(770, 420, 201, 31))
         font = QtGui.QFont()
@@ -250,10 +277,11 @@ class Ui_Dialog(object):
         font.setUnderline(True)
         self.train_failures_title.setFont(font)
         self.train_failures_title.setObjectName("train_failures_title")
-        self.signal_button = QtWidgets.QRadioButton(parent=self.page_tab)
+        self.signal_button = QtWidgets.QCheckBox(parent=self.page_tab)
         self.signal_button.setGeometry(QtCore.QRect(980, 430, 16, 16))
         self.signal_button.setText("")
         self.signal_button.setObjectName("signal_button")
+        self.signal_button.setEnabled(False)
         self.engine_failure_label = QtWidgets.QLabel(parent=self.page_tab)
         self.engine_failure_label.setGeometry(QtCore.QRect(770, 340, 151, 31))
         font = QtGui.QFont()
@@ -262,6 +290,7 @@ class Ui_Dialog(object):
         self.engine_failure_label.setObjectName("engine_failure_label")
         self.emergency_brake = QtWidgets.QPushButton(parent=self.page_tab)
         self.emergency_brake.setGeometry(QtCore.QRect(0, 440, 491, 121))
+        self.emergency_brake.clicked.connect(self.e_brake_click)
         font = QtGui.QFont()
         font.setPointSize(30)
         font.setBold(True)
@@ -279,6 +308,7 @@ class Ui_Dialog(object):
         font.setWeight(75)
         self.apply_changes_button.setFont(font)
         self.apply_changes_button.setObjectName("apply_changes_button")
+        self.apply_changes_button.clicked.connect(self.get_test_vals)
         self.time_label_4 = QtWidgets.QLabel(parent=self.tab_2)
         self.time_label_4.setGeometry(QtCore.QRect(0, 0, 131, 31))
         font = QtGui.QFont()
@@ -305,7 +335,7 @@ class Ui_Dialog(object):
         font.setWeight(50)
         self.announcement_label_4.setFont(font)
         self.announcement_label_4.setObjectName("announcement_label_4")
-        self.announcement_4 = QtWidgets.QTextBrowser(parent=self.tab_2)
+        self.announcement_4 = QtWidgets.QTextEdit(parent=self.tab_2)
         self.announcement_4.setGeometry(QtCore.QRect(410, 0, 341, 81))
         self.announcement_4.setObjectName("announcement_4")
         self.train_vars_title_4 = QtWidgets.QLabel(parent=self.tab_2)
@@ -345,7 +375,7 @@ class Ui_Dialog(object):
         font.setPointSize(16)
         self.passenger_count_label_6.setFont(font)
         self.passenger_count_label_6.setObjectName("passenger_count_label_6")
-        self.enginer_failure_input = QtWidgets.QRadioButton(parent=self.tab_2)
+        self.enginer_failure_input = QtWidgets.QCheckBox(parent=self.tab_2)
         self.enginer_failure_input.setGeometry(QtCore.QRect(920, 345, 16, 16))
         self.enginer_failure_input.setText("")
         self.enginer_failure_input.setObjectName("enginer_failure_input")
@@ -393,19 +423,19 @@ class Ui_Dialog(object):
         font.setUnderline(True)
         self.train_failures_title_6.setFont(font)
         self.train_failures_title_6.setObjectName("train_failures_title_6")
-        self.right_door_input = QtWidgets.QRadioButton(parent=self.tab_2)
+        self.right_door_input = QtWidgets.QCheckBox(parent=self.tab_2)
         self.right_door_input.setGeometry(QtCore.QRect(680, 370, 16, 16))
         self.right_door_input.setText("")
         self.right_door_input.setObjectName("right_door_input")
-        self.signal_pickup_input = QtWidgets.QRadioButton(parent=self.tab_2)
+        self.signal_pickup_input = QtWidgets.QCheckBox(parent=self.tab_2)
         self.signal_pickup_input.setGeometry(QtCore.QRect(980, 425, 16, 16))
         self.signal_pickup_input.setText("")
         self.signal_pickup_input.setObjectName("signal_pickup_input")
-        self.inside_light_input = QtWidgets.QRadioButton(parent=self.tab_2)
+        self.inside_light_input = QtWidgets.QCheckBox(parent=self.tab_2)
         self.inside_light_input.setGeometry(QtCore.QRect(510, 320, 16, 16))
         self.inside_light_input.setText("")
         self.inside_light_input.setObjectName("inside_light_input")
-        self.outside_light_input = QtWidgets.QRadioButton(parent=self.tab_2)
+        self.outside_light_input = QtWidgets.QCheckBox(parent=self.tab_2)
         self.outside_light_input.setGeometry(QtCore.QRect(530, 370, 16, 16))
         self.outside_light_input.setText("")
         self.outside_light_input.setObjectName("outside_light_input")
@@ -422,7 +452,7 @@ class Ui_Dialog(object):
         font.setPointSize(16)
         self.brake_failure_label_6.setFont(font)
         self.brake_failure_label_6.setObjectName("brake_failure_label_6")
-        self.brake_failure_input = QtWidgets.QRadioButton(parent=self.tab_2)
+        self.brake_failure_input = QtWidgets.QCheckBox(parent=self.tab_2)
         self.brake_failure_input.setGeometry(QtCore.QRect(910, 385, 16, 16))
         self.brake_failure_input.setText("")
         self.brake_failure_input.setObjectName("brake_failure_input")
@@ -432,7 +462,7 @@ class Ui_Dialog(object):
         font.setPointSize(16)
         self.left_door_label_6.setFont(font)
         self.left_door_label_6.setObjectName("left_door_label_6")
-        self.left_door_input = QtWidgets.QRadioButton(parent=self.tab_2)
+        self.left_door_input = QtWidgets.QCheckBox(parent=self.tab_2)
         self.left_door_input.setGeometry(QtCore.QRect(680, 320, 16, 16))
         self.left_door_input.setText("")
         self.left_door_input.setObjectName("left_door_input")
@@ -579,7 +609,7 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.time_label.setText(_translate("Dialog", "System Time: "))
-        self.curr_time.setText(_translate("Dialog", "XX:XX:XX"))
+        self.curr_time.setText(_translate("Dialog", self.sys_time))
         self.play_button.setText(_translate("Dialog", "Play"))
         self.pause_button.setText(_translate("Dialog", "Pause"))
         self.announcement_label.setText(_translate("Dialog", "Current \n"
@@ -589,24 +619,26 @@ class Ui_Dialog(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">holder announcement</span></p></body></html>"))
-        self.authority.setText(_translate("Dialog", "0 Meters"))
+        self.announcement.clear()
+        self.announcement.insertPlainText(self.announcement_val)
+        self.authority.setText(_translate("Dialog", str(self.authority_val) + " Meters"))
         self.current_velocity_label.setText(_translate("Dialog", "Current Velocity:"))
         self.train_vars_title.setText(_translate("Dialog", "Train Variables"))
-        self.passenger_count.setText(_translate("Dialog", "0 People"))
-        self.current_velocity.setText(_translate("Dialog", "0 MPH"))
-        self.power.setText(_translate("Dialog", "0 Watts"))
+        self.passenger_count.setText(_translate("Dialog", str(self.curr_people) + " People"))
+        self.current_velocity.setText(_translate("Dialog", str(self.curr_velo) + " MPH"))
+        self.power.setText(_translate("Dialog", str(self.curr_watts) + " Watts"))
         self.power_label.setText(_translate("Dialog", "Power:"))
         self.authority_label.setText(_translate("Dialog", "Authority:"))
         self.passenger_count_label.setText(_translate("Dialog", "Passenger Count: "))
-        self.environment.setText(_translate("Dialog", "In Tunnel"))
+        self.environment.setText(_translate("Dialog", self.environment_out))
         self.curr_environment_label.setText(_translate("Dialog", "Current Environment:"))
         self.slope_label.setText(_translate("Dialog", "Slope:"))
         self.enviromental_vars_title.setText(_translate("Dialog", "Environmental Variables"))
-        self.slope.setText(_translate("Dialog", "0 Degrees"))
-        self.elevation.setText(_translate("Dialog", "0 Feet"))
+        self.slope.setText(_translate("Dialog", str(self.slope_grade) + " Degrees"))
+        self.elevation.setText(_translate("Dialog", str(self.elevation_grade) + " Feet"))
         self.elevation_label.setText(_translate("Dialog", "Elevation:"))
-        self.acceleration.setText(_translate("Dialog", "0 M/S^2"))
-        self.air_conditioning.setText(_translate("Dialog", "0 Degrees"))
+        self.acceleration.setText(_translate("Dialog", str(self.acceleration_out) + " M/S^2"))
+        self.air_conditioning.setText(_translate("Dialog", str(self.ac_val) + " Degrees"))
         self.air_conditioning_label.setText(_translate("Dialog", "Air Conditioning:"))
         self.acceleration_label.setText(_translate("Dialog", "Acceleration:"))
         self.closed_door_text.setText(_translate("Dialog", "Closed?"))
@@ -623,7 +655,7 @@ class Ui_Dialog(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.page_tab), _translate("Dialog", "Main Page"))
         self.apply_changes_button.setText(_translate("Dialog", "APPLY CHANGES"))
         self.time_label_4.setText(_translate("Dialog", "System Time: "))
-        self.sys_time_test.setText(_translate("Dialog", "XX:XX:XX"))
+        self.sys_time_test.setText(_translate("Dialog", self.sys_time))
         self.play_button_4.setText(_translate("Dialog", "Play"))
         self.pause_button_4.setText(_translate("Dialog", "Pause"))
         self.announcement_label_4.setText(_translate("Dialog", "Current \n"
@@ -663,13 +695,111 @@ class Ui_Dialog(object):
         self.label_7.setText(_translate("Dialog", "Watts"))
         self.label_8.setText(_translate("Dialog", "MPH"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", "Test Bench"))
+        self.announcement_4.setFontPointSize(16)
+        self.announcement.setFontPointSize(16)
 
+        self.ad_one = QtWidgets.QLabel(parent=self.page_tab)
+        pixmap = QtGui.QPixmap("train_model_gui/assets/canesAd.png")
+        self.ad_one.setPixmap(pixmap)
+        self.ad_one.setGeometry(QtCore.QRect(10, 80, 330, 350))
+
+        self.ad_two = QtWidgets.QLabel(parent=self.tab_2)
+        pixmap = QtGui.QPixmap("train_model_gui/assets/canesAd.png")
+        self.ad_two.setPixmap(pixmap)
+        self.ad_two.setGeometry(QtCore.QRect(10, 66, 330, 350))
+
+        self.emergency_brake.setStyleSheet("""
+            QPushButton {
+                background-color: #FF0000;  /* Set the background color to red */
+                color: #FFFFFF;  /* Set the text color to white */
+            }
+        """)
+
+        self.apply_changes_button.setStyleSheet("""
+            QPushButton {
+                background-color: #00FF6F;  /* Set the background color to red */
+                color: #FFFFFF;  /* Set the text color to white */
+            }
+        """)
+
+        self.update_all()
+
+    def update_all(self):
+        _translate = QtCore.QCoreApplication.translate
+        self.passenger_count.setText(_translate("Dialog", str(self.curr_people) + " People"))
+        self.current_velocity.setText(_translate("Dialog", str(self.curr_velo) + " MPH"))
+        self.power.setText(_translate("Dialog", str(self.curr_watts) + " Watts"))
+        self.environment.setText(_translate("Dialog", self.environment_out))
+        self.slope.setText(_translate("Dialog", str(self.slope_grade) + " Degrees"))
+        self.elevation.setText(_translate("Dialog", str(self.elevation_grade) + " Feet"))
+        self.acceleration.setText(_translate("Dialog", str(self.acceleration_out) + " M/S^2"))
+        self.air_conditioning.setText(_translate("Dialog", str(self.ac_val) + " Degrees"))
+        self.inside_lights.setChecked(self.inside_lights_val)
+        self.outside_lights.setChecked(self.outside_lights_val)
+        self.right_door.setChecked(self.right_door_val)
+        self.left_door.setChecked(self.left_door_val)
+        self.engine_button.setChecked(self.engine_failure)
+        self.brake_button.setChecked(self.brake_failure)
+        self.signal_button.setChecked(self.signal_failure)
+        self.authority.setText(_translate("Dialog", str(self.authority_val) + " Meters"))
+
+        self.passenge_input.setText(_translate("Dialog", str(self.curr_people)))
+        self.velocity_input.setText(_translate("Dialog", str(self.curr_velo)))
+        self.power_input.setText(_translate("Dialog", str(self.curr_watts)))
+        self.environment_input.setText(_translate("Dialog", self.environment_out))
+        self.slope_input.setText(_translate("Dialog", str(self.slope_grade)))
+        self.elevation_input.setText(_translate("Dialog", str(self.elevation_grade)))
+        self.acceleration_input.setText(_translate("Dialog", str(self.acceleration_out)))
+        self.ac_input.setText(_translate("Dialog", str(self.ac_val)))
+        self.inside_light_input.setChecked(self.inside_lights_val)
+        self.outside_light_input.setChecked(self.outside_lights_val)
+        self.right_door_input.setChecked(self.right_door_val)
+        self.left_door_input.setChecked(self.left_door_val)
+        self.enginer_failure_input.setChecked(self.engine_failure)
+        self.brake_failure_input.setChecked(self.brake_failure)
+        self.signal_pickup_input.setChecked(self.signal_failure)
+        self.authhority_input.setText(_translate("Dialog", str(self.authority_val)))
+        
+        self.announcement.clear()
+        self.announcement.insertPlainText(self.announcement_val)
+
+        self.announcement_4.clear()
+        self.announcement_4.insertPlainText(self.announcement_val)
+
+        
+
+    def get_test_vals(self):
+        self.right_door_val = self.right_door_input.isChecked()
+        self.left_door_val = self.left_door_input.isChecked()
+        self.engine_failure = self.enginer_failure_input.isChecked()
+        self.brake_failure = self.brake_failure_input.isChecked()
+        self.signal_failure = self.signal_pickup_input.isChecked()
+        self.inside_lights_val = self.inside_light_input.isChecked()
+        self.outside_lights_val = self.outside_light_input.isChecked()
+
+        self.curr_people = self.passenge_input.text()
+        self.curr_velo = self.velocity_input.text()
+        self.curr_watts = self.power_input.text()
+        self.environment_out = self.environment_input.text()
+        self.slope_grade = self.slope_input.text()
+        self.elevation_grade = self.elevation_input.text()
+        self.acceleration_out = self.acceleration_input.text()
+        self.ac_val = self.ac_input.text()
+        self.authority_val = self.authhority_input.text()
+
+        self.announcement_val = self.announcement_4.toPlainText()
+
+        self.update_all()
+
+    def e_brake_click(self):
+        self.curr_velo = 0
+        self.update_all()
 
 if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec())
+        import sys
+        app = QtWidgets.QApplication(sys.argv)
+        Dialog = QtWidgets.QDialog()
+        ui = Ui_Dialog()
+        ui.setupUi(Dialog)
+        Dialog.show()
+        sys.exit(app.exec())
