@@ -135,7 +135,7 @@ class SoftwareTrainControllerGUI(QMainWindow):
         self.rightDoor=self.ui.tbrightdoor.checkState()
         self.exlights=self.ui.tbexteriorlights.checkState()
         self.intlights=self.ui.tbinteriorlights.checkState()
-        self.manualMode=self.ui.tbmanualmode.checkState()
+       # self.manualMode=self.ui.tbmanualmode.checkState()
         self.brakeFailure=self.ui.tbbrakefailure.checkState()
         self.engineFailure=self.ui.tbenginefailure.checkState()
         self.tbcomputeVals()
