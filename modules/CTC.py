@@ -3,7 +3,7 @@
 import time
 import pandas as pd
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 from threading import Thread, Event
 from pathlib import Path
@@ -46,6 +46,7 @@ class CTC(QMainWindow):
         self.station_a_throughput = 0
         self.station_b_throughput = 0
         self.station_c_throughput = 0
+        self.train_dispatched = False
 
         self.initialize_connections()
         self.start_threads()
@@ -58,10 +59,9 @@ class CTC(QMainWindow):
 
     def initialize_connections(self):
         self.ui.dispatch_train_btn.clicked.connect(self.dispatch_train)
-        #self.ui.manual_mode_btn.isChecked.connect(self.update_mode_tb)
         self.ui.import_schedule_btn.clicked.connect(self.import_schedule)
         self.ui.apply_changes.clicked.connect(self.apply_tb)
-        self.station_update.connect(self.update_stations)
+        #self.station_update.connect(self.update_stations)
         self.ui.schedule_train_btn.clicked.connect(self.schedule_train)
         self.manual_mode.connect(self.update_manual_mode)
         self.auto_mode.connect(self.update_auto_mode)
@@ -73,6 +73,12 @@ class CTC(QMainWindow):
         self.ui.manual_dispatch_departure.addItem("Station B")
         self.ui.manual_dispatch_departure.addItem("Station C")
         self.ui.manual_mode_btn.setChecked(True)
+        self.ui.label_9.hide()
+        self.ui.manual_dispatch_departure.hide()
+        self.ui.manual_dispatch_destination.addItem("Station A")
+        self.ui.manual_dispatch_destination.addItem("Station B")
+        self.ui.manual_dispatch_destination.addItem("Station C")
+
 
     def check_stations(self):
         while True:
@@ -81,22 +87,22 @@ class CTC(QMainWindow):
             time.sleep(0.5)
             
 
-    def update_stations(self):
-        if (self.ui.manual_dispatch_departure.currentText() == "Station A"):
-            self.old_station = "Station A"
-            self.ui.manual_dispatch_destination.clear()
-            self.ui.manual_dispatch_destination.addItem("Station B")
-            self.ui.manual_dispatch_destination.addItem("Station C")
-        elif (self.ui.manual_dispatch_departure.currentText() == "Station B"):
-            self.old_station = "Station B"
-            self.ui.manual_dispatch_destination.clear()
-            self.ui.manual_dispatch_destination.addItem("Station A")
-            self.ui.manual_dispatch_destination.addItem("Station C")
-        elif (self.ui.manual_dispatch_departure.currentText() == "Station C"):
-            self.old_station = "Station C"
-            self.ui.manual_dispatch_destination.clear()
-            self.ui.manual_dispatch_destination.addItem("Station A")
-            self.ui.manual_dispatch_destination.addItem("Station B")
+    # def update_stations(self):
+    #     if (self.ui.manual_dispatch_departure.currentText() == "Station A"):
+    #         self.old_station = "Station A"
+    #         self.ui.manual_dispatch_destination.clear()
+    #         self.ui.manual_dispatch_destination.addItem("Station B")
+    #         self.ui.manual_dispatch_destination.addItem("Station C")
+    #     elif (self.ui.manual_dispatch_departure.currentText() == "Station B"):
+    #         self.old_station = "Station B"
+    #         self.ui.manual_dispatch_destination.clear()
+    #         self.ui.manual_dispatch_destination.addItem("Station A")
+    #         self.ui.manual_dispatch_destination.addItem("Station C")
+    #     elif (self.ui.manual_dispatch_departure.currentText() == "Station C"):
+    #         self.old_station = "Station C"
+    #         self.ui.manual_dispatch_destination.clear()
+    #         self.ui.manual_dispatch_destination.addItem("Station A")
+    #         self.ui.manual_dispatch_destination.addItem("Station B")
 
 
     def check_occupancy(self):
@@ -154,7 +160,7 @@ class CTC(QMainWindow):
         filePath, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)", options=options)
 
         if filePath:
-            self.ui.label.setText(f'Selected File: {filePath}')
+            #self.ui.label.setText(f'Selected File: {filePath}')
             if filePath.endswith('.xlsx'):
                 df = pd.read_excel(filePath)
             elif filePath.endswith('.csv'):
@@ -182,10 +188,23 @@ class CTC(QMainWindow):
         #speed = self.ui.mph_box.getCurrentValue()
         #route = self.ui.route_box.getCurrentValue()
         #authority = self.ui.authority_box.getCurrentValue()
-        self.update_schedule()
-        item = QTableWidgetItem()
-        item.setBackground(Qt.GlobalColor.green)
-        self.ui.block_occupancy.setItem(0, 0, item)
+        if not self.train_dispatched:
+            train = self.trainID
+            self.trainID+=1
+            current_block = 1
+            authority = 10
+            #departure = self.ui.manual_dispatch_departure.currentText()
+            destination = self.ui.manual_dispatch_destination.currentText()
+            #delta = self.calculate_time(departure, destination)
+            dep_time = datetime.strptime(datetime.now().strftime("%H:%M:%S"), "%H:%M:%S")
+            #dep_time_str = dep_time.strftime("%H:%M:%S")
+            #eta = (dep_time + delta).strftime("%H:%M:%S")
+            #self.blue_line_schedule.append(QTreeWidgetItem([str(train), departure, destination, str(dep_time_str), str(eta)]))
+            self.ui.dispatched.addTopLevelItem(QTreeWidgetItem([str(train), str(current_block),str(authority), destination]))
+            item = QTableWidgetItem()
+            item.setBackground(Qt.GlobalColor.green)
+            self.ui.block_occupancy.setItem(0, 0, item)
+            self.train_dispatched = True
         return #[speed, route, authority]
     
     #updates schedule on main page
@@ -199,22 +218,21 @@ class CTC(QMainWindow):
             dep_time = datetime.strptime(datetime.now().strftime("%H:%M:%S"), "%H:%M:%S")
             dep_time_str = dep_time.strftime("%H:%M:%S")
             eta = (dep_time + delta).strftime("%H:%M:%S")
-            self.blue_line_schedule.append(QTreeWidgetItem([str(train), departure, destination, str(dep_time_str), str(eta)]))
-            self.ui.schedule.addTopLevelItem(QTreeWidgetItem([str(train), departure, destination, str(dep_time_str), str(eta)]))
+            self.blue_line_schedule.append(QTreeWidgetItem([str(train), destination, str(dep_time_str), str(eta)]))
+            self.ui.schedule.addTopLevelItem(QTreeWidgetItem([str(train), destination, str(dep_time_str), str(eta)]))
         elif self.ui.auto_mode_btn.isChecked():
             # Assuming train_ids, departure_, destination_, and departure_time_ are lists
             for t_id, dep, dest, dep_time in zip(train_ids, departure_, destination_, departure_time_):
-                if isinstance(dep_time, datetime.time):
-                    hrs, mins, secs = dep_time.hour, dep_time.minute, dep_time.second
+                if isinstance(dep_time, str):
+                    dep_time_obj = datetime.strptime(dep_time, "%H:%M:%S").time()
                 else:
-                    hrs, mins, secs = map(int, dep_time.split(':'))
-
-                delta_dep_time = timedelta(hours=hrs, minutes=mins, seconds=secs)
+                    dep_time_obj = dep_time
 
                 delta = self.calculate_time(dep, dest)
-                eta = (datetime.datetime.combine(datetime.date.today(), delta_dep_time) + delta).time().strftime("%H:%M:%S")
-                self.blue_line_schedule.append(QTreeWidgetItem([str(t_id), dep, dest, dep_time, eta]))
-                self.ui.schedule.addTopLevelItem(QTreeWidgetItem([str(t_id), dep, dest, dep_time, eta]))
+                eta = (datetime.combine(date.today(), dep_time_obj) + delta).time().strftime("%H:%M:%S")
+
+                self.blue_line_schedule.append(QTreeWidgetItem([str(t_id), dest, str(dep_time_obj), str(eta)]))
+                self.ui.schedule.addTopLevelItem(QTreeWidgetItem([str(t_id), dest, str(dep_time_obj), str(eta)]))
     
         return
     
@@ -232,9 +250,10 @@ class CTC(QMainWindow):
                 continue
 
             # Define color-coding logic
+            color = Qt.GlobalColor.white
             if block_state == "Occupied":
                 color = Qt.GlobalColor.green
-            elif block_state == "Maintenance":
+            elif block_state == "Active":
                 color = Qt.GlobalColor.yellow
             elif block_state == "Failure":
                 color = Qt.GlobalColor.red
@@ -280,6 +299,8 @@ class CTC(QMainWindow):
                 mins+=1
             if(station_a == "Station C"):
                 mins+=1
+            if(station_b == "Station A"):
+                mins+=1
         if(station_a == "Station B"):
             if(station_b == "Station A"):
                 mins+=1
@@ -310,15 +331,21 @@ class CTC(QMainWindow):
     
     def schedule_train(self):
         train = self.trainID
-        self.trainID+=1
+        self.trainID += 1
         departure = self.ui.manual_dispatch_departure.currentText()
         destination = self.ui.manual_dispatch_destination.currentText()
         delta = self.calculate_time(departure, destination)
-        dep_time = datetime.strptime(datetime.now().strftime("%H:%M:%S"), "%H:%M:%S")
-        dep_time_str = dep_time.strftime("%H:%M:%S")
-        eta = (dep_time + delta).strftime("%H:%M:%S")
-        self.blue_line_schedule.append(QTreeWidgetItem([str(train), departure, destination, str(dep_time_str), str(eta)]))
-        self.ui.schedule.addTopLevelItem(QTreeWidgetItem([str(train), departure, destination, str(dep_time_str), str(eta)]))
+        
+        # Get text from QLineEdit
+        dep_time_str = self.ui.departure_time.text()
+        dep_time_obj = datetime.strptime(dep_time_str, "%H:%M:%S")
+        
+
+        eta_obj = (datetime.combine(datetime.today(), dep_time_obj.time()) + delta).time()
+        eta_str = eta_obj.strftime("%H:%M:%S")
+        
+        self.blue_line_schedule.append(QTreeWidgetItem([str(train), destination, dep_time_str, eta_str]))
+        self.ui.schedule.addTopLevelItem(QTreeWidgetItem([str(train), destination, dep_time_str, eta_str]))
         return
     
     #updates the ui of tb when manual mode is selected/deselected

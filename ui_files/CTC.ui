@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="ctc_mainpage">
      <attribute name="title">
@@ -48,7 +48,7 @@
        <rect>
         <x>10</x>
         <y>320</y>
-        <width>511</width>
+        <width>461</width>
         <height>231</height>
        </rect>
       </property>
@@ -59,12 +59,7 @@
       </column>
       <column>
        <property name="text">
-        <string>Departing From</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Arriving To</string>
+        <string>Arriving At</string>
        </property>
       </column>
       <column>
@@ -160,9 +155,9 @@
      <widget class="QComboBox" name="occupancy_line_box">
       <property name="geometry">
        <rect>
-        <x>770</x>
-        <y>10</y>
-        <width>131</width>
+        <x>470</x>
+        <y>30</y>
+        <width>71</width>
         <height>31</height>
        </rect>
       </property>
@@ -176,9 +171,9 @@
       <property name="geometry">
        <rect>
         <x>550</x>
-        <y>40</y>
+        <y>0</y>
         <width>341</width>
-        <height>511</height>
+        <height>361</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -387,7 +382,7 @@
      <widget class="QWidget" name="verticalLayoutWidget_5">
       <property name="geometry">
        <rect>
-        <x>360</x>
+        <x>290</x>
         <y>10</y>
         <width>160</width>
         <height>92</height>
@@ -485,27 +480,6 @@
         </rect>
        </property>
        <layout class="QGridLayout" name="manual_layout">
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_10">
-          <property name="text">
-           <string>Select Destination Station</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_8">
-          <property name="text">
-           <string>Select Line</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string>Select Departure Station</string>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="1">
          <widget class="QComboBox" name="manual_dispatch_line">
           <item>
@@ -515,14 +489,83 @@
           </item>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QComboBox" name="manual_dispatch_departure"/>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Select Destination Station</string>
+          </property>
+         </widget>
         </item>
         <item row="2" column="1">
          <widget class="QComboBox" name="manual_dispatch_destination"/>
         </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Select Line</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="manual_dispatch_departure"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Select Departure Station</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
+     </widget>
+     <widget class="QTreeWidget" name="dispatched">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>400</y>
+        <width>411</width>
+        <height>161</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>Train ID</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Current Block</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Authority</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Destination</string>
+       </property>
+      </column>
+     </widget>
+     <widget class="QLabel" name="label_14">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>370</y>
+        <width>252</width>
+        <height>29</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Blue Line Train Info</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="ctc_testbench">
@@ -908,7 +951,7 @@
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="label_77">
            <property name="text">
             <string>Set Switch State</string>
            </property>
@@ -1018,39 +1061,119 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="verticalLayoutWidget_3">
+     <widget class="QLabel" name="label_13">
       <property name="geometry">
        <rect>
-        <x>320</x>
-        <y>240</y>
-        <width>571</width>
-        <height>311</height>
+        <x>550</x>
+        <y>230</y>
+        <width>141</width>
+        <height>41</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <widget class="QLabel" name="label_13">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Change Train Data</string>
-         </property>
-         <property name="textFormat">
-          <enum>Qt::AutoText</enum>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Change Train Data</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::AutoText</enum>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QWidget" name="gridLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>270</y>
+        <width>521</width>
+        <height>181</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="1" column="2">
+        <widget class="QComboBox" name="comboBox_11">
+         <item>
+          <property name="text">
+           <string>Alternate Route</string>
+          </property>
+         </item>
         </widget>
        </item>
-       <item>
-        <widget class="QLabel" name="label_12">
-         <property name="text">
-          <string>TextLabel</string>
-         </property>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="comboBox_10">
+         <item>
+          <property name="text">
+           <string>Train ID</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QComboBox" name="comboBox_4">
+         <item>
+          <property name="text">
+           <string>Select Line</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QComboBox" name="comboBox_6">
+         <item>
+          <property name="text">
+           <string>Delays</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QComboBox" name="comboBox_7">
+         <item>
+          <property name="text">
+           <string>Select Line</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="comboBox_5">
+         <item>
+          <property name="text">
+           <string>Train ID</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QComboBox" name="comboBox_12">
+         <item>
+          <property name="text">
+           <string>Select Line</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="comboBox_13">
+         <item>
+          <property name="text">
+           <string>Train ID</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QComboBox" name="comboBox_14">
+         <item>
+          <property name="text">
+           <string>Emergency Stop</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>
