@@ -348,9 +348,9 @@ class Ui_MainWindow(object):
         ######################################################################################## 
 
         #Set up images and texts
-        pixmap = QPixmap("1140\TrackControllerSw\left.jpg")
+        pixmap = QPixmap("left.jpg")
         self.switchDirection.setPixmap(pixmap)
-        pixmap = QPixmap("1140\TrackControllerSw\crosso.jpg")
+        pixmap = QPixmap("crosso.jpg")
         self.crossroadStatus.setPixmap(pixmap)
         self.leftSection.setText("Section 6-10")
         self.rightSection.setText("Section 11-15")
@@ -387,14 +387,14 @@ class Ui_MainWindow(object):
         self.direc = False
         self.cross = [False, False, False]
         self.sig = [False, False, False]
-        self.station = "Station B"
+        self.station = "..."
         self.occupation = ["Unoccupied","Unoccupied","Unoccupied"]
         self.failures = ["No failures","No failures","No failures"]
         #images
-        self.left = QPixmap("1140\TrackControllerSw\left.jpg")
-        self.right = QPixmap("1140\TrackControllerSw\light.jpg")
-        self.open = QPixmap("1140\TrackControllerSw\crosso.jpg")
-        self.closed = QPixmap("1140\TrackControllerSw\crossc.jpg")
+        self.left = QPixmap("left.jpg")
+        self.right = QPixmap("light.jpg")
+        self.open = QPixmap("crosso.jpg")
+        self.closed = QPixmap("crossc.jpg")
 
 
     def toggle_direction_handler(self):
