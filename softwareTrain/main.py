@@ -12,6 +12,7 @@ class SoftwareTrainControllerGUI(QMainWindow):
     #variables
     nextstop="a stop"
     currentSpeed=0      #current speed in manual or auto (max speed is 70km/hr)
+    previousSpeed=0
     commandedSpeed=0    #commanded speed in automatic mode
     acceleration=0      # m/s^2
     authority=0         #authority in automatic mode
@@ -87,6 +88,7 @@ class SoftwareTrainControllerGUI(QMainWindow):
 
 
     def manualreceiveVals(self):
+        self.previousSpeed=self.currentSpeed
         self.currentSpeed=self.ui.manualspeed.value()
         self.temperature=self.ui.manualtemp.value()
         self.announcement=self.ui.manualannouncement.currentText()
@@ -99,7 +101,7 @@ class SoftwareTrainControllerGUI(QMainWindow):
         self.manualcomputeVals()
     
     def manualcomputeVals(self):
-        self.power=8*self.currentSpeed
+        self.power=self.ki*self.currentSpeed+self.kp*self.previousSpeed
         self.manualudpateVals()
 
     def manualudpateVals(self):
@@ -119,6 +121,7 @@ class SoftwareTrainControllerGUI(QMainWindow):
 
     def tbreceiveVals(self):                                              #receive values from test bench after apply button is pressed
         self.acceleration=int(self.ui.tbacceleration.toPlainText())
+        self.previousSpeed=self.currentSpeed
         self.currentSpeed=int(self.ui.tbcurrentspeed.toPlainText())
         self.commandedSpeed=int(self.ui.tbcommandespeed.toPlainText())
         self.acceleration=int(self.ui.tbacceleration.toPlainText())
@@ -138,7 +141,7 @@ class SoftwareTrainControllerGUI(QMainWindow):
         self.tbcomputeVals()
     
     def tbcomputeVals(self):
-        self.power=8*self.currentSpeed
+        self.power=self.ki*self.currentSpeed+self.kp*self.previousSpeed
         self.tbupdateVals()
 
     def tbupdateVals(self):
