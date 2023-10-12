@@ -499,14 +499,14 @@ class Ui_MainWindow(object):
     def defaultSwitch(self, text):
         if text == "Switch 1":
             if self.Switch1 == "right":
-                operate.switchRight()
+                operate.switchRight("A", "B")
             else:
-                operate.switchLeft()
+                operate.switchLeft("A", "C")
         elif text == "Switch 2":
             if self.Switch2 == "right":
-                operate.switchRight()
+                operate.switchRight("B", "E")
             else:
-                operate.switchLeft()
+                operate.switchLeft("B", "D")
     def defaultLight(self, text):
         if text == "Light 1":
             operate.changeLight(self.Light1)
@@ -602,17 +602,17 @@ class Ui_MainWindow(object):
         if self.comboBox_4.currentText() == "Switch 1":
             if self.Switch1 == "right":
                 self.Switch1 = "left"
-                operate.switchLeft()
+                operate.switchLeft("A", "C")
             elif self.Switch1 == "left":
                 self.Switch1 = "right"
-                operate.switchRight()
+                operate.switchRight("A", "B")
         elif self.comboBox_4.currentText() == "Switch 2":
             if self.Switch2 == "right":
                 self.Switch2 = "left"
-                operate.switchLeft()
+                operate.switchLeft("B", "D")
             elif self.Switch2 == "left":
                 self.Switch2 = "right"
-                operate.switchRight()
+                operate.switchRight("B", "E")
     def saveLight(self, item):
         if self.comboBox_2.currentText() == "Light 1":
             self.Light1 = item

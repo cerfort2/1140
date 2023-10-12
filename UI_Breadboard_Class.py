@@ -16,15 +16,21 @@ class Operations():
         check = str(color).lower()
         serialComm.write(check.encode())
 
-    def switchLeft(self): #Switches switch left
+    def switchLeft(self, fromText, toText): #Switches switch left
         status = "switchLeft"
         serialComm.write(status.encode())
-        time.sleep(.5)
+        time.sleep(1.1)
+        serialComm.write(fromText.encode())
+        time.sleep(1.1)
+        serialComm.write(toText.encode())
     
-    def switchRight(self): #Switches switch right
+    def switchRight(self, fromText, toText): #Switches switch right
         status = "switchRight"
         serialComm.write(status.encode())
-        time.sleep(.5)
+        time.sleep(1.1)
+        serialComm.write(fromText.encode())
+        time.sleep(1.1)
+        serialComm.write(toText.encode())
 
     def crossroadOn(self):
         status = "crossroadOn"
