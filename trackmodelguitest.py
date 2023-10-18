@@ -2,6 +2,8 @@ from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow, QFileDialog
 from PyQt6 import QtCore, QtGui, QtWidgets
 import pandas as pd
 from customUI import Ui_MainWindow
+import os;
+import random;
 
 ## TO CONVERT UI TO PY
 # open terminal at folder with ui
@@ -12,17 +14,47 @@ from customUI import Ui_MainWindow
 #comboBox_4 = Block box
 # comboBox_3 = Line Box
 
-class line():
+class Line():
     def __init__(self,name):
         self.name = name
         self.blocks = []
+
     def addBlock(self,blk):
         self.blocks.append(blk)
 
-class block():
-    def __init__(self,name):
+    def getBlockNames(self):
+        if len(self.blocks) == 0:
+            return []
+        block_list = [blk.name for blk in self.blocks]
+        return block_list
+    
+    def getOccupiedBlockNames(self):
+        if(len(self.blocks) == 0):
+            return []
+
+        occupied_list = [blk.name for blk in self.blocks if blk.occupied]
+        return occupied_list
+    
+    def getBlockFromName(self,blockName):
+        for b in self.blocks:
+            if (b.name == blockName):
+                return b
+        
+        print("ERROR: Line not found")
+        return 0
+
+class Block():
+    def __init__(self,attributes):
+        name, occupied, length, grade, limit, elevation, underground, station = attributes
         self.name = name
-        self.occupied = False
+        self.occupied = occupied
+        self.length = length
+        self.grade = grade
+        self.limit = limit
+        self.elevation = elevation
+        self.underground = underground
+        self.station = station
+
         # self.line = attributes[0] #string
         # self.name = attributes[1] #string
         # self.occupied = attributes[2] #bool
@@ -36,20 +68,100 @@ class block():
         # self.crossroad = attributes[10] #bool
         # self.heater = attributes[11] #bool
         # self.failure = attributes[12] #bool
+
     def setOccupied(self):
         self.occupied = True
+
     def clearOccupied(self):
         self.occupied = False
-    def setLength(self,length):
-        self.length = length
-    def setGrade(self,grade):
-        self.grade = grade
-    def setLimit(self,limit):
-        self.limit = limit
-    def setElevation(self, elevation):
-        self.elevation = elevation
 
-#debug array
+class TrackModel():
+    def __init__(self):
+        self.lines = []
+
+    def addLine(self, path):
+        if os.path.exists(path):
+            db = pd.read_csv(path)
+            numOfRows = len(db.index)
+
+            #instantiate line:
+            newLine = Line(db.at[0,"Line"] + " Line")
+
+            #Instantiate Blocks
+            for i in range(numOfRows):
+                if(not (db.isna().at[i,"Section"])):
+                    name = db.at[i,"Section"]+str(int(db.at[i, "Block Number"]))
+                    length = db.at[i,"Block Length (m)"]
+                    grade = db.at[i,"Block Grade (%)"]
+                    limit = db.at[i,"Speed Limit (Km/Hr)"]
+                    elevation = db.at[i,"ELEVATION (M)"]
+
+                    if(not db.isna().at[i,"Infrastructure"]):
+
+                        infrastructure = str(db.at[i,"Infrastructure"])
+                        infrastructure = infrastructure.replace(":",";")
+                        underground = "UNDERGROUND" in infrastructure
+                        isStation = "STATION" in infrastructure
+                        isSwitch = "SWITCH" in infrastructure
+                        isCrossing = "RAILWAY CROSSING" in infrastructure
+
+
+                        if isStation:
+                            split = infrastructure.split(";")
+
+                            for i in range(len(split)):
+                                if(split[i]== "STATION"):
+                                    stationName = split[i+1]
+                                    break
+                            
+                            ticketsSold = random.randint(0,100) #Change this to a random tickets sold
+
+                            station = [isStation, stationName, ticketsSold]
+
+                        else:
+                            station = [isStation, "", -1]
+
+                        if isSwitch:
+                            pass
+
+                    else:
+                        underground = False
+                        station = [False, "", -1]
+                    
+
+
+
+
+                    attributes = (name,False,length,grade,limit,elevation,underground,station)
+                    blk = Block(attributes)
+                    newLine.addBlock(blk)
+
+            self.lines.append(newLine)
+
+    def getLineNames(self):
+        names_list = [l.name for l in self.lines]
+        return names_list
+    
+    def getLineFromName(self, lineName):
+        for l in self.lines:
+            if (l.name == lineName):
+                return l
+        
+        print("ERROR: Line not found")
+        return 0
+    
+
+            
+    # def updateOccupancy(self):
+    #     for line in self.lines:
+    #         for blk in line.blocks:
+    #             if (blk.name in self.occupied_debug):
+    #                 blk.setOccupied()
+    #             else:
+    #                 blk.clearOccupied()
+
+        
+    
 
 
 metersToFeet = 3.28084
@@ -60,16 +172,16 @@ kmhrTomihr = 0.621371
 class functionalUI(Ui_MainWindow):
     def __init__(self) -> None:
         super().__init__()
-        self.lines = []
+        self.trackModel = TrackModel()
+
         self.occupied_debug = []
 
 
     def update(self):
         self.comboBox_3.activated.connect(self.lineChange)
-        self.comboBox_4.currentIndexChanged.connect(self.blockChange)
+        self.comboBox_4.activated.connect(self.blockChange)
         self.pushButton_2.clicked.connect(self.buttonPress)
         self.lineEdit.returnPressed.connect(self.tbChange)
-        self.updateOccupancy()
 
 
         # #tb
@@ -79,35 +191,30 @@ class functionalUI(Ui_MainWindow):
     def tbChange(self):
         tbInfo = self.lineEdit.displayText().split(',')
     
-        for l in self.lines:
+        for l in self.trackModel.lines:
             if(l.name == tbInfo[0]):
                 break
 
         tbInfo.pop(0)
 
         self.occupied_debug += tbInfo
-        self.updateOccupancy()
 
     def lineChange(self):
         #Clear the Blocks
         self.comboBox_4.clear()
+        #Clear the Occupancy
         self.listWidget_2.clear()
-
-        # #tb
-        # self.comboBox_6.clear()
-
 
         # Add the blocks associated with that line
         currentLineName = self.comboBox_3.currentText()
 
-        for l in self.lines:
-            if(l.name == currentLineName):
-                for blk in l.blocks:
-                    self.comboBox_4.addItem(blk.name)
-                    if(blk.occupied):
-                        self.listWidget_2.addItem(blk.name)
-                    # #tb
-                    # self.comboBox_6.addItem(blk.name)
+        l = self.trackModel.getLineFromName(currentLineName)
+        self.comboBox_4.addItems(l.getBlockNames())
+        self.listWidget_2.addItems(l.getOccupiedBlockNames())
+
+                
+
+
 
 
                 
@@ -119,13 +226,8 @@ class functionalUI(Ui_MainWindow):
         # tbLineName = self.comboBox_5.currentText()
         # tbBlockName = self.comboBox_6.currentText()
 
-        for l in self.lines:
-            if(l.name == currentLineName):
-                break
-
-        for b in l.blocks:
-            if (b.name == currentBlockName):
-                break
+        l = self.trackModel.getLineFromName(currentLineName)
+        b = l.getBlockFromName(currentBlockName)
 
         # for tbl in self.lines:
         #     if tbl.name == tbLineName:
@@ -137,19 +239,43 @@ class functionalUI(Ui_MainWindow):
 
         #name
         self.tableWidget_3.item(0,0).setText(currentBlockName)
+
         #occupancy
         if(b.occupied):
             self.tableWidget_3.item(1,0).setCheckState(QtCore.Qt.CheckState.Checked)
         else:
             self.tableWidget_3.item(1,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
+
         #length
         self.tableWidget_3.item(2,0).setText(str(round(b.length * metersToFeet,3)) +" feet")
+
         #grade
         self.tableWidget_3.item(3,0).setText(str(b.grade) + "%")
+
         #elevation
         self.tableWidget_3.item(4,0).setText(str(round(b.elevation*metersToFeet,3)) + " feet")
+
         #limit
         self.tableWidget_3.item(5,0).setText(str(round(b.limit*kmhrTomihr,3)) + " mi/hr")
+
+        #station
+        if(b.station[0]):
+            self.tableWidget_3.item(6,0).setCheckState(QtCore.Qt.CheckState.Checked)
+            self.tableWidget_7.item(0,0).setText(b.station[1])
+            self.tableWidget_7.item(1,0).setText(str(b.station[2]))
+        else:
+            self.tableWidget_3.item(6,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
+            self.tableWidget_7.item(0,0).setText("")
+            self.tableWidget_7.item(1,0).setText("")
+
+        #Switch
+        #Underground
+        if(b.underground):
+            self.tableWidget_3.item(8,0).setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self.tableWidget_3.item(8,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+
 
 
         # #tb
@@ -171,46 +297,16 @@ class functionalUI(Ui_MainWindow):
     def buttonPress(self):
         fd = QFileDialog()
         path, _ = fd.getOpenFileName(None, 'Select a file:')
-        db = pd.read_csv(path)
-        numOfRows = len(db.index)
+        self.trackModel.addLine(path)
 
-        #instantiate line:
-        newLine = line(db.at[0,"Line"] + " Line")
-
-        #Instantiate Blocks
-        for i in range(numOfRows):
-            if(not (db.isna().at[i,"Section"])):
-                name = db.at[i,"Section"]+str(int(db.at[i, "Block Number"]))
-                length = db.at[i,"Block Length (m)"]
-                grade = db.at[i,"Block Grade (%)"]
-                limit = db.at[i,"Speed Limit (Km/Hr)"]
-                elevation = db.at[i,"ELEVATION (M)"]
+        self.comboBox_3.clear()
+        self.comboBox_3.addItems(self.trackModel.getLineNames())
 
 
-                blk = block(name)
-                blk.setElevation(elevation)
-                blk.setLimit(limit)
-                blk.setLength(length)
-                blk.setGrade(grade)
-                newLine.addBlock(blk)
+
         
 
-        self.comboBox_3.addItem(newLine.name)
 
-        # #tb
-        # self.comboBox_5.addItem(newLine.name)
-
-        self.lines.append(newLine)
-
-        self.updateOccupancy()
-
-    def updateOccupancy(self):
-        for line in self.lines:
-            for blk in line.blocks:
-                if (blk.name in self.occupied_debug):
-                    blk.setOccupied()
-                else:
-                    blk.clearOccupied()
 
 
 
