@@ -80,7 +80,7 @@ class Block():
         if self.switch[0]:
             temp = self.switch[1]
             self.switch[1] = self.switch[2]
-            self.swtich[2] = temp
+            self.switch[2] = temp
 
 class TrackModel():
     def __init__(self):
@@ -97,18 +97,17 @@ class TrackModel():
             #Instantiate Blocks
             for i in range(numOfRows):
                 if(not (db.isna().at[i,"Section"])):
+
                     name = db.at[i,"Section"]+str(int(db.at[i, "Block Number"]))
                     length = db.at[i,"Block Length (m)"]
                     grade = db.at[i,"Block Grade (%)"]
                     limit = db.at[i,"Speed Limit (Km/Hr)"]
                     elevation = db.at[i,"ELEVATION (M)"]
                     
-
                     if(not db.isna().at[i,"Infrastructure"]):
-
                         infrastructure = str(db.at[i,"Infrastructure"])
-                        stationSide = str(db.at[i, "Station Side"])
                         infrastructure = infrastructure.replace(":",";")
+                        stationSide = str(db.at[i, "Station Side"])
                         underground = "UNDERGROUND" in infrastructure
                         isStation = "STATION" in infrastructure
                         isSwitch = "SWITCH" in infrastructure
@@ -141,21 +140,20 @@ class TrackModel():
                             
                             if nextWord[0] == "(":
                                 #normal switch between blocks
-                                nextWord += split[i+2]
 
+                                nextWord += split[i+2]
                                 nextWord = nextWord.replace('(','')
                                 nextWord = nextWord.replace(')','')
                                 nextWord = nextWord.replace(';','-')
+
                                 switch_blocks = nextWord.split("-")
 
                                 erasedDupes = [blk for blk in switch_blocks if switch_blocks.count(blk) == 1]
-                                
                                 switch = [isSwitch, erasedDupes[0], erasedDupes[1]]
-
-
 
                             elif nextWord == "TO/FROM":
                                 switch = [isSwitch, "YARD", ""]
+                                #switch to and from the yard
 
                             elif nextWord == "TO":
                                 switch = [isSwitch, "YARD", ""]
@@ -165,7 +163,6 @@ class TrackModel():
                                 #switch from yard
                             else:
                                 print("ERROR: Switch processing error")
-
 
                     else:
                         underground = False
@@ -196,23 +193,6 @@ class TrackModel():
         return 0
 
 
-
-
-    
-
-            
-    # def updateOccupancy(self):
-    #     for line in self.lines:
-    #         for blk in line.blocks:
-    #             if (blk.name in self.occupied_debug):
-    #                 blk.setOccupied()
-    #             else:
-    #                 blk.clearOccupied()
-
-        
-    
-
-
 metersToFeet = 3.28084
 kmhrTomihr = 0.621371
 
@@ -225,17 +205,11 @@ class functionalUI(Ui_MainWindow):
 
         self.occupied_debug = []
 
-
     def update(self):
         self.comboBox_3.activated.connect(self.lineChange)
         self.comboBox_4.activated.connect(self.blockChange)
         self.pushButton_2.clicked.connect(self.buttonPress)
         self.lineEdit.returnPressed.connect(self.tbChange)
-
-
-        # #tb
-        # self.comboBox_5.activated.connect(self.lineChange)
-        # self.comboBox_6.currentIndexChanged.connect(self.blockChange)
 
     def tbChange(self):
         tbInfo = self.lineEdit.displayText().split(',')
@@ -261,30 +235,12 @@ class functionalUI(Ui_MainWindow):
         self.comboBox_4.addItems(l.getBlockNames())
         self.listWidget_2.addItems(l.getOccupiedBlockNames())
 
-                
-
-
-
-
-                
-
-
     def blockChange(self):
         currentBlockName = self.comboBox_4.currentText()
         currentLineName = self.comboBox_3.currentText()
-        # tbLineName = self.comboBox_5.currentText()
-        # tbBlockName = self.comboBox_6.currentText()
 
         l = self.trackModel.getLineFromName(currentLineName)
         b = l.getBlockFromName(currentBlockName)
-
-        # for tbl in self.lines:
-        #     if tbl.name == tbLineName:
-        #         break
-        
-        # for tbb in tbl.blocks:
-        #     if tbb.name == tbBlockName:
-        #         break
 
         #name
         self.tableWidget_3.item(0,0).setText(b.name)
@@ -321,10 +277,12 @@ class functionalUI(Ui_MainWindow):
 
         #Switch
         if(b.switch[0]):
+            self.tableWidget_3.item(7,0).setCheckState(QtCore.Qt.CheckState.Checked)
             self.tableWidget_8.item(0,0).setText(b.name)
             self.tableWidget_8.item(1,0).setText(b.switch[1])
             self.tableWidget_8.item(2,0).setText(b.switch[2])
         else:
+            self.tableWidget_3.item(7,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
             self.tableWidget_8.item(0,0).setText("")
             self.tableWidget_8.item(1,0).setText("")
             self.tableWidget_8.item(2,0).setText("")
@@ -334,25 +292,6 @@ class functionalUI(Ui_MainWindow):
             self.tableWidget_3.item(8,0).setCheckState(QtCore.Qt.CheckState.Checked)
         else:
             self.tableWidget_3.item(8,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
-
-
-
-
-        # #tb
-        # #name
-        # self.tableWidget_4.item(0,0).setText(tbBlockName)
-        # #occupancy
-        # if(self.tableWidget_4.item(1,0).checkState() == QtCore.Qt.CheckState.Checked):
-        #     l.occupied += tbb.name
-        # #length
-        # self.tableWidget_4.item(2,0).setText(str(round(tbb.length * metersToFeet,3)) +" feet")
-        # #grade
-        # self.tableWidget_4.item(3,0).setText(str(tbb.grade) + "%")
-        # #elevation
-        # self.tableWidget_4.item(4,0).setText(str(round(tbb.elevation*metersToFeet,3)) + " feet")
-        # #limit
-        # self.tableWidget_4.item(5,0).setText(str(round(tbb.limit*kmhrTomihr,3)) + " mi/hr")
-    
 
     def buttonPress(self):
         fd = QFileDialog()
@@ -365,11 +304,6 @@ class functionalUI(Ui_MainWindow):
 
 
         
-
-
-
-
-
 
 app = QApplication([])
 MainWindow = QMainWindow()
