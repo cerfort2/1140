@@ -1,7 +1,6 @@
 import serial
 import time
 
-
 serialComm = serial.Serial('COM3', 115200)
 serialComm.timeout = 1
 
