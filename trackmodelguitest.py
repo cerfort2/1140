@@ -45,7 +45,7 @@ class Line():
 
 class Block():
     def __init__(self,attributes):
-        name, occupied, length, grade, limit, elevation, underground, station = attributes
+        name, occupied, length, grade, limit, elevation, underground, station, switch = attributes
         self.name = name
         self.occupied = occupied
         self.length = length
@@ -54,6 +54,7 @@ class Block():
         self.elevation = elevation
         self.underground = underground
         self.station = station
+        self.switch = switch
 
         # self.line = attributes[0] #string
         # self.name = attributes[1] #string
@@ -75,6 +76,12 @@ class Block():
     def clearOccupied(self):
         self.occupied = False
 
+    def toggleSwitch(self):
+        if self.switch[0]:
+            temp = self.switch[1]
+            self.switch[1] = self.switch[2]
+            self.swtich[2] = temp
+
 class TrackModel():
     def __init__(self):
         self.lines = []
@@ -95,15 +102,18 @@ class TrackModel():
                     grade = db.at[i,"Block Grade (%)"]
                     limit = db.at[i,"Speed Limit (Km/Hr)"]
                     elevation = db.at[i,"ELEVATION (M)"]
+                    
 
                     if(not db.isna().at[i,"Infrastructure"]):
 
                         infrastructure = str(db.at[i,"Infrastructure"])
+                        stationSide = str(db.at[i, "Station Side"])
                         infrastructure = infrastructure.replace(":",";")
                         underground = "UNDERGROUND" in infrastructure
                         isStation = "STATION" in infrastructure
                         isSwitch = "SWITCH" in infrastructure
                         isCrossing = "RAILWAY CROSSING" in infrastructure
+
 
 
                         if isStation:
@@ -116,23 +126,58 @@ class TrackModel():
                             
                             ticketsSold = random.randint(0,100) #Change this to a random tickets sold
 
-                            station = [isStation, stationName, ticketsSold]
+                            station = [isStation, stationName, ticketsSold, stationSide]
 
                         else:
                             station = [isStation, "", -1]
 
                         if isSwitch:
-                            pass
+                            split = infrastructure.split()
+
+                            for i in range(len(split)):
+                                if(split[i]== "SWITCH"):
+                                    nextWord = split[i+1]
+                                    break
+                            
+                            if nextWord[0] == "(":
+                                #normal switch between blocks
+                                nextWord += split[i+2]
+
+                                nextWord = nextWord.replace('(','')
+                                nextWord = nextWord.replace(')','')
+                                nextWord = nextWord.replace(';','-')
+                                switch_blocks = nextWord.split("-")
+
+                                erasedDupes = [blk for blk in switch_blocks if switch_blocks.count(blk) == 1]
+                                
+                                switch = [isSwitch, erasedDupes[0], erasedDupes[1]]
+
+
+
+                            elif nextWord == "TO/FROM":
+                                switch = [isSwitch, "YARD", ""]
+
+                            elif nextWord == "TO":
+                                switch = [isSwitch, "YARD", ""]
+                                #switch to yard
+                            elif nextWord == "FROM":
+                                switch = [isSwitch, "YARD", ""]
+                                #switch from yard
+                            else:
+                                print("ERROR: Switch processing error")
+
 
                     else:
                         underground = False
-                        station = [False, "", -1]
+                        station = [False, "", -1, ""]
+                        switch = [False, "", ""]
+
                     
 
 
 
 
-                    attributes = (name,False,length,grade,limit,elevation,underground,station)
+                    attributes = (name,False,length,grade,limit,elevation,underground,station,switch)
                     blk = Block(attributes)
                     newLine.addBlock(blk)
 
@@ -149,6 +194,10 @@ class TrackModel():
         
         print("ERROR: Line not found")
         return 0
+
+
+
+
     
 
             
@@ -238,7 +287,7 @@ class functionalUI(Ui_MainWindow):
         #         break
 
         #name
-        self.tableWidget_3.item(0,0).setText(currentBlockName)
+        self.tableWidget_3.item(0,0).setText(b.name)
 
         #occupancy
         if(b.occupied):
@@ -263,12 +312,23 @@ class functionalUI(Ui_MainWindow):
             self.tableWidget_3.item(6,0).setCheckState(QtCore.Qt.CheckState.Checked)
             self.tableWidget_7.item(0,0).setText(b.station[1])
             self.tableWidget_7.item(1,0).setText(str(b.station[2]))
+            self.tableWidget_7.item(2,0).setText(b.station[3])
         else:
             self.tableWidget_3.item(6,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
             self.tableWidget_7.item(0,0).setText("")
             self.tableWidget_7.item(1,0).setText("")
+            self.tableWidget_7.item(2,0).setText("")
 
         #Switch
+        if(b.switch[0]):
+            self.tableWidget_8.item(0,0).setText(b.name)
+            self.tableWidget_8.item(1,0).setText(b.switch[1])
+            self.tableWidget_8.item(2,0).setText(b.switch[2])
+        else:
+            self.tableWidget_8.item(0,0).setText("")
+            self.tableWidget_8.item(1,0).setText("")
+            self.tableWidget_8.item(2,0).setText("")
+
         #Underground
         if(b.underground):
             self.tableWidget_3.item(8,0).setCheckState(QtCore.Qt.CheckState.Checked)
