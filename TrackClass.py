@@ -5,14 +5,19 @@ class Track():
 
     occupancy = False
 
+    #If a Track is a Switch, it also has light info
+    isLight = False
+    lightStatus = True #True is Red, False is Green
+
     #If it is a switch, input the destination tracks on left and right
     isSwitch = False
     rightDestination = ""
     leftDestination = ""
     switchStatus = "right" #Default switch to right
 
-    def __init__(self, switch, crossroad): #Initlize a Track to be set as a switch or a crossroad
+    def __init__(self, switch, crossroad, light): #Initlize a Track to be set as a switch or a crossroad
         self.isSwitch = switch
+        self.isLight = light
         self.isCrossroad = crossroad
     
     def getOccupancy(self): #Get the occupancy
@@ -50,4 +55,13 @@ class Track():
     
     def getCrossroad(self): #Get crossroas status
         return self.crossroadStatus
+    
+    def setLight(self, status):
+        if self.isLight == True:
+            self.lightStatus = status
+        else:
+            print("Track does not contain light")
+    
+    def getLight(self):
+        return self.lightStatus
         
