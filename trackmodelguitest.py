@@ -14,6 +14,10 @@ import random;
 #comboBox_4 = Block box
 # comboBox_3 = Line Box
 
+
+metersToFeet = 3.28084
+kmhrTomihr = 0.621371
+
 class Line():
     def __init__(self,name):
         self.name = name
@@ -42,33 +46,43 @@ class Line():
         
         print("ERROR: Line not found")
         return 0
+    
+    def getBlockOccupancyList(self):
+        occupancyMask = [blk.occupied for blk in self.blocks]
+        return occupancyMask
+    
+    def updateLine(self, signals):
+        for i in range(len(signals)):
+            if(self.blocks[i].switch[0] or self.blocks[i].crossroad[0]):
+                #Switch Updating
+                if(self.blocks[i].switch[3] != signals[i][0]):
+                    self.blocks[i].toggleSwitch()
+                
+                #Crossroad Updating
+                if(self.blocks[i].crossroad[1] != signals[i][1]):
+                    self.blocks[i].toggleCrossroad()
+                
+                #Signal Updating
+                if(self.blocks[i].switch[4] != signals[i][2]):
+                    self.blocks[i].toggleSignal()
+
 
 class Block():
     def __init__(self,attributes):
-        name, occupied, length, grade, limit, elevation, underground, station, switch = attributes
-        self.name = name
-        self.occupied = occupied
-        self.length = length
-        self.grade = grade
-        self.limit = limit
-        self.elevation = elevation
-        self.underground = underground
-        self.station = station
-        self.switch = switch
+        name, occupied, length, grade, limit, elevation, underground, station, switch, crossroad = attributes
 
-        # self.line = attributes[0] #string
-        # self.name = attributes[1] #string
-        # self.occupied = attributes[2] #bool
-        # self.length = attributes[3] #double
-        # self.grade = attributes[4]  #double
-        # self.elevation = attributes[5] #double
-        # self.limit = attributes[6] #double
-        # self.station = attributes[7] #bool
-        # self.switch = attributes[8] #bool
-        # self.underground = attributes[9] #bool
-        # self.crossroad = attributes[10] #bool
-        # self.heater = attributes[11] #bool
-        # self.failure = attributes[12] #bool
+        self.name = name #string with name ex: "A2"
+        self.occupied = occupied #bool with occupancy
+        self.length = length #double with block length
+        self.grade = grade #double with block grade
+        self.limit = limit # double with speed limit
+        self.elevation = elevation # double with elevation
+        self.underground = underground # bool with underground status
+        self.station = station # list with if the station exists, station name, tickets sold, and station side ex
+                                # [True, "SHADYSIDE", 86, "Left/Right"]
+        self.switch = switch # list with if the switch exists, block name pointing towards, block name pointing away
+                            # [True, "16", "1"]
+        self.crossroad = crossroad
 
     def setOccupied(self):
         self.occupied = True
@@ -81,6 +95,19 @@ class Block():
             temp = self.switch[1]
             self.switch[1] = self.switch[2]
             self.switch[2] = temp
+            self.switch[3] = not self.switch[3]
+
+    def toggleCrossroad(self):
+        if self.crossroad[0]:
+            self.crossroad[1] = not self.crossroad[1]
+    
+    def toggleSignal(self):
+        if self.switch[0]:
+            self.switch[4] = not self.switch[4]
+            
+    def isSwitch(self):
+        return self.switch[0]
+    
 
 class TrackModel():
     def __init__(self):
@@ -107,14 +134,17 @@ class TrackModel():
                     if(not db.isna().at[i,"Infrastructure"]):
                         infrastructure = str(db.at[i,"Infrastructure"])
                         infrastructure = infrastructure.replace(":",";")
+
                         stationSide = str(db.at[i, "Station Side"])
+
                         underground = "UNDERGROUND" in infrastructure
                         isStation = "STATION" in infrastructure
                         isSwitch = "SWITCH" in infrastructure
                         isCrossing = "RAILWAY CROSSING" in infrastructure
 
 
-
+                        #Station Processing
+                        #################################################
                         if isStation:
                             split = infrastructure.split(";")
 
@@ -128,8 +158,12 @@ class TrackModel():
                             station = [isStation, stationName, ticketsSold, stationSide]
 
                         else:
-                            station = [isStation, "", -1]
+                            station = [False, "", -1, ""]
+                        #################################################
 
+
+                        #Switch Processing
+                        #################################################
                         if isSwitch:
                             split = infrastructure.split()
 
@@ -149,7 +183,12 @@ class TrackModel():
                                 switch_blocks = nextWord.split("-")
 
                                 erasedDupes = [blk for blk in switch_blocks if switch_blocks.count(blk) == 1]
-                                switch = [isSwitch, erasedDupes[0], erasedDupes[1]]
+
+                                #All switches are initialized to the left postiion active, AKA, False -> Left active; True -> Right Active,second to last bool shows this
+                                # Final bool for signal status
+                                #Signal Status; True -> Red, False -> Green
+                                switch = [isSwitch, erasedDupes[0], erasedDupes[1], False, True]
+
 
                             elif nextWord == "TO/FROM":
                                 switch = [isSwitch, "YARD", ""]
@@ -163,18 +202,27 @@ class TrackModel():
                                 #switch from yard
                             else:
                                 print("ERROR: Switch processing error")
+                        else:
+                            switch = [False, "", "",False, True]
+                        #################################################
+
+                        #Crossroad Processing
+                        #################################################
+                        #True -> Closed, False -> Open
+                        crossroad = [isCrossing, True]
+
+                        #################################################
+
 
                     else:
                         underground = False
                         station = [False, "", -1, ""]
-                        switch = [False, "", ""]
-
+                        switch = [False, "", "", False, True]
+                        crossroad = [False, True]
+                        
                     
 
-
-
-
-                    attributes = (name,False,length,grade,limit,elevation,underground,station,switch)
+                    attributes = (name,False,length,grade,limit,elevation,underground,station,switch,crossroad)
                     blk = Block(attributes)
                     newLine.addBlock(blk)
 
@@ -191,11 +239,6 @@ class TrackModel():
         
         print("ERROR: Line not found")
         return 0
-
-
-metersToFeet = 3.28084
-kmhrTomihr = 0.621371
-
 
 
 class functionalUI(Ui_MainWindow):
@@ -269,6 +312,7 @@ class functionalUI(Ui_MainWindow):
             self.tableWidget_7.item(0,0).setText(b.station[1])
             self.tableWidget_7.item(1,0).setText(str(b.station[2]))
             self.tableWidget_7.item(2,0).setText(b.station[3])
+            self.tableWidget_7.resizeColumnsToContents()
         else:
             self.tableWidget_3.item(6,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
             self.tableWidget_7.item(0,0).setText("")
@@ -293,6 +337,16 @@ class functionalUI(Ui_MainWindow):
         else:
             self.tableWidget_3.item(8,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
 
+        #Crossroad
+        if(b.crossroad[0]):
+            self.tableWidget_3.item(9,0).setCheckState(QtCore.Qt.CheckState.Checked)
+            self.tableWidget_6.item(0,0).setText(b.name)
+            self.tableWidget_6.item(1,0).setText("No" if b.crossroad[1] else "Yes")
+        else:
+            self.tableWidget_3.item(9,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
+            self.tableWidget_6.item(0,0).setText("")
+            self.tableWidget_6.item(1,0).setText("")
+
     def buttonPress(self):
         fd = QFileDialog()
         path, _ = fd.getOpenFileName(None, 'Select a file:')
@@ -300,10 +354,7 @@ class functionalUI(Ui_MainWindow):
 
         self.comboBox_3.clear()
         self.comboBox_3.addItems(self.trackModel.getLineNames())
-
-
-
-        
+      
 
 app = QApplication([])
 MainWindow = QMainWindow()
