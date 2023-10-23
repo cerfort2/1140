@@ -1,29 +1,32 @@
 class Track():
     #Class variables
-    isCrossroad = False
+
+    isCrossroad = False# #specify if Track has a crossroad
     crossroadStatus = False #False means up and True means down, default will be up
 
-    occupancy = False
+    occupancy = False #If occupied or not
 
-    #If a Track is a Switch, it also has light info
-    isLight = False
+    isLight = False #Specify if Track has a Light
     lightStatus = True #True is Red, False is Green
 
     #If it is a switch, input the destination tracks on left and right
     isSwitch = False
     rightDestination = ""
     leftDestination = ""
-    switchStatus = "right" #Default switch to right
+    switchStatus = True #Default switch to right(True = Right, False = left)
 
-    def __init__(self, switch, crossroad, light): #Initlize a Track to be set as a switch or a crossroad
+    isStation = False #Specify if the block is a station
+
+    def __init__(self, switch:bool, crossroad:bool, light:bool, station:bool): #Initlize a Track to be set as a switch or a crossroad
         self.isSwitch = switch
         self.isLight = light
         self.isCrossroad = crossroad
+        self.isStation = station
     
     def getOccupancy(self): #Get the occupancy
         return self.occupancy
     
-    def setOccupancy(self, occu): #Get the occupancy
+    def setOccupancy(self, occu:bool): #Get the occupancy
         self.occupancy = occu
     
     def setRightDest(self, right): #Set the right destination if it is a switch, no need for get because value is static
@@ -38,7 +41,7 @@ class Track():
         else:
             print("Track is not a Switch")
 
-    def setSwitch(self, status): #Set the switch position
+    def setSwitch(self, status:bool): #Set the switch position
         if self.isSwitch == True:
             self.switchStatus = status
         else:
@@ -47,7 +50,7 @@ class Track():
     def getSwitch(self): #Get current switch position
         return self.switchStatus
 
-    def setCrossroad(self, status): #Set crossroad status
+    def setCrossroad(self, status:bool): #Set crossroad status
         if self.isCrossroad == True:
             self.crossroadStatus = status
         else:
@@ -56,7 +59,7 @@ class Track():
     def getCrossroad(self): #Get crossroas status
         return self.crossroadStatus
     
-    def setLight(self, status):
+    def setLight(self, status:bool):
         if self.isLight == True:
             self.lightStatus = status
         else:

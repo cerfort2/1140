@@ -361,7 +361,6 @@ class Ui_MainWindow(object):
         self.comboBox_7.setItemText(0, _translate("MainWindow", "Select Switch"))
         self.comboBox_7.setItemText(1, _translate("MainWindow", "Switch 1"))
         self.comboBox_7.setItemText(2, _translate("MainWindow", "Switch 2"))
-        self.comboBox_7.currentTextChanged.connect(self.defaultSwitch)
 
         self.label_12.setText(_translate("MainWindow", "Blocks Occupied"))
 
@@ -379,7 +378,6 @@ class Ui_MainWindow(object):
         item = self.listWidget.item(1)
         item.setText(_translate("MainWindow", "Green Line"))
         self.listWidget.setSortingEnabled(__sortingEnabled)
-        self.listWidget.itemClicked.connect(self.checkListManual)
 
         __sortingEnabled = self.listWidget_2.isSortingEnabled()
         self.listWidget_2.setSortingEnabled(False)
@@ -388,45 +386,32 @@ class Ui_MainWindow(object):
         red = self.listWidget_2.item(1)
         red.setText(_translate("MainWindow", "Green"))
         self.listWidget_2.setSortingEnabled(__sortingEnabled)
-        self.listWidget_2.itemClicked.connect(lambda item=red: self.saveLight(item.text()))
 
         self.comboBox_2.setItemText(0, _translate("MainWindow", "Select Light"))
         self.comboBox_2.setItemText(1, _translate("MainWindow", "Light 1"))
         self.comboBox_2.setItemText(2, _translate("MainWindow", "Light 2"))
-        self.comboBox_2.currentIndexChanged.connect(self.lightChangeManual)
-        self.comboBox_2.currentTextChanged.connect(self.defaultLight)
 
         self.pushButton.setText(_translate("MainWindow", "Toggle Crossroad"))
-        self.pushButton.clicked.connect(self.crossroadUpdater)
 
         self.comboBox_3.setItemText(0, _translate("MainWindow", "Select Crossroad"))
         self.comboBox_3.setItemText(1, _translate("MainWindow", "Crossroad 1"))
         self.comboBox_3.setItemText(2, _translate("MainWindow", "Crossroad 2"))
-        self.comboBox_3.currentIndexChanged.connect(self.crossChangeManual)
-        self.comboBox_3.currentTextChanged.connect(self.defaultCrossroad)
 
         self.pushButton_2.setText(_translate("MainWindow", "Toggle Switch"))
-        self.pushButton_2.clicked.connect(self.switchUpdater)
 
         self.comboBox_12.setItemText(0, _translate("MainWindow", "Select Wayside"))
         self.comboBox_12.setItemText(1, _translate("MainWindow", "Wayside 1"))
         self.comboBox_12.setItemText(2, _translate("MainWindow", "Wayside 2"))
-        self.comboBox_12.currentIndexChanged.connect(self.checkWaysideSelectionManual)
-
-        #Toggles that block occupancy has been changed
-        self.listWidget_5.model().rowsInserted.connect(self.plcCode)
-        self.listWidget_5.model().rowsRemoved.connect(self.plcCode)
 
         self.comboBox_4.setItemText(0, _translate("MainWindow", "Select Switch"))
         self.comboBox_4.setItemText(1, _translate("MainWindow", "Switch 1"))
         self.comboBox_4.setItemText(2, _translate("MainWindow", "Switch 2"))
-        self.comboBox_4.currentIndexChanged.connect(self.switchChangeManual)
-        self.comboBox_4.currentTextChanged.connect(self.defaultSwitch)
 
         #No need to edit these 3 values
         self.label_10.setText(_translate("MainWindow", "Blocks Occupied"))
         self.label_11.setText(_translate("MainWindow", "Track Failures"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Main Page - Manual"))
+
 
         #Test Bench UI
         __sortingEnabled = self.listWidget_9.isSortingEnabled()
@@ -436,37 +421,29 @@ class Ui_MainWindow(object):
         item = self.listWidget_9.item(1)
         item.setText(_translate("MainWindow", "Green Line"))
         self.listWidget_9.setSortingEnabled(__sortingEnabled)
-        self.listWidget_9.itemClicked.connect(self.checkListTest)
 
         self.comboBox_8.setItemText(0, _translate("MainWindow", "Track Selection"))
         self.comboBox_8.setItemText(1, _translate("MainWindow", "A"))
         self.comboBox_8.setItemText(2, _translate("MainWindow", "B"))
         self.comboBox_8.setItemText(3, _translate("MainWindow", "C"))
-        self.comboBox_8.currentIndexChanged.connect(self.trackChangeTest)
 
         self.pushButton_4.setText(_translate("MainWindow", "Toggle Occupancy"))
-        self.pushButton_4.clicked.connect(lambda: self.toggleOccu(self.comboBox_8.currentText()))
 
         self.comboBox_9.setItemText(0, _translate("MainWindow", "Select Light"))
         self.comboBox_9.setItemText(1, _translate("MainWindow", "Light 1"))
         self.comboBox_9.setItemText(2, _translate("MainWindow", "Light 2"))
-        self.comboBox_9.currentIndexChanged.connect(self.lightChangeTest)
 
         self.comboBox_10.setItemText(0, _translate("MainWindow", "Select Crossroad"))
         self.comboBox_10.setItemText(1, _translate("MainWindow", "Crossroad 1"))
         self.comboBox_10.setItemText(2, _translate("MainWindow", "Crossroad 2"))
-        self.comboBox_10.currentIndexChanged.connect(self.crossChangeTest)
 
         self.comboBox_11.setItemText(0, _translate("MainWindow", "Select Switch"))
         self.comboBox_11.setItemText(1, _translate("MainWindow", "Switch 1"))
         self.comboBox_11.setItemText(2, _translate("MainWindow", "Switch 2"))
-        self.comboBox_11.currentIndexChanged.connect(self.switchChangeTest)
-        self.comboBox_11.currentTextChanged.connect(self.switchSelection)
 
         self.comboBox_13.setItemText(0, _translate("MainWindow", "Select Wayside"))
         self.comboBox_13.setItemText(1, _translate("MainWindow", "Wayside 1"))
         self.comboBox_13.setItemText(2, _translate("MainWindow", "Wayside 2"))
-        self.comboBox_13.currentIndexChanged.connect(self.checkWaysideSelectionTest)
 
         __sortingEnabled = self.listWidget_4.isSortingEnabled()
         self.listWidget_4.setSortingEnabled(False)
@@ -475,7 +452,6 @@ class Ui_MainWindow(object):
         redTest = self.listWidget_4.item(1)
         redTest.setText(_translate("MainWindow", "Green"))
         self.listWidget_4.setSortingEnabled(__sortingEnabled)
-        self.listWidget_4.itemClicked.connect(lambda item=redTest: self.changeLight(item.text()))
 
         __sortingEnabled = self.listWidget_10.isSortingEnabled()
         self.listWidget_10.setSortingEnabled(False)
@@ -484,17 +460,14 @@ class Ui_MainWindow(object):
         cross = self.listWidget_10.item(1)
         cross.setText(_translate("MainWindow", "Off"))
         self.listWidget_10.setSortingEnabled(__sortingEnabled)
-        self.listWidget_10.itemClicked.connect(lambda item=cross: self.changeCrossroad(item.text()))
 
         self.pushButton_5.setText(_translate("MainWindow", "Toggle Track Failure"))
-        self.pushButton_5.clicked.connect(lambda: self.toggleFailure(self.comboBox_8.currentText()))
 
         #For Selection of Switch list
         __sortingEnabled = self.listWidget_11.isSortingEnabled()
         self.listWidget_11.setSortingEnabled(__sortingEnabled)
         switch = self.listWidget_11.item(0)
         switch = self.listWidget_11.item(1)
-        self.listWidget_11.itemClicked.connect(lambda item=switch: self.changeSwitch(item.text()))
 
         #Below is for Displaying CTC Info given
         self.label_3.setText(_translate("MainWindow", "Inputs from CTC"))
@@ -517,10 +490,9 @@ class Ui_MainWindow(object):
         self.pushButton_3.setText(_translate("MainWindow", "Open PLC Code"))
         self.label_4.setText("PLC Path Location")
     
-    
 
 
-    #Functions to be used in all
+    #Functions to be used in all (OLD DO NOT USE)
     def defaultCrossroad(self, text):
         if text == "Crossroad 1":
             if self.Crossroad1 == "on":
@@ -548,13 +520,6 @@ class Ui_MainWindow(object):
             operate.changeLight(self.Light1)
         elif text == "Light 2":
             operate.changeLight(self.Light2)
-    
-
-
-
-
-
-    
     def plcCode(self):
         self.BlockA = False
         self.BlockB = False
@@ -598,36 +563,7 @@ class Ui_MainWindow(object):
 
 
         
-    #Functions all to ensure Manual mode is Good
-    def crossChangeManual(self): #Checks if still selecting crossroad to grey out button
-        if self.comboBox_3.currentText() == "Select Crossroad":
-            self.pushButton.setDisabled(True)
-        else:
-            self.pushButton.setDisabled(False)
-    def switchChangeManual(self): #Checks if still selecting switch to grey out button
-        if self.comboBox_4.currentText() == "Select Switch":
-            self.pushButton_2.setDisabled(True)
-        else:
-            self.pushButton_2.setDisabled(False)
-    def lightChangeManual(self): #Checks if still selecting light to grey out list
-        if self.comboBox_2.currentText() == "Select Light":
-            self.listWidget_2.setDisabled(True)
-        else:
-            self.listWidget_2.setDisabled(False)
-    def checkListManual(self): #Checks if a wayside is selected or not to grey out combo boxes or not
-        if self.listWidget.currentItem() is not None:
-            self.comboBox_12.setEnabled(True)
-    def checkWaysideSelectionManual(self): #Checks if still selecting crossroad to grey out button
-        if self.comboBox_12.currentText() == "Select Wayside":
-            for combo_box in [self.comboBox_2, self.comboBox_3, self.comboBox_4, self.listWidget_5, self.listWidget_6]:
-                combo_box.setDisabled(True)
-        else:
-            for combo_box in [self.comboBox_2, self.comboBox_3, self.comboBox_4, self.listWidget_5, self.listWidget_6]:
-                combo_box.setEnabled(True)
-
-    
-
-
+    #Functions all to ensure Manual mode is Good (OLD DO NOT USE)
     def crossroadUpdater(self):
         if self.comboBox_3.currentText() == "Crossroad 1":
             if self.Crossroad1 == "off":
@@ -668,66 +604,12 @@ class Ui_MainWindow(object):
     
 
 
-
-
-    #Functions for Automatic Mode
-    def checkListAutomatic(self): #Checks if a wayside is selected or not to grey out combo boxes or not
-        if self.listWidget_3.currentItem() is not None:
-            self.comboBox.setEnabled(True)
-    def checkWaysideSelectionAutomatic(self): #Checks if still selecting crossroad to grey out button
-        if self.comboBox.currentText() == "Select Wayside":
-            for combo_box in [self.comboBox_5, self.comboBox_6, self.comboBox_7, self.listWidget_7, self.listWidget_8]:
-                combo_box.setDisabled(True)
-        else:
-            for combo_box in [self.comboBox_5, self.comboBox_6, self.comboBox_7, self.listWidget_7, self.listWidget_8]:
-                combo_box.setEnabled(True)
-
-
-
-    #Functions for Test Bench
-    def checkListTest(self): #Checks if a wayside is selected or not to grey out combo boxes or not
-        if self.listWidget_9.currentItem() is not None:
-            self.comboBox_13.setEnabled(True)
-    def checkWaysideSelectionTest(self): #Checks if still selecting crossroad to grey out button
-        if self.comboBox_13.currentText() == "Select Wayside":
-            for combo_box in [self.comboBox_9, self.comboBox_10, self.comboBox_11, self.comboBox_8]:
-                combo_box.setDisabled(True)
-        else:
-            for combo_box in [self.comboBox_9, self.comboBox_10, self.comboBox_11, self.comboBox_8]:
-                combo_box.setEnabled(True)
-    def crossChangeTest(self): #Checks if still selecting crossroad to grey out list
-        if self.comboBox_10.currentText() == "Select Crossroad":
-            self.listWidget_10.setDisabled(True)
-        else:
-            self.listWidget_10.setDisabled(False)
-    def switchChangeTest(self): #Checks if still selecting switch to grey out list
-        if self.comboBox_11.currentText() == "Select Switch":
-            self.listWidget_11.setDisabled(True)
-        else:
-            self.listWidget_11.setDisabled(False)
-    def lightChangeTest(self): #Checks if still selecting light to grey out list
-        if self.comboBox_9.currentText() == "Select Light":
-            self.listWidget_4.setDisabled(True)
-        else:
-            self.listWidget_4.setDisabled(False)
-    def trackChangeTest(self):
-        if self.comboBox_8.currentText() == "Track Selection":
-            self.pushButton_4.setDisabled(True)
-            self.pushButton_5.setDisabled(True)
-        else:
-            self.pushButton_4.setDisabled(False)
-            self.pushButton_5.setDisabled(False)
-
-
+    #Functions for Test Bench (OLD DO NOT USE)
     def changeLight(self, item):
         if self.comboBox_9.currentText() == "Light 1":
             self.Light1 = item
         elif self.comboBox_9.currentText() == "Light 2":
             self.Light2 = item
-
-    
-
-
     def changeCrossroad(self, item):
         if self.comboBox_10.currentText() == "Crossroad 1":
             self.Crossroad1 = str(item).lower()
@@ -760,11 +642,6 @@ class Ui_MainWindow(object):
                 self.Switch2 = "left"
             else:
                 self.Switch2 = "right"
-    
-
-
-
-    
     def toggleOccu(self, value):
         item = self.listWidget_5.findItems(value, QtCore.Qt.MatchFlag.MatchExactly)
         if item:
