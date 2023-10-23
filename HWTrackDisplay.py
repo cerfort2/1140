@@ -1,9 +1,9 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
-from UI_Breadboard_Class import Operations
+#from UI_Breadboard_Class import Operations
 from PyQt6.QtWidgets import QFileDialog
 import subprocess
 
-operate = Operations() #Class to perform operations on the breadboard
+#operate = Operations() #Class to perform operations on the breadboard
 
 class Ui_MainWindow(object):
 
@@ -561,7 +561,9 @@ class Ui_MainWindow(object):
             self.label_4.setText(fileLocation)
             arduino = "C:\Program Files (x86)\Arduino\\arduino.exe"
             command = f'"{arduino}" "{fileLocation}"'
-            subprocess.run(command, shell=True)        
+            subprocess.run(command, shell=True)    
+
+    """    
     def plcCode(self):
         self.BlockA = False
         self.BlockB = False
@@ -601,7 +603,7 @@ class Ui_MainWindow(object):
         elif self.BlockC or not self.BlockB or not self.BlockA:
             self.Crossroad2 = "off"
             self.Crossroad1 = "off"
-        
+    """
         
     #Functions all to ensure Manual mode is Good
     def crossChangeManual(self): #Checks if still selecting crossroad to grey out button
@@ -630,6 +632,7 @@ class Ui_MainWindow(object):
             for combo_box in [self.comboBox_2, self.comboBox_3, self.comboBox_4, self.listWidget_5, self.listWidget_6]:
                 combo_box.setEnabled(True)
 
+    """
     def crossroadUpdater(self):
         if self.comboBox_3.currentText() == "Crossroad 1":
             if self.Crossroad1 == "off":
@@ -667,7 +670,7 @@ class Ui_MainWindow(object):
         elif self.comboBox_2.currentText() == "Light 2":
             self.Light2 = item
             operate.changeLight(self.Light2)
-
+    """
 
 
     #Functions for Automatic Mode
@@ -717,11 +720,15 @@ class Ui_MainWindow(object):
         else:
             self.pushButton_4.setDisabled(False)
             self.pushButton_5.setDisabled(False)
+
+
     def changeLight(self, item):
         if self.comboBox_9.currentText() == "Light 1":
             self.Light1 = item
         elif self.comboBox_9.currentText() == "Light 2":
             self.Light2 = item
+
+    """
     def changeCrossroad(self, item):
         if self.comboBox_10.currentText() == "Crossroad 1":
             self.Crossroad1 = str(item).lower()
@@ -754,6 +761,8 @@ class Ui_MainWindow(object):
                 self.Switch2 = "left"
             else:
                 self.Switch2 = "right"
+    """
+    
     def toggleOccu(self, value):
         item = self.listWidget_5.findItems(value, QtCore.Qt.MatchFlag.MatchExactly)
         if item:
