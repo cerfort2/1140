@@ -344,23 +344,19 @@ class Ui_MainWindow(object):
         item = self.listWidget_3.item(1)
         item.setText(_translate("MainWindow", "Green Line"))
         self.listWidget_3.setSortingEnabled(__sortingEnabled)
-        self.listWidget_3.itemClicked.connect(self.checkListAutomatic)
 
         self.comboBox_5.setItemText(0, _translate("MainWindow", "Select Light"))
         self.comboBox_5.setItemText(1, _translate("MainWindow", "Light 1"))
         self.comboBox_5.setItemText(2, _translate("MainWindow", "Light 2"))
-        self.comboBox_5.currentTextChanged.connect(self.defaultLight)
 
         self.comboBox.setItemText(0, _translate("MainWindow", "Select Wayside"))
         self.comboBox.setItemText(1, _translate("MainWindow", "Wayside 1"))
         self.comboBox.setItemText(2, _translate("MainWindow", "Wayside 2"))
-        self.comboBox.currentIndexChanged.connect(self.checkWaysideSelectionAutomatic)
 
 
         self.comboBox_6.setItemText(0, _translate("MainWindow", "Select Crossroad"))
         self.comboBox_6.setItemText(1, _translate("MainWindow", "Crossroad 1"))
         self.comboBox_6.setItemText(2, _translate("MainWindow", "Crossroad 2"))
-        self.comboBox_6.currentTextChanged.connect(self.defaultCrossroad)
 
         self.comboBox_7.setItemText(0, _translate("MainWindow", "Select Switch"))
         self.comboBox_7.setItemText(1, _translate("MainWindow", "Switch 1"))
@@ -520,9 +516,10 @@ class Ui_MainWindow(object):
         #PLC Code opener button
         self.pushButton_3.setText(_translate("MainWindow", "Open PLC Code"))
         self.label_4.setText("PLC Path Location")
-
-        self.pushButton_3.clicked.connect(self.openArduinoFile)
     
+    
+
+
     #Functions to be used in all
     def defaultCrossroad(self, text):
         if text == "Crossroad 1":
@@ -551,19 +548,13 @@ class Ui_MainWindow(object):
             operate.changeLight(self.Light1)
         elif text == "Light 2":
             operate.changeLight(self.Light2)
-    def openArduinoFile(self):
-        dialog = QFileDialog()
-        dialog.setNameFilter("Arduino File (*.ino)")
-        dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
-        dialogSuccessful = dialog.exec()
-        if dialogSuccessful:
-            fileLocation = dialog.selectedFiles()[0]
-            self.label_4.setText(fileLocation)
-            arduino = "C:\Program Files (x86)\Arduino\\arduino.exe"
-            command = f'"{arduino}" "{fileLocation}"'
-            subprocess.run(command, shell=True)    
+    
 
-    """    
+
+
+
+
+    
     def plcCode(self):
         self.BlockA = False
         self.BlockB = False
@@ -603,7 +594,9 @@ class Ui_MainWindow(object):
         elif self.BlockC or not self.BlockB or not self.BlockA:
             self.Crossroad2 = "off"
             self.Crossroad1 = "off"
-    """
+    
+
+
         
     #Functions all to ensure Manual mode is Good
     def crossChangeManual(self): #Checks if still selecting crossroad to grey out button
@@ -632,7 +625,9 @@ class Ui_MainWindow(object):
             for combo_box in [self.comboBox_2, self.comboBox_3, self.comboBox_4, self.listWidget_5, self.listWidget_6]:
                 combo_box.setEnabled(True)
 
-    """
+    
+
+
     def crossroadUpdater(self):
         if self.comboBox_3.currentText() == "Crossroad 1":
             if self.Crossroad1 == "off":
@@ -670,7 +665,9 @@ class Ui_MainWindow(object):
         elif self.comboBox_2.currentText() == "Light 2":
             self.Light2 = item
             operate.changeLight(self.Light2)
-    """
+    
+
+
 
 
     #Functions for Automatic Mode
@@ -728,7 +725,9 @@ class Ui_MainWindow(object):
         elif self.comboBox_9.currentText() == "Light 2":
             self.Light2 = item
 
-    """
+    
+
+
     def changeCrossroad(self, item):
         if self.comboBox_10.currentText() == "Crossroad 1":
             self.Crossroad1 = str(item).lower()
@@ -761,7 +760,10 @@ class Ui_MainWindow(object):
                 self.Switch2 = "left"
             else:
                 self.Switch2 = "right"
-    """
+    
+
+
+
     
     def toggleOccu(self, value):
         item = self.listWidget_5.findItems(value, QtCore.Qt.MatchFlag.MatchExactly)
@@ -791,13 +793,3 @@ class Ui_MainWindow(object):
             self.listWidget_8.addItem(new_item2)
 
 
-
-
-"""if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec()) """

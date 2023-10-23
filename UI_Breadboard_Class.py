@@ -31,7 +31,7 @@ class Operations():
         time.sleep(1.1)
         serialComm.write(toText.encode())
 
-    def crossroadOn(self):
+    def crossroadChange(self):
         status = "crossroadOn"
         serialComm.write(status.encode())
         time.sleep(.5)
