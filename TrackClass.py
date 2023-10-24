@@ -17,11 +17,14 @@ class Track():
 
     isStation = False #Specify if the block is a station
 
-    def __init__(self, switch:bool, crossroad:bool, light:bool, station:bool): #Initlize a Track to be set as a switch or a crossroad
+    trackName = ""
+
+    def __init__(self, switch:bool, crossroad:bool, light:bool, station:bool, trackName:str): #Initlize a Track to be set as a switch or a crossroad
         self.isSwitch = switch
         self.isLight = light
         self.isCrossroad = crossroad
         self.isStation = station
+        self.trackName = trackName
     
     def getOccupancy(self): #Get the occupancy
         return self.occupancy
@@ -67,4 +70,7 @@ class Track():
     
     def getLight(self):
         return self.lightStatus
+    
+    def getTrackName(self):
+        return self.trackName
         
