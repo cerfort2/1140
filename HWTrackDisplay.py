@@ -7,17 +7,6 @@ import subprocess
 
 class Ui_MainWindow(object):
 
-    Light1 = "green"
-    Light2 = "red"
-    Switch1 = "left"
-    Switch2 = "left"
-    Crossroad1 = "off"
-    Crossroad2 = "off"
-    BlockA = False
-    BlockB = False
-    BlockC = False
-    BlockE = False
-
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(916, 350)
@@ -338,20 +327,12 @@ class Ui_MainWindow(object):
         self.listWidget_3.setSortingEnabled(__sortingEnabled)
 
         self.comboBox_5.setItemText(0, _translate("MainWindow", "Select Light"))
-
         self.comboBox.setItemText(0, _translate("MainWindow", "Select Wayside"))
-
-
         self.comboBox_6.setItemText(0, _translate("MainWindow", "Select Crossroad"))
-
         self.comboBox_7.setItemText(0, _translate("MainWindow", "Select Switch"))
-
         self.label_12.setText(_translate("MainWindow", "Blocks Occupied"))
-
         self.label_13.setText(_translate("MainWindow", "Track Failures"))
-
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Main Page - Automatic"))
-
 
 
         #Manual Mode UI

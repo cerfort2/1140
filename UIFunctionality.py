@@ -4,13 +4,49 @@ from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QPushBut
 from PyQt6.QtCore import QTimer
 from PyQt6 import QtCore, QtGui, QtWidgets
 from HWTrackDisplay import Ui_MainWindow
+from WaysideClass import Wayside
 #from UI_Breadboard_Class import Operations
 
 #operate = Operations() #Class to perform operations on the breadboard
 
 class HWTrackControllerGUI(QMainWindow):
     
-    
+    Waysides = [Wayside(), Wayside(), Wayside(), Wayside()] #All The waysides going int order of 1,2,3,4 for Green Line
+    #Configuration of all tracks in Green Line Waysides
+    #switch:bool, crossroad:bool, light:bool, station:bool
+    Waysides[0].createTrack(False, False, True, False) #A1
+    Waysides[0].createTrack(False, False, False, True) #A2
+    Waysides[0].createTrack(False, False, False, False) #A3
+    Waysides[0].createTrack(False, False, False, False) #B4
+    Waysides[0].createTrack(False, False, False, False) #B5
+    Waysides[0].createTrack(False, False, False, False) #B6
+    Waysides[0].createTrack(False, False, False, False) #C7
+    Waysides[0].createTrack(False, False, False, False) #C8
+    Waysides[0].createTrack(False, False, False, True) #C9
+    Waysides[0].createTrack(False, False, False, False) #C10
+    Waysides[0].createTrack(False, False, False, False) #C11
+    Waysides[0].createTrack(False, False, False, False) #C12
+    Waysides[0].createTrack(True, False, True, False, "A1", "C12") #D13
+    Waysides[0].createTrack(False, False, False, False) #D14
+    Waysides[0].createTrack(False, False, False, False) #D15
+    Waysides[0].createTrack(False, False, False, True) #D16
+    Waysides[0].createTrack(False, False, False, False) #E17
+    Waysides[0].createTrack(False, False, False, False) #E18
+    Waysides[0].createTrack(False, True, False, False) #E19
+    Waysides[0].createTrack(False, False, False, False) #E20
+    Waysides[0].createTrack(False, False, False, False) #F21
+    Waysides[0].createTrack(False, False, False, True) #F22
+    Waysides[0].createTrack(False, False, False, False) #F23
+    Waysides[0].createTrack(False, False, False, False) #F24
+    Waysides[0].createTrack(False, False, False, False) #F25
+    Waysides[0].createTrack(False, False, False, False) #F26
+    Waysides[0].createTrack(False, False, False, False) #F27
+    Waysides[0].createTrack(False, False, False, False) #F28
+    Waysides[0].createTrack(True, False, True, False, "Z150", "G30") #G29
+    Waysides[0].createTrack(False, False, False, False) #G30
+    Waysides[0].createTrack(False, False, False, True) #G31
+    Waysides[0].createTrack(False, False, False, False) #G32
+    Waysides[0].createTrack(False, True, False, False) #Z150
 
     def __init__(self):
         super().__init__()
