@@ -34,7 +34,7 @@ class Ui_MainWindow(object):
         self.tab_2.setObjectName("tab_2")
         self.listWidget_3 = QtWidgets.QListWidget(parent=self.tab_2)
         self.listWidget_3.setGeometry(QtCore.QRect(10, 20, 121, 61))
-        self.listWidget_3.setObjectName("listWidget_3") #Wayside Selector
+        self.listWidget_3.setObjectName("listWidget_3") #Line Selector
         item = QtWidgets.QListWidgetItem()
         self.listWidget_3.addItem(item)
         item = QtWidgets.QListWidgetItem()
@@ -44,15 +44,11 @@ class Ui_MainWindow(object):
         self.comboBox_5.setGeometry(QtCore.QRect(170, 70, 101, 22))
         self.comboBox_5.setObjectName("comboBox_5") #Light Selector
         self.comboBox_5.addItem("")
-        self.comboBox_5.addItem("")
-        self.comboBox_5.addItem("")
         self.comboBox_5.setDisabled(True)
 
         self.comboBox_6 = QtWidgets.QComboBox(parent=self.tab_2)
         self.comboBox_6.setGeometry(QtCore.QRect(330, 70, 121, 22))
         self.comboBox_6.setObjectName("comboBox_6") #Crossroad Selector
-        self.comboBox_6.addItem("")
-        self.comboBox_6.addItem("")
         self.comboBox_6.addItem("")
         self.comboBox_6.setDisabled(True)
 
@@ -60,15 +56,11 @@ class Ui_MainWindow(object):
         self.comboBox_7.setGeometry(QtCore.QRect(500, 70, 101, 22))
         self.comboBox_7.setObjectName("comboBox_7") #Switch Selector
         self.comboBox_7.addItem("")
-        self.comboBox_7.addItem("")
-        self.comboBox_7.addItem("")
         self.comboBox_7.setDisabled(True)
 
         self.comboBox = QtWidgets.QComboBox(parent=self.tab_2)
         self.comboBox.setGeometry(QtCore.QRect(10, 110, 121, 22))
         self.comboBox.setObjectName("comboBox") #Wayside Selector
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.setDisabled(True)
 
@@ -100,7 +92,7 @@ class Ui_MainWindow(object):
         self.tab.setObjectName("tab")
         self.listWidget = QtWidgets.QListWidget(parent=self.tab)
         self.listWidget.setGeometry(QtCore.QRect(10, 30, 121, 61))
-        self.listWidget.setObjectName("listWidget") #Wayside Selector
+        self.listWidget.setObjectName("listWidget") #Line Selector
         item = QtWidgets.QListWidgetItem()
         self.listWidget.addItem(item)
         item = QtWidgets.QListWidgetItem()
@@ -192,7 +184,7 @@ class Ui_MainWindow(object):
         self.tab_3.setObjectName("tab_3")
         self.listWidget_9 = QtWidgets.QListWidget(parent=self.tab_3)
         self.listWidget_9.setGeometry(QtCore.QRect(10, 10, 121, 61))
-        self.listWidget_9.setObjectName("listWidget_9") #Wayside Selector
+        self.listWidget_9.setObjectName("listWidget_9") #Line Selector
         item = QtWidgets.QListWidgetItem()
         self.listWidget_9.addItem(item)
         item = QtWidgets.QListWidgetItem()
@@ -346,21 +338,13 @@ class Ui_MainWindow(object):
         self.listWidget_3.setSortingEnabled(__sortingEnabled)
 
         self.comboBox_5.setItemText(0, _translate("MainWindow", "Select Light"))
-        self.comboBox_5.setItemText(1, _translate("MainWindow", "Light 1"))
-        self.comboBox_5.setItemText(2, _translate("MainWindow", "Light 2"))
 
         self.comboBox.setItemText(0, _translate("MainWindow", "Select Wayside"))
-        self.comboBox.setItemText(1, _translate("MainWindow", "Wayside 1"))
-        self.comboBox.setItemText(2, _translate("MainWindow", "Wayside 2"))
 
 
         self.comboBox_6.setItemText(0, _translate("MainWindow", "Select Crossroad"))
-        self.comboBox_6.setItemText(1, _translate("MainWindow", "Crossroad 1"))
-        self.comboBox_6.setItemText(2, _translate("MainWindow", "Crossroad 2"))
 
         self.comboBox_7.setItemText(0, _translate("MainWindow", "Select Switch"))
-        self.comboBox_7.setItemText(1, _translate("MainWindow", "Switch 1"))
-        self.comboBox_7.setItemText(2, _translate("MainWindow", "Switch 2"))
 
         self.label_12.setText(_translate("MainWindow", "Blocks Occupied"))
 
