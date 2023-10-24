@@ -11,8 +11,10 @@ from WaysideClass import Wayside
 
 class HWTrackControllerGUI(QMainWindow):
     
-    Waysides = [Wayside(), Wayside(), Wayside(), Wayside()] #All The waysides going int order of 1,2,3,4 for Green Line
+    Waysides = [Wayside(), Wayside(), Wayside(), Wayside()] #All The waysides going in order of 1,2,3,4 for Green Line
+
     #Configuration of all tracks in Green Line Waysides
+    #switch:bool, crossroad:bool, light:bool, station:bool, trackName:str
     #Wayside 1
     Waysides[0].createTrack(False, False, True, False, "A1") #A1 [0]
     Waysides[0].createTrack(False, False, False, True, "A2") #A2 [1]
@@ -91,11 +93,10 @@ class HWTrackControllerGUI(QMainWindow):
     Waysides[1].createTrack(False, False, False, True, "L73") #L73 [40]
     Waysides[1].createTrack(False, False, True, False, "YARD") #YARD [41]
     #Wayside 3
-    #switch:bool, crossroad:bool, light:bool, station:bool
     Waysides[2].createTrack(False, False, False, False, "M74") #M74 [0]
     Waysides[2].createTrack(False, False, False, False, "M75") #M75 [1]
-    Waysides[2].createTrack(False, False, False, False, "M76") #M76 [2]
-    Waysides[2].createTrack(False, False, False, False, "N77") #N77 [3]
+    Waysides[2].createTrack(False, False, True, False, "M76") #M76 [2]
+    Waysides[2].createTrack(True, False, True, True, "N77", "M76", "R101") #N77 [3]
     Waysides[2].createTrack(False, False, False, False, "N78") #N78 [4]
     Waysides[2].createTrack(False, False, False, False, "N79") #N79 [5]
     Waysides[2].createTrack(False, False, False, False, "N80") #N80 [6]
@@ -103,10 +104,10 @@ class HWTrackControllerGUI(QMainWindow):
     Waysides[2].createTrack(False, False, False, False, "N82") #N82 [8]
     Waysides[2].createTrack(False, False, False, False, "N83") #N83 [9]
     Waysides[2].createTrack(False, False, False, False, "N84") #N84 [10]
-    Waysides[2].createTrack(False, False, False, False, "N85") #N85 [11]
+    Waysides[2].createTrack(True, False, True, False, "N85", "Q100", "O86") #N85 [11]
     Waysides[2].createTrack(False, False, False, False, "O86") #O86 [12]
     Waysides[2].createTrack(False, False, False, False, "O87") #O87 [13]
-    Waysides[2].createTrack(False, False, False, False, "O88") #O88 [14]
+    Waysides[2].createTrack(False, False, False, True, "O88") #O88 [14]
     Waysides[2].createTrack(False, False, False, False, "P89") #P89 [15]
     Waysides[2].createTrack(False, False, False, False, "P90") #P90 [16]
     Waysides[2].createTrack(False, False, False, False, "P91") #P91 [17]
@@ -114,62 +115,61 @@ class HWTrackControllerGUI(QMainWindow):
     Waysides[2].createTrack(False, False, False, False, "P93") #P93 [19]
     Waysides[2].createTrack(False, False, False, False, "P94") #P94 [20]
     Waysides[2].createTrack(False, False, False, False, "P95") #P95 [21]
-    Waysides[2].createTrack(False, False, False, False, "P96") #P96 [22]
+    Waysides[2].createTrack(False, False, False, True, "P96") #P96 [22]
     Waysides[2].createTrack(False, False, False, False, "P97") #P97 [23]
     Waysides[2].createTrack(False, False, False, False, "Q98") #Q98 [24]
     Waysides[2].createTrack(False, False, False, False, "Q99") #Q99 [25]
-    Waysides[2].createTrack(False, False, False, False, "Q100") #Q100 [26]
+    Waysides[2].createTrack(False, False, True, False, "Q100") #Q100 [26]
     Waysides[2].createTrack(False, False, False, False, "R101") #R101 [27]
-
     #Wayside 4
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-    Waysides[3].createTrack(False, False, False, False, "") # []
-    Waysides[3].createTrack(False, False, False, False "") # []
-
+    Waysides[3].createTrack(False, False, False, False, "S102") #S102 [0]
+    Waysides[3].createTrack(False, False, False, False, "S103") #S103 [1]
+    Waysides[3].createTrack(False, False, False, False, "S104") #S104 [2]
+    Waysides[3].createTrack(False, False, False, True, "T105") #T105 [3]
+    Waysides[3].createTrack(False, False, False, False, "T106") #T106 [4]
+    Waysides[3].createTrack(False, False, False, False, "T107") #T107 [5]
+    Waysides[3].createTrack(False, False, False, False, "T108") #T108 [6]
+    Waysides[3].createTrack(False, False, False, False, "T109") #T109 [7]
+    Waysides[3].createTrack(False, False, False, False, "U110") #U110 [8]
+    Waysides[3].createTrack(False, False, False, False, "U111") #U111 [9]
+    Waysides[3].createTrack(False, False, False, False, "U112") #U112 [10]
+    Waysides[3].createTrack(False, False, False, False, "U113") #U113 [11]
+    Waysides[3].createTrack(False, False, False, True, "U114") #U114 [12]
+    Waysides[3].createTrack(False, False, False, False, "U115") #U115 [13]
+    Waysides[3].createTrack(False, False, False, False, "U116") #U116 [14]
+    Waysides[3].createTrack(False, False, False, False, "V117") #V117 [15]
+    Waysides[3].createTrack(False, False, False, False, "V118") #V118 [16]
+    Waysides[3].createTrack(False, False, False, False, "V119") #V119 [17]
+    Waysides[3].createTrack(False, False, False, False, "V120") #V120 [18]
+    Waysides[3].createTrack(False, False, False, False, "V121") #V121 [19]
+    Waysides[3].createTrack(False, False, False, False, "W122") #W122 [20]
+    Waysides[3].createTrack(False, False, False, True, "W123") #W123 [21]
+    Waysides[3].createTrack(False, False, False, False, "W124") #W124 [22]
+    Waysides[3].createTrack(False, False, False, False, "W125") #W125 [23]
+    Waysides[3].createTrack(False, False, False, False, "W126") #W126 [24]
+    Waysides[3].createTrack(False, False, False, False, "W127") #W127 [25]
+    Waysides[3].createTrack(False, False, False, False, "W128") #W128 [26]
+    Waysides[3].createTrack(False, False, False, False, "W129") #W129 [27]
+    Waysides[3].createTrack(False, False, False, False, "W130") #W130 [28]
+    Waysides[3].createTrack(False, False, False, False, "W131") #W131 [29]
+    Waysides[3].createTrack(False, False, False, True, "W132") #W132 [30]
+    Waysides[3].createTrack(False, False, False, False, "W133") #W133 [31]
+    Waysides[3].createTrack(False, False, False, False, "W134") #W134 [32]
+    Waysides[3].createTrack(False, False, False, False, "W135") #W135 [33]
+    Waysides[3].createTrack(False, False, False, False, "W136") #W136 [34]
+    Waysides[3].createTrack(False, False, False, False, "W137") #W137 [35]
+    Waysides[3].createTrack(False, False, False, False, "W138") #W138 [36]
+    Waysides[3].createTrack(False, False, False, False, "W139") #W139 [37]
+    Waysides[3].createTrack(False, False, False, False, "W140") #W140 [38]
+    Waysides[3].createTrack(False, False, False, True, "W141") #W141 [39]
+    Waysides[3].createTrack(False, False, False, False, "W142") #W142 [40]
+    Waysides[3].createTrack(False, False, False, False, "W143") #W143 [41]
+    Waysides[3].createTrack(False, False, False, False, "X144") #X144 [42]
+    Waysides[3].createTrack(False, False, False, False, "X145") #X145 [43]
+    Waysides[3].createTrack(False, False, False, False, "X146") #X146 [44]
+    Waysides[3].createTrack(False, False, False, False, "Y147") #Y147 [45]
+    Waysides[3].createTrack(False, False, False, False, "Y148") #Y148 [46]
+    Waysides[3].createTrack(False, False, False, False, "Y149") #Y149 [47]
 
     def __init__(self):
         super().__init__()
@@ -265,6 +265,9 @@ class HWTrackControllerGUI(QMainWindow):
         else:
             for combo_box in [self.ui.comboBox_5, self.ui.comboBox_6, self.ui.comboBox_7, self.ui.listWidget_7, self.ui.listWidget_8]:
                 combo_box.setEnabled(True)
+        self.configureLightsAutomaticGreen(self.ui.comboBox.currentText())
+        self.configureCrossroadsAutomaticGreen(self.ui.comboBox.currentText())
+        self.configureSwitchAutomaticGreen(self.ui.comboBox.currentText())
 
 
     #Functions used in Manual Mode
@@ -299,6 +302,9 @@ class HWTrackControllerGUI(QMainWindow):
         else:
             for combo_box in [self.ui.comboBox_2, self.ui.comboBox_3, self.ui.comboBox_4, self.ui.listWidget_5, self.ui.listWidget_6]:
                 combo_box.setEnabled(True)
+        self.configureLightsManualGreen(self.ui.comboBox_12.currentText())
+        self.configureCrossroadsManualGreen(self.ui.comboBox_12.currentText())
+        self.configureSwitchManualGreen(self.ui.comboBox_12.currentText())
 
 
     #Functions used in Test Bench
@@ -318,6 +324,9 @@ class HWTrackControllerGUI(QMainWindow):
         else:
             for combo_box in [self.ui.comboBox_9, self.ui.comboBox_10, self.ui.comboBox_11, self.ui.comboBox_8]:
                 combo_box.setEnabled(True)
+        self.configureLightsTestGreen(self.ui.comboBox_13.currentText())
+        self.configureCrossroadsTestGreen(self.ui.comboBox_13.currentText())
+        self.configureSwitchTestGreen(self.ui.comboBox_13.currentText())
     def crossChangeTest(self): #Checks if still selecting crossroad to grey out list
         if self.ui.comboBox_10.currentText() == "Select Crossroad":
             self.ui.listWidget_10.setDisabled(True)
@@ -357,6 +366,7 @@ class HWTrackControllerGUI(QMainWindow):
             temp.setText("")
             temp = self.ui.listWidget_11.item(1)
             temp.setText("")
+
 
     #Code for configuration of Green Line Values
     #Automatic Mode

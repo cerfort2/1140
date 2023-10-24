@@ -8,6 +8,7 @@ class Operations():
     def __init__(self):
         pass
     
+    #True = Red, False = Green
     def changeLight(self, color): #Function to change breadboard light color
         light = "lights"
         serialComm.write(light.encode())
@@ -31,7 +32,7 @@ class Operations():
         time.sleep(1.1)
         serialComm.write(toText.encode())
 
-    def crossroadChange(self):
+    def crossroadOn(self):
         status = "crossroadOn"
         serialComm.write(status.encode())
         time.sleep(.5)
