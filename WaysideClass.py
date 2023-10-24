@@ -9,3 +9,6 @@ class Wayside():
         if switch == True: #If it is a switch you can also specify the Left and Right Destination
             self.tracks[self.tracks.__len__()-1].setLeftDest(left)
             self.tracks[self.tracks.__len__()-1].setRightDest(right)
+    
+    def getTrack(self, index): #Gets a certain track from the Wayside
+        return self.tracks[index]
