@@ -327,6 +327,7 @@ class HWTrackControllerGUI(QMainWindow):
         self.configureLightsTestGreen(self.ui.comboBox_13.currentText())
         self.configureCrossroadsTestGreen(self.ui.comboBox_13.currentText())
         self.configureSwitchTestGreen(self.ui.comboBox_13.currentText())
+        self.configureTrackSelectionGreen(self.ui.comboBox_13.currentText())
     def crossChangeTest(self): #Checks if still selecting crossroad to grey out list
         if self.ui.comboBox_10.currentText() == "Select Crossroad":
             self.ui.listWidget_10.setDisabled(True)
@@ -378,24 +379,30 @@ class HWTrackControllerGUI(QMainWindow):
         self.ui.comboBox.addItem("Wayside 3")
         self.ui.comboBox.addItem("Wayside 4")
     def configureLightsAutomaticGreen(self, currentWayside): #Sets proper lights for each wayside selection
+        for i in range(self.ui.comboBox_5.count(), 0, -1):
+            self.ui.comboBox_5.removeItem(i)
         if(currentWayside == "Wayside 1"):
-            return
+            self.ui.comboBox_5.addItem("Light A1")
+            self.ui.comboBox_5.addItem("Light D13")
+            self.ui.comboBox_5.addItem("Light G29")
+            self.ui.comboBox_5.addItem("Light Z150")
         elif(currentWayside == "Wayside 2"):
-            return
+            self.ui.comboBox_5.addItem("Light J58")
+            self.ui.comboBox_5.addItem("Light J61")
+            self.ui.comboBox_5.addItem("Light YARD")
         elif(currentWayside == "Wayside 3"):
-            return
-        elif(currentWayside == "Wayside 4"):
-            return
+            self.ui.comboBox_5.addItem("Light M76")
+            self.ui.comboBox_5.addItem("Light N77")
+            self.ui.comboBox_5.addItem("Light N85")
+            self.ui.comboBox_5.addItem("Light Q100")
     def configureCrossroadsAutomaticGreen(self, currentWayside): #Sets proper crossroads for each wayside selection
+        for i in range(self.ui.comboBox_6.count(), 0, -1):
+            self.ui.comboBox_6.removeItem(i)
         if(currentWayside == "Wayside 1"):
-            return
-        elif(currentWayside == "Wayside 2"):
-            return
-        elif(currentWayside == "Wayside 3"):
-            return
-        elif(currentWayside == "Wayside 4"):
-            return
+            self.ui.comboBox_6.addItem("Crossroad E19")
     def configureSwitchAutomaticGreen(self, currentWayside): #Sets proper switches for each wayside selection
+        for i in range(self.ui.comboBox_5.count(), 0, -1):
+            self.ui.comboBox_5.removeItem(i)
         if(currentWayside == "Wayside 1"):
             return
         elif(currentWayside == "Wayside 2"):

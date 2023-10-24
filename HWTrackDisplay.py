@@ -109,15 +109,11 @@ class Ui_MainWindow(object):
         self.comboBox_2.setGeometry(QtCore.QRect(160, 60, 101, 22))
         self.comboBox_2.setObjectName("comboBox_2") #Select Light
         self.comboBox_2.addItem("")
-        self.comboBox_2.addItem("")
-        self.comboBox_2.addItem("")
         self.comboBox_2.setDisabled(True)
 
         self.comboBox_12 = QtWidgets.QComboBox(parent=self.tab)
         self.comboBox_12.setGeometry(QtCore.QRect(10, 110, 121, 22))
         self.comboBox_12.setObjectName("comboBox_12") #Wayside Selector
-        self.comboBox_12.addItem("")
-        self.comboBox_12.addItem("")
         self.comboBox_12.addItem("")
         self.comboBox_12.setDisabled(True)
 
@@ -130,8 +126,6 @@ class Ui_MainWindow(object):
         self.comboBox_3.setGeometry(QtCore.QRect(310, 60, 121, 22))
         self.comboBox_3.setObjectName("comboBox_3") #Select Crossroad
         self.comboBox_3.addItem("")
-        self.comboBox_3.addItem("")
-        self.comboBox_3.addItem("")
         self.comboBox_3.setDisabled(True)
 
         self.pushButton_2 = QtWidgets.QPushButton(parent=self.tab)
@@ -142,8 +136,6 @@ class Ui_MainWindow(object):
         self.comboBox_4 = QtWidgets.QComboBox(parent=self.tab)
         self.comboBox_4.setGeometry(QtCore.QRect(500, 60, 101, 22))
         self.comboBox_4.setObjectName("comboBox_4") #Select Switch
-        self.comboBox_4.addItem("")
-        self.comboBox_4.addItem("")
         self.comboBox_4.addItem("")
         self.comboBox_4.setDisabled(True)
 
@@ -183,9 +175,6 @@ class Ui_MainWindow(object):
         self.comboBox_8.setGeometry(QtCore.QRect(310, 110, 101, 22))
         self.comboBox_8.setObjectName("comboBox_8") #Track selections
         self.comboBox_8.addItem("")
-        self.comboBox_8.addItem("")
-        self.comboBox_8.addItem("")
-        self.comboBox_8.addItem("")
         self.comboBox_8.setDisabled(True)
 
         self.pushButton_4 = QtWidgets.QPushButton(parent=self.tab_3)
@@ -197,15 +186,11 @@ class Ui_MainWindow(object):
         self.comboBox_9.setGeometry(QtCore.QRect(170, 10, 101, 22))
         self.comboBox_9.setObjectName("comboBox_9") #Select Light
         self.comboBox_9.addItem("")
-        self.comboBox_9.addItem("")
-        self.comboBox_9.addItem("")
         self.comboBox_9.setDisabled(True)
 
         self.comboBox_10 = QtWidgets.QComboBox(parent=self.tab_3)
         self.comboBox_10.setGeometry(QtCore.QRect(310, 10, 121, 22))
         self.comboBox_10.setObjectName("comboBox_10") #Select Crossroad
-        self.comboBox_10.addItem("")
-        self.comboBox_10.addItem("")
         self.comboBox_10.addItem("")
         self.comboBox_10.setDisabled(True)
 
@@ -213,15 +198,11 @@ class Ui_MainWindow(object):
         self.comboBox_11.setGeometry(QtCore.QRect(470, 10, 101, 22))
         self.comboBox_11.setObjectName("comboBox_11") #Select Switch
         self.comboBox_11.addItem("")
-        self.comboBox_11.addItem("")
-        self.comboBox_11.addItem("")
         self.comboBox_11.setDisabled(True)
 
         self.comboBox_13 = QtWidgets.QComboBox(parent=self.tab_3)
         self.comboBox_13.setGeometry(QtCore.QRect(10, 110, 121, 22))
         self.comboBox_13.setObjectName("comboBox") #Wayside Selector
-        self.comboBox_13.addItem("")
-        self.comboBox_13.addItem("")
         self.comboBox_13.addItem("")
         self.comboBox_13.setDisabled(True)
 
@@ -351,26 +332,12 @@ class Ui_MainWindow(object):
         red = self.listWidget_2.item(1)
         red.setText(_translate("MainWindow", "Green"))
         self.listWidget_2.setSortingEnabled(__sortingEnabled)
-
         self.comboBox_2.setItemText(0, _translate("MainWindow", "Select Light"))
-        self.comboBox_2.setItemText(1, _translate("MainWindow", "Light 1"))
-        self.comboBox_2.setItemText(2, _translate("MainWindow", "Light 2"))
-
         self.pushButton.setText(_translate("MainWindow", "Toggle Crossroad"))
-
         self.comboBox_3.setItemText(0, _translate("MainWindow", "Select Crossroad"))
-        self.comboBox_3.setItemText(1, _translate("MainWindow", "Crossroad 1"))
-        self.comboBox_3.setItemText(2, _translate("MainWindow", "Crossroad 2"))
-
         self.pushButton_2.setText(_translate("MainWindow", "Toggle Switch"))
-
         self.comboBox_12.setItemText(0, _translate("MainWindow", "Select Wayside"))
-        self.comboBox_12.setItemText(1, _translate("MainWindow", "Wayside 1"))
-        self.comboBox_12.setItemText(2, _translate("MainWindow", "Wayside 2"))
-
         self.comboBox_4.setItemText(0, _translate("MainWindow", "Select Switch"))
-        self.comboBox_4.setItemText(1, _translate("MainWindow", "Switch 1"))
-        self.comboBox_4.setItemText(2, _translate("MainWindow", "Switch 2"))
 
         #No need to edit these 3 values
         self.label_10.setText(_translate("MainWindow", "Blocks Occupied"))
@@ -388,27 +355,11 @@ class Ui_MainWindow(object):
         self.listWidget_9.setSortingEnabled(__sortingEnabled)
 
         self.comboBox_8.setItemText(0, _translate("MainWindow", "Track Selection"))
-        self.comboBox_8.setItemText(1, _translate("MainWindow", "A"))
-        self.comboBox_8.setItemText(2, _translate("MainWindow", "B"))
-        self.comboBox_8.setItemText(3, _translate("MainWindow", "C"))
-
         self.pushButton_4.setText(_translate("MainWindow", "Toggle Occupancy"))
-
         self.comboBox_9.setItemText(0, _translate("MainWindow", "Select Light"))
-        self.comboBox_9.setItemText(1, _translate("MainWindow", "Light 1"))
-        self.comboBox_9.setItemText(2, _translate("MainWindow", "Light 2"))
-
         self.comboBox_10.setItemText(0, _translate("MainWindow", "Select Crossroad"))
-        self.comboBox_10.setItemText(1, _translate("MainWindow", "Crossroad 1"))
-        self.comboBox_10.setItemText(2, _translate("MainWindow", "Crossroad 2"))
-
         self.comboBox_11.setItemText(0, _translate("MainWindow", "Select Switch"))
-        self.comboBox_11.setItemText(1, _translate("MainWindow", "Switch 1"))
-        self.comboBox_11.setItemText(2, _translate("MainWindow", "Switch 2"))
-
         self.comboBox_13.setItemText(0, _translate("MainWindow", "Select Wayside"))
-        self.comboBox_13.setItemText(1, _translate("MainWindow", "Wayside 1"))
-        self.comboBox_13.setItemText(2, _translate("MainWindow", "Wayside 2"))
 
         __sortingEnabled = self.listWidget_4.isSortingEnabled()
         self.listWidget_4.setSortingEnabled(False)
