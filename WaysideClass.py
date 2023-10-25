@@ -14,4 +14,7 @@ class Wayside():
         return self.tracks[index]
     
     def getTrackName(self, index):
-        return self.tracks[index].getTrackname()
+        return self.tracks[index].getTrackName()
+    
+    def amountOfTracks(self):
+        return len(self.tracks)
