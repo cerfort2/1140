@@ -2,21 +2,26 @@ import sys
 from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QPushButton, QComboBox, QMainWindow
 from PyQt6.QtCore import QTimer
 from PyQt6 import QtCore, QtGui, QtWidgets
+from datetime import datetime
 
 from swtc import Ui_MainWindow
 
 
-
 class SoftwareTrainControllerGUI(QMainWindow):
+  #self.textEdit_9.setStyleSheet(background-color: orange)
+  #self.ebrake.setStyleSheet('background-color: #FF7F7F')
+
 
     #variables
+    manualmode=False
+    automaticcommandedspeed=0
+    manualcommandedspeed=0
     nextstop="a stop"
     currentSpeed=0      #current speed in manual or auto (max speed is 70km/hr)
     previousSpeed=0
     commandedSpeed=0    #commanded speed in automatic mode
-    acceleration=0      # m/s^2
+    speedLimit=43
     authority=0         #authority in automatic mode
-    mass=40.9              #in tons (max is 56.7)
     temperature=70       #temp in degrees fahrenheit
     exlights=False     #true=on
     intlights=False      #true=on
@@ -26,202 +31,185 @@ class SoftwareTrainControllerGUI(QMainWindow):
     manualMode=False    #true =manual mode on
     eBrake=False        #false=not pressed
     serviceBrake=False  #false=not pressed
+    ek=0
+    ekprev=0
+    uk=0
     kp=0    #proportional gain
     ki=0    #integral gain
     brakeFailure=False  # false is no failure
     engineFailure=False
     signalFailure=False
-    time=1300
-    force=0         # f=ma
-    power=0     # p=fv  
+    power=0     
+    interval=.05
     
-        
-    
+
+        #need to implement sliders for velocity (buttons?)
+        #collect values with a timer or by signals?
+        #need bool values for doors, lights in automatic mode?
+        #need an announcement input?
+
     def __init__(self):
         super().__init__()
         self.init_ui()
 
-        #cannot change the train failures in manual or automatic mode
-        self.ui.manualbrakefailure_2.setDisabled(True)
-        self.ui.manualenginefailure.setDisabled(True)
-        self.ui.manualsignalfailure.setDisabled(True)
-        self.ui.autobrakefailure.setDisabled(True)
-        self.ui.autoenginefailure.setDisabled(True)
-        self.ui.autosignalfailure.setDisabled(True)
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_time)
+        self.timer.start(50)
 
-        #cannot edit doors or light statuses in automatic mode
-        self.ui.autoleftdoor.setDisabled(True)
-        self.ui.autorightdoor.setDisabled(True)
-        self.ui.autoexternallights.setDisabled(True)
-        self.ui.autointernallights.setDisabled(True)
-                
+
+        self.ui.commandedspeed.setMaximumHeight(43) #set maximum speed limit of the train
         
+        self.ui.manualspeed.setTickInterval(1) 
+       
+        self.ui.mode.currentTextChanged.connect(self.modeVals)  #check for change in mode
+        self.ui.ebrake.clicked.connect(self.eBrakePressed)      #check for if ebrake is pushed in manual or automatic
 
-        self.ui.tbapply.clicked.connect(self.tbreceiveVals)         #check for if the apply button is pressed in the test bench
-        self.ui.manualapply.clicked.connect(self.manualreceiveVals)   # check for if the apply button is pressed in the manual mode ui
-
-        self.ui.autoebrake.clicked.connect(self.eBrakePressed)      #check for if ebrake is pushed in manual or automatic
-        self.ui.manualebrake.clicked.connect(self.eBrakePressed)   
-
-        self.ui.servicebrake.clicked.connect(self.serviceBrakePressed) #check for if service brake is pushed in manual mode
-
-#still need to implement functionality for manual changes
+        #look for changes in service brake and manual speed     
+        self.ui.manualspeed.valueChanged.connect(self.manualspeedPressed)
+        self.ui.servicebrake.valueChanged.connect(self.serviceBrakePressed)
+    
+    def update_time(self):
+        self.ui.time.setDateTime(datetime.now())
+        self.receiveVals()
+        
+        
+        #cannot edit doors or light statuses in automatic mode
+    def modeVals(self):
+        if self.ui.mode.currentText()=='Automatic':
+            print('In Automatic mode')
+            self.manualMode=False
+            self.ui.rightdoor.setDisabled(True)
+            self.ui.leftdoor.setDisabled(True)
+            self.ui.externallight.setDisabled(True)
+            self.ui.internallight.setDisabled(True)
+            self.ui.commandedspeed.setDisabled(True)
+            self.ui.temp.setDisabled(True)
+            self.ui.announcement.setDisabled(True)
+            self.ui.servicebrake.setDisabled(True)
+            self.ui.manualspeed.setDisabled(True)
+        else:
+            print('In Manual mode')
+            self.manualMode=True
+            self.ui.rightdoor.setDisabled(False)
+            self.ui.leftdoor.setDisabled(False)
+            self.ui.externallight.setDisabled(False)
+            self.ui.internallight.setDisabled(False)
+            self.ui.commandedspeed.setDisabled(False)
+            self.ui.temp.setDisabled(False)
+            self.ui.announcement.setDisabled(False)
+            self.ui.servicebrake.setDisabled(False)
+            self.ui.manualspeed.setDisabled(False)
+            
 
     def serviceBrakePressed(self):
-        if self.currentSpeed==0:
-            print('Service Brake Pressed: Speed is already 0!')
-            self.tbcomputeVals()
+        if self.manualcommandedspeed-self.ui.servicebrake.value()<=0:
+            self.manualcommandedspeed=0
         else:
-            print('Service Brake pressed')
-            self.currentSpeed-=1
-            self.acceleration=-1
-            self.tbcomputeVals()
+            self.manualcommandedspeed-=self.ui.servicebrake.value()
+            self.updateVals()
+
+    def manualspeedPressed(self):
+        if self.manualcommandedspeed+self.ui.manualspeed.value()>=self.speedLimit:
+            self.manualcommandedspeed=self.speedLimit
+        else:
+            self.manualcommandedspeed+=self.ui.manualspeed.value()
+        self.updateVals()
 
     def eBrakePressed(self):  
-        if self.currentSpeed==0:
-            print('Ebrake pressed: Speed is already 0!') 
+        if self.currentSpeed==0 & self.eBrake==True:    #ebrake already pressed
+            print('Ebrake released')
+            self.eBrake=False
+            self.computeVals()
         else:
             print('Ebrake pressed')
-            self.currentSpeed=0
-            self.acceleration=0
-            self.tbcomputeVals()
+            self.manualcommandedspeed=0
+            self.eBrake=True
+            self.computeVals()
 
-
-    def manualreceiveVals(self):
+    def receiveVals(self):
         self.previousSpeed=self.currentSpeed
-        self.currentSpeed=self.ui.manualspeed.value()
-        self.temperature=self.ui.manualtemp.value()
-        self.announcement=self.ui.manualannouncement.currentText()
-        self.ki=self.ui.manualki.value()
-        self.kp=self.ui.manualkp.value()
-        self.exlights=self.ui.manualexternallight.checkState()
-        self.intlights=self.ui.manualinternallight.checkState()
-        self.leftDoor=self.ui.manualleftdoor.checkState()
-        self.rightDoor=self.ui.manualrightdoor.checkState()
-        self.manualcomputeVals()
+        self.currentSpeed=0     #call for current speed from train model
+        self.authority=0        #call for authority from train model. either have train model use set functions or call get functions from train model
+        self.temperature=int(self.ui.temp.value())
+        self.announcement=self.ui.announcement.currentText()
+        self.ki=self.ui.ki.value()
+        self.kp=self.ui.kp.value()
+        self.exlights=self.ui.externallight.isChecked()
+        self.intlights=self.ui.internallight.isChecked()
+        self.leftDoor=self.ui.leftdoor.isChecked()
+        self.rightDoor=self.ui.rightdoor.isChecked()
+        self.computeVals()
     
-    def manualcomputeVals(self):
-        self.power=self.ki*self.currentSpeed+self.kp*self.previousSpeed
-        self.manualudpateVals()
+    def computeVals(self):
+        self.ekprev=self.ek
+        self.ek=self.commandedSpeed-self.currentSpeed
+        self.uk+=(self.interval/2)*(self.ek+self.ekprev)
+        self.power=(self.ek*self.kp+self.ki*self.uk)
 
-    def manualudpateVals(self):
-        self.ui.manualpower.setText(str(self.power))
-        self.ui.autopower.setText(str(self.power))
-        self.ui.autocurrentspeed.setText(str(self.currentSpeed))
-        self.ui.autoannouncement.setText(self.announcement)
-        self.ui.autotemp.setText(str(self.temperature))
-        self.ui.autoki.setText(str(self.ki))
-        self.ui.autokp.setText(str(self.kp))
-        self.ui.autoexternallights.setCheckState(self.ui.manualexternallight.checkState())
-        self.ui.autointernallights.setCheckState(self.ui.manualinternallight.checkState())
-        self.ui.autoleftdoor.setCheckState(self.ui.manualleftdoor.checkState())
-        self.ui.autorightdoor.setCheckState(self.ui.manualrightdoor.checkState())
+        if self.manualMode==True:
+            self.commandedSpeed=self.manualcommandedspeed
+        else:
+            self.commandedSpeed=self.automaticcommandedspeed
+            self.manualcommandedspeed=self.automaticcommandedspeed
+            
+        self.updateVals()
 
-
-
-    def tbreceiveVals(self):                                              #receive values from test bench after apply button is pressed
-        self.acceleration=int(self.ui.tbacceleration.toPlainText())
-        self.previousSpeed=self.currentSpeed
-        self.currentSpeed=int(self.ui.tbcurrentspeed.toPlainText())
-        self.commandedSpeed=int(self.ui.tbcommandespeed.toPlainText())
-        self.acceleration=int(self.ui.tbacceleration.toPlainText())
-        self.authority=int(self.ui.tbauthority.toPlainText())
-        self.mass=int(self.ui.tbmass.toPlainText())
-        self.temperature=int(self.ui.tbtemp.toPlainText())
-        self.kp=int(self.ui.tbkp.toPlainText())
-        self.ki=int(self.ui.tbki.toPlainText())
-        self.announcement=self.ui.tbannouncement.currentText()
-        self.leftDoor=self.ui.tbleftdoor.checkState()
-        self.rightDoor=self.ui.tbrightdoor.checkState()
-        self.exlights=self.ui.tbexteriorlights.checkState()
-        self.intlights=self.ui.tbinteriorlights.checkState()
-       # self.manualMode=self.ui.tbmanualmode.checkState()
-        self.brakeFailure=self.ui.tbbrakefailure.checkState()
-        self.engineFailure=self.ui.tbenginefailure.checkState()
-        self.tbcomputeVals()
-    
-    def tbcomputeVals(self):
-        self.power=self.ki*self.currentSpeed+self.kp*self.previousSpeed
-        self.tbupdateVals()
-
-    def tbupdateVals(self):
-        #update manual mode values from tb
-        self.ui.manualspeed.setValue(self.currentSpeed)
-        self.ui.manualacceleration.setText(str(self.acceleration))
-        self.ui.manualnextstop.setText("Station Square")
-        self.ui.manualtime.setText(str(self.time))
-        self.ui.manualmass.setText(str(self.mass))
-        self.ui.manualtemp.setValue(self.temperature)
-        self.ui.manualleftdoor.setCheckState(self.ui.tbleftdoor.checkState())
-        self.ui.manualrightdoor.setCheckState(self.ui.tbrightdoor.checkState())
-        self.ui.manualexternallight.setCheckState(self.ui.tbexteriorlights.checkState())
-        self.ui.manualinternallight.setCheckState(self.ui.tbinteriorlights.checkState())
-        self.ui.manualbrakefailure_2.setCheckState(self.ui.tbbrakefailure.checkState())
-        self.ui.manualenginefailure.setCheckState(self.ui.tbenginefailure.checkState())
-        self.ui.manualsignalfailure.setCheckState(self.ui.tbsignalfailure.checkState())
-        self.ui.manualki.setValue(self.ki)
-        self.ui.manualkp.setValue(self.kp)
-        self.ui.manualannouncement.addItem(str(self.ui.tbannouncement.currentText()))
-        self.ui.manualpower.setText(str(self.power))
-
-        #update automatic mode values from tb
-        self.ui.autocurrentspeed.setText(str(self.currentSpeed))
-        self.ui.autocommandedspeed.setText(str(self.commandedSpeed))
-        self.ui.autoacceleration.setText(str(self.acceleration))
-        self.ui.autoauthority.setText(str(self.authority))
-        self.ui.autonextstop.setText("Station Square")
-        self.ui.autotime.setText(str(self.time))
-        self.ui.automass.setText(str(self.mass))
-        self.ui.autotemp.setText(str(self.temperature))
-        self.ui.autoleftdoor.setCheckState(self.ui.tbleftdoor.checkState())
-        self.ui.autorightdoor.setCheckState(self.ui.tbrightdoor.checkState())
-        self.ui.autoexternallights.setCheckState(self.ui.tbexteriorlights.checkState())
-        self.ui.autointernallights.setCheckState(self.ui.tbinteriorlights.checkState())
-        self.ui.autobrakefailure.setCheckState(self.ui.tbbrakefailure.checkState())
-        self.ui.autoenginefailure.setCheckState(self.ui.tbenginefailure.checkState())
-        self.ui.autosignalfailure.setCheckState(self.ui.tbsignalfailure.checkState())
-        self.ui.autoki.setText(str(self.ki))
-        self.ui.autokp.setText(str(self.kp))
-        self.ui.autoannouncement.setText(str(self.ui.tbannouncement.currentText()))
-        self.ui.autopower.setText(str(self.power))
-
+    def updateVals(self):
+        #add in some kind of loop to get the current speed to reach commanded, while calculating power
+        self.ui.power.display(self.power)
+        self.ui.currentspeed.display(self.currentSpeed)
+        self.ui.nextstop.setPlainText(self.nextstop)
+        self.ui.commandedspeed.display(self.commandedSpeed)
+        self.ui.announcement.setCurrentText(self.announcement)
+        self.ui.speedlimit.setPlainText(str(self.speedLimit))
+        self.ui.authority.setPlainText(str(self.authority))
         
         
+        def setCommandedSpeed(s):
+            self.automaticcommandedspeed=s
+        def setCurrentSpeed(s):
+            self.currentSpeed=s
+        def setSpeedLimit(s):
+            self.speedLimit=s
+        
+        def setNextStop(stop):
+            self.nextstop=stop
+        
+        def setAnnouncement(a):
+            self.ui.tbannouncement.addItem(a)
+
+        def setAuthority(a):
+            self.authority=a
+
+        def getMode():
+            return self.manualmode 
+        def getEbrake():
+            return self.eBrake
+        
+        def setBrakeFailure(a):
+            self.brakeFailure=a
+        def setSignalFailure(a):
+            self.signalFailure=a
+        def setEngineFailure(a):
+            self.engineFailure=a
+
+        def getRightDoor():
+            return self.rightDoor
+        def getLeftDoor():
+            return self.leftDoor
+        def getExteriorLights():
+            return self.exlights
+        def getIntLights():
+            return self.intlights
+
+        #set time function?
 
     def init_ui(self):
         self.ui = Ui_MainWindow()           #setup ui
         self.ui.setupUi(self)
-        self.tbupdateVals() #set default vals
-        
+        self.modeVals()
+
        # self.ui.tbcurrentspeed.textChanged.connect(lambda: self.updateVals)
-
-
-        self.ui.tbannouncement.addItem('hello')
-        self.ui.tbannouncement.addItem('Goodbye')
-   
-
-        #  # Create QTimer for service brake
-        # self.service_brake_timer = QTimer(self)
-        # self.service_brake_timer.timeout.connect(self.service_brake)
-        # self.service_brake_timer.setInterval(1000)  # Decrease speed every second
-
-    # def emergency_brake(self):
-    #     # Add logic for emergency brake (set speed to 0)
-    #     self.current_speed = 0
-    #     self.update_speed_label()
-
-    # def start_service_brake(self):
-    #     #Start the service brake timer when the button is clicked
-    #      self.service_brake_timer.start()
-
-    # def service_brake(self):
-    #     # Add logic for service brake (decrease speed by 3 per second until 0)
-    #     if self.current_speed > 0:
-    #         self.current_speed = max(0, self.current_speed - 3)
-    #         self.update_speed_label()
-    #     else:
-    #         # Stop the timer when speed reaches 0
-    #         self.service_brake_timer.stop()
 
     
 
