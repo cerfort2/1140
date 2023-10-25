@@ -178,13 +178,9 @@ class HWTrackControllerGUI(QMainWindow):
         #Buttons/Setup for Automatic Mode
         self.ui.listWidget_3.itemClicked.connect(self.checkListAutomatic)
         self.ui.comboBox.currentIndexChanged.connect(self.checkWaysideSelectionAutomatic)
-
-        #Stuff to be changed
-        """
         self.ui.comboBox_5.currentTextChanged.connect(self.defaultLight)
         self.ui.comboBox_6.currentTextChanged.connect(self.defaultCrossroad)
         self.ui.comboBox_7.currentTextChanged.connect(self.defaultSwitch)
-        """
 
         #Buttons/Setup for Manual Mode
         self.ui.listWidget.itemClicked.connect(self.checkListManual)
@@ -269,7 +265,30 @@ class HWTrackControllerGUI(QMainWindow):
         self.configureLightsAutomaticGreen(value)
         self.configureCrossroadsAutomaticGreen(value)
         self.configureSwitchAutomaticGreen(value)
-
+    def defaultLight(self):
+        text = self.ui.comboBox_5.currentText()
+        properText = text.replace("Light ", "") #Get Just track Number and letter into a string
+        waysideNumber = self.ui.comboBox.currentIndex()-1 #Gets the current wayside selected
+        for i in range(self.Waysides[waysideNumber].amountOfTracks()):
+            if(properText == self.Waysides[waysideNumber].getTrackName(i)):
+                break
+        #operate.changeLight(self.Waysides[waysideNumber].getTrack(i).getLight())
+    def defaultCrossroad(self):
+        text = self.ui.comboBox_6.currentText()
+        properText = text.replace("Crossroad ", "") #Get Just track Number and letter into a string
+        waysideNumber = self.ui.comboBox.currentIndex()-1 #Gets the current wayside selected
+        for i in range(self.Waysides[waysideNumber].amountOfTracks()):
+            if(properText == self.Waysides[waysideNumber].getTrackName(i)):
+                break
+        #operate.crossroad(self.Waysides[waysideNumber].getTrack(i).getCrossroad())
+    def defaultSwitch(self):
+        text = self.ui.comboBox_7.currentText()
+        properText = text.replace("Light ", "") #Get Just track Number and letter into a string
+        waysideNumber = self.ui.comboBox.currentIndex()-1 #Gets the current wayside selected
+        for i in range(self.Waysides[waysideNumber].amountOfTracks()):
+            if(properText == self.Waysides[waysideNumber].getTrackName(i)):
+                break
+        #operate.switch(self.Waysides[waysideNumber].getTrack(i).getSwitch())
 
     #Functions used in Manual Mode
     def crossChangeManual(self): #Checks if still selecting crossroad to grey out button
