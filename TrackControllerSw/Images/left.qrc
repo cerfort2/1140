@@ -1,8 +1,0 @@
-<RCC>
-  <qresource prefix="left">
-    <file>left.jpg</file>
-  </qresource>
-  <qresource prefix="right">
-    <file>right.jpg</file>
-  </qresource>
-</RCC>
