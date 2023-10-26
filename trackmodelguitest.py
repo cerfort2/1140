@@ -51,19 +51,19 @@ class Line():
         occupancyMask = [blk.occupied for blk in self.blocks]
         return occupancyMask
     
-    def updateLine(self, signals):
-        for i in range(len(signals)):
+    def updateLine(self, controlSignals):
+        for i in range(len(controlSignals)):
             if(self.blocks[i].switch[0] or self.blocks[i].crossroad[0] or self.blocks[i].signal[0]):
                 #Switch Updating
-                if(self.blocks[i].switch[3] != signals[i][0]):
+                if(self.blocks[i].switch[3] != controlSignals[i][0]):
                     self.blocks[i].toggleSwitch()
                 
                 #Crossroad Updating
-                if(self.blocks[i].crossroad[1] != signals[i][1]):
+                if(self.blocks[i].crossroad[1] != controlSignals[i][1]):
                     self.blocks[i].toggleCrossroad()
                 
                 #Signal Updating
-                if(self.blocks[i].signal[1] != signals[i][2]):
+                if(self.blocks[i].signal[1] != controlSignals[i][2]):
                     self.blocks[i].toggleSignal()
 
 
@@ -124,114 +124,115 @@ class TrackModel():
 
             #Instantiate Blocks
             for i in range(numOfRows):
-                if(not (db.isna().at[i,"Section"])):
+                if(not (db.isna().at[i,"Line"])):
 
-                    name = db.at[i,"Section"]+str(int(db.at[i, "Block Number"]))
+                    name = (str(db.at[i,"Section"])+str(db.at[i, "Block Number"])).lstrip('nan')
                     length = db.at[i,"Block Length (m)"]
                     grade = db.at[i,"Block Grade (%)"]
                     limit = db.at[i,"Speed Limit (Km/Hr)"]
                     elevation = db.at[i,"ELEVATION (M)"]
-                    
-                    if(not db.isna().at[i,"Infrastructure"]):
-                        infrastructure = str(db.at[i,"Infrastructure"])
-                        infrastructure = infrastructure.replace(":",";")
 
-                        stationSide = str(db.at[i, "Station Side"])
-
-                        isUnderground = "UNDERGROUND" in infrastructure
-                        isStation = "STATION" in infrastructure
-                        isSwitch = "SWITCH" in infrastructure
-                        isCrossing = "RAILWAY CROSSING" in infrastructure
-                        isSignal = "SIGNAL" in infrastructure
-
-
-                        #Station Processing
-                        #################################################
-                        if isStation:
-                            split = infrastructure.split(";")
-
-                            for i in range(len(split)):
-                                if(split[i]== "STATION"):
-                                    stationName = split[i+1]
-                                    break
-                            
-                            ticketsSold = random.randint(0,100) #Change this to a random tickets sold
-
-                            station = [isStation, stationName, ticketsSold, stationSide]
-
-                        else:
-                            station = [False, "", -1, ""]
-                        #################################################
-
-
-                        #Switch Processing
-                        #################################################
-                        if isSwitch:
-                            split = infrastructure.split()
-
-                            for i in range(len(split)):
-                                if(split[i]== "SWITCH"):
-                                    nextWord = split[i+1]
-                                    break
-                            
-                            if nextWord[0] == "(":
-                                #normal switch between blocks
-
-                                nextWord += split[i+2]
-                                nextWord = nextWord.replace('(','')
-                                nextWord = nextWord.replace(')','')
-                                nextWord = nextWord.replace(';','-')
-
-                                switch_blocks = nextWord.split("-")
-
-                                erasedDupes = [blk for blk in switch_blocks if switch_blocks.count(blk) == 1]
-
-                                #All switches are initialized to the left postiion active, AKA, False -> Left active; True -> Right Active,second to last bool shows this
-                                # Final bool for signal status
-
-                                switch = [isSwitch, erasedDupes[0], erasedDupes[1], False]
-
-
-                            elif nextWord == "TO/FROM":
-                                switch = [isSwitch, "YARD", ""]
-                                #switch to and from the yard
-
-                            elif nextWord == "TO":
-                                switch = [isSwitch, "YARD", ""]
-                                #switch to yard
-                            elif nextWord == "FROM":
-                                switch = [isSwitch, "YARD", ""]
-                                #switch from yard
-                            else:
-                                print("ERROR: Switch processing error")
-                        else:
-                            switch = [False, "", "",False]
-                        #################################################
-
-                        #Crossroad Processing
-                        #################################################
-                        #True -> Closed, False -> Open
-                        crossroad = [isCrossing, True]
-
-                        #################################################
-
-                        #Signal Processing
-                        #Signal Status; True -> Red, False -> Green
-                        #################################################
-                        signal = [isSignal, True]
-
-                        #################################################
-
-
-                    else:
+                
+                    if(db.isna().at[i,"Infrastructure"]):
                         isUnderground = False
                         station = [False, "", -1, ""]
                         switch = [False, "", "", False]
                         crossroad = [False, True]
                         signal = [False, True]
-                        
-                    
+                        attributes = (name,False,length,grade,limit,elevation,isUnderground,station,switch,crossroad,signal)
+                        blk = Block(attributes)
+                        newLine.addBlock(blk)
+                        continue
 
+                    infrastructure = str(db.at[i,"Infrastructure"])
+                    infrastructure = infrastructure.replace(":",";")
+
+
+                    isUnderground = "UNDERGROUND" in infrastructure
+                    isStation = "STATION" in infrastructure
+                    isSwitch = "SWITCH" in infrastructure
+                    isCrossing = "RAILWAY CROSSING" in infrastructure
+                    isSignal = "SIGNAL" in infrastructure
+
+
+                    #Station Processing
+                    #################################################
+                    if isStation:
+                        split = infrastructure.split(";")
+                        stationSide = str(db.at[i, "Station Side"])
+
+                        for i in range(len(split)):
+                            if(split[i]== "STATION"):
+                                stationName = split[i+1]
+                                break
+                        
+                        ticketsSold = random.randint(0,100) #Change this to a random tickets sold
+
+                        station = [isStation, stationName, ticketsSold, stationSide]
+
+                    else:
+                        station = [False, "", -1, ""]
+                    #################################################
+
+
+                    #Switch Processing
+                    #################################################
+                    if isSwitch:
+                        split = infrastructure.split()
+
+                        for i in range(len(split)):
+                            if(split[i]== "SWITCH"):
+                                nextWord = split[i+1]
+                                break
+                        
+                        if nextWord[0] == "(":
+                            #normal switch between blocks
+
+                            nextWord += split[i+2]
+                            nextWord = nextWord.replace('(','')
+                            nextWord = nextWord.replace(')','')
+                            nextWord = nextWord.replace(';','-')
+
+                            switch_blocks = nextWord.split("-")
+
+                            erasedDupes = [blk for blk in switch_blocks if switch_blocks.count(blk) == 1]
+
+                            #All switches are initialized to the left postiion active, AKA, False -> Left active; True -> Right Active,second to last bool shows this
+                            # Final bool for signal status
+
+                            switch = [isSwitch, erasedDupes[0], erasedDupes[1], False]
+
+
+                        elif nextWord == "TO/FROM":
+                            switch = [isSwitch, "YARD", ""]
+                            #switch to and from the yard
+
+                        elif nextWord == "TO":
+                            switch = [isSwitch, "YARD", ""]
+                            #switch to yard
+                        elif nextWord == "FROM":
+                            switch = [isSwitch, "YARD", ""]
+                            #switch from yard
+                        else:
+                            print("ERROR: Switch processing error")
+                    else:
+                        switch = [False, "", "",False]
+                    #################################################
+
+                    #Crossroad Processing
+                    #################################################
+                    #True -> Closed, False -> Open
+                    crossroad = [isCrossing, True]
+
+                    #################################################
+
+                    #Signal Processing
+                    #Signal Status; True -> Red, False -> Green
+                    #################################################
+                    signal = [isSignal, True]
+
+                    #################################################
+                        
                     attributes = (name,False,length,grade,limit,elevation,isUnderground,station,switch,crossroad,signal)
                     blk = Block(attributes)
                     newLine.addBlock(blk)
@@ -258,7 +259,7 @@ class functionalUI(Ui_MainWindow):
 
         self.occupied_debug = []
 
-    def update(self):
+    def connect(self):
         self.comboBox_3.activated.connect(self.lineChange)
         self.comboBox_4.activated.connect(self.blockChange)
         self.pushButton_2.clicked.connect(self.buttonPress)
@@ -370,7 +371,7 @@ app = QApplication([])
 MainWindow = QMainWindow()
 ui = functionalUI()
 ui.setupUi(MainWindow)
-ui.update()
+ui.connect()
 MainWindow.show()
 # # Start the event loop.
 app.exec()
