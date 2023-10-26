@@ -5,9 +5,9 @@ from PyQt6.QtCore import QTimer
 from PyQt6 import QtCore, QtGui, QtWidgets
 from HWTrackDisplay import Ui_MainWindow
 from WaysideClass import Wayside
-#from UI_Breadboard_Class import Operations
+from UI_Breadboard_Class import Operations
 
-#operate = Operations() #Class to perform operations on the breadboard
+operate = Operations() #Class to perform operations on the breadboard
 
 class HWTrackControllerGUI(QMainWindow):
     
@@ -171,6 +171,11 @@ class HWTrackControllerGUI(QMainWindow):
     Waysides[3].createTrack(False, False, False, False, "Y148") #Y148 [46]
     Waysides[3].createTrack(False, False, False, False, "Y149") #Y149 [47]
     
+    #Testing for functionality
+    Waysides[0].getTrack(32).setLight(True) #Z150 Red
+    Waysides[2].getTrack(26).setLight(True) #Q100 Red
+    Waysides[0].getTrack(18).setCrossroad(True) #E19 Crossroad Down
+
     def __init__(self):
         super().__init__()
         self.init_ui()
@@ -188,6 +193,10 @@ class HWTrackControllerGUI(QMainWindow):
         self.ui.comboBox_3.currentIndexChanged.connect(self.crossChangeManual)
         self.ui.comboBox_12.currentIndexChanged.connect(self.checkWaysideSelectionManual)
         self.ui.comboBox_4.currentIndexChanged.connect(self.switchChangeManual)
+
+        red = self.ui.listWidget_2
+        self.ui.listWidget_2.itemClicked.connect(lambda item=red: self.editLight(item.text()))
+        self.ui.comboBox_2.currentTextChanged.connect(self.defaultLight)
 
         #Stuff to be changed
         """
@@ -265,28 +274,38 @@ class HWTrackControllerGUI(QMainWindow):
         self.configureSwitchAutomaticGreen(value)
     def defaultLight(self):
         text = self.ui.comboBox_5.currentText()
+        if text == "Select Light":
+            return
         properText = text.replace("Light ", "") #Get Just track Number and letter into a string
         waysideNumber = self.ui.comboBox.currentIndex()-1 #Gets the current wayside selected
         for i in range(self.Waysides[waysideNumber].amountOfTracks()):
             if(properText == self.Waysides[waysideNumber].getTrackName(i)):
                 break
-        #operate.changeLight(self.Waysides[waysideNumber].getTrack(i).getLight())
+        operate.changeLight(self.Waysides[waysideNumber].getTrack(i).getLight())
     def defaultCrossroad(self):
         text = self.ui.comboBox_6.currentText()
+        if text == "Select Crossroad":
+            return
         properText = text.replace("Crossroad ", "") #Get Just track Number and letter into a string
         waysideNumber = self.ui.comboBox.currentIndex()-1 #Gets the current wayside selected
         for i in range(self.Waysides[waysideNumber].amountOfTracks()):
             if(properText == self.Waysides[waysideNumber].getTrackName(i)):
                 break
-        #operate.crossroad(self.Waysides[waysideNumber].getTrack(i).getCrossroad())
+        operate.crossroad(self.Waysides[waysideNumber].getTrack(i).getCrossroad())
     def defaultSwitch(self):
         text = self.ui.comboBox_7.currentText()
+        if text == "Select Switch":
+            return
         properText = text.replace("Light ", "") #Get Just track Number and letter into a string
         waysideNumber = self.ui.comboBox.currentIndex()-1 #Gets the current wayside selected
         for i in range(self.Waysides[waysideNumber].amountOfTracks()):
             if(properText == self.Waysides[waysideNumber].getTrackName(i)):
                 break
-        #operate.switch(self.Waysides[waysideNumber].getTrack(i).getSwitch())
+        trackStatus = self.Waysides[waysideNumber].getTrack(i).getSwitch()
+        if trackStatus == True: #Right
+            operate.switch(self.Waysides[waysideNumber].getTrackName(i), self.Waysides[waysideNumber].getTrack(i).getRightDest(), trackStatus)
+        elif trackStatus == False: #Left
+            operate.switch(self.Waysides[waysideNumber].getTrackName(i), self.Waysides[waysideNumber].getTrack(i).getLeftDest(), trackStatus)
 
     #Functions used in Manual Mode
     def crossChangeManual(self): #Checks if still selecting crossroad to grey out button
@@ -324,7 +343,25 @@ class HWTrackControllerGUI(QMainWindow):
         self.configureLightsManualGreen(value)
         self.configureCrossroadsManualGreen(value)
         self.configureSwitchManualGreen(value)
-
+    def editLight(self, text):
+        text = self.ui.comboBox_2.currentText()
+        if text == "Select Light":
+            return
+        properText = text.replace("Light ", "") #Get Just track Number and letter into a string
+        waysideNumber = self.ui.comboBox_12.currentIndex()-1 #Gets the current wayside selected
+        for i in range(self.Waysides[waysideNumber].amountOfTracks()):
+            if(properText == self.Waysides[waysideNumber].getTrackName(i)):
+                break
+        if text == "Red":
+            color = True
+        elif text == "Green":
+            color = False
+        self.Waysides[waysideNumber].getTrack(i).setLight(color)
+        operate.changeLight(self.Waysides[waysideNumber].getTrack(i).getLight())
+    def editCrossroad(self):
+        return
+    def editSwitch(self):
+        return
 
     #Functions used in Test Bench
     def checkListTest(self): #Checks if a line is selected or not to grey out combo boxes
@@ -417,6 +454,7 @@ class HWTrackControllerGUI(QMainWindow):
         self.ui.comboBox.addItem("Wayside 3")
         self.ui.comboBox.addItem("Wayside 4")
     def configureLightsAutomaticGreen(self, currentWayside): #Sets proper lights for each wayside selection
+        self.ui.comboBox_5.setCurrentIndex(0)
         for i in range(self.ui.comboBox_5.count(), 0, -1):
             self.ui.comboBox_5.removeItem(i)
         if(currentWayside == "Wayside 1"):
@@ -434,11 +472,13 @@ class HWTrackControllerGUI(QMainWindow):
             self.ui.comboBox_5.addItem("Light N85")
             self.ui.comboBox_5.addItem("Light Q100")
     def configureCrossroadsAutomaticGreen(self, currentWayside): #Sets proper crossroads for each wayside selection
+        self.ui.comboBox_6.setCurrentIndex(0)
         for i in range(self.ui.comboBox_6.count(), 0, -1):
             self.ui.comboBox_6.removeItem(i)
         if(currentWayside == "Wayside 1"):
             self.ui.comboBox_6.addItem("Crossroad E19")
     def configureSwitchAutomaticGreen(self, currentWayside): #Sets proper switches for each wayside selection
+        self.ui.comboBox_7.setCurrentIndex(0)
         for i in range(self.ui.comboBox_7.count(), 0, -1):
             self.ui.comboBox_7.removeItem(i)
         if(currentWayside == "Wayside 1"):
@@ -461,6 +501,7 @@ class HWTrackControllerGUI(QMainWindow):
         self.ui.comboBox_12.addItem("Wayside 3")
         self.ui.comboBox_12.addItem("Wayside 4")
     def configureLightsManualGreen(self, currentWayside): #Sets proper lights for each wayside selection
+        self.ui.comboBox_2.setCurrentIndex(0)
         for i in range(self.ui.comboBox_2.count(), 0, -1):
             self.ui.comboBox_2.removeItem(i)
         if(currentWayside == "Wayside 1"):
@@ -478,9 +519,11 @@ class HWTrackControllerGUI(QMainWindow):
             self.ui.comboBox_2.addItem("Light N85")
             self.ui.comboBox_2.addItem("Light Q100")
     def configureCrossroadsManualGreen(self, currentWayside): #Sets proper crossroads for each wayside selection
+        self.ui.comboBox_3.setCurrentIndex(0)
         for i in range(self.ui.comboBox_3.count(), 0, -1):
             self.ui.comboBox_3.removeItem(i)
     def configureSwitchManualGreen(self, currentWayside): #Sets proper switches for each wayside selection
+        self.ui.comboBox_4.setCurrentIndex(0)
         for i in range(self.ui.comboBox_4.count(), 0, -1):
             self.ui.comboBox_4.removeItem(i)
         if(currentWayside == "Wayside 1"):
@@ -503,6 +546,7 @@ class HWTrackControllerGUI(QMainWindow):
         self.ui.comboBox_13.addItem("Wayside 3")
         self.ui.comboBox_13.addItem("Wayside 4")
     def configureLightsTestGreen(self, currentWayside): #Sets proper lights for each wayside selection
+        self.ui.comboBox_9.setCurrentIndex(0)
         for i in range(self.ui.comboBox_9.count(), 0, -1):
             self.ui.comboBox_9.removeItem(i)
         if(currentWayside == "Wayside 1"):
@@ -520,9 +564,11 @@ class HWTrackControllerGUI(QMainWindow):
             self.ui.comboBox_9.addItem("Light N85")
             self.ui.comboBox_9.addItem("Light Q100")
     def configureCrossroadsTestGreen(self, currentWayside): #Sets proper crossroads for each wayside selection
+        self.ui.comboBox_10.setCurrentIndex(0)
         for i in range(self.ui.comboBox_10.count(), 0, -1):
             self.ui.comboBox_10.removeItem(i)
     def configureSwitchTestGreen(self, currentWayside): #Sets proper switches for each wayside selection
+        self.ui.comboBox_11.setCurrentIndex(0)
         for i in range(self.ui.comboBox_11.count(), 0, -1):
             self.ui.comboBox_11.removeItem(i)
         if(currentWayside == "Wayside 1"):
@@ -535,6 +581,7 @@ class HWTrackControllerGUI(QMainWindow):
             self.ui.comboBox_11.addItem("N77")
             self.ui.comboBox_11.addItem("N85")
     def configureTrackSelectionGreen(self, currentWayside):
+        self.ui.comboBox_8.setCurrentIndex(0)
         for i in range(self.ui.comboBox_8.count(), 0, -1):
             self.ui.comboBox_8.removeItem(i)
         if(currentWayside == "Wayside 1"):

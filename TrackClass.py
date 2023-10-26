@@ -7,7 +7,7 @@ class Track():
     occupancy = False #If occupied or not
 
     isLight = False #Specify if Track has a Light
-    lightStatus = True #True is Red, False is Green
+    lightStatus = False #True is Red, False is Green
 
     #If it is a switch, input the destination tracks on left and right
     isSwitch = False
@@ -43,6 +43,12 @@ class Track():
             self.leftDestination = left
         else:
             print("Track is not a Switch")
+
+    def getRightDest(self):
+        return self.rightDestination
+
+    def getLeftDest(self):
+        return self.leftDestination
 
     def setSwitch(self, status:bool): #Set the switch position
         if self.isSwitch == True:

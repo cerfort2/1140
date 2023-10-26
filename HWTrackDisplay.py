@@ -1,9 +1,6 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
-#from UI_Breadboard_Class import Operations
 from PyQt6.QtWidgets import QFileDialog
 import subprocess
-
-#operate = Operations() #Class to perform operations on the breadboard
 
 class Ui_MainWindow(object):
 
@@ -409,33 +406,6 @@ class Ui_MainWindow(object):
 
 
     #Functions to be used in all (OLD DO NOT USE)
-    def defaultCrossroad(self, text):
-        if text == "Crossroad 1":
-            if self.Crossroad1 == "on":
-                operate.crossroadOn()
-            else:
-                operate.crossroadOff()
-        elif text == "Crossroad 2":
-            if self.Crossroad2 == "on":
-                operate.crossroadOn()
-            else:
-                operate.crossroadOff()
-    def defaultSwitch(self, text):
-        if text == "Switch 1":
-            if self.Switch1 == "right":
-                operate.switchRight("A", "B")
-            else:
-                operate.switchLeft("A", "C")
-        elif text == "Switch 2":
-            if self.Switch2 == "right":
-                operate.switchRight("B", "E")
-            else:
-                operate.switchLeft("B", "D")
-    def defaultLight(self, text):
-        if text == "Light 1":
-            operate.changeLight(self.Light1)
-        elif text == "Light 2":
-            operate.changeLight(self.Light2)
     def plcCode(self):
         self.BlockA = False
         self.BlockB = False

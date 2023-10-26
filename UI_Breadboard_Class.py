@@ -9,35 +9,28 @@ class Operations():
         pass
     
     #True = Red, False = Green
-    def changeLight(self, color): #Function to change breadboard light color
-        light = "lights"
+    def changeLight(self, color:bool): #Function to change breadboard light color
+        light = "G"
         serialComm.write(light.encode())
         time.sleep(1.1)
-        check = str(color).lower()
-        serialComm.write(check.encode())
+        value_byte = b'\x01' if color else b'\x00'
+        serialComm.write(value_byte)
 
-    def switchLeft(self, fromText, toText): #Switches switch left
-        status = "switchLeft"
+    def switch(self, fromText:str, toText:str, position:bool): #Switches screen based off position given
+        if position == True:
+            status = "R" #Right
+        elif position == False:
+            status = "L" #Left
         serialComm.write(status.encode())
         time.sleep(1.1)
         serialComm.write(fromText.encode())
         time.sleep(1.1)
         serialComm.write(toText.encode())
-    
-    def switchRight(self, fromText, toText): #Switches switch right
-        status = "switchRight"
-        serialComm.write(status.encode())
-        time.sleep(1.1)
-        serialComm.write(fromText.encode())
-        time.sleep(1.1)
-        serialComm.write(toText.encode())
 
-    def crossroadOn(self):
-        status = "crossroadOn"
-        serialComm.write(status.encode())
-        time.sleep(.5)
-
-    def crossroadOff(self):
-        status = "crossroadOff"
+    def crossroad(self, current:bool): #Crossroad to On/Off based of status given
+        if current == False:
+            status = "F" #Off
+        elif current == True:
+            status = "O" #On
         serialComm.write(status.encode())
         time.sleep(.5)
