@@ -66,6 +66,7 @@ class Line():
                 if(self.blocks[i].signal[1] != controlSignals[i][2]):
                     self.blocks[i].toggleSignal()
 
+    
 
 class Block():
     def __init__(self,attributes):
@@ -242,7 +243,6 @@ class TrackModel():
         print("ERROR: Line not found")
         return 0
 
-
 class functionalUI(Ui_MainWindow):
     def __init__(self) -> None:
         super().__init__()
@@ -251,8 +251,8 @@ class functionalUI(Ui_MainWindow):
         self.occupied_debug = []
 
     def connect(self):
-        self.comboBox_3.activated.connect(self.lineChange)
-        self.comboBox_4.activated.connect(self.blockChange)
+        self.comboBox_3.currentIndexChanged.connect(self.lineChange)
+        self.comboBox_4.currentIndexChanged.connect(self.blockChange)
         self.pushButton_2.clicked.connect(self.buttonPress)
         self.lineEdit.returnPressed.connect(self.tbChange)
 
@@ -353,7 +353,6 @@ class functionalUI(Ui_MainWindow):
         fd = QFileDialog()
         path, _ = fd.getOpenFileName(None, 'Select a file:')
         self.trackModel.addLine(path)
-
         self.comboBox_3.clear()
         self.comboBox_3.addItems(self.trackModel.getLineNames())
       
