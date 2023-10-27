@@ -5,6 +5,7 @@ class Track():
     crossroadStatus = False #False means up and True means down, default will be up
 
     occupancy = False #If occupied or not
+    failure = False #toggle for failure
 
     isLight = False #Specify if Track has a Light
     lightStatus = False #True is Red, False is Green
@@ -79,4 +80,10 @@ class Track():
     
     def getTrackName(self):
         return self.trackName
+    
+    def getFailure(self):
+        return self.failure
+
+    def setFailure(self, status:bool):
+        self.failure = status
         
