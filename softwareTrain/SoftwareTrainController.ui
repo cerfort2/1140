@@ -180,6 +180,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </property>
      </widget>
      <widget class="QComboBox" name="announcement">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>320</x>
@@ -188,16 +191,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
         <height>31</height>
        </rect>
       </property>
-      <item>
-       <property name="text">
-        <string>Announcement 1</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Announcement 2</string>
-       </property>
-      </item>
+      <property name="editable">
+       <bool>true</bool>
+      </property>
+      <property name="duplicatesEnabled">
+       <bool>false</bool>
+      </property>
      </widget>
      <widget class="QTextEdit" name="manualtrainfailures">
       <property name="enabled">
@@ -233,7 +232,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="2">
-        <widget class="QDateTimeEdit" name="time"/>
+        <widget class="QDateTimeEdit" name="time">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
        </item>
        <item row="11" column="0">
         <widget class="QTextEdit" name="textEdit_8">
@@ -253,7 +256,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
         </widget>
        </item>
        <item row="1" column="2">
-        <widget class="QTextEdit" name="speedlimit"/>
+        <widget class="QTextEdit" name="speedlimit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
        </item>
        <item row="11" column="2">
         <widget class="QSpinBox" name="temp">
@@ -267,6 +274,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
        </item>
        <item row="5" column="2">
         <widget class="QTextEdit" name="authority">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="html">
           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -298,6 +308,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
        </item>
        <item row="3" column="2">
         <widget class="QTextEdit" name="nextstop">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="html">
           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -364,6 +377,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </layout>
      </widget>
      <widget class="QCheckBox" name="brakefailure">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>340</x>
@@ -377,6 +393,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </property>
      </widget>
      <widget class="QCheckBox" name="enginefailure">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>340</x>
@@ -390,6 +409,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </property>
      </widget>
      <widget class="QCheckBox" name="signalfailure">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>340</x>
@@ -521,6 +543,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </item>
      </widget>
      <widget class="QTextEdit" name="textEdit_9">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>530</x>
