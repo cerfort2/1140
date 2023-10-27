@@ -86,4 +86,15 @@ class Track():
 
     def setFailure(self, status:bool):
         self.failure = status
-        
+
+    def getName(self):
+        return self.trackName
+    
+    def getIsSwitch(self):
+        return self.isSwitch
+    
+    def getIsCrossroad(self):
+        return self.isCrossroad
+    
+    def getIsLight(self):
+        return self.isLight

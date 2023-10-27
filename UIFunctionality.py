@@ -5,9 +5,10 @@ from PyQt6.QtCore import QTimer
 from PyQt6 import QtCore, QtGui, QtWidgets
 from HWTrackDisplay import Ui_MainWindow
 from WaysideClass import Wayside
-from UI_Breadboard_Class import Operations
+from TrackClass import Track
+#from UI_Breadboard_Class import Operations
 
-operate = Operations() #Class to perform operations on the breadboard
+#operate = Operations() #Class to perform operations on the breadboard
 
 class HWTrackControllerGUI(QMainWindow):
     
@@ -176,6 +177,16 @@ class HWTrackControllerGUI(QMainWindow):
     Waysides[2].getTrack(26).setLight(True) #Q100 Red
     Waysides[0].getTrack(18).setCrossroad(True) #E19 Crossroad Down
 
+    Waysides[0].getTrack(12).setOccupancy(True) #E19 Crossroad Down
+    Waysides[0].getTrack(13).setOccupancy(True) #E19 Crossroad Down
+    Waysides[0].getTrack(14).setOccupancy(True)#E19 Crossroad Down
+    Waysides[0].getTrack(15).setOccupancy(True) #E19 Crossroad Down
+
+    Waysides[1].getTrack(18).setOccupancy(True) #E19 Crossroad Down
+    Waysides[1].getTrack(19).setOccupancy(True) #E19 Crossroad Down
+    Waysides[1].getTrack(20).setOccupancy(True) #E19 Crossroad Down
+    Waysides[1].getTrack(21).setOccupancy(True) #E19 Crossroad Down
+
     def __init__(self):
         super().__init__()
         self.init_ui()
@@ -186,6 +197,10 @@ class HWTrackControllerGUI(QMainWindow):
         self.ui.comboBox_5.currentTextChanged.connect(self.defaultLight)
         self.ui.comboBox_6.currentTextChanged.connect(self.defaultCrossroad)
         self.ui.comboBox_7.currentTextChanged.connect(self.defaultSwitch)
+
+        #Temp need to implement timer for this
+        self.ui.comboBox.currentIndexChanged.connect(self.setListsOccupancyAutomatic)
+        self.ui.comboBox.currentIndexChanged.connect(self.setListsFailureAutomatic)
 
         #Buttons/Setup for Manual Mode
         self.ui.listWidget.itemClicked.connect(self.checkListManual)
@@ -200,6 +215,10 @@ class HWTrackControllerGUI(QMainWindow):
         self.ui.comboBox_3.currentTextChanged.connect(self.defaultCrossroadManual)
         self.ui.pushButton_2.clicked.connect(self.editSwitch)
         self.ui.comboBox_4.currentTextChanged.connect(self.defaultSwitchManual)
+
+        #Temp need to implement timer for this
+        self.ui.comboBox_12.currentIndexChanged.connect(self.setListsOccupancyManual)
+        self.ui.comboBox_12.currentIndexChanged.connect(self.setListsFailureManual)
 
         #Stuff to be changed
         """
@@ -227,11 +246,14 @@ class HWTrackControllerGUI(QMainWindow):
         #Buttons/Setup for Whole UI
         self.ui.pushButton_3.clicked.connect(self.openArduinoFile) #Opens PLC File
 
+        #Timer Dependent Stuff
+        #self.sendData
+        #self.recieveData
+        
+
     def init_ui(self): #SetupUI
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-
-
 
     #Functions used in Whole UI
     def openArduinoFile(self): #Functionality for PLC File Opening
@@ -245,7 +267,39 @@ class HWTrackControllerGUI(QMainWindow):
             arduino = "C:\Program Files (x86)\Arduino\\arduino.exe"
             command = f'"{arduino}" "{fileLocation}"'
             subprocess.run(command, shell=True) 
+    def sendData(self):
+        data = [[],[],[]]
+        blocks:Track = []
+        for i in range (len(self.Waysides)):
+            for j in range (len(self.Waysides[i].tracks)):
+                blocks.append(self.Waysides[i].tracks[j])
 
+        for i in range (len(blocks)):
+            for j in range (i, len(blocks)):
+                if(blocks[i].getName(self) > blocks[j].getName(self)):
+                    hold = blocks[i]
+                    blocks[i] = blocks[j]
+                    blocks[j] = hold
+        hold = blocks[len(blocks) - 1]
+        blocks[len(blocks) - 1] = blocks[len(blocks) - 2]
+        blocks[len(blocks) - 2] = hold
+
+        for i in range (len(blocks)):
+            if(blocks[i].getIsSwitch()):
+                data[0].append(blocks[i].getSwitch())
+            else:
+                data[0].append(False)
+            if(blocks[i].getIsCrossroad()):
+                data[1].append(blocks[i].getCrossroad())
+            else:
+                data[1].append(False)
+            if(blocks[i].getIsSignal()):
+                data[2].append(blocks[i].getSignal())
+            else:
+                data[2].append(False) 
+        return data
+    def recievedData(self, occupancy:[]):
+        return
 
     #Functions used in Automatic Mode
     def checkListAutomatic(self): #Checks if a Line is selected or not to grey out combo boxes and list
@@ -301,13 +355,18 @@ class HWTrackControllerGUI(QMainWindow):
             operate.switch(self.Waysides[waysideNumber].getTrackName(i), self.Waysides[waysideNumber].getTrack(i).getRightDest(), trackStatus)
         elif trackStatus == False: #Left
             operate.switch(self.Waysides[waysideNumber].getTrackName(i), self.Waysides[waysideNumber].getTrack(i).getLeftDest(), trackStatus)
-    def setListsOccupancyAutomatic(self):
+    def setListsOccupancyAutomatic(self): #Shows occupancy on the lists for displaying
         waysideNumber = self.ui.comboBox.currentIndex()-1 #Gets the current wayside selected
+        self.ui.listWidget_7.clear()
         for j in range(self.Waysides[waysideNumber].amountOfTracks()):
             if self.Waysides[waysideNumber].getTrack(j).getOccupancy() == True:
-                self.ui.listWidget_7.addItem( self.Waysides[waysideNumber].getTrackName(j))
-    def setListsFailureAutomatic(self):
-        return
+                self.ui.listWidget_7.addItem(self.Waysides[waysideNumber].getTrackName(j))
+    def setListsFailureAutomatic(self): #Shows failures on the list for displaying
+        waysideNumber = self.ui.comboBox.currentIndex()-1 #Gets the current wayside selected
+        self.ui.listWidget_8.clear()
+        for j in range(self.Waysides[waysideNumber].amountOfTracks()):
+            if self.Waysides[waysideNumber].getTrack(j).getFailure() == True:
+                self.ui.listWidget_8.addItem(self.Waysides[waysideNumber].getTrackName(j))
 
 
     #Functions used in Manual Mode
@@ -421,7 +480,20 @@ class HWTrackControllerGUI(QMainWindow):
             operate.switch(self.Waysides[waysideNumber].getTrackName(i), self.Waysides[waysideNumber].getTrack(i).getRightDest(), trackStatus)
         elif trackStatus == False: #Left
             operate.switch(self.Waysides[waysideNumber].getTrackName(i), self.Waysides[waysideNumber].getTrack(i).getLeftDest(), trackStatus)
-    
+    def setListsOccupancyManual(self): #Shows occupancy on the lists for displaying
+        waysideNumber = self.ui.comboBox_12.currentIndex()-1 #Gets the current wayside selected
+        self.ui.listWidget_5.clear()
+        for j in range(self.Waysides[waysideNumber].amountOfTracks()):
+            if self.Waysides[waysideNumber].getTrack(j).getOccupancy() == True:
+                self.ui.listWidget_5.addItem(self.Waysides[waysideNumber].getTrackName(j))
+    def setListsFailureManual(self): #Shows failures on the list for displaying
+        waysideNumber = self.ui.comboBox_12.currentIndex()-1 #Gets the current wayside selected
+        self.ui.listWidget_6.clear()
+        for j in range(self.Waysides[waysideNumber].amountOfTracks()):
+            if self.Waysides[waysideNumber].getTrack(j).getFailure() == True:
+                self.ui.listWidget_6.addItem(self.Waysides[waysideNumber].getTrackName(j))
+
+
     #Functions used in Test Bench
     def checkListTest(self): #Checks if a line is selected or not to grey out combo boxes
         if self.ui.listWidget_9.currentItem() is not None:
