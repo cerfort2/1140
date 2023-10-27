@@ -115,129 +115,120 @@ class TrackModel():
         self.lines = []
 
     def addLine(self, path):
-        if os.path.exists(path):
-            db = pd.read_csv(path)
-            numOfRows = len(db.index)
+        if not os.path.exists(path):
+            print("File not found!")
+            return
+        
+        db = pd.read_csv(path)
+        numOfRows = len(db.index)
 
-            #instantiate line:
-            newLine = Line(db.at[0,"Line"] + " Line")
+        #instantiate line:
+        newLine = Line(db.at[0,"Line"] + " Line")
 
-            #Instantiate Blocks
-            for i in range(numOfRows):
-                if(not (db.isna().at[i,"Line"])):
+        #Instantiate Blocks
+        for i in range(numOfRows):
+            if(not (db.isna().at[i,"Line"])):
 
-                    name = (str(db.at[i,"Section"])+str(db.at[i, "Block Number"])).lstrip('nan')
-                    length = db.at[i,"Block Length (m)"]
-                    grade = db.at[i,"Block Grade (%)"]
-                    limit = db.at[i,"Speed Limit (Km/Hr)"]
-                    elevation = db.at[i,"ELEVATION (M)"]
+                name = (str(db.at[i,"Section"])+str(db.at[i, "Block Number"])).lstrip('nan')
+                length = db.at[i,"Block Length (m)"]
+                grade = db.at[i,"Block Grade (%)"]
+                limit = db.at[i,"Speed Limit (Km/Hr)"]
+                elevation = db.at[i,"ELEVATION (M)"]
 
-                
-                    if(db.isna().at[i,"Infrastructure"]):
-                        isUnderground = False
-                        station = [False, "", -1, ""]
-                        switch = [False, "", "", False]
-                        crossroad = [False, True]
-                        signal = [False, True]
-                        attributes = (name,False,length,grade,limit,elevation,isUnderground,station,switch,crossroad,signal)
-                        blk = Block(attributes)
-                        newLine.addBlock(blk)
-                        continue
-
-                    infrastructure = str(db.at[i,"Infrastructure"])
-                    infrastructure = infrastructure.replace(":",";")
-
-
-                    isUnderground = "UNDERGROUND" in infrastructure
-                    isStation = "STATION" in infrastructure
-                    isSwitch = "SWITCH" in infrastructure
-                    isCrossing = "RAILWAY CROSSING" in infrastructure
-                    isSignal = "SIGNAL" in infrastructure
-
-
-                    #Station Processing
-                    #################################################
-                    if isStation:
-                        split = infrastructure.split(";")
-                        stationSide = str(db.at[i, "Station Side"])
-
-                        for i in range(len(split)):
-                            if(split[i]== "STATION"):
-                                stationName = split[i+1]
-                                break
-                        
-                        ticketsSold = random.randint(0,100) #Change this to a random tickets sold
-
-                        station = [isStation, stationName, ticketsSold, stationSide]
-
-                    else:
-                        station = [False, "", -1, ""]
-                    #################################################
-
-
-                    #Switch Processing
-                    #################################################
-                    if isSwitch:
-                        split = infrastructure.split()
-
-                        for i in range(len(split)):
-                            if(split[i]== "SWITCH"):
-                                nextWord = split[i+1]
-                                break
-                        
-                        if nextWord[0] == "(":
-                            #normal switch between blocks
-
-                            nextWord += split[i+2]
-                            nextWord = nextWord.replace('(','')
-                            nextWord = nextWord.replace(')','')
-                            nextWord = nextWord.replace(';','-')
-
-                            switch_blocks = nextWord.split("-")
-
-                            erasedDupes = [blk for blk in switch_blocks if switch_blocks.count(blk) == 1]
-
-                            #All switches are initialized to the left postiion active, AKA, False -> Left active; True -> Right Active,second to last bool shows this
-                            # Final bool for signal status
-
-                            switch = [isSwitch, erasedDupes[0], erasedDupes[1], False]
-
-
-                        elif nextWord == "TO/FROM":
-                            switch = [isSwitch, "YARD", ""]
-                            #switch to and from the yard
-
-                        elif nextWord == "TO":
-                            switch = [isSwitch, "YARD", ""]
-                            #switch to yard
-                        elif nextWord == "FROM":
-                            switch = [isSwitch, "YARD", ""]
-                            #switch from yard
-                        else:
-                            print("ERROR: Switch processing error")
-                    else:
-                        switch = [False, "", "",False]
-                    #################################################
-
-                    #Crossroad Processing
-                    #################################################
-                    #True -> Closed, False -> Open
-                    crossroad = [isCrossing, True]
-
-                    #################################################
-
-                    #Signal Processing
-                    #Signal Status; True -> Red, False -> Green
-                    #################################################
-                    signal = [isSignal, True]
-
-                    #################################################
-                        
+            
+                if(db.isna().at[i,"Infrastructure"]):
+                    isUnderground = False
+                    station = [False, "", -1, ""]
+                    switch = [False, "", "", False]
+                    crossroad = [False, True]
+                    signal = [False, True]
                     attributes = (name,False,length,grade,limit,elevation,isUnderground,station,switch,crossroad,signal)
                     blk = Block(attributes)
                     newLine.addBlock(blk)
+                    continue
 
-            self.lines.append(newLine)
+                infrastructure = str(db.at[i,"Infrastructure"]).replace(":",";")
+
+
+                isUnderground = "UNDERGROUND" in infrastructure
+                isStation = "STATION" in infrastructure
+                isSwitch = "SWITCH" in infrastructure
+                isCrossing = "RAILWAY CROSSING" in infrastructure
+                isSignal = "SIGNAL" in infrastructure
+
+
+                #Station Processing
+                #################################################
+                if isStation:
+                    split = infrastructure.split(";")
+                    split = [x.lstrip() for x in split]
+
+                    stationSide = str(db.at[i, "Station Side"])
+                    stationName = split[split.index("STATION")+1]               
+                    ticketsSold = random.randint(0,100) #Change this to a random tickets sold
+
+                    station = [isStation, stationName, ticketsSold, stationSide]
+
+                else:
+                    station = [isStation, "", -1, ""]
+                #################################################
+
+
+                #Switch Processing
+                #################################################
+                if isSwitch:
+                    split = infrastructure.split()
+
+                    nextWord = split[split.index("SWITCH")+1]
+
+                    if nextWord[0] == "(":
+                        #normal switch between blocks
+                        nextWord += split[split.index("SWITCH")+2]
+                        switch_blocks = nextWord.replace('(','').replace(')','').replace(';','-').split("-")
+
+                        connectedBlocks = [blk for blk in switch_blocks if switch_blocks.count(blk) == 1]
+
+                        #All switches are initialized to the left postiion active, AKA, False -> Left active; True -> Right Active,second to last bool shows this
+                        # Final bool for signal status
+                        switch = [isSwitch, connectedBlocks[0], connectedBlocks[1], False]
+
+                    elif nextWord == "TO/FROM":
+                        switch = [isSwitch, "YARD", ""]
+                        #switch to and from the yard
+
+                    elif nextWord == "TO":
+                        switch = [isSwitch, "YARD", ""]
+                        #switch to yard
+
+                    elif nextWord == "FROM":
+                        switch = [isSwitch, "YARD", ""]
+                        #switch from yard
+                        
+                    else:
+                        print("ERROR: Switch processing error")
+                else:
+                    switch = [isSwitch, "", "",False]
+                #################################################
+
+                #Crossroad Processing
+                #################################################
+                #True -> Closed, False -> Open
+                crossroad = [isCrossing, True]
+
+                #################################################
+
+                #Signal Processing
+                #Signal Status; True -> Red, False -> Green
+                #################################################
+                signal = [isSignal, True]
+
+                #################################################
+                    
+                attributes = (name,False,length,grade,limit,elevation,isUnderground,station,switch,crossroad,signal)
+                blk = Block(attributes)
+                newLine.addBlock(blk)
+
+        self.lines.append(newLine)
 
     def getLineNames(self):
         names_list = [l.name for l in self.lines]
