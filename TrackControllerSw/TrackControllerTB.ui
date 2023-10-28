@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>807</width>
-    <height>735</height>
+    <width>912</width>
+    <height>729</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,8 +46,8 @@
      <rect>
       <x>10</x>
       <y>40</y>
-      <width>791</width>
-      <height>671</height>
+      <width>891</width>
+      <height>661</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -62,7 +62,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>781</width>
+        <width>881</width>
         <height>631</height>
        </rect>
       </property>
@@ -254,30 +254,6 @@
         </property>
        </widget>
       </widget>
-      <widget class="QLabel" name="stationLabel">
-       <property name="geometry">
-        <rect>
-         <x>340</x>
-         <y>10</y>
-         <width>91</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="lineWidth">
-        <number>1</number>
-       </property>
-       <property name="midLineWidth">
-        <number>0</number>
-       </property>
-       <property name="text">
-        <string>Next Station:</string>
-       </property>
-      </widget>
       <widget class="QRadioButton" name="modeButton">
        <property name="geometry">
         <rect>
@@ -333,7 +309,7 @@
          <number>0</number>
         </property>
         <property name="text">
-         <string>A</string>
+         <string>...</string>
         </property>
        </widget>
        <widget class="QLabel" name="waysideLabel">
@@ -384,7 +360,7 @@
          <number>0</number>
         </property>
         <property name="text">
-         <string>A</string>
+         <string>...</string>
         </property>
        </widget>
        <widget class="QLabel" name="blockLabel">
@@ -411,7 +387,7 @@
          <string>Block:</string>
         </property>
        </widget>
-       <widget class="QLabel" name="occupationData">
+       <widget class="QLabel" name="stationData">
         <property name="geometry">
          <rect>
           <x>100</x>
@@ -438,7 +414,7 @@
          <string>...</string>
         </property>
        </widget>
-       <widget class="QLabel" name="occupationLabel">
+       <widget class="QLabel" name="stationLabel">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -459,7 +435,7 @@
          <number>0</number>
         </property>
         <property name="text">
-         <string>Occupation:</string>
+         <string>Station:</string>
         </property>
        </widget>
        <widget class="QLabel" name="failureLabel">
@@ -584,18 +560,34 @@
         </rect>
        </property>
       </widget>
-      <widget class="QLabel" name="stationData">
+      <widget class="QListWidget" name="occupationData">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="geometry">
         <rect>
-         <x>440</x>
-         <y>10</y>
-         <width>131</width>
-         <height>41</height>
+         <x>780</x>
+         <y>100</y>
+         <width>91</width>
+         <height>521</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="occupationLabel">
+       <property name="geometry">
+        <rect>
+         <x>780</x>
+         <y>70</y>
+         <width>91</width>
+         <height>21</height>
         </rect>
        </property>
        <property name="font">
         <font>
-         <pointsize>12</pointsize>
+         <pointsize>9</pointsize>
         </font>
        </property>
        <property name="lineWidth">
@@ -605,7 +597,7 @@
         <number>0</number>
        </property>
        <property name="text">
-        <string>...</string>
+        <string>Occupied Blocks</string>
        </property>
       </widget>
      </widget>
@@ -641,11 +633,6 @@
          <height>22</height>
         </rect>
        </property>
-       <item>
-        <property name="text">
-         <string>Wayside A</string>
-        </property>
-       </item>
       </widget>
       <widget class="QComboBox" name="blockTB">
        <property name="geometry">
@@ -656,11 +643,6 @@
          <height>22</height>
         </rect>
        </property>
-       <item>
-        <property name="text">
-         <string>Block A</string>
-        </property>
-       </item>
       </widget>
       <widget class="QCheckBox" name="occupationTB">
        <property name="geometry">
@@ -675,30 +657,38 @@
         <string>Occupation</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="stationTB">
+      <widget class="QLabel" name="authorityLabelTB">
        <property name="geometry">
         <rect>
          <x>30</x>
          <y>80</y>
+         <width>61</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="midLineWidth">
+        <number>0</number>
+       </property>
+       <property name="text">
+        <string>Authority:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="authorityDataTB">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>80</y>
          <width>113</width>
          <height>22</height>
         </rect>
-       </property>
-       <property name="text">
-        <string>Station</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="applyTB">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>180</y>
-         <width>75</width>
-         <height>24</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Apply</string>
        </property>
       </widget>
      </widget>
@@ -712,7 +702,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>807</width>
+     <width>912</width>
      <height>22</height>
     </rect>
    </property>

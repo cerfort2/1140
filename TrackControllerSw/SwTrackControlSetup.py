@@ -29,14 +29,21 @@ class SoftwareTrackControllerGUI(QMainWindow):
         self.ui.wayside.addItem("Green 2")
         self.ui.wayside.addItem("Green 3")
         self.ui.wayside.addItem("Green 4")
+        self.ui.waysideTB.addItem("Green 1")
+        self.ui.waysideTB.addItem("Green 2")
+        self.ui.waysideTB.addItem("Green 3")
+        self.ui.waysideTB.addItem("Green 4")
         for i in range(len(side[0].blocks)):
             self.ui.block.addItem(side[0].blocks[i].name)
+        for i in range(len(side[0].blocks)):
+            self.ui.blockTB.addItem(side[0].blocks[i].name)
         self.ui.waysideData.setText("Green 1")
         self.ui.blockData.setText("A1")
         self.ui.failureData.setText("No failure")
-        self.ui.occupationData.setText("Unoccupied")
+        self.ui.stationData.setText("No")
         self.ui.switchFrame.hide()
         self.ui.crossroadFrame.hide()
+        self.setOccupied()
         #Switch Toggle Signal
         self.ui.toggleDirection.clicked.connect(self.toggle_direction_handler)
         #Crossroad Toggle Signal
@@ -49,8 +56,34 @@ class SoftwareTrackControllerGUI(QMainWindow):
         self.ui.wayside.currentIndexChanged.connect(self.new_wayside)
         #Change Block
         self.ui.block.currentIndexChanged.connect(self.new_block)
+        #Set occupied
+        self.ui.tab.currentChanged.connect(self.setOccupied)
         #Mode
         self.ui.modeButton.toggled.connect(self.mode_handler)
+        #TB
+        self.ui.occupationTB.stateChanged.connect(self.TB_o_handler)
+        self.ui.waysideTB.currentIndexChanged.connect(self.TB_w_handler)
+        self.ui.blockTB.currentIndexChanged.connect(self.TB_b_handler)
+
+    def TB_o_handler(self):
+        way = self.ui.waysideTB.currentIndex()
+        blo = self.ui.blockTB.currentIndex()
+        side[way].blocks[blo].setOccupancy(self.ui.occupationTB.isChecked())
+
+    def TB_w_handler(self):
+        way = self.ui.waysideTB.currentIndex()
+        blo = 0
+        self.ui.blockTB.clear()
+        for i in range(len(side[way].blocks)):
+            self.ui.blockTB.addItem(side[way].blocks[i].name)
+        self.ui.occupationTB.setChecked(side[way].blocks[blo].getOccupancy())
+    
+    def TB_b_handler(self):
+        way = self.ui.waysideTB.currentIndex()
+        blo = self.ui.blockTB.currentIndex()
+        self.ui.occupationTB.setChecked(side[way].blocks[blo].getOccupancy())
+
+    
 
     def toggle_direction_handler(self):
         #Get current block and wayside
@@ -106,10 +139,10 @@ class SoftwareTrackControllerGUI(QMainWindow):
         #Set the lables of block wayside and occupation
         self.ui.waysideData.setText(side[way].name)
         self.ui.blockData.setText(side[way].blocks[blo].name)
-        if(side[way].blocks[blo].getOccupancy()):
-            self.ui.occupationData.setText("Occupied")
+        if(side[way].blocks[blo].getHasStation()):
+            self.ui.stationData.setText("Yes")
         else:
-            self.ui.occupationData.setText("Unoccupied")
+            self.ui.stationData.setText("No")
         #Switch Update
         if(side[way].blocks[blo].getHasSwitch()):
             #If there is a switch set data and show frame
@@ -151,10 +184,10 @@ class SoftwareTrackControllerGUI(QMainWindow):
         #Set data lables
         self.ui.waysideData.setText(side[way].name)
         self.ui.blockData.setText(side[way].blocks[blo].name)
-        if(side[way].blocks[blo].getOccupancy()):
-            self.ui.occupationData.setText("Occupied")
+        if(side[way].blocks[blo].getHasStation()):
+            self.ui.stationData.setText("Yes")
         else:
-            self.ui.occupationData.setText("Unoccupied")
+            self.ui.stationData.setText("No")
         #Switch Update
         if(side[way].blocks[blo].getHasSwitch()):
             #If there is a switch set data and show frame
@@ -191,6 +224,12 @@ class SoftwareTrackControllerGUI(QMainWindow):
         way = self.ui.wayside.currentIndex()
         blo = self.ui.block.currentIndex()
         self.ui.switchDirection.setPixmap(left)
+
+    def setOccupied(self):
+        self.ui.occupationData.clear()
+        names = whole.getOccupancy()
+        for i in range (len(names)):
+            self.ui.occupationData.addItem(names[i])
 
     def init_ui(self):
         self.ui = Ui_MainWindow()
@@ -363,10 +402,14 @@ if __name__ == "__main__":
     side[3].addBlock(False, False, False, False, "Y149")
     side[0].addBlock(False, False, True, False, "Z150") #Signal
     side[1].addBlock(False, False, True, False, "YARD") #Signal
-    
+    side[0].blocks[0].setOccupancy(True)
     whole = Track(side)
     data = whole.getData()
-
+    x = []
+    for i in range(151):
+        x.append(False)
+    x[150] = True
+    whole.setOccupancy(x)
     ###########################################
     MainWindow = SoftwareTrackControllerGUI()
     MainWindow.show()

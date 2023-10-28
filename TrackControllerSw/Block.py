@@ -36,6 +36,9 @@ class Block():
     def getHasSignal(self):
         return self.hasSignal
     
+    def getHasStation(self):
+        return self.hasStation
+    
     #Returns switch value if has a switch
     def getSwitch(self):
         if(self.hasSwitch):
