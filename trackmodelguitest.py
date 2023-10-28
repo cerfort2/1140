@@ -40,18 +40,13 @@ class Line():
         return occupied_list
     
     def getBlockFromName(self,blockName):
-        for b in self.blocks:
-            if (b.name == blockName):
-                return b
-        
-        print("ERROR: Line not found")
-        return 0
-    
+        return self.blocks[self.blocks.index(blockName)]
+  
     def getBlockOccupancyList(self):
         occupancyMask = [blk.occupied for blk in self.blocks]
         return occupancyMask
     
-    def updateLine(self, controlSignals):
+    def updateLineStatus(self, controlSignals):
         for i in range(len(controlSignals)):
             if(self.blocks[i].switch[0] or self.blocks[i].crossroad[0] or self.blocks[i].signal[0]):
                 #Switch Updating
@@ -66,11 +61,12 @@ class Line():
                 if(self.blocks[i].signal[1] != controlSignals[i][2]):
                     self.blocks[i].toggleSignal()
 
-    
-
+#implement beacon locations, implement beacon data, Track---> Train function(which is in the beacons), Set up authoirty variable
 class Block():
     def __init__(self,attributes):
-        name, occupied, length, grade, limit, elevation, underground, station, switch, crossroad, signal = attributes
+        name, occupied, length, grade, limit, elevation = attributes
+
+        # underground, station, switch, crossroad, signal
 
         self.name = name #string with name ex: "A2"
         self.occupied = occupied #bool with occupancy
@@ -78,13 +74,13 @@ class Block():
         self.grade = grade #double with block grade
         self.limit = limit # double with speed limit
         self.elevation = elevation # double with elevation
-        self.underground = underground # bool with underground status
-        self.station = station # list with if the station exists, station name, tickets sold, and station side ex
+        self.underground = False # bool with underground status
+        self.station = [False, "", -1, ""] # list with if the station exists, station name, tickets sold, and station side ex
                                 # [True, "SHADYSIDE", 86, "Left/Right"]
-        self.switch = switch # list with if the switch exists, block name pointing towards, block name pointing away
+        self.switch = [False, "", "",False] # list with if the switch exists, block name pointing towards, block name pointing away
                             # [True, "16", "1"]
-        self.crossroad = crossroad
-        self.signal = signal
+        self.crossroad = [False, True]
+        self.signal = [False, True] #need to implement red or green
 
     def setOccupied(self):
         self.occupied = True
@@ -106,10 +102,55 @@ class Block():
     def toggleSignal(self):
         if self.signal[0]:
             self.signal[1] = not self.signal[1]
-            
-    def isSwitch(self):
-        return self.switch[0]
     
+    def addUnderground(self):
+        self.underground = True
+
+    def addStation(self, infrastructure, stationSide):
+        split = infrastructure.split(";")
+        split = [x.lstrip() for x in split]
+
+        stationName = split[split.index("STATION")+1]               
+        ticketsSold = random.randint(0,100) #Change this to a random tickets sold
+
+        self.station = [True, stationName, ticketsSold, stationSide]
+
+    def addSwitch(self,infrastructure):
+        split = infrastructure.split()
+
+        nextWord = split[split.index("SWITCH")+1]
+
+        if nextWord[0] == "(":
+            #normal switch between blocks
+            nextWord += split[split.index("SWITCH")+2]
+            switch_blocks = nextWord.replace('(','').replace(')','').replace(';','-').split("-")
+
+            connectedBlocks = [blk for blk in switch_blocks if switch_blocks.count(blk) == 1]
+
+            #All switches are initialized to the left postiion active, AKA, False -> Left active; True -> Right Active,second to last bool shows this
+            # Final bool for signal status
+            switch = [True, connectedBlocks[0], connectedBlocks[1], False]
+
+        elif nextWord == "TO/FROM":
+            switch = [True, "YARD", ""]
+            #switch to and from the yard
+
+        elif nextWord == "TO":
+            switch = [True, "YARD", ""]
+            #switch to yard
+
+        elif nextWord == "FROM":
+            switch = [True, "YARD", ""]
+            #switch from yard
+            
+        else:
+            print("ERROR: Switch processing error")
+
+    def addCrossroad(self):
+        self.crossroad = [True, True]
+
+    def addSignal(self):
+        self.signal = [True, True]
 
 class TrackModel():
     def __init__(self):
@@ -117,7 +158,7 @@ class TrackModel():
 
     def addLine(self, path):
         if not os.path.exists(path):
-            print("File not found!")
+            print("File not selected!")
             return
         
         db = pd.read_csv(path)
@@ -125,6 +166,7 @@ class TrackModel():
 
         #instantiate line:
         newLine = Line(db.at[0,"Line"] + " Line")
+
 
         #Instantiate Blocks
         for i in range(numOfRows):
@@ -136,97 +178,43 @@ class TrackModel():
                 limit = db.at[i,"Speed Limit (Km/Hr)"]
                 elevation = db.at[i,"ELEVATION (M)"]
 
+                attributes = (name,length,grade,limit,elevation)
+                blk = Block(attributes)
+
             
                 if(db.isna().at[i,"Infrastructure"]):
-                    isUnderground = False
-                    station = [False, "", -1, ""]
-                    switch = [False, "", "", False]
-                    crossroad = [False, True]
-                    signal = [False, True]
-                    attributes = (name,False,length,grade,limit,elevation,isUnderground,station,switch,crossroad,signal)
-                    blk = Block(attributes)
                     newLine.addBlock(blk)
                     continue
 
                 infrastructure = str(db.at[i,"Infrastructure"]).replace(":",";")
 
-
                 isUnderground = "UNDERGROUND" in infrastructure
                 isStation = "STATION" in infrastructure
                 isSwitch = "SWITCH" in infrastructure
-                isCrossing = "RAILWAY CROSSING" in infrastructure
+                isCrossroad = "RAILWAY CROSSING" in infrastructure
                 isSignal = "SIGNAL" in infrastructure
+                isSWBeacon = "SW_BEACON" in infrastructure
+                isSTBeacon = "ST_BEACON" in infrastructure
 
 
-                #Station Processing
-                #################################################
+                if isUnderground:
+                    blk.addUnderground()
+
                 if isStation:
-                    split = infrastructure.split(";")
-                    split = [x.lstrip() for x in split]
-
                     stationSide = str(db.at[i, "Station Side"])
-                    stationName = split[split.index("STATION")+1]               
-                    ticketsSold = random.randint(0,100) #Change this to a random tickets sold
+                    blk.addStation(infrastructure, stationSide)
 
-                    station = [isStation, stationName, ticketsSold, stationSide]
-
-                else:
-                    station = [isStation, "", -1, ""]
-                #################################################
-
-
-                #Switch Processing
-                #################################################
                 if isSwitch:
-                    split = infrastructure.split()
+                    blk.addSwitch(infrastructure)
 
-                    nextWord = split[split.index("SWITCH")+1]
-
-                    if nextWord[0] == "(":
-                        #normal switch between blocks
-                        nextWord += split[split.index("SWITCH")+2]
-                        switch_blocks = nextWord.replace('(','').replace(')','').replace(';','-').split("-")
-
-                        connectedBlocks = [blk for blk in switch_blocks if switch_blocks.count(blk) == 1]
-
-                        #All switches are initialized to the left postiion active, AKA, False -> Left active; True -> Right Active,second to last bool shows this
-                        # Final bool for signal status
-                        switch = [isSwitch, connectedBlocks[0], connectedBlocks[1], False]
-
-                    elif nextWord == "TO/FROM":
-                        switch = [isSwitch, "YARD", ""]
-                        #switch to and from the yard
-
-                    elif nextWord == "TO":
-                        switch = [isSwitch, "YARD", ""]
-                        #switch to yard
-
-                    elif nextWord == "FROM":
-                        switch = [isSwitch, "YARD", ""]
-                        #switch from yard
-                        
-                    else:
-                        print("ERROR: Switch processing error")
-                else:
-                    switch = [isSwitch, "", "",False]
-                #################################################
-
-                #Crossroad Processing
-                #################################################
                 #True -> Closed, False -> Open
-                crossroad = [isCrossing, True]
+                if isCrossroad:
+                    blk.addCrossroad()
 
-                #################################################
-
-                #Signal Processing
                 #Signal Status; True -> Red, False -> Green
-                #################################################
-                signal = [isSignal, True]
+                if isSignal:
+                    blk.addSignal()
 
-                #################################################
-                    
-                attributes = (name,False,length,grade,limit,elevation,isUnderground,station,switch,crossroad,signal)
-                blk = Block(attributes)
                 newLine.addBlock(blk)
 
         self.lines.append(newLine)
@@ -242,6 +230,17 @@ class TrackModel():
         
         print("ERROR: Line not found")
         return 0
+
+    def updateOccupancy(self,occupancyList):
+        #Clear occupancy
+        for line in self.lines:
+            for block in self.blocks:
+                block.clearOccupied()
+
+        for i in range(len(occupancyList)):
+            blk_name, line_name = occupancyList
+            self.lines[self.lines.index(line_name)].getBlockFromNames(blk_name).setOccupied()
+
 
 class functionalUI(Ui_MainWindow):
     def __init__(self) -> None:
