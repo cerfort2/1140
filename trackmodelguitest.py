@@ -40,12 +40,14 @@ class Line():
         return occupied_list
     
     def getBlockFromName(self,blockName):
-        return self.blocks[self.blocks.index(blockName)]
+        return self.blocks[self.getBlockNames().index(blockName)]
   
+    #Track Model --> Track Controller
     def getBlockOccupancyList(self):
         occupancyMask = [blk.occupied for blk in self.blocks]
         return occupancyMask
     
+    #Track Controller --> Track Model
     def updateLineStatus(self, controlSignals):
         for i in range(len(controlSignals)):
             if(self.blocks[i].switch[0] or self.blocks[i].crossroad[0] or self.blocks[i].signal[0]):
@@ -152,9 +154,11 @@ class Block():
     def addSignal(self):
         self.signal = [True, True]
 
+
 class TrackModel():
     def __init__(self):
         self.lines = []
+        authority = 0
 
     def addLine(self, path):
         if not os.path.exists(path):
@@ -178,7 +182,7 @@ class TrackModel():
                 limit = db.at[i,"Speed Limit (Km/Hr)"]
                 elevation = db.at[i,"ELEVATION (M)"]
 
-                attributes = (name,length,grade,limit,elevation)
+                attributes = (name,False,length,grade,limit,elevation)
                 blk = Block(attributes)
 
             
@@ -195,7 +199,6 @@ class TrackModel():
                 isSignal = "SIGNAL" in infrastructure
                 isSWBeacon = "SW_BEACON" in infrastructure
                 isSTBeacon = "ST_BEACON" in infrastructure
-
 
                 if isUnderground:
                     blk.addUnderground()
@@ -224,13 +227,9 @@ class TrackModel():
         return names_list
     
     def getLineFromName(self, lineName):
-        for l in self.lines:
-            if (l.name == lineName):
-                return l
-        
-        print("ERROR: Line not found")
-        return 0
-
+        return self.lines[self.getLineNames().index(lineName)]
+    
+    #Train Model --> Track Model
     def updateOccupancy(self,occupancyList):
         #Clear occupancy
         for line in self.lines:
