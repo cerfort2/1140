@@ -36,8 +36,8 @@ class CTC(QMainWindow):
         self.occupancy_old_text = None
         self.old_station = None
         
-        self.red_line = ['SHADYSIDE', 'HERRON AVE', 'SWISSVILLE', 'PENN STATION', 'FIRST AVE', 'STATION SQUARE', 'SOUTH HILLS JUNCTION']
-        self.green_line_both = ['PIONEER', 'EDGEBROOK', 'WHITE', 'SOUTH BANK', 'CENTRAL', 'INGLEWOOD', 'OVERBROOK', 'GLENBURY', 'DORMONT', 'MT LEBANON', 'POPLAR', 'CASTLE SHANNON']
+        self.red_line_stations = ['SHADYSIDE', 'HERRON AVE', 'SWISSVILLE', 'PENN STATION', 'FIRST AVE', 'STATION SQUARE', 'SOUTH HILLS JUNCTION']
+        self.green_line_stations = ['PIONEER', 'EDGEBROOK', 'WHITE', 'SOUTH BANK', 'CENTRAL', 'INGLEWOOD', 'OVERBROOK', 'GLENBURY', 'DORMONT', 'MT LEBANON', 'POPLAR', 'CASTLE SHANNON']
         self.blue_line = ['Station A', 'Station B', 'Station C']
         self.blue_line_times = [1,1,1]
         self.blue_lines_blocks = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
@@ -236,6 +236,9 @@ class CTC(QMainWindow):
     
         return
     
+
+#change to updated_block_occupancy function
+#receive block occupancies from track controller, upon receiving, update corresponding blocks
     def apply_tb(self):
         block_combos = [self.ui.track_tb, self.ui.maintenance_tb, self.ui.block_occupancy_tb]
         state_combos = [self.ui.track_state_tb, self.ui.maintenance_state_tb, self.ui.block_state_tb]
@@ -352,6 +355,13 @@ class CTC(QMainWindow):
     def update_mode_tb(self):
         return
     
+    def train_movement(self):
+        return
+    
+    def calculate_authority(self, departure, arrival):
+
+
+
     
 if __name__ == "__main__":
     import sys
