@@ -33,13 +33,13 @@ class Track():
     def setOccupancy(self, occu:bool): #Get the occupancy
         self.occupancy = occu
     
-    def setRightDest(self, right): #Set the right destination if it is a switch, no need for get because value is static
+    def setRightDest(self, right:str): #Set the right destination if it is a switch, no need for get because value is static
         if self.isSwitch == True:
             self.rightDestination = right
         else:
             print("Track is not a Switch")
     
-    def setLeftDest(self, left): #Set the left destination if it is a switch, no need for get because value is static
+    def setLeftDest(self, left:str): #Set the left destination if it is a switch, no need for get because value is static
         if self.isSwitch == True:
             self.leftDestination = left
         else:

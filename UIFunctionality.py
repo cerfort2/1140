@@ -13,21 +13,29 @@ operate = Operations() #Class to perform operations on the breadboard
 class HWTrackControllerGUI(QMainWindow):
     
     greenLine = GreenLine()
+    pureOccupancy = []
     
     #Testing for functionality
     greenLine.Waysides[0].getTrack(32).setLight(True) #Z150 Red
     greenLine.Waysides[2].getTrack(26).setLight(True) #Q100 Red
     greenLine.Waysides[0].getTrack(18).setCrossroad(True) #E19 Crossroad Down
 
-    greenLine.Waysides[0].getTrack(12).setOccupancy(True) #E19 Crossroad Down
-    greenLine.Waysides[0].getTrack(13).setOccupancy(True) #E19 Crossroad Down
-    greenLine.Waysides[0].getTrack(14).setOccupancy(True)#E19 Crossroad Down
-    greenLine.Waysides[0].getTrack(15).setOccupancy(True) #E19 Crossroad Down
+    greenLine.Waysides[0].getTrack(12).setOccupancy(True) 
+    greenLine.Waysides[0].getTrack(13).setOccupancy(True) 
+    greenLine.Waysides[0].getTrack(14).setOccupancy(True)
+    greenLine.Waysides[0].getTrack(15).setOccupancy(True) 
 
-    greenLine.Waysides[1].getTrack(18).setOccupancy(True) #E19 Crossroad Down
-    greenLine.Waysides[1].getTrack(19).setOccupancy(True) #E19 Crossroad Down
-    greenLine.Waysides[1].getTrack(20).setOccupancy(True) #E19 Crossroad Down
-    greenLine.Waysides[1].getTrack(21).setOccupancy(True) #E19 Crossroad Down
+    greenLine.Waysides[1].getTrack(0).setOccupancy(True) 
+    greenLine.Waysides[1].getTrack(1).setOccupancy(True) 
+    greenLine.Waysides[1].getTrack(2).setOccupancy(True) 
+    greenLine.Waysides[1].getTrack(3).setOccupancy(True) 
+    greenLine.Waysides[1].getTrack(18).setOccupancy(True) 
+    greenLine.Waysides[1].getTrack(19).setOccupancy(True) 
+    greenLine.Waysides[1].getTrack(20).setOccupancy(True) 
+    greenLine.Waysides[1].getTrack(21).setOccupancy(True) 
+
+    greenLine.Waysides[1].getTrack(25).setSwitch(False)
+    greenLine.Waysides[2].getTrack(11).setSwitch(False)
 
     def __init__(self):
         super().__init__()
@@ -87,29 +95,15 @@ class HWTrackControllerGUI(QMainWindow):
 
         #Buttons/Setup for Whole UI
         self.ui.pushButton_3.clicked.connect(self.openArduinoFile) #Opens PLC File
-
-        #Timer Dependent Stuff
-        #self.sendData
-        #self.recieveData
         
 
     def init_ui(self): #SetupUI
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-    #Functions used in Whole UI
-    def openArduinoFile(self): #Functionality for PLC File Opening
-        dialog = QFileDialog()
-        dialog.setNameFilter("Arduino File (*.ino)")
-        dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
-        dialogSuccessful = dialog.exec()
-        if dialogSuccessful:
-            fileLocation = dialog.selectedFiles()[0]
-            self.ui.label_4.setText(fileLocation)
-            arduino = "C:\Program Files (x86)\Arduino\\arduino.exe"
-            command = f'"{arduino}" "{fileLocation}"'
-            subprocess.run(command, shell=True) 
-    def sendData(self):
+
+    #Time dependent Functions
+    def sendDataModel(self):
         data = [[],[],[]]
         blocks:Track = []
         for i in range (len(self.greenLine.Waysides)):
@@ -118,7 +112,7 @@ class HWTrackControllerGUI(QMainWindow):
 
         for i in range (len(blocks)):
             for j in range (i, len(blocks)):
-                if(blocks[i].getName(self) > blocks[j].getName(self)):
+                if(blocks[i].getName() > blocks[j].getName()):
                     hold = blocks[i]
                     blocks[i] = blocks[j]
                     blocks[j] = hold
@@ -135,14 +129,49 @@ class HWTrackControllerGUI(QMainWindow):
                 data[1].append(blocks[i].getCrossroad())
             else:
                 data[1].append(False)
-            if(blocks[i].getIsSignal()):
-                data[2].append(blocks[i].getSignal())
+            if(blocks[i].getIsLight()):
+                data[2].append(blocks[i].getLight())
             else:
                 data[2].append(False) 
         return data
-    def recievedData(self, occupancy:[]):
+    def sendOccupancy(self):
+        return self.pureOccupancy
+    def recievedOccupancy(self, occupancy:[]):
+        self.pureOccupancy = occupancy
+        #All for Wayside 1
+        for i in range(31): #A1-G32
+            self.greenLine.Waysides[0].getTrack(i).setOccupancy(occupancy[i])
+        self.greenLine.Waysides[0].getTrack(32).setOccupancy(occupancy[len(occupancy)-2]) #Z150
+        #All for Wayside 2
+        for i in range(40): #H33-L73
+            self.greenLine.Waysides[1].getTrack(i).setOccupancy(occupancy[i+32])
+        self.greenLine.Waysides[1].getTrack(41).setOccupancy(occupancy[len(occupancy)-1]) #YARD
+        #All for Wayside 3
+        for i in range(27): #M74-R101
+            self.greenLine.Waysides[2].getTrack(i).setOccupancy(occupancy[i+73])
+        #All for Wayside 4
+        for i in range(47): #S102-Y149
+            self.greenLine.Waysides[3].getTrack(i).setOccupancy(occupancy[i+101])
+    def editAuthority(self):
+        return
+    def getAuthority(self):
         return
 
+
+    #Functions used in Whole UI
+    def openArduinoFile(self): #Functionality for PLC File Opening
+        dialog = QFileDialog()
+        dialog.setNameFilter("Arduino File (*.ino)")
+        dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+        dialogSuccessful = dialog.exec()
+        if dialogSuccessful:
+            fileLocation = dialog.selectedFiles()[0]
+            self.ui.label_4.setText(fileLocation)
+            arduino = "C:\Program Files (x86)\Arduino\\arduino.exe"
+            command = f'"{arduino}" "{fileLocation}"'
+            subprocess.run(command, shell=True) 
+    
+    
     #Functions used in Automatic Mode
     def checkListAutomatic(self): #Checks if a Line is selected or not to grey out combo boxes and list
         if self.ui.listWidget_3.currentItem() is not None:
@@ -476,7 +505,8 @@ class HWTrackControllerGUI(QMainWindow):
                 break
         newVal = not self.greenLine.Waysides[waysideNumber].getTrack(i).getFailure() #Toggling the current value
         self.greenLine.Waysides[waysideNumber].getTrack(i).setFailure(newVal) #Setting it to the track it is associated with
-    
+
+
     #Code for configuration of Green Line Values
     #Automatic Mode
     def configureWaysidesAutomaticGreen(self):
