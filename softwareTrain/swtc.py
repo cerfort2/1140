@@ -22,9 +22,6 @@ class Ui_MainWindow(object):
         self.tabWidget.setObjectName("tabWidget")
         self.manual = QtWidgets.QWidget()
         self.manual.setObjectName("manual")
-        self.leftdoor = QtWidgets.QCheckBox(parent=self.manual)
-        self.leftdoor.setGeometry(QtCore.QRect(340, 280, 131, 41))
-        self.leftdoor.setObjectName("leftdoor")
         self.rightdoor = QtWidgets.QCheckBox(parent=self.manual)
         self.rightdoor.setGeometry(QtCore.QRect(340, 270, 111, 21))
         self.rightdoor.setObjectName("rightdoor")
@@ -65,6 +62,29 @@ class Ui_MainWindow(object):
         self.gridLayout_2 = QtWidgets.QGridLayout(self.gridLayoutWidget_2)
         self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_2.setObjectName("gridLayout_2")
+        self.temp = QtWidgets.QSpinBox(parent=self.gridLayoutWidget_2)
+        self.temp.setWrapping(False)
+        self.temp.setFrame(True)
+        self.temp.setObjectName("temp")
+        self.gridLayout_2.addWidget(self.temp, 12, 2, 1, 1)
+        self.textEdit_10 = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
+        self.textEdit_10.setEnabled(False)
+        self.textEdit_10.setObjectName("textEdit_10")
+        self.gridLayout_2.addWidget(self.textEdit_10, 0, 0, 1, 1)
+        self.textEdit_4 = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
+        self.textEdit_4.setEnabled(False)
+        self.textEdit_4.setObjectName("textEdit_4")
+        self.gridLayout_2.addWidget(self.textEdit_4, 2, 0, 1, 1)
+        self.speedlimit = QtWidgets.QLCDNumber(parent=self.gridLayoutWidget_2)
+        self.speedlimit.setObjectName("speedlimit")
+        self.gridLayout_2.addWidget(self.speedlimit, 2, 2, 1, 1)
+        self.textEdit_15 = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
+        self.textEdit_15.setEnabled(False)
+        self.textEdit_15.setObjectName("textEdit_15")
+        self.gridLayout_2.addWidget(self.textEdit_15, 6, 0, 1, 1)
+        self.authority = QtWidgets.QLCDNumber(parent=self.gridLayoutWidget_2)
+        self.authority.setObjectName("authority")
+        self.gridLayout_2.addWidget(self.authority, 6, 2, 1, 1)
         self.time = QtWidgets.QDateTimeEdit(parent=self.gridLayoutWidget_2)
         self.time.setEnabled(False)
         self.time.setObjectName("time")
@@ -72,40 +92,15 @@ class Ui_MainWindow(object):
         self.textEdit_8 = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
         self.textEdit_8.setEnabled(False)
         self.textEdit_8.setObjectName("textEdit_8")
-        self.gridLayout_2.addWidget(self.textEdit_8, 11, 0, 1, 1)
-        self.speedlimit = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
-        self.speedlimit.setEnabled(False)
-        self.speedlimit.setObjectName("speedlimit")
-        self.gridLayout_2.addWidget(self.speedlimit, 1, 2, 1, 1)
-        self.temp = QtWidgets.QSpinBox(parent=self.gridLayoutWidget_2)
-        self.temp.setWrapping(False)
-        self.temp.setFrame(True)
-        self.temp.setObjectName("temp")
-        self.gridLayout_2.addWidget(self.temp, 11, 2, 1, 1)
-        self.authority = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
-        self.authority.setEnabled(False)
-        self.authority.setObjectName("authority")
-        self.gridLayout_2.addWidget(self.authority, 5, 2, 1, 1)
-        self.textEdit_15 = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
-        self.textEdit_15.setEnabled(False)
-        self.textEdit_15.setObjectName("textEdit_15")
-        self.gridLayout_2.addWidget(self.textEdit_15, 5, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.textEdit_8, 12, 0, 1, 1)
         self.nextstop = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
         self.nextstop.setEnabled(False)
         self.nextstop.setObjectName("nextstop")
-        self.gridLayout_2.addWidget(self.nextstop, 3, 2, 1, 1)
-        self.textEdit_4 = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
-        self.textEdit_4.setEnabled(False)
-        self.textEdit_4.setObjectName("textEdit_4")
-        self.gridLayout_2.addWidget(self.textEdit_4, 1, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.nextstop, 1, 2, 1, 1)
         self.amanualnextstop = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
         self.amanualnextstop.setEnabled(False)
         self.amanualnextstop.setObjectName("amanualnextstop")
-        self.gridLayout_2.addWidget(self.amanualnextstop, 3, 0, 1, 1)
-        self.textEdit_10 = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
-        self.textEdit_10.setEnabled(False)
-        self.textEdit_10.setObjectName("textEdit_10")
-        self.gridLayout_2.addWidget(self.textEdit_10, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.amanualnextstop, 1, 0, 1, 1)
         self.brakefailure = QtWidgets.QCheckBox(parent=self.manual)
         self.brakefailure.setEnabled(False)
         self.brakefailure.setGeometry(QtCore.QRect(340, 360, 91, 20))
@@ -157,12 +152,8 @@ class Ui_MainWindow(object):
         self.mode.addItem("")
         self.textEdit_9 = QtWidgets.QTextEdit(parent=self.manual)
         self.textEdit_9.setEnabled(False)
-        self.textEdit_9.setGeometry(QtCore.QRect(530, 160, 151, 41))
+        self.textEdit_9.setGeometry(QtCore.QRect(520, 150, 181, 51))
         self.textEdit_9.setObjectName("textEdit_9")
-        self.manualspeed = QtWidgets.QSlider(parent=self.manual)
-        self.manualspeed.setGeometry(QtCore.QRect(530, 220, 160, 16))
-        self.manualspeed.setOrientation(QtCore.Qt.Orientation.Horizontal)
-        self.manualspeed.setObjectName("manualspeed")
         self.textEdit_12 = QtWidgets.QTextEdit(parent=self.manual)
         self.textEdit_12.setEnabled(False)
         self.textEdit_12.setGeometry(QtCore.QRect(510, 10, 201, 71))
@@ -189,9 +180,18 @@ class Ui_MainWindow(object):
         self.currentspeed = QtWidgets.QLCDNumber(parent=self.gridLayoutWidget_7)
         self.currentspeed.setObjectName("currentspeed")
         self.gridLayout_7.addWidget(self.currentspeed, 1, 1, 1, 1)
-        self.commandedspeed = QtWidgets.QLCDNumber(parent=self.gridLayoutWidget_7)
-        self.commandedspeed.setObjectName("commandedspeed")
-        self.gridLayout_7.addWidget(self.commandedspeed, 2, 1, 1, 1)
+        self.autocommandedspeed = QtWidgets.QLCDNumber(parent=self.gridLayoutWidget_7)
+        self.autocommandedspeed.setObjectName("autocommandedspeed")
+        self.gridLayout_7.addWidget(self.autocommandedspeed, 2, 1, 1, 1)
+        self.leftdoor = QtWidgets.QCheckBox(parent=self.manual)
+        self.leftdoor.setGeometry(QtCore.QRect(340, 290, 111, 21))
+        self.leftdoor.setObjectName("leftdoor")
+        self.manualcommandedspeed = QtWidgets.QSpinBox(parent=self.manual)
+        self.manualcommandedspeed.setGeometry(QtCore.QRect(520, 200, 121, 41))
+        self.manualcommandedspeed.setObjectName("manualcommandedspeed")
+        self.textEdit_5 = QtWidgets.QTextEdit(parent=self.manual)
+        self.textEdit_5.setGeometry(QtCore.QRect(640, 200, 61, 41))
+        self.textEdit_5.setObjectName("textEdit_5")
         self.tabWidget.addTab(self.manual, "")
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
@@ -299,7 +299,6 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.leftdoor.setText(_translate("MainWindow", "Left Door Open"))
         self.rightdoor.setText(_translate("MainWindow", "Right Door Open"))
         self.internallight.setText(_translate("MainWindow", "Internal Lights On"))
         self.externallight.setText(_translate("MainWindow", "External Lights On"))
@@ -337,54 +336,6 @@ class Ui_MainWindow(object):
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Train Failures</span></p></body></html>"))
-        self.textEdit_8.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:700;\">Temperature</span></p></body></html>"))
-        self.authority.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
-        self.textEdit_15.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Authority</span></p></body></html>"))
-        self.nextstop.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
-        self.textEdit_4.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Speed Limit</span></p></body></html>"))
-        self.amanualnextstop.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Next stop:</span></p></body></html>"))
         self.textEdit_10.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -393,6 +344,46 @@ class Ui_MainWindow(object):
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Time:</span></p></body></html>"))
+        self.textEdit_4.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Speed Limit (miles/hr)</span></p></body></html>"))
+        self.textEdit_15.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Authority (feet)</span></p></body></html>"))
+        self.textEdit_8.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:700;\">Temperature (F)</span></p></body></html>"))
+        self.nextstop.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        self.amanualnextstop.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Next stop:</span></p></body></html>"))
         self.brakefailure.setText(_translate("MainWindow", "Brake Failure"))
         self.enginefailure.setText(_translate("MainWindow", "Engine Failure"))
         self.signalfailure.setText(_translate("MainWindow", "Signal Failure"))
@@ -462,6 +453,15 @@ class Ui_MainWindow(object):
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700; font-style:italic; text-decoration: underline;\">Commanded Speed (miles/hr)</span></p></body></html>"))
+        self.leftdoor.setText(_translate("MainWindow", "Left Door Open"))
+        self.textEdit_5.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">miles/hr</p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.manual), _translate("MainWindow", "Main Page"))
         self.textEdit_47.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
