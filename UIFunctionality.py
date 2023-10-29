@@ -14,6 +14,8 @@ class HWTrackControllerGUI(QMainWindow):
     
     greenLine = GreenLine()
     pureOccupancy = []
+    yardSwitchAuthority = int
+    route = []
     
     #Testing for functionality
     greenLine.Waysides[0].getTrack(32).setLight(True) #Z150 Red
@@ -116,9 +118,6 @@ class HWTrackControllerGUI(QMainWindow):
                     hold = blocks[i]
                     blocks[i] = blocks[j]
                     blocks[j] = hold
-        hold = blocks[len(blocks) - 1]
-        blocks[len(blocks) - 1] = blocks[len(blocks) - 2]
-        blocks[len(blocks) - 2] = hold
 
         for i in range (len(blocks)):
             if(blocks[i].getIsSwitch()):
@@ -154,9 +153,12 @@ class HWTrackControllerGUI(QMainWindow):
             self.greenLine.Waysides[3].getTrack(i).setOccupancy(occupancy[i+101])
     def editAuthority(self):
         return
-    def getAuthority(self):
-        return
-
+    def setAuthority(self, code):
+        self.yardSwitchAuthority = code
+    def setRoute(self, route:[]):
+        self.route = route
+    def getRoute(self):
+        return self.route
 
     #Functions used in Whole UI
     def openArduinoFile(self): #Functionality for PLC File Opening
