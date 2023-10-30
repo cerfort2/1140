@@ -58,7 +58,6 @@ class SoftwareTrainControllerGUI(QMainWindow):
         
         self.ui.tbapply.clicked.connect(self.tbreceiveVals)
         
-        self.ui.mode.currentTextChanged.connect(self.modeVals)  #check for change in mode
         self.ui.ebrake.clicked.connect(self.eBrakePressed)      #check for if ebrake is pushed in manual or automatic
 
         self.ui.announcement.currentTextChanged.connect(self.manualannouncementchange)
@@ -92,7 +91,7 @@ class SoftwareTrainControllerGUI(QMainWindow):
             self.ui.manualcommandedspeed.setDisabled(False)
         
 
-#going to get back current speed=0. commanded speed holds for in automatic mode and manual
+
     def eBrakePressed(self): 
         if self.currentSpeed==0 and self.eBrake==True:    #ebrake already pressed
             print('Ebrake released')
@@ -116,40 +115,56 @@ class SoftwareTrainControllerGUI(QMainWindow):
         self.computeVals()
     
     def computeVals(self):
+        self.computeManualSpeed()
+        self.computeAutoSpeed()
+        self.computeAuthority()
+        self.computeDwellTime()
+        self.modeVals()
+        self.computeDoors()
+        self.computePower()                    
+        self.updateVals()
 
-    
-        if self.manualcommandedspeed>=self.speedLimit:
-            self.ui.manualcommandedspeed.setValue(self.speedLimit)
-            self.manualcommandedspeed=self.speedLimit*.44704        #convert to m/s
+    def computePower(self):
+        if self.manualMode==True:
+            self.ekprev=self.ek
+            self.ek=self.manualcommandedspeed-self.currentSpeed
+            self.uk=(self.interval/2)*(self.ek+self.ekprev)
+            self.power=(self.ek*self.kp+self.ki*self.uk)
         else:
-            self.manualcommandedspeed=self.ui.manualcommandedspeed.value()*.44704   
-        
-        
-        if self.automaticcommandedspeed*2.2369362921>=self.speedLimit:
-            self.setCommandedSpeed(self.speedLimit*.44704)
-            
-        
+            self.ekprev=self.ek
+            self.ek=self.automaticcommandedspeed-self.currentSpeed
+            self.uk+=(self.interval/2)*(self.ek+self.ekprev)
+            self.power=(self.ek*self.kp+self.ki*self.uk)
 
-        if self.authority>0:
-            self.authority-=self.currentSpeed*self.interval
+    def computeDoors(self):
+        if self.authority==0 and self.currentSpeed==0:
+            if self.stationOnLeft:
+                self.ui.leftdoor.setChecked(True)
+            else:
+                self.ui.rightdoor.setChecked(True)
         else:
-            if not self.manualMode:
-                self.dwelling=True
-            
-
-        
+                self.ui.leftdoor.setChecked(False)
+                self.ui.rightdoor.setChecked(False)
+    def computeDwellTime(self):
         if self.dwelling and not self.manualMode:
             print(self.dwellTime)
             if self.dwellTime-self.interval>0:   #subtract the time that it takes the timer to time out
                 self.dwellTime-=self.interval
             else:
                 self.dwelling=False
-                self.authority+=20
-                self.dwellTime=60
-   
-        
+                self.dwellTime=60        
+    def computeAuthority(self):
+        if self.authority>0:
+            self.authority-=self.currentSpeed*self.interval
+        else:
+            if not self.manualMode:
+                self.dwelling=True
+    def computeAutoSpeed(self):
+        if self.automaticcommandedspeed*2.2369362921>=self.speedLimit:
+            self.ctcSpeed=self.speedLimit
+            self.setCommandedSpeed(self.speedLimit*.44704)
 
-        #might need to correct
+                #might need to correct
         #slowing the train down as authority decreases
         if self.authority<=18 and not self.manualMode: 
             if self.authority<=18 and self.authority>15:
@@ -175,37 +190,20 @@ class SoftwareTrainControllerGUI(QMainWindow):
                 self.automaticcommandedspeed=0
         else:
             self.automaticcommandedspeed=self.ctcSpeed
-                  
-        
+
+    def computeManualSpeed(self):
+        if not self.manualMode:
+            self.ui.manualcommandedspeed.setValue(round(self.automaticcommandedspeed*2.2369362921))
+
+        if self.manualcommandedspeed>=self.speedLimit:
+            self.ui.manualcommandedspeed.setValue(self.speedLimit)
+            self.manualcommandedspeed=self.speedLimit*.44704        #convert to m/s
+        else:
+            self.manualcommandedspeed=self.ui.manualcommandedspeed.value()*.44704   
+
         if self.serviceBrakeSlide>0:
             self.manualcommandedspeed=self.currentSpeed #make sure this is good, assume connor sends this back
             self.ui.manualcommandedspeed.setValue(self.currentSpeed)
-        
-
-
-        if self.manualMode==True:
-            self.ekprev=self.ek
-            self.ek=self.manualcommandedspeed-self.currentSpeed
-            self.uk=(self.interval/2)*(self.ek+self.ekprev)
-            self.power=(self.ek*self.kp+self.ki*self.uk)
-        else:
-            self.ui.manualcommandedspeed.setValue(round(self.automaticcommandedspeed*2.2369362921))
-            self.ekprev=self.ek
-            self.ek=self.automaticcommandedspeed-self.currentSpeed
-            self.uk+=(self.interval/2)*(self.ek+self.ekprev)
-            self.power=(self.ek*self.kp+self.ki*self.uk)
-            
-            if self.authority==0 and self.currentSpeed==0:
-                if self.stationOnLeft:
-                    self.ui.leftdoor.setChecked(True)
-                else:
-                    self.ui.rightdoor.setChecked(True)
-            else:
-                self.ui.leftdoor.setChecked(False)
-                self.ui.rightdoor.setChecked(False)
-                
-        self.updateVals()
-
     def updateVals(self):
         self.ui.power.display(self.power)
         self.ui.currentspeed.display(self.currentSpeed*2.2369362921)
