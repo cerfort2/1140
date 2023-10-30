@@ -29,8 +29,6 @@ class train_model_software():
 
         #create instance of train controller
         self.controller = SoftwareTrainController()
-        self.controller.setKp(3)
-        self.controller.setKi(12)
     
 
     #
@@ -39,7 +37,7 @@ class train_model_software():
 
     #recieve power from train controller, update power in model
     def set_power(self) -> None:
-        self.power = self.controller.getPower()
+        self.power = 120000
 
     #power getter
     def get_power(self) -> float:
@@ -90,7 +88,7 @@ class train_model_software():
 
 
 new_train = train_model_software()
-
+ui = 
 while(1):
     new_train.update_train()
     print(new_train.get_speed())

@@ -4,7 +4,7 @@ from PyQt6.QtCore import QTimer
 from PyQt6 import QtCore, QtGui, QtWidgets
 from datetime import datetime
 import math
-from train_model_gui.sw_train_UI import Ui_MainWindow
+from sw_train_UI import Ui_MainWindow
 
 class SoftwareTrainController():
     
@@ -12,7 +12,7 @@ class SoftwareTrainController():
         self.manualmode=False
         self.ctcSpeed=0                #speed to go in automatic mode when in the middle of a route in m/s
         self.automaticcommandedspeed=0   #desired speed in automatic mode. i edit this as the train is stopping at a station
-        self.manualcommandedspeed=0      #the value of the slide bar. commandedspeed=manualcommandedspeed if manualMode=True 
+        self.manualcommandedspeed = 20     #the value of the slide bar. commandedspeed=manualcommandedspeed if manualMode=True 
         self.nextstop="A Stop"
         self.currentSpeed=0      #current speed in manual or auto (max speed is 70km/hr)
         self.speedLimit=43
@@ -28,15 +28,15 @@ class SoftwareTrainController():
         self.tunnel=False
         self.stationOnLeft='l' #where to let the passengers out. if stationOnLeft is true, that means the left doors open when the station is reached
         self.serviceBrakeSlide=0
-        self.ek=0
-        self.ekprev=0
+        self.ek=10
+        self.ekprev=20
         self.uk=0
         self.kp=0    #proportional gain
         self.ki=0    #integral gain
         self.brakeFailure=False  # false is no failure
         self.engineFailure=False
         self.signalFailure=False
-        self.power=0     
+        self.power=20   
         self.interval=.05
         self.dwelling=False
         self.dwellTime=60
