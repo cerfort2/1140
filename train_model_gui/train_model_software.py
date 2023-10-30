@@ -88,7 +88,6 @@ class train_model_software():
 
 
 new_train = train_model_software()
-ui = 
 while(1):
     new_train.update_train()
     print(new_train.get_speed())
