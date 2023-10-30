@@ -39,7 +39,7 @@ class Line():
         occupied_list = [blk.name for blk in self.blocks if blk.occupied]
         return occupied_list
     
-    def getBlockFromName(self,blockName):
+    def getBlock(self,blockName):
         return self.blocks[self.getBlockNames().index(blockName)]
   
     #Track Model --> Track Controller
@@ -63,7 +63,7 @@ class Line():
                 if(self.blocks[i].signal[1] != controlSignals[i][2]):
                     self.blocks[i].toggleSignal()
 
-#implement beacon locations, implement beacon data, Track---> Train function(which is in the beacons), Set up authoirty variable
+#implement beacon locations, implement beacon data
 class Block():
     def __init__(self,attributes):
         name, occupied, length, grade, limit, elevation = attributes
@@ -154,6 +154,15 @@ class Block():
     def addSignal(self):
         self.signal = [True, True]
 
+    def addBeaconBeforeStation(self):
+        pass
+
+    def addBeaconAtStation(self):
+        pass
+
+    def addBeaconAtSwitch(self):
+        pass
+
 
 class TrackModel():
     def __init__(self):
@@ -218,6 +227,16 @@ class TrackModel():
                 if isSignal:
                     blk.addSignal()
 
+                if isSWBeacon:
+                    blk.addBeaconAtSwitch()
+
+                if isSTBeacon:
+                    if isStation:
+                        blk.addBeaconAtStation()
+                    else:
+                        blk.addBeaconBeforeStation()
+
+
                 newLine.addBlock(blk)
 
         self.lines.append(newLine)
@@ -226,7 +245,7 @@ class TrackModel():
         names_list = [l.name for l in self.lines]
         return names_list
     
-    def getLineFromName(self, lineName):
+    def getLine(self, lineName):
         return self.lines[self.getLineNames().index(lineName)]
     
     #Train Model --> Track Model
@@ -238,8 +257,19 @@ class TrackModel():
 
         for i in range(len(occupancyList)):
             blk_name, line_name = occupancyList
-            self.lines[self.lines.index(line_name)].getBlockFromNames(blk_name).setOccupied()
+            self.lines[self.lines.index(line_name)].getBlock(blk_name).setOccupied()
 
+    #Track Model --> Train Model
+    def routeToBlockLengths(self, route):
+        line = self.getLine(route[0])
+
+        blocksAndLengths = []
+
+        for i in range(1, len(route)):
+            blocksAndLengths.append((route[i], line.getBlock(route[i]).length))
+
+        return blocksAndLengths
+            
 
 class functionalUI(Ui_MainWindow):
     def __init__(self) -> None:
@@ -274,7 +304,7 @@ class functionalUI(Ui_MainWindow):
         # Add the blocks associated with that line
         currentLineName = self.comboBox_3.currentText()
 
-        l = self.trackModel.getLineFromName(currentLineName)
+        l = self.trackModel.getLine(currentLineName)
         self.comboBox_4.addItems(l.getBlockNames())
         self.listWidget_2.addItems(l.getOccupiedBlockNames())
 
@@ -282,8 +312,8 @@ class functionalUI(Ui_MainWindow):
         currentBlockName = self.comboBox_4.currentText()
         currentLineName = self.comboBox_3.currentText()
 
-        l = self.trackModel.getLineFromName(currentLineName)
-        b = l.getBlockFromName(currentBlockName)
+        l = self.trackModel.getLine(currentLineName)
+        b = l.getBlock(currentBlockName)
 
         #name
         self.tableWidget_3.item(0,0).setText(b.name)
