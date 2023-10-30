@@ -23,10 +23,9 @@ class SoftwareTrainController():
         self.leftDoor=False       #true=open
         self.rightDoor=False      #true=open
         self.announcement=""
-        self.manualMode=False    #true =manual mode on
         self.eBrake=False        #false=not pressed
         self.tunnel=False
-        self.stationOnLeft='l' #where to let the passengers out. if stationOnLeft is true, that means the left doors open when the station is reached
+        self.stationOnLeft='b' #where to let the passengers out. if stationOnLeft is true, that means the left doors open when the station is reached
         self.serviceBrakeSlide=0
         self.ek=0
         self.ekprev=0
@@ -68,9 +67,9 @@ class SoftwareTrainController():
         self.authority=a
 
     def setMode(self,b):
-        self.manualMode=b
+        self.manualmode=b
         
-    def getMode(self):
+    def getManualMode(self):
         return self.manualmode 
     def getEbrake(self):
         return self.eBrake
@@ -82,19 +81,15 @@ class SoftwareTrainController():
     def setEngineFailure(self,a):
         self.engineFailure=a
 
-    def getRightDoor(self):
-        return self.rightDoor
-    def getLeftDoor(self):
-            return self.leftDoor
     def getExteriorLights(self):
             return self.exlights
     def getIntLights(self):
         return self.intlights
 
     def computeExtLights(self):
-        if self.tunnel and not self.manualMode:
+        if self.tunnel and not self.manualmode:
             self.exlights=True
-        if not self.tunnel and not self.manualMode:
+        if not self.tunnel and not self.manualmode:
             self.exlights=False
         return self.exlights
 
@@ -111,35 +106,56 @@ class SoftwareTrainController():
         return self.power
     
     def computePower(self):
-        if self.manualMode==True:
+        if self.manualmode==True:
             self.ekprev=self.ek
             self.ek=self.manualcommandedspeed-self.currentSpeed
-            self.uk=(self.interval/2)*(self.ek+self.ekprev)
+            self.uk+=(self.interval/2)*(self.ek+self.ekprev)
             self.power=(self.ek*self.kp+self.ki*self.uk)
-            return self.power
         else:
             self.ekprev=self.ek
             self.ek=self.automaticcommandedspeed-self.currentSpeed
             self.uk+=(self.interval/2)*(self.ek+self.ekprev)
             self.power=(self.ek*self.kp+self.ki*self.uk)
-            return self.power
+
+        if self.power>120:
+            self.power=120
+
+        if self.brakeFailure or self.signalFailure or self.engineFailure:
+            self.power=0
             
-    def computeDoors(self):
-        if self.authority==0 and self.currentSpeed==0 and self.stationOnLeft=='l' and not self.manualMode:
+    def getLeftDoor(self):
+        if self.authority==0 and self.currentSpeed==0 and self.stationOnLeft=='l' and not self.manualmode:
             self.leftDoor=True
             self.rightDoor=False
-        if self.authority==0 and self.currentSpeed==0 and self.stationOnLeft=='r' and not self.manualMode:
+            return True
+        if self.authority==0 and self.currentSpeed==0 and self.stationOnLeft=='r' and not self.manualmode:
             self.rightDoor=True
             self.leftDoor=False
-        if self.authority==0 and self.currentSpeed==0 and self.stationOnLeft=='b' and not self.manualMode:
+            return False
+        if self.authority==0 and self.currentSpeed==0 and self.stationOnLeft=='b' and not self.manualmode:
             self.rightDoor=True
             self.leftDoor=True
-        if not self.manualMode:
-            self.leftDoor=False
+            return True
+        else:
+            return self.leftDoor
+    def getRightDoor(self):
+        if self.authority==0 and self.currentSpeed==0 and self.stationOnLeft=='l' and not self.manualmode:
+            self.leftDoor=True
             self.rightDoor=False
+            return False
+        if self.authority==0 and self.currentSpeed==0 and self.stationOnLeft=='r' and not self.manualmode:
+            self.rightDoor=True
+            self.leftDoor=False
+            return True
+        if self.authority==0 and self.currentSpeed==0 and self.stationOnLeft=='b' and not self.manualmode:
+            self.rightDoor=True
+            self.leftDoor=True
+            return True
+        else:
+            return self.rightDoor
         
     def computeDwellTime(self):
-        if self.dwelling and not self.manualMode:
+        if self.dwelling and not self.manualmode:
             print(self.dwellTime)
             if self.dwellTime-self.interval>0:   #subtract the time that it takes the timer to time out
                 self.dwellTime-=self.interval
@@ -150,16 +166,17 @@ class SoftwareTrainController():
         if self.authority>0:
             self.authority-=self.currentSpeed*self.interval
         else:
-            if not self.manualMode:
+            self.authority=0
+            self.currentSpeed=0
+            if not self.manualmode:
                 self.dwelling=True
     def computeAutoSpeed(self):
-        if self.automaticcommandedspeed*2.2369362921>=self.speedLimit:
+        if self.ctcSpeed*2.2369362921>=self.speedLimit:
             self.ctcSpeed=self.speedLimit
-            self.setCommandedSpeed(self.speedLimit*.44704)
 
                 #might need to correct
         #slowing the train down as authority decreases
-        if self.authority<=18 and not self.manualMode: 
+        if self.authority<=18 and not self.manualmode: 
             if self.authority<=18 and self.authority>15:
                 if self.automaticcommandedspeed>12:
                     self.automaticcommandedspeed=12           
@@ -187,16 +204,12 @@ class SoftwareTrainController():
     def computeManualSpeed(self) ->int:
         if self.serviceBrakeSlide>0:
             self.manualcommandedspeed=self.currentSpeed #make sure this is good, assume connor sends this back
-            return self.currentSpeed
 
-        if not self.manualMode:
-            return round(self.automaticcommandedspeed*2.2369362921)
+        if not self.manualmode:
+            self.manualcommandedspeed=self.automaticcommandedspeed*2.2369362921
         else:
             if self.manualcommandedspeed>=self.speedLimit:
-                self.manualcommandedspeed=self.speedLimit*.44704        #convert to m/s
-                return self.speedLimit
-            else:  
-                return self.manualcommandedspeed
+                self.manualcommandedspeed=self.speedLimit        #convert to m/s
 
     def setManualCommandedSpeed(self,s):
         self.manualcommandedspeed=s
@@ -303,6 +316,7 @@ class SoftwareTrainControllerGUI(QMainWindow):
 
 
     def receiveVals(self):
+        self.modeVals()
         self.swtrain.setManualCommandedSpeed(self.ui.manualcommandedspeed.value())
         self.swtrain.setServiceBrakeSlide(self.ui.servicebrake.value())
         self.swtrain.setTemperature(self.ui.temp.value())
@@ -310,32 +324,31 @@ class SoftwareTrainControllerGUI(QMainWindow):
         self.swtrain.setKp(self.ui.kp.value())
         self.swtrain.setExLights(self.ui.externallight.isChecked())
         self.swtrain.setIntLights(self.ui.internallight.isChecked())
-        self.swtrain.setLeftDoor(self.ui.leftdoor.isChecked())
-        self.swtrain.setRightDoor(self.ui.rightdoor.isChecked())
+        if self.swtrain.getManualMode():
+            self.swtrain.setLeftDoor(self.ui.leftdoor.isChecked())
+            self.swtrain.setRightDoor(self.ui.rightdoor.isChecked())
         self.computeVals()
     
     def computeVals(self):
+        self.swtrain.computeAuthority()
         self.swtrain.computeManualSpeed()
         self.swtrain.computeAutoSpeed()
-        self.swtrain.computeDwellTime()
-        self.swtrain.computeDoors()
-        self.modeVals()               
+        self.swtrain.computeDwellTime()     
+        self.swtrain.computePower()         
         self.updateVals()
 
     
     def updateVals(self):
-        self.ui.power.display(self.swtrain.computePower())
+        self.ui.power.display(self.swtrain.getPower())
         self.ui.currentspeed.display(self.swtrain.getCurrentSpeed()*2.2369362921)
         self.ui.nextstop.setPlainText(self.swtrain.getNextStop())
         self.ui.autocommandedspeed.display(2.23693629*self.swtrain.getAutoCommandedSpeed())
-        self.ui.manualcommandedspeed.setValue(self.swtrain.computeManualSpeed())
+        self.ui.manualcommandedspeed.setValue(int(self.swtrain.getManualCommandedSpeed()))
         self.ui.leftdoor.setChecked(self.swtrain.getLeftDoor())
         self.ui.rightdoor.setChecked(self.swtrain.getRightDoor())
 
         
         self.ui.externallight.setChecked(self.swtrain.computeExtLights())
-
-        self.ui.manualcommandedspeed.setValue(self.swtrain.computeManualSpeed())
         self.ui.announcement.setCurrentText(self.computeAnnouncement())
 
         self.ui.speedlimit.display(round(self.swtrain.getSpeedLimit()))
@@ -361,6 +374,9 @@ class SoftwareTrainControllerGUI(QMainWindow):
         self.ui.setupUi(self)
         self.modeVals()
         self.ui.temp.setValue(70)
+        self.swtrain.setAuthority(10)
+        self.swtrain.setCommandedSpeed(2)
+        self.swtrain.setCurrentSpeed(1)
         self.ui.internallight.setChecked(True)
        # self.ui.tbcurrentspeed.textChanged.connect(lambda: self.updateVals) 
 
