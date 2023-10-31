@@ -1,0 +1,1453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HardwareTrainController</class>
+ <widget class="QMainWindow" name="HardwareTrainController">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>802</width>
+    <height>630</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>AutomaticMode</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTabWidget" name="controller">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>-10</x>
+      <y>0</y>
+      <width>811</width>
+      <height>621</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::ClickFocus</enum>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <property name="movable">
+     <bool>false</bool>
+    </property>
+    <property name="tabBarAutoHide">
+     <bool>false</bool>
+    </property>
+    <widget class="QWidget" name="MainPage">
+     <attribute name="title">
+      <string>Automatic</string>
+     </attribute>
+     <widget class="QTreeWidget" name="active_status_auto">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>251</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>Object</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Status</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <item>
+       <property name="text">
+        <string>Right Door</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../../2023-09-07-192429_1920x1080_scrot.png</normaloff>../../2023-09-07-192429_1920x1080_scrot.png</iconset>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Left Door</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../../2023-09-07-192429_1920x1080_scrot.png</normaloff>../../2023-09-07-192429_1920x1080_scrot.png</iconset>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Exterior Lights</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>6</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../../2023-09-07-192429_1920x1080_scrot.png</normaloff>../../2023-09-07-192429_1920x1080_scrot.png</iconset>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Interior Lights</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>6</pointsize>
+        </font>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../../2023-09-07-192429_1920x1080_scrot.png</normaloff>../../2023-09-07-192429_1920x1080_scrot.png</iconset>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+     </widget>
+     <widget class="QPushButton" name="ebrake">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>440</y>
+        <width>311</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Emergency Brake</string>
+      </property>
+     </widget>
+     <widget class="QTreeWidget" name="failure_status_auto">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>10</y>
+        <width>211</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>Failures</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Status</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <item>
+       <property name="text">
+        <string>Engine</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../../2023-09-07-192429_1920x1080_scrot.png</normaloff>../../2023-09-07-192429_1920x1080_scrot.png</iconset>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Signal</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../../2023-09-07-192429_1920x1080_scrot.png</normaloff>../../2023-09-07-192429_1920x1080_scrot.png</iconset>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Brake</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../../index.html?u=https:%2F%2Fwww.clker.com%2Fcliparts%2F3%2F8%2F1%2Fd%2F13940141271385061948232px-green_light_icon.svg.png</normaloff>
+         <normalon>../../2023-09-07-192429_1920x1080_scrot.png</normalon>../../index.html?u=https:%2F%2Fwww.clker.com%2Fcliparts%2F3%2F8%2F1%2Fd%2F13940141271385061948232px-green_light_icon.svg.png</iconset>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="integral_gain_label_auto">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>250</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Integral Gain: </string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="integral_gain">
+      <property name="geometry">
+       <rect>
+        <x>690</x>
+        <y>250</y>
+        <width>67</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="proportional_gain_label_auto">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>290</y>
+        <width>221</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Proportional Gain: </string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="proportional_gain">
+      <property name="geometry">
+       <rect>
+        <x>720</x>
+        <y>300</y>
+        <width>67</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="manual_speed_label_auto">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>220</y>
+        <width>241</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Current Speed:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="power_label_auto">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>0</y>
+        <width>131</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>30</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Power:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="accouncements_label_auto">
+      <property name="geometry">
+       <rect>
+        <x>480</x>
+        <y>360</y>
+        <width>211</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Annoucements:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="annoucements">
+      <property name="geometry">
+       <rect>
+        <x>670</x>
+        <y>390</y>
+        <width>121</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="commanded_speed">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>150</y>
+        <width>81</width>
+        <height>71</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>280</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Speed Limit: </string>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="power">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>60</y>
+        <width>151</width>
+        <height>161</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="watts_label_auto">
+      <property name="geometry">
+       <rect>
+        <x>680</x>
+        <y>130</y>
+        <width>101</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Watts</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="mode">
+      <property name="geometry">
+       <rect>
+        <x>680</x>
+        <y>20</y>
+        <width>101</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Manual</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Automatic</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QPushButton" name="annoucements_button">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>410</y>
+        <width>91</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Notify</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="right_door_status">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>40</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="interior_lights">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>100</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="left_door">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>60</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="exterior_lights">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>80</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QSlider" name="service_slider">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>440</y>
+        <width>20</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="invertedAppearance">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="service_two_2">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>450</y>
+        <width>111</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Service</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="service_one_2">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>480</y>
+        <width>68</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Brake</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>280</y>
+        <width>68</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>MPH</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>180</y>
+        <width>68</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>MPH</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="manual_speed_label_auto_2">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>140</y>
+        <width>241</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Commanded Speed:</string>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="current_speed">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>230</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>230</y>
+        <width>68</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>MPH</string>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="speed_limit">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>280</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="manual_speed">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>180</y>
+        <width>131</width>
+        <height>41</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>350</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Authority:</string>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="authority">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>330</y>
+        <width>81</width>
+        <height>71</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>350</y>
+        <width>68</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Feet</string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="cs_test">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>310</y>
+        <width>67</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>470</y>
+        <width>191</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Temperature:</string>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="authority_2">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>470</y>
+        <width>81</width>
+        <height>71</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="manual_speed_2">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>510</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame">
+      <property name="geometry">
+       <rect>
+        <x>470</x>
+        <y>370</y>
+        <width>331</width>
+        <height>191</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>140</y>
+        <width>461</width>
+        <height>271</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>410</y>
+        <width>461</width>
+        <height>151</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_4">
+      <property name="geometry">
+       <rect>
+        <x>470</x>
+        <y>10</y>
+        <width>331</width>
+        <height>361</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="testbench">
+     <attribute name="title">
+      <string>Testbench</string>
+     </attribute>
+     <widget class="QTreeWidget" name="active_status_tb">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>211</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>Object</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Status</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <item>
+       <property name="text">
+        <string>Right Door</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Left Door</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Light 1</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Light 2</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+     </widget>
+     <widget class="QCheckBox" name="right_door">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>40</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="light_two_status">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>100</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="light_one_status">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>80</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="left_door_status">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>60</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QTreeWidget" name="failure_status_tb">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>20</y>
+        <width>211</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>Failures</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Status</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <item>
+       <property name="text">
+        <string>Engine</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Signal</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Brake</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+     </widget>
+     <widget class="QCheckBox" name="signal_failure">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>70</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="engine_failure">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>50</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QTreeWidget" name="brakes_status_tb">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>410</y>
+        <width>211</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>Brakes</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Status</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <item>
+       <property name="text">
+        <string>Emergency</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Service</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+     </widget>
+     <widget class="QCheckBox" name="emergency_brake_tb">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>440</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="brake_failure">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>90</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="integral_gain_label_tb">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>170</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Integral Gain: </string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="service_brake_tb">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>460</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="integral_gain_tb">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>170</y>
+        <width>67</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="proportional_gain_label_tb">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>220</y>
+        <width>221</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Proportional Gain: </string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="proportional_gain_tb">
+      <property name="geometry">
+       <rect>
+        <x>250</x>
+        <y>230</y>
+        <width>67</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="manual_speed_label_tb">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>270</y>
+        <width>111</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Velocity: </string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="manual_speed_tb">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>280</y>
+        <width>67</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTreeWidget" name="environmental_status_tb">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>170</y>
+        <width>211</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>Object</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Status</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <item>
+       <property name="text">
+        <string>Tunnel</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Moving</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Stationary</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+     </widget>
+     <widget class="QCheckBox" name="tunnel_status">
+      <property name="geometry">
+       <rect>
+        <x>670</x>
+        <y>200</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="stationary_status">
+      <property name="geometry">
+       <rect>
+        <x>670</x>
+        <y>240</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="moving_status">
+      <property name="geometry">
+       <rect>
+        <x>670</x>
+        <y>220</y>
+        <width>95</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="power_label_tb">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>30</y>
+        <width>211</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>36</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Power:</string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="power_value_tb">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>50</y>
+        <width>67</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="annoucements_label_tb">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>340</y>
+        <width>221</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Annoucements:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="annoucements_display_tb">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>380</y>
+        <width>191</width>
+        <height>30</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="mass_label_tb">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>340</y>
+        <width>68</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Mass:</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="mass_value_tb">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>340</y>
+        <width>46</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
