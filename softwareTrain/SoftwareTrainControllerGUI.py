@@ -83,7 +83,8 @@ class SoftwareTrainControllerGUI(QMainWindow):
         self.swtrain.controller.computeAuthority()
         self.swtrain.controller.computeManualSpeed()
         self.swtrain.controller.computeAutoSpeed()
-        self.swtrain.controller.computeDwellTime()     
+        self.swtrain.controller.computeDwellTime() 
+        self.swtrain.controller.computeServiceBrake()    
         self.swtrain.controller.computePower()      
         self.swtrain.update_train()
         self.updateVals()
@@ -102,8 +103,8 @@ class SoftwareTrainControllerGUI(QMainWindow):
         self.ui.externallight.setChecked(self.swtrain.controller.computeExtLights())
         self.ui.announcement.setCurrentText(self.computeAnnouncement())
 
-        self.ui.speedlimit.display(round(self.swtrain.controller.getSpeedLimit()))
-        self.ui.authority.display(self.swtrain.controller.getAuthority()*2.23693629)
+        self.ui.speedlimit.display(int(self.swtrain.controller.getSpeedLimit()))
+        self.ui.authority.display(int(self.swtrain.controller.getAuthority()*2.23693629))
         
     # def tbreceiveVals(self):
     #     self.setCommandedSpeed(int(self.ui.tbcommandespeed.toPlainText()))
@@ -124,6 +125,8 @@ class SoftwareTrainControllerGUI(QMainWindow):
         self.ui = Ui_MainWindow()           #setup ui
         self.ui.setupUi(self)
         self.modeVals()
+        self.ui.ki.setValue(6)
+        self.ui.kp.setValue(5)
        # self.ui.tbcurrentspeed.textChanged.connect(lambda: self.updateVals) 
 
         self.ui.textEdit_12.setStyleSheet('background-color: orange')

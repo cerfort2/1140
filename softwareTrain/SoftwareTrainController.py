@@ -3,7 +3,7 @@ class SoftwareTrainController():
     def __init__(self):
         self.manualmode=False
         self.ctcSpeed=10                #speed to go in automatic mode when in the middle of a route in m/s
-        self.automaticcommandedspeed=0   #desired speed in automatic mode. i edit this as the train is stopping at a station
+        self.automaticcommandedspeed=5   #desired speed in automatic mode. i edit this as the train is stopping at a station
         self.manualcommandedspeed=0      #the value of the slide bar. commandedspeed=manualcommandedspeed if manualMode=True 
         self.nextstop="A Stop"
         self.currentSpeed=0      #current speed in manual or auto (max speed is 70km/hr)
@@ -31,6 +31,9 @@ class SoftwareTrainController():
         self.interval=.05
         self.dwelling=False
         self.dwellTime=60
+        self.serviceBrakeFlag=False
+        self.brakeAuthority=0
+        self.currentSpeed = 0
 
     def eBrakePressed(self): 
         if self.currentSpeed==0 and self.eBrake==True:    #ebrake already pressed
@@ -112,7 +115,7 @@ class SoftwareTrainController():
         if self.power>120:
             self.power=120
 
-        if self.brakeFailure or self.signalFailure or self.engineFailure or self.eBrake or self.power < 0 or self.serviceBrakeSlide:
+        if self.brakeFailure or self.signalFailure or self.engineFailure or self.eBrake or self.power < 0 or self.serviceBrakeFlag:
             self.power=0
         
             
@@ -146,10 +149,24 @@ class SoftwareTrainController():
             return True
         else:
             return self.rightDoor
-        
+    
+    def computeServiceBrake(self):
+        if not self.manualmode and self.currentSpeed>0 and self.authority > 0:
+            if not self.serviceBrakeFlag:
+                self.serviceBrakeFlag = self.currentSpeed/0.6 + 1 >= self.authority/self.currentSpeed
+                self.brakeSpeed=self.currentSpeed
+                self.brakeAuthority=self.authority
+            if self.serviceBrakeFlag:
+                print('engaged')
+                self.serviceBrakeSlide=100 - (100 * (1 - max((self.currentSpeed/self.brakeAuthority), (self.authority/self.brakeAuthority))))
+        elif self.currentSpeed < 0:
+            self.currentSpeed = 0
+            self.brakeAuthority = 0
+            self.serviceBrakeFlag = False
+
     def computeDwellTime(self):
         if self.dwelling and not self.manualmode:
-            print(self.dwellTime)
+           # print(self.dwellTime)
             if self.dwellTime-self.interval>0:   #subtract the time that it takes the timer to time out
                 self.dwellTime-=self.interval
             else:
@@ -167,10 +184,7 @@ class SoftwareTrainController():
 
                 #might need to correct
         #slowing the train down as authority decreases
-        if self.authority<1000:
-                self.automaticcommandedspeed=0
-        else:
-            self.automaticcommandedspeed=self.ctcSpeed
+
 
     def computeManualSpeed(self) ->int:
         if self.serviceBrakeSlide>0:
