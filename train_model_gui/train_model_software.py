@@ -1,3 +1,5 @@
+#Train Model object class, all objects are created in the train model interface
+
 from PyQt6.QtWidgets import QApplication
 from train_controller import SoftwareTrainController, SoftwareTrainControllerGUI
 import math, time
@@ -8,28 +10,30 @@ class train_model_software():
     def __init__(self) -> None:
 
         #set local vars to test vals
-        self.authority = 50.0
+        self.authority = 0.0
         self.speed = 0.0
         self.passengers = 0
         self.power = 0.0
-        self.environment = "Tunnel"
-        self.slope = 13
-        self.elevation = 407
+        self.environment = ""
+        self.slope = 0.0
+        self.elevation = 0.0
         self.acceleration = 0.0
         self.temperature = 71
         self.engine_failure = False
         self.brake_failure = False
         self.signal_failure = False
-        self.inside_lights = True
-        self.outside_lights = True
+        self.inside_lights = False
+        self.outside_lights = False
         self.right_door = False
         self.left_door = False
         self.mass = 45842.3
-        self.announcement = "Test Announcementf"
+        self.announcement = ""
+        self.occupancy = "A1"
 
         #create instance of train controller
         self.controller = SoftwareTrainController()
     
+
 
     #
     #GETTERS AND SETTERS
@@ -61,6 +65,136 @@ class train_model_software():
     def get_authority(self) -> None:
         return self.authority
 
+    #passenger setter
+    def set_passengers(self, count: int) -> None:
+        self.passengers = count
+
+    #passenger getter
+    def get_passengers(self) -> int:
+        return self.passengers
+    
+    #environment setter
+    def set_environment(self, type: str) -> None:
+        self.environment = type
+
+    #environment getter
+    def get_environment(self) -> str:
+        return self.environment
+    
+    #slope setter
+    def set_slope(self, degree: float) -> None:
+        self.slope = degree
+
+    #slope getter
+    def get_slope(self) -> float:
+        return self.slope
+    
+    #elevation setter
+    def set_elevation(self, count: float) -> None:
+        self.elevation = count
+
+    #elevation getter
+    def get_elevation(self) -> float:
+        return self.elevation
+    
+    #acceleration setter
+    def set_acceleration(self, count: float) -> None:
+        self.acceleration = count
+
+    #acceleration getter
+    def get_acceleration(self) -> float:
+        return self.acceleration
+
+    #temperature setter
+    def set_temperature(self, temp: int) -> None:
+        self.temperature = temp
+
+    #temperature getter
+    def get_temperature(self) -> int:
+        return self.temperature
+
+    #engine failure setter
+    def set_engine_failure(self, fail: bool) -> None:
+        self.engine_failure = fail
+
+    #engine failure getter
+    def get_engine_failure(self) -> bool:
+        return self.engine_failure
+
+    #brake failure setter
+    def set_brake_failure(self, fail: bool) -> None:
+        self.brake_failure = fail
+
+    #brake failure getter
+    def get_brake_failure(self) -> bool:
+        return self.brake_failure
+    
+    #signal failure setter
+    def set_signal_failure(self, fail: bool) -> None:
+        self.signal_failure = fail
+
+    #signal failure getter
+    def get_signal_failure(self) -> bool:
+        return self.signal_failure
+    
+    #inside lights setter
+    def set_inside_lights(self, light: bool) -> None:
+        self.inside_lights = light
+
+    #inside lights getter
+    def get_inside_lights(self) -> bool:
+        return self.inside_lights
+    
+    #outside lights setter
+    def set_outside_lights(self, light: bool) -> None:
+        self.outside_lights = light
+
+    #outside lights getter
+    def get_outside_lights(self) -> bool:
+        return self.outside_lights
+    
+    #right doorsetter
+    def set_right_door(self, door: bool) -> None:
+        self.right_door = door
+
+    #right door getter
+    def get_right_door(self) -> bool:
+        return self.right_door
+    
+    #left doorsetter
+    def set_left_door(self, door: bool) -> None:
+        self.left_door = door
+
+    #left door getter
+    def get_left_door(self) -> bool:
+        return self.left_door
+    
+    #mass setter
+    def set_mass(self, mass: float) -> None:
+        self.mass = mass
+
+    #mass getter
+    def get_mass(self) -> float:
+        return self.mass
+    
+    #announcement setter
+    def set_announcement(self, announcement: str) -> None:
+        self.announcement = announcement
+
+    #announcement getter
+    def get_announcement(self) -> str:
+        return self.announcement
+
+    #occupancy setter
+    def set_occupancy(self, occupancy: str) -> None:
+        self.occupancy = occupancy
+    
+    #occupancy getter
+    def get_occupancy(self) -> str:
+        return self.occupancy
+
+
+
     #
     #CALCULATORS
     #
@@ -80,17 +214,18 @@ class train_model_software():
         return speed * delta_time
 
     
-    #updates all train values
+    #updates all train values and recieve inputs from the controller
     def update_train(self) -> None:
         self.set_power()
         self.set_speed()
         self.set_authority()
-
-
-new_train = train_model_software()
-while(1):
-    new_train.update_train()
-    print(new_train.get_speed())
-    print(new_train.get_authority())
-    time.sleep(1)
+        self.set_temperature(self.controller.temperature)
+        self.set_engine_failure(self.controller.engineFailure)
+        self.set_brake_failure(self.controller.brakeFailure)
+        self.set_signal_failure(self.controller.signalFailure)
+        self.set_inside_lights(self.controller.getIntLights())
+        self.set_outside_lights(self.controller.getExteriorLights())
+        self.set_right_door(self.controller.getRightDoor())
+        self.set_left_door(self.controller.getLeftDoor())
+        self.set_announcement(self.controller.getAnnouncement())
 
