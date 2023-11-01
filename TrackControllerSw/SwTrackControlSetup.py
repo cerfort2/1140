@@ -34,9 +34,9 @@ class SoftwareTrackControllerGUI(QMainWindow):
         self.ui.waysideTB.addItem("Green 3")
         self.ui.waysideTB.addItem("Green 4")
         for i in range(len(side[0].blocks)):
-            self.ui.block.addItem(side[0].blocks[i].name)
+            self.ui.block.addItem(side[0].getBlock(i).name)
         for i in range(len(side[0].blocks)):
-            self.ui.blockTB.addItem(side[0].blocks[i].name)
+            self.ui.blockTB.addItem(side[0].getBlock(i).name)
         self.ui.waysideData.setText("Green 1")
         self.ui.blockData.setText("A1")
         self.ui.failureData.setText("No failure")
@@ -68,20 +68,20 @@ class SoftwareTrackControllerGUI(QMainWindow):
     def TB_o_handler(self):
         way = self.ui.waysideTB.currentIndex()
         blo = self.ui.blockTB.currentIndex()
-        side[way].blocks[blo].setOccupancy(self.ui.occupationTB.isChecked())
+        side[way].getBlock(blo).setOccupancy(self.ui.occupationTB.isChecked())
 
     def TB_w_handler(self):
         way = self.ui.waysideTB.currentIndex()
         blo = 0
         self.ui.blockTB.clear()
         for i in range(len(side[way].blocks)):
-            self.ui.blockTB.addItem(side[way].blocks[i].name)
-        self.ui.occupationTB.setChecked(side[way].blocks[blo].getOccupancy())
+            self.ui.blockTB.addItem(side[way].getBlock(i).name)
+        self.ui.occupationTB.setChecked(side[way].getBlock(blo).getOccupancy())
     
     def TB_b_handler(self):
         way = self.ui.waysideTB.currentIndex()
         blo = self.ui.blockTB.currentIndex()
-        self.ui.occupationTB.setChecked(side[way].blocks[blo].getOccupancy())
+        self.ui.occupationTB.setChecked(side[way].getBlock(blo).getOccupancy())
 
     
 
@@ -90,11 +90,11 @@ class SoftwareTrackControllerGUI(QMainWindow):
         way = self.ui.wayside.currentIndex()
         blo = self.ui.block.currentIndex()
         #If left turn right if right turn left
-        if(side[way].blocks[blo].getSwitch()):
-            side[way].blocks[blo].setSwitch(False)
+        if(side[way].getBlock(blo).getSwitch()):
+            side[way].getBlock(blo).setSwitch(False)
             self.ui.switchDirection.setPixmap(left)
         else:
-            side[way].blocks[blo].setSwitch(True)
+            side[way].getBlock(blo).setSwitch(True)
             self.ui.switchDirection.setPixmap(right)
     
     def toggle_crossroad_handler(self):
@@ -102,11 +102,11 @@ class SoftwareTrackControllerGUI(QMainWindow):
         way = self.ui.wayside.currentIndex()
         blo = self.ui.block.currentIndex()
         #If open close if closed open
-        if(side[way].blocks[blo].getCrossroad()):
-            side[way].blocks[blo].setCrossroad(False)
+        if(side[way].getBlock(blo).getCrossroad()):
+            side[way].getBlock(blo).setCrossroad(False)
             self.ui.crossroadStatus.setPixmap(open)
         else:
-            side[way].blocks[blo].setCrossroad(True)
+            side[way].getBlock(blo).setCrossroad(True)
             self.ui.crossroadStatus.setPixmap(closed)
         
 
@@ -115,8 +115,8 @@ class SoftwareTrackControllerGUI(QMainWindow):
         way = self.ui.wayside.currentIndex()
         blo = self.ui.block.currentIndex()
         #If red change green
-        if(side[way].blocks[blo].getSignal()):
-            side[way].blocks[blo].setSignal(False)
+        if(side[way].getBlock(blo).getSignal()):
+            side[way].getBlock(blo).setSignal(False)
             self.ui.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
 
     def red_handler(self):
@@ -124,8 +124,8 @@ class SoftwareTrackControllerGUI(QMainWindow):
         way = self.ui.wayside.currentIndex()
         blo = self.ui.block.currentIndex()
         #If Green change red
-        if(not side[way].blocks[blo].getSignal()):
-            side[way].blocks[blo].setSignal(True)
+        if(not side[way].getBlock(blo).getSignal()):
+            side[way].getBlock(blo).setSignal(True)
             self.ui.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
 
     def new_wayside(self):
@@ -135,39 +135,39 @@ class SoftwareTrackControllerGUI(QMainWindow):
         #Create new block list
         self.ui.block.clear()
         for i in range(len(side[way].blocks)):
-            self.ui.block.addItem(side[way].blocks[i].name)
+            self.ui.block.addItem(side[way].getBlock(i).name)
         #Set the lables of block wayside and occupation
         self.ui.waysideData.setText(side[way].name)
-        self.ui.blockData.setText(side[way].blocks[blo].name)
-        if(side[way].blocks[blo].getHasStation()):
+        self.ui.blockData.setText(side[way].getBlock(blo).name)
+        if(side[way].getBlock(blo).getHasStation()):
             self.ui.stationData.setText("Yes")
         else:
             self.ui.stationData.setText("No")
         #Switch Update
-        if(side[way].blocks[blo].getHasSwitch()):
+        if(side[way].getBlock(blo).getHasSwitch()):
             #If there is a switch set data and show frame
-            if(side[way].blocks[blo].getSwitch()):
+            if(side[way].getBlock(blo).getSwitch()):
                 self.ui.switchDirection.setPixmap(right)
             else:
                 self.ui.switchDirection.setPixmap(left)
-            self.ui.leftBlock.setText(side[way].blocks[blo].getLeft())
-            self.ui.rightBlock.setText(side[way].blocks[blo].getRight())
+            self.ui.leftBlock.setText(side[way].getBlock(blo).getLeft())
+            self.ui.rightBlock.setText(side[way].getBlock(blo).getRight())
             self.ui.switchFrame.show()
         else:
             self.ui.switchFrame.hide()
         #Crossroad Update
-        if(side[way].blocks[blo].getHasCrossroad()):
+        if(side[way].getBlock(blo).getHasCrossroad()):
             #If there is a crossroad set image and show frame
-            if(side[way].blocks[blo].getCrossroad()):
+            if(side[way].getBlock(blo).getCrossroad()):
                 self.ui.crossroadStatus.setPixmap(closed)
             else:
                 self.ui.crossroadStatus.setPixmap(open)
             self.ui.crossroadFrame.show()
         else:
             self.ui.crossroadFrame.hide()
-        if(side[way].blocks[blo].getHasSignal()):
+        if(side[way].getBlock(blo).getHasSignal()):
             #If there is a signal set color and show frame
-            if(side[way].blocks[blo].getSignal()):
+            if(side[way].getBlock(blo).getSignal()):
                 self.ui.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
             else:
                 self.ui.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
@@ -183,36 +183,36 @@ class SoftwareTrackControllerGUI(QMainWindow):
         blo = self.ui.block.currentIndex()
         #Set data lables
         self.ui.waysideData.setText(side[way].name)
-        self.ui.blockData.setText(side[way].blocks[blo].name)
-        if(side[way].blocks[blo].getHasStation()):
+        self.ui.blockData.setText(side[way].getBlock(blo).name)
+        if(side[way].getBlock(blo).getHasStation()):
             self.ui.stationData.setText("Yes")
         else:
             self.ui.stationData.setText("No")
         #Switch Update
-        if(side[way].blocks[blo].getHasSwitch()):
+        if(side[way].getBlock(blo).getHasSwitch()):
             #If there is a switch set data and show frame
-            if(side[way].blocks[blo].getSwitch()):
+            if(side[way].getBlock(blo).getSwitch()):
                 self.ui.switchDirection.setPixmap(right)
             else:
                 self.ui.switchDirection.setPixmap(left)
-            self.ui.leftBlock.setText(side[way].blocks[blo].getLeft())
-            self.ui.rightBlock.setText(side[way].blocks[blo].getRight())
+            self.ui.leftBlock.setText(side[way].getBlock(blo).getLeft())
+            self.ui.rightBlock.setText(side[way].getBlock(blo).getRight())
             self.ui.switchFrame.show()
         else:
             self.ui.switchFrame.hide()
         #Crossroad Update
-        if(side[way].blocks[blo].getHasCrossroad()):
+        if(side[way].getBlock(blo).getHasCrossroad()):
             #If there is a crossroad set image and show frame
-            if(side[way].blocks[blo].getCrossroad()):
+            if(side[way].getBlock(blo).getCrossroad()):
                 self.ui.crossroadStatus.setPixmap(closed)
             else:
                 self.ui.crossroadStatus.setPixmap(open)
             self.ui.crossroadFrame.show()
         else:
             self.ui.crossroadFrame.hide()
-        if(side[way].blocks[blo].getHasSignal()):
+        if(side[way].getBlock(blo).getHasSignal()):
             #If there is a signal set color and show frame
-            if(side[way].blocks[blo].getSignal()):
+            if(side[way].getBlock(blo).getSignal()):
                 self.ui.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
             else:
                 self.ui.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
@@ -401,15 +401,10 @@ if __name__ == "__main__":
     side[3].addBlock(False, False, False, False, "Y148")
     side[3].addBlock(False, False, False, False, "Y149")
     side[0].addBlock(False, False, True, False, "Z150") #Signal
-    side[1].addBlock(False, False, True, False, "YARD") #Signal
-    side[0].blocks[0].setOccupancy(True)
+    side[1].addBlock(False, False, False, False, "Z151")
+
     whole = Track(side)
     data = whole.getData()
-    x = []
-    for i in range(151):
-        x.append(False)
-    x[150] = True
-    whole.setOccupancy(x)
     ###########################################
     MainWindow = SoftwareTrackControllerGUI()
     MainWindow.show()

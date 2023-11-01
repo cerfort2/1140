@@ -12,7 +12,7 @@ class Track():
         #Create list of blocks from waysides
         for i in range (len(self.waysides)):
             for j in range (len(self.waysides[i].blocks)):
-                self.blocks.append(self.waysides[i].blocks[j])
+                self.blocks.append(self.waysides[i].getBlock(j))
         #Sort list of blocks
         for i in range (len(self.blocks)):
             for j in range (i, len(self.blocks)):
@@ -20,9 +20,6 @@ class Track():
                     hold = self.blocks[i]
                     self.blocks[i] = self.blocks[j]
                     self.blocks[j] = hold
-        hold = self.blocks[len(self.blocks) - 1]
-        self.blocks[len(self.blocks) - 1] = self.blocks[len(self.blocks) - 2]
-        self.blocks[len(self.blocks) - 2] = hold
  
     def getData(self):
         #Created lists

@@ -15,3 +15,5 @@ class Wayside():
             create.setRight(ri)
         self.blocks.append(create)
     
+    def getBlock(self, index:int):
+        return self.blocks[index]
