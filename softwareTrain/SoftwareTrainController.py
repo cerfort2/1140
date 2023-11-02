@@ -27,13 +27,19 @@ class SoftwareTrainController():
         self.brakeFailure=False  # false is no failure
         self.engineFailure=False
         self.signalFailure=False
-        self.power=9     
+        self.power=0     
         self.interval=.05
         self.dwelling=False
         self.dwellTime=60
         self.serviceBrakeFlag=False
         self.brakeAuthority=0
-        self.currentSpeed = 0
+        self.beaconInfo=''
+
+    def setBeaconInfo(self,s):
+        self.beaconInfo=s
+
+    def decodeBeaconInfo(self):
+        self.nextstop='Station Square'
 
     def eBrakePressed(self): 
         if self.currentSpeed==0 and self.eBrake==True:    #ebrake already pressed

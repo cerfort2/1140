@@ -12,17 +12,16 @@ class SoftwareTrainControllerGUI(QMainWindow):
     #meters/sec
     #variables
     
-    
+        #do i make use cases for automatic too?
         #calculation of kp and ki values?
         #decode beacon messages?
         #inputs in metric
-        #if i have a failure does the ebrake get pressed? how do failures get computed? what to do after track failure?
+        #announcement?
 
     def __init__(self):
         self.swtrain=train_model_software()
         super().__init__()
         self.init_ui()
-
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_time)
@@ -67,7 +66,6 @@ class SoftwareTrainControllerGUI(QMainWindow):
         self.modeVals()
 
         self.swtrain.controller.setManualCommandedSpeed(self.ui.manualcommandedspeed.value())
-
         self.swtrain.controller.setServiceBrakeSlide(self.ui.servicebrake.value())
         self.swtrain.controller.setTemperature(self.ui.temp.value())
         self.swtrain.controller.setKi(self.ui.ki.value())
@@ -86,6 +84,7 @@ class SoftwareTrainControllerGUI(QMainWindow):
         self.swtrain.controller.computeDwellTime() 
         self.swtrain.controller.computeServiceBrake()    
         self.swtrain.controller.computePower()      
+        self.swtrain.controller.decodeBeaconInfo()
         self.swtrain.update_train()
         self.updateVals()
 

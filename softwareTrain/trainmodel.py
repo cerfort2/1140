@@ -7,7 +7,7 @@ class train_model_software():
     def __init__(self) -> None:
 
         #set local vars to test vals
-        self.authority = 10000.0
+        self.authority = 100.0
         self.speed = 0.0
         self.passengers = 0
         self.power = 0.0
@@ -45,8 +45,8 @@ class train_model_software():
     #set speed for both controller and model
     #uses the calculate_speed function
     def set_speed(self) -> None:
-        self.controller.setCurrentSpeed(self.calculate_speed(self.speed, self.acceleration, 1))
-        self.speed = self.calculate_speed(self.speed, self.acceleration, 1)
+        self.controller.setCurrentSpeed(self.calculate_speed(self.speed, self.acceleration, 0.5))
+        self.speed = self.calculate_speed(self.speed, self.acceleration, 0.5)
     
     #speed getter
     def get_speed(self) -> float:
@@ -54,7 +54,7 @@ class train_model_software():
 
     #authority setter
     def set_authority(self) -> None:
-        self.authority -= self.calculate_travel(self.speed, 1)
+        self.authority -= self.calculate_travel(self.speed, 0.5)
         self.controller.setAuthority(self.authority)
         
     #authority getter
@@ -67,15 +67,16 @@ class train_model_software():
 
     #calculate a new speed across a certain time interval
     def calculate_speed(self, prev_speed: float, prev_acceleration : float, delta_time: float) -> float:
-        return prev_speed + ((delta_time / 2) * (prev_acceleration + self.calculate_acceleration(self.power, self.mass, delta_time)))
+        calced = prev_speed + ((delta_time / 2) * (prev_acceleration + self.calculate_acceleration(self.power, self.mass, delta_time)))
+        return calced if calced > 0 else 0
 
     #calculate the acceleration across a certain time period
     #THIS DOES NOT YET ACCOUNT FOR GRAVITY
     def calculate_acceleration(self, power: float, mass: float, delta_time: float) -> float:
         if power >= 0:
             self.acceleration = math.sqrt(power / (2 * mass * delta_time))
-            return self.acceleration
-        return 0
+            return self.acceleration - 1.2 * (self.controller.getServiceBrake() / 100)
+        return 0 - 1.2 * (self.controller.getServiceBrake() / 100)
         
     #calculates time traveled over a time period
     def calculate_travel(self, speed: float, delta_time: float) -> float:
