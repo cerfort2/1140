@@ -7,7 +7,7 @@ import random;
 
 ## TO CONVERT UI TO PY
 # open terminal at folder with ui
-# pyuic6 -x -o test.py mainwindow.ui
+# pyuic6 -x -o customUI.py mainwindow.ui
 #profit
 #################
 
@@ -18,6 +18,7 @@ import random;
 metersToFeet = 3.28084
 kmhrTomihr = 0.621371
 
+      
 class Line():
     def __init__(self,name):
         self.name = name
@@ -42,6 +43,24 @@ class Line():
     def getBlock(self,blockName):
         return self.blocks[self.getBlockNames().index(blockName)]
   
+    def loadBeacons(self):
+        for i in range(len(self.blocks)):
+            if self.blocks[i].approachingBeacon[0]:
+                self.blocks.approachingBeacon[1] = self.blocks[i+1].station[1]+ "/" + self.blocks[i+1].station[3]
+            elif self.blocks[i].stationBeacon[0]:
+                for j in range(i+1,len(self.blocks)):
+                    if self.blocks[j].stationBeacon[0] or self.blocks[j].switchBeacon[0]:
+                        break
+                    self.blocks[i].stationBeacon[1] += self.blocks[j].name
+                    self.blocks[i].stationBeacon[1] += "/"
+                    self.blocks[i].stationBeacon[1] += self.blocks[j].length
+                    self.blocks[i].stationBeacon[1] += "/"
+                    self.blocks[i].stationBeacon[1] += self.blocks[j].underground
+                    self.blocks[i].stationBeacon[1] += "/"
+                    self.blocks[i].stationBeacon[1] += self.blocks[j].limit
+            elif self.blocks[i].switchBeacon[0]:
+                pass
+
     #Track Model --> Track Controller
     def getBlockOccupancyList(self):
         occupancyMask = [blk.occupied for blk in self.blocks]
@@ -83,6 +102,9 @@ class Block():
                             # [True, "16", "1"]
         self.crossroad = [False, True]
         self.signal = [False, True] #need to implement red or green
+        self.switchBeacon = [False, ""]
+        self.approachingBeacon = [False, ""]
+        self.stationBeacon = [False, ""]
 
     def setOccupied(self):
         self.occupied = True
@@ -155,13 +177,13 @@ class Block():
         self.signal = [True, True]
 
     def addBeaconBeforeStation(self):
-        pass
+        self.approachingBeacon = [True,""]
 
     def addBeaconAtStation(self):
-        pass
+        self.stationBeacon = [True, ""]
 
     def addBeaconAtSwitch(self):
-        pass
+        self.switchBeacon = [True,""]
 
 
 class TrackModel():
@@ -301,6 +323,7 @@ class functionalUI(Ui_MainWindow):
         #Clear the Occupancy
         self.listWidget_2.clear()
 
+
         # Add the blocks associated with that line
         currentLineName = self.comboBox_3.currentText()
 
@@ -384,6 +407,8 @@ class functionalUI(Ui_MainWindow):
         self.comboBox_3.clear()
         self.comboBox_3.addItems(self.trackModel.getLineNames())
       
+    def createMap(self):
+        pass
 
 app = QApplication([])
 MainWindow = QMainWindow()
