@@ -35,18 +35,21 @@ class CTC(QMainWindow):
         
         self.occupancy_old_text = None
         self.old_station = None
-        
-        self.red_line_stations = ['SHADYSIDE', 'HERRON AVE', 'SWISSVILLE', 'PENN STATION', 'FIRST AVE', 'STATION SQUARE', 'SOUTH HILLS JUNCTION']
-        self.green_line_stations = ['PIONEER', 'EDGEBROOK', 'WHITE', 'SOUTH BANK', 'CENTRAL', 'INGLEWOOD', 'OVERBROOK', 'GLENBURY', 'DORMONT', 'MT LEBANON', 'POPLAR', 'CASTLE SHANNON']
-        self.blue_line = ['Station A', 'Station B', 'Station C']
-        self.blue_line_times = [1,1,1]
-        self.blue_lines_blocks = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-        self.blue_line_schedule = []
+        self.red_line = Line("Red")
+        self.green_line = Line("Green")
 
-        self.station_a_throughput = 0
-        self.station_b_throughput = 0
-        self.station_c_throughput = 0
-        self.train_dispatched = False
+        self.current_velocities = []
+        self.current_authority = 0
+        self.current_route = []
+
+        #self.red_line_stations = ['SHADYSIDE', 'HERRON AVE', 'SWISSVILLE', 'PENN STATION', 'FIRST AVE', 'STATION SQUARE', 'SOUTH HILLS JUNCTION']
+        #self.green_line_stations = ['PIONEER', 'EDGEBROOK', 'WHITE', 'SOUTH BANK', 'CENTRAL', 'INGLEWOOD', 'OVERBROOK', 'GLENBURY', 'DORMONT', 'MT LEBANON', 'POPLAR', 'CASTLE SHANNON']
+        #self.blue_line = ['Station A', 'Station B', 'Station C']
+        #self.blue_line_times = [1,1,1]
+        #self.blue_lines_blocks = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+        #self.blue_line_schedule = []
+        
+        self.throughput = 0
 
         self.initialize_connections()
         self.start_threads()
@@ -87,22 +90,22 @@ class CTC(QMainWindow):
             time.sleep(0.5)
             
 
-    # def update_stations(self):
-    #     if (self.ui.manual_dispatch_departure.currentText() == "Station A"):
-    #         self.old_station = "Station A"
-    #         self.ui.manual_dispatch_destination.clear()
-    #         self.ui.manual_dispatch_destination.addItem("Station B")
-    #         self.ui.manual_dispatch_destination.addItem("Station C")
-    #     elif (self.ui.manual_dispatch_departure.currentText() == "Station B"):
-    #         self.old_station = "Station B"
-    #         self.ui.manual_dispatch_destination.clear()
-    #         self.ui.manual_dispatch_destination.addItem("Station A")
-    #         self.ui.manual_dispatch_destination.addItem("Station C")
-    #     elif (self.ui.manual_dispatch_departure.currentText() == "Station C"):
-    #         self.old_station = "Station C"
-    #         self.ui.manual_dispatch_destination.clear()
-    #         self.ui.manual_dispatch_destination.addItem("Station A")
-    #         self.ui.manual_dispatch_destination.addItem("Station B")
+    def update_stations(self):
+        if (self.ui.manual_dispatch_departure.currentText() == "Station A"):
+            self.old_station = "Station A"
+            self.ui.manual_dispatch_destination.clear()
+            self.ui.manual_dispatch_destination.addItem("Station B")
+            self.ui.manual_dispatch_destination.addItem("Station C")
+        elif (self.ui.manual_dispatch_departure.currentText() == "Station B"):
+            self.old_station = "Station B"
+            self.ui.manual_dispatch_destination.clear()
+            self.ui.manual_dispatch_destination.addItem("Station A")
+            self.ui.manual_dispatch_destination.addItem("Station C")
+        elif (self.ui.manual_dispatch_departure.currentText() == "Station C"):
+            self.old_station = "Station C"
+            self.ui.manual_dispatch_destination.clear()
+            self.ui.manual_dispatch_destination.addItem("Station A")
+            self.ui.manual_dispatch_destination.addItem("Station B")
 
 
     def check_occupancy(self):
@@ -188,23 +191,21 @@ class CTC(QMainWindow):
         #speed = self.ui.mph_box.getCurrentValue()
         #route = self.ui.route_box.getCurrentValue()
         #authority = self.ui.authority_box.getCurrentValue()
-        if not self.train_dispatched:
-            train = self.trainID
-            self.trainID+=1
-            current_block = 1
-            authority = 10
-            #departure = self.ui.manual_dispatch_departure.currentText()
-            destination = self.ui.manual_dispatch_destination.currentText()
-            #delta = self.calculate_time(departure, destination)
-            dep_time = datetime.strptime(datetime.now().strftime("%H:%M:%S"), "%H:%M:%S")
-            #dep_time_str = dep_time.strftime("%H:%M:%S")
-            #eta = (dep_time + delta).strftime("%H:%M:%S")
-            #self.blue_line_schedule.append(QTreeWidgetItem([str(train), departure, destination, str(dep_time_str), str(eta)]))
-            self.ui.dispatched.addTopLevelItem(QTreeWidgetItem([str(train), str(current_block),str(authority), destination]))
-            item = QTableWidgetItem()
-            item.setBackground(Qt.GlobalColor.green)
-            self.ui.block_occupancy.setItem(0, 0, item)
-            self.train_dispatched = True
+        train = self.trainID
+        self.trainID+=1
+        current_block = 1
+        authority = 10
+        #departure = self.ui.manual_dispatch_departure.currentText()
+        destination = self.ui.manual_dispatch_destination.currentText()
+        #delta = self.calculate_time(departure, destination)
+        dep_time = datetime.strptime(datetime.now().strftime("%H:%M:%S"), "%H:%M:%S")
+        #dep_time_str = dep_time.strftime("%H:%M:%S")
+        #eta = (dep_time + delta).strftime("%H:%M:%S")
+        #self.blue_line_schedule.append(QTreeWidgetItem([str(train), departure, destination, str(dep_time_str), str(eta)]))
+        self.ui.dispatched.addTopLevelItem(QTreeWidgetItem([str(train), str(current_block),str(authority), destination]))
+        item = QTableWidgetItem()
+        item.setBackground(Qt.GlobalColor.green)
+        self.ui.block_occupancy.setItem(0, 0, item)
         return #[speed, route, authority]
     
     #updates schedule on main page
@@ -239,7 +240,7 @@ class CTC(QMainWindow):
 
 #change to updated_block_occupancy function
 #receive block occupancies from track controller, upon receiving, update corresponding blocks
-    def apply_tb(self):
+    def update_block_occupancy(self):
         block_combos = [self.ui.track_tb, self.ui.maintenance_tb, self.ui.block_occupancy_tb]
         state_combos = [self.ui.track_state_tb, self.ui.maintenance_state_tb, self.ui.block_state_tb]
 
@@ -285,40 +286,9 @@ class CTC(QMainWindow):
         throughput = self.calc_throughput()
         self.ui.throughput_val.display(throughput)
 
-        self.update_ui_tb()
         return
 
-    
-    def update_ui_tb(self):
-        return
-
-    def calculate_time(self, station_a, station_b):
-        #for blue line
-        hrs = 0
-        mins = 0
-        secs = 0
-        if(station_a == "Station A"):
-            if(station_b == "Station B"):
-                mins+=1
-            if(station_a == "Station C"):
-                mins+=1
-            if(station_b == "Station A"):
-                mins+=1
-        if(station_a == "Station B"):
-            if(station_b == "Station A"):
-                mins+=1
-            if(station_a == "Station C"):
-                mins+=1
-        if(station_a == "Station C"):
-            if(station_b == "Station A"):
-                mins+=1
-            if(station_a == "Station B"):
-                mins+=1
-        delta = timedelta(hours = hrs, minutes = mins, seconds = secs)
-        return delta
-
-
-    def calc_throughput(self):
+    def calc_throughput(self, ticket_sales, time_el):
         if self.ui.throughput_station_tb.currentText() == "Station A":
             self.station_a_throughput = self.ui.throughput_tb.value()
         elif self.ui.throughput_station_tb.currentText() == "Station B":
@@ -328,9 +298,7 @@ class CTC(QMainWindow):
 
         total_throughput = self.station_a_throughput + self.station_b_throughput + self.station_c_throughput
         return total_throughput
-        
-    def close_track(self, track_num):
-        return
+
     
     def schedule_train(self):
         train = self.trainID
@@ -339,7 +307,7 @@ class CTC(QMainWindow):
         destination = self.ui.manual_dispatch_destination.currentText()
         delta = self.calculate_time(departure, destination)
         
-        # Get text from QLineEdit
+
         dep_time_str = self.ui.departure_time.text()
         dep_time_obj = datetime.strptime(dep_time_str, "%H:%M:%S")
         
@@ -350,15 +318,29 @@ class CTC(QMainWindow):
         self.blue_line_schedule.append(QTreeWidgetItem([str(train), destination, dep_time_str, eta_str]))
         self.ui.schedule.addTopLevelItem(QTreeWidgetItem([str(train), destination, dep_time_str, eta_str]))
         return
-    
-    #updates the ui of tb when manual mode is selected/deselected
-    def update_mode_tb(self):
+
+    #checks for any changes in ui / variables and updates ui accordingly
+    def update_ui(self):
         return
     
-    def train_movement(self):
+    def set_RVA(self, route, velocities, authority):
+        self.current_authority = authority
+        self.current_route = route
+        self.current_velocities = velocities
         return
+
+    def get_route(self):
+        return self.current_route
     
-    def calculate_authority(self, departure, arrival):
+    def get_authority(self):
+        return self.current_authority
+    
+    def get_velocities(self):
+        return self.current_velocities
+    
+    def close_tracks(self, track_list):
+        for track in track_list:
+            return
 
 
 
