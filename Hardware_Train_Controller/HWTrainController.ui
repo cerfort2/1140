@@ -20,8 +20,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>-10</x>
-      <y>0</y>
+      <x>0</x>
+      <y>10</y>
       <width>811</width>
       <height>621</height>
      </rect>
@@ -57,7 +57,6 @@
        </property>
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -68,7 +67,6 @@
        </property>
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -80,7 +78,6 @@
        <property name="font">
         <font>
          <pointsize>8</pointsize>
-         <weight>50</weight>
          <italic>false</italic>
          <bold>false</bold>
         </font>
@@ -117,7 +114,6 @@
        <property name="font">
         <font>
          <pointsize>6</pointsize>
-         <weight>50</weight>
          <italic>false</italic>
          <bold>false</bold>
         </font>
@@ -176,7 +172,6 @@
        </property>
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -187,7 +182,6 @@
        </property>
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -245,7 +239,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -275,7 +268,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -305,7 +297,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -326,7 +317,6 @@
       <property name="font">
        <font>
         <pointsize>30</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -347,7 +337,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -359,7 +348,7 @@
      <widget class="QLineEdit" name="annoucements">
       <property name="geometry">
        <rect>
-        <x>670</x>
+        <x>650</x>
         <y>390</y>
         <width>121</width>
         <height>51</height>
@@ -391,7 +380,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -422,7 +410,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -464,11 +451,11 @@
        <string>Notify</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="right_door_status">
+     <widget class="QCheckBox" name="right_door">
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>40</y>
+        <y>20</y>
         <width>95</width>
         <height>28</height>
        </rect>
@@ -481,7 +468,7 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>100</y>
+        <y>80</y>
         <width>95</width>
         <height>28</height>
        </rect>
@@ -494,7 +481,7 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>60</y>
+        <y>40</y>
         <width>95</width>
         <height>28</height>
        </rect>
@@ -507,7 +494,7 @@
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>80</y>
+        <y>60</y>
         <width>95</width>
         <height>28</height>
        </rect>
@@ -547,7 +534,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -568,7 +554,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -589,7 +574,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -610,7 +594,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -631,7 +614,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -662,7 +644,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -703,7 +684,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -734,7 +714,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -765,7 +744,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -774,7 +752,7 @@
        <string>Temperature:</string>
       </property>
      </widget>
-     <widget class="QLCDNumber" name="authority_2">
+     <widget class="QLCDNumber" name="temperature">
       <property name="geometry">
        <rect>
         <x>660</x>
@@ -784,7 +762,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="QSpinBox" name="manual_speed_2">
+     <widget class="QSpinBox" name="manual_temperature">
       <property name="geometry">
        <rect>
         <x>520</x>
@@ -797,10 +775,10 @@
      <widget class="QFrame" name="frame">
       <property name="geometry">
        <rect>
-        <x>470</x>
-        <y>370</y>
-        <width>331</width>
-        <height>191</height>
+        <x>10</x>
+        <y>140</y>
+        <width>461</width>
+        <height>281</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -814,9 +792,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>140</y>
+        <y>420</y>
         <width>461</width>
-        <height>271</height>
+        <height>141</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -829,10 +807,10 @@
      <widget class="QFrame" name="frame_3">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>410</y>
-        <width>461</width>
-        <height>151</height>
+        <x>470</x>
+        <y>10</y>
+        <width>321</width>
+        <height>361</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -846,9 +824,9 @@
       <property name="geometry">
        <rect>
         <x>470</x>
-        <y>10</y>
-        <width>331</width>
-        <height>361</height>
+        <y>370</y>
+        <width>321</width>
+        <height>191</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -878,7 +856,6 @@
        </property>
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -889,7 +866,6 @@
        </property>
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -927,7 +903,7 @@
        </property>
       </item>
      </widget>
-     <widget class="QCheckBox" name="right_door">
+     <widget class="QCheckBox" name="right_door_3">
       <property name="geometry">
        <rect>
         <x>120</x>
@@ -994,7 +970,6 @@
        </property>
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -1005,7 +980,6 @@
        </property>
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -1079,7 +1053,6 @@
        </property>
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -1090,7 +1063,6 @@
        </property>
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -1153,7 +1125,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -1196,7 +1167,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -1226,7 +1196,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -1260,7 +1229,6 @@
        </property>
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -1271,7 +1239,6 @@
        </property>
        <property name="font">
         <font>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -1360,7 +1327,6 @@
       <property name="font">
        <font>
         <pointsize>36</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -1391,7 +1357,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -1421,7 +1386,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>

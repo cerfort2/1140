@@ -1,0 +1,143 @@
+""" 
+    def annoucements_display(self):
+
+        padding = " " * 12
+      
+        lcd = I2C_LCD_driver.lcd()
+        my_long_string = self.annoucements_display_auto.displayText()
+        #lcd.lcd_display_string("Annoucements: ",2,0)
+        
+        for i in range (0, len(my_long_string)):
+            lcd.lcd_display_string("Annoucements: ",2,0)
+            lcd_text = my_long_string[i:(i+20)]
+            lcd.lcd_display_string(lcd_text,3)
+            sleep(0.25)
+            lcd.lcd_clear()
+            #lcd.lcd_display_string(padding,3)
+        
+        lcd.lcd_clear()
+        sleep(1)
+        #lcd.lcd_clear()
+        self.annoucements_display_auto.clear()
+        self.check_value()
+
+
+
+    def right_door_disp(self):
+         
+        mylcd = I2C_LCD_driver.lcd()
+        mylcd.lcd_display_string("Notification: ",1,0)
+        mylcd.lcd_display_string("The door status",2,0)
+        mylcd.lcd_display_string("was changed.",3,0)
+        sleep(1.5)
+        mylcd.lcd_clear()
+        self.check_value()
+    
+    def left_door_disp(self):
+         
+        mylcd = I2C_LCD_driver.lcd()
+        mylcd.lcd_display_string("Notification: ",1,0)
+        mylcd.lcd_display_string("The left status",2,0)
+        mylcd.lcd_display_string("was changed.",3,0)
+        sleep(1.5)
+        mylcd.lcd_clear()
+        self.check_value()
+
+    def light_one(self):
+         
+        mylcd = I2C_LCD_driver.lcd()
+        mylcd.lcd_display_string("Notification: ",1,0)
+        mylcd.lcd_display_string("The light one status",2,0)
+        mylcd.lcd_display_string("was changed.",3,0)
+        sleep(1.5)
+        mylcd.lcd_clear()
+        self.check_value()
+
+    def light_two(self):
+         
+        mylcd = I2C_LCD_driver.lcd()
+        mylcd.lcd_display_string("Notification: ",1,0)
+        mylcd.lcd_display_string("The light two status",2,0)
+        mylcd.lcd_display_string("was changed.",3,0)
+        sleep(1.5)
+        mylcd.lcd_clear()
+        self.check_value()
+
+    def e_brake(self):
+         
+        mylcd = I2C_LCD_driver.lcd()
+        mylcd.lcd_display_string("Notification: ",1,0)
+        mylcd.lcd_display_string("The e-brake status",2,0)
+        mylcd.lcd_display_string("was changed.",3,0)
+        sleep(1.5)
+        mylcd.lcd_clear()
+        self.check_value()
+
+
+    def tunnel_stat(self):
+         
+        mylcd = I2C_LCD_driver.lcd()
+        mylcd.lcd_display_string("Notification: ",1,0)
+        mylcd.lcd_display_string("The tunnel status",2,0)
+        mylcd.lcd_display_string("was changed.",3,0)
+        sleep(1.5)
+        mylcd.lcd_clear()
+        self.check_value()
+        
+    def moving_stat(self):
+         
+        mylcd = I2C_LCD_driver.lcd()
+        mylcd.lcd_display_string("Notification: ",1,0)
+        mylcd.lcd_display_string("The movement status",2,0)
+        mylcd.lcd_display_string("was changed.",3,0)
+        sleep(1.5)
+        mylcd.lcd_clear()
+        self.check_value()
+    
+    def stationary_stat(self):
+         
+        mylcd = I2C_LCD_driver.lcd()
+        mylcd.lcd_display_string("Notification: ",1,0)
+        mylcd.lcd_display_string("The stationary status",2,0)
+        mylcd.lcd_display_string("was changed.",3,0)
+        sleep(1.5)
+        mylcd.lcd_clear()
+        self.check_value()
+ """
+      """"" 
+    def check_value(self):#displays info
+        
+        mylcd = I2C_LCD_driver.lcd()
+
+        mylcd.lcd_display_string("Power Value:" + str(round(self.power.value())),2,0)
+        mylcd.lcd_display_string("Velocity:" + str(round(self.commanded_speed.value())),3,0)
+        mylcd.lcd_display_string("Authority:" + str(round(self.authority.value())),4,0)
+        mylcd.lcd_display_string("IG:" + str(round(self.integral_gain.value())),1,15)
+        mylcd.lcd_display_string("PG:" + str(round(self.proportional_gain.value())),2,15)
+    
+        sleep(.5)
+    """
+
+
+
+
+self.setAuthority()
+        self.mode.currentIndexChanged.connect(self.setAuto)
+        self.commanded_speed.valueChanged.connect(self.set_commanded_speed)
+        self.ebrake.pressed.connect(self.stop_train)
+        #self.proportional_gain.valueChanged.connect(self.check_value) #connects the widget to a function that continously checks if the value was updated
+        #self.integral_gain.valueChanged.connect(self.check_value)
+        #self.service_slider.valueChanged.connect(self.update_sb)
+        #self.ebrake.clicked.connect(self.stop_train)
+        #self.speed_limit.display(43)
+        #self.annoucements_button.clicked.connect(self.annoucements_display) #connect to notify button
+
+        #self.right_door_status.stateChanged.connect(self.right_door_disp)
+        #self.left_door.stateChanged.connect(self.left_door_disp)
+        #self.exterior_lights.stateChanged.connect(self.light_one)
+        #self.interior_lights.stateChanged.connect(self.light_two)
+        #self.ebrake_manual_2.stateChanged.connect(self.e_brake)
+        #self.service_brake_tb.stateChanged.connect(self.service_brake) #change to slider
+        #self.engine_failure.stateChanged.connect(self.engine_fail)
+        #self.signal_failure.stateChanged.connect(self.signal_fail)
+        #self.brake_failure.stateChanged.connect(self.brake_fail)
