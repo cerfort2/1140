@@ -8,7 +8,7 @@ class Track():
     failure = False #toggle for failure
 
     isLight = False #Specify if Track has a Light
-    lightStatus = False #True is Red, False is Green
+    lightStatus = True #True is Red, False is Green
 
     #If it is a switch, input the destination tracks on left and right
     isSwitch = False

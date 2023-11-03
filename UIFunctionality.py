@@ -18,9 +18,13 @@ class HWTrackControllerGUI(QMainWindow):
     route = []
     suggestedSpeed = int
 
+    for i in range(3):
+        for j in range(greenLine.Waysides[i].amountOfTracks()):
+            pureOccupancy = greenLine.Waysides[i].getTrack(i).getOccupancy()
+
     #Testing for functionality
-    greenLine.Waysides[0].getTrack(32).setLight(True) #Z150 Red
-    greenLine.Waysides[2].getTrack(26).setLight(True) #Q100 Red
+    greenLine.Waysides[0].getTrack(32).setLight(False) #Z150 Red
+    greenLine.Waysides[2].getTrack(26).setLight(False) #Q100 Red
     greenLine.Waysides[0].getTrack(18).setCrossroad(True) #E19 Crossroad Down
 
     greenLine.Waysides[0].getTrack(12).setOccupancy(True) 
@@ -99,6 +103,8 @@ class HWTrackControllerGUI(QMainWindow):
         #Buttons/Setup for Whole UI
         self.ui.pushButton_3.clicked.connect(self.openArduinoFile) #Opens PLC File
         
+        
+        self.ui.comboBox.currentIndexChanged.connect(lambda: operate.plcCode(self.pureOccupancy))
 
     def init_ui(self): #SetupUI
         self.ui = Ui_MainWindow()
@@ -134,7 +140,7 @@ class HWTrackControllerGUI(QMainWindow):
             else:
                 data[2].append(False) 
         return data
-    def sendOccupancy(self):
+    def getOccupancy(self):
         return self.pureOccupancy
     def recievedOccupancy(self, occupancy:[]):
         self.pureOccupancy = occupancy
@@ -145,7 +151,7 @@ class HWTrackControllerGUI(QMainWindow):
         #All for Wayside 2
         for i in range(40): #H33-L73
             self.greenLine.Waysides[1].getTrack(i).setOccupancy(occupancy[i+32])
-        self.greenLine.Waysides[1].getTrack(41).setOccupancy(occupancy[len(occupancy)-1]) #YARD
+        self.greenLine.Waysides[1].getTrack(41).setOccupancy(occupancy[len(occupancy)-1]) #Z151/YARD
         #All for Wayside 3
         for i in range(27): #M74-R101
             self.greenLine.Waysides[2].getTrack(i).setOccupancy(occupancy[i+73])
@@ -154,15 +160,11 @@ class HWTrackControllerGUI(QMainWindow):
             self.greenLine.Waysides[3].getTrack(i).setOccupancy(occupancy[i+101])
     def editAuthority(self):
         return
-    def sentAuthority(self):
+    def getAuthority(self):
         return
-    def setAuthority(self, code):
-        self.yardSwitchAuthority = code
-    def setRoute(self, route:[]):
-        self.route = route
     def getRoute(self):
         return self.route
-    def sendFailures(self):
+    def getFailures(self):
         failures = []
         for i in range(len(self.greenLine.Waysides)):
             for j in range(len(self.greenLine.Waysides[i])):
@@ -170,8 +172,7 @@ class HWTrackControllerGUI(QMainWindow):
         return failures
     def getSpeed(self):
         return self.suggestedSpeed
-    def setSpeed(self, speed):
-        self.suggestedSpeed = speed
+
 
     #Functions used in Whole UI
     def openArduinoFile(self): #Functionality for PLC File Opening

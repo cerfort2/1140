@@ -34,3 +34,11 @@ class Operations():
             status = "O" #On
         serialComm.write(status.encode())
         time.sleep(.5)
+
+    def plcCode(self, occupancies:[bool]):
+        status = "P"
+        data = bytes(occupancies)
+        serialComm.write(status.encode())
+        time.sleep(1.1)
+        serialComm.write(data)
+        
