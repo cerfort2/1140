@@ -7,7 +7,7 @@ class train_model_software():
     def __init__(self) -> None:
 
         #set local vars to test vals
-        self.authority = 100.0
+        self.authority = 3000.0
         self.speed = 0.0
         self.passengers = 0
         self.power = 0.0
@@ -75,8 +75,8 @@ class train_model_software():
     def calculate_acceleration(self, power: float, mass: float, delta_time: float) -> float:
         if power >= 0:
             self.acceleration = math.sqrt(power / (2 * mass * delta_time))
-            return self.acceleration - 1.2 * (self.controller.getServiceBrake() / 100)
-        return 0 - 1.2 * (self.controller.getServiceBrake() / 100)
+            return self.acceleration - 1.2 * (self.controller.getServiceBrake() / 100) if self.controller.getServiceBrake() > 0 else -2.3 * int(self.controller.getEbrake())
+        return 0 - 1.2 * (self.controller.getServiceBrake() / 100) if self.controller.getServiceBrake() > 0 else -2.3 * int(self.controller.getEbrake())
         
     #calculates time traveled over a time period
     def calculate_travel(self, speed: float, delta_time: float) -> float:
