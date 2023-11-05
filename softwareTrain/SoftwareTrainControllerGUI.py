@@ -12,14 +12,16 @@ class SoftwareTrainControllerGUI(QMainWindow):
     #meters/sec
     #variables
     
-        #do i make use cases for automatic too?
+
         #calculation of kp and ki values?
         #decode beacon messages?
         #inputs in metric
         #announcement?
 
     def __init__(self):
+
         self.swtrain=train_model_software()
+
         super().__init__()
         self.init_ui()
 
@@ -64,7 +66,6 @@ class SoftwareTrainControllerGUI(QMainWindow):
 
     def receiveVals(self):
         self.modeVals()
-
         self.swtrain.controller.setManualCommandedSpeed(self.ui.manualcommandedspeed.value())
         self.swtrain.controller.setServiceBrakeSlide(self.ui.servicebrake.value())
         self.swtrain.controller.setTemperature(self.ui.temp.value())
@@ -124,8 +125,8 @@ class SoftwareTrainControllerGUI(QMainWindow):
         self.ui = Ui_MainWindow()           #setup ui
         self.ui.setupUi(self)
         self.modeVals()
-        self.ui.ki.setValue(6)
-        self.ui.kp.setValue(5)
+        self.ui.ki.setValue(20)
+        self.ui.kp.setValue(99)
        # self.ui.tbcurrentspeed.textChanged.connect(lambda: self.updateVals) 
 
         self.ui.textEdit_12.setStyleSheet('background-color: orange')

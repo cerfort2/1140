@@ -3,7 +3,6 @@ class SoftwareTrainController():
     def __init__(self):
         self.manualmode=False
         self.ctcSpeed=10                #speed to go in automatic mode when in the middle of a route in m/s
-        self.automaticcommandedspeed=5   #desired speed in automatic mode. i edit this as the train is stopping at a station
         self.manualcommandedspeed=0      #the value of the slide bar. commandedspeed=manualcommandedspeed if manualMode=True 
         self.nextstop="A Stop"
         self.currentSpeed=0      #current speed in manual or auto (max speed is 70km/hr)
@@ -69,6 +68,9 @@ class SoftwareTrainController():
 
     def setMode(self,b):
         self.manualmode=b
+
+    def getAutoCommandedSpeed(self):
+        return self.ctcSpeed
         
     def getManualMode(self):
         return self.manualmode 
@@ -114,7 +116,7 @@ class SoftwareTrainController():
             self.power=(self.ek*self.kp+self.ki*self.uk)
         else:
             self.ekprev=self.ek
-            self.ek=(self.automaticcommandedspeed-self.currentSpeed)
+            self.ek=(self.ctcSpeed-self.currentSpeed)
             self.uk+=(self.interval/2)*(self.ek-self.ekprev)
             self.power=(self.ek*self.kp+self.ki*self.uk)
 
@@ -159,7 +161,7 @@ class SoftwareTrainController():
     def computeServiceBrake(self):
         if not self.manualmode and self.currentSpeed>0 and self.authority > 0:
             if not self.serviceBrakeFlag:
-                self.serviceBrakeFlag = self.currentSpeed/0.6 + 1 >= self.authority/self.currentSpeed
+                self.serviceBrakeFlag = self.currentSpeed/0.8 + 1 >= self.authority/self.currentSpeed
                 self.brakeSpeed=self.currentSpeed
                 self.brakeAuthority=self.authority
             if self.serviceBrakeFlag:
@@ -197,7 +199,7 @@ class SoftwareTrainController():
             self.manualcommandedspeed=self.currentSpeed #make sure this is good, assume connor sends this back
 
         if not self.manualmode:
-            self.manualcommandedspeed=self.automaticcommandedspeed*2.2369362921
+            self.manualcommandedspeed=self.ctcSpeed*2.2369362921
         else:
             if self.manualcommandedspeed>=self.speedLimit:
                 self.manualcommandedspeed=self.speedLimit        #convert to m/s
@@ -234,9 +236,6 @@ class SoftwareTrainController():
     
     def getNextStop(self):
         return self.nextstop
-    
-    def getAutoCommandedSpeed(self):
-        return self.automaticcommandedspeed
     
     def getAnnouncement(self):
         return self.announcement
