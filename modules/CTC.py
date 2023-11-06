@@ -12,7 +12,7 @@ from typing import List, Optional
 from PyQt6.QtCore import pyqtSignal, QEvent, Qt
 from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QTableWidgetItem
 
-
+from Line import Line
 from CTC_ui import Ui_MainWindow
 
 
