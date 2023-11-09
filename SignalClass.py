@@ -4,12 +4,12 @@ from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow, QFileDialog
 from PyQt6 import QtCore, QtGui, QtWidgets 
 
 
-class Signal(QTCore.pyqtSignal)
+class Signal(QTCore.pyqtSignal):
 # class Connection(QtCore.QObject):
 #     def __init__(self, data) -> None:
 #         super().__init__()
 #         self.signal = QtCore.pyqtSignal()
-
+    pass
 
 class CTC:
     def __init__(self):
@@ -21,7 +21,7 @@ class TrackC:
 
 class TrackM:
     def __init__(self) -> None:
-        
+        pass
 
 class TrainM:
     def __init__(self) -> None:
@@ -42,7 +42,7 @@ class God():
         self.trainController = TrainC()
 
     def setupConnections(self):
-        self.ctc.
+        pass
 
 
 

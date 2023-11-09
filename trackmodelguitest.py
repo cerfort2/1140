@@ -86,10 +86,12 @@ class Line():
         
         self.loadBeacons()
         self.loadBlockConnections()
-        
+
         labels = {self.blocks[i] : self.blocks[i].name for i in range(len(self.blocks))}
         pos = nx.spiral_layout(self.network)
-        nx.draw_networkx(self.network, pos,node_size = 100, labels = labels, with_labels=True, font_size = 10, node_color = 'green')
+        nx.draw_networkx(self.network, pos,node_size = 100,
+                          labels = labels, with_labels=True,
+                            font_size = 10, node_color = 'green')
 
         plt.show()
         
