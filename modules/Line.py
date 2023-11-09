@@ -81,15 +81,19 @@ class Line():
     def get_routes(self, station_list):
         route_blocks = []
         stop_or_dest = []
+
         for block in self.blocks:
             route_blocks.append(block)
+
             if block.station in station_list:
                 stop_or_dest.append(True)
+
                 if block.station == station_list[-1]:
                     break
             else:
                 stop_or_dest.append(False)
         return route_blocks, stop_or_dest
+    
     #returns a list of suggested velocities for each block given a list of routes
     def get_velocities_mul(self, blocK_list_list):
         return
