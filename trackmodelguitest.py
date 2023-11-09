@@ -2,9 +2,10 @@ from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow, QFileDialog
 from PyQt6 import QtCore, QtGui, QtWidgets
 import pandas as pd
 from customUI import Ui_MainWindow
-import os;
-import random;
-
+import os
+import random
+import networkx as nx
+import matplotlib.pyplot as plt
 ## TO CONVERT UI TO PY
 # open terminal at folder with ui
 # pyuic6 -x -o customUI.py mainwindow.ui
@@ -20,10 +21,73 @@ kmhrTomihr = 0.621371
 
       
 class Line():
-    def __init__(self,name):
-        self.name = name
+    def __init__(self,df):
+        numOfRows = len(df.index)
+        self.name = df.at[0,"Line"] + " Line"
         self.blocks = []
 
+        #Instantiate Blocks
+        for i in range(numOfRows):
+            if(not (df.isna().at[i,"Line"])):
+
+                name = (str(df.at[i,"Section"])+str(df.at[i, "Block Number"])).lstrip('nan')
+                length = df.at[i,"Block Length (m)"]
+                grade = df.at[i,"Block Grade (%)"]
+                limit = df.at[i,"Speed Limit (Km/Hr)"]
+                elevation = df.at[i,"ELEVATION (M)"]
+
+                attributes = (name,False,length,grade,limit,elevation)
+                blk = Block(attributes)
+
+            
+                if(df.isna().at[i,"Infrastructure"]):
+                    self.blocks.append(blk)
+                    continue
+
+                infrastructure = str(df.at[i,"Infrastructure"]).replace(":",";")
+
+                isUnderground = "UNDERGROUND" in infrastructure
+                isStation = "STATION" in infrastructure
+                isSwitch = "SWITCH" in infrastructure
+                isCrossroad = "RAILWAY CROSSING" in infrastructure
+                isSignal = "SIGNAL" in infrastructure
+                isSWBeacon = "SW_BEACON" in infrastructure
+                isSTBeacon = "ST_BEACON" in infrastructure
+
+                if isUnderground:
+                    blk.addUnderground()
+
+                if isStation:
+                    stationSide = str(df.at[i, "Station Side"])
+                    blk.addStation(infrastructure, stationSide)
+
+                if isSwitch:
+                    blk.addSwitch(infrastructure)
+
+                #True -> Closed, False -> Open
+                if isCrossroad:
+                    blk.addCrossroad()
+
+                #Signal Status; True -> Red, False -> Green
+                if isSignal:
+                    blk.addSignal()
+
+                if isSWBeacon:
+                    blk.addBeaconAtSwitch()
+
+                if isSTBeacon:
+                    if isStation:
+                        blk.addBeaconAtStation()
+                    else:
+                        blk.addBeaconBeforeStation()
+
+                self.blocks.append(blk)
+        
+        self.loadBeacons()
+        self.loadBlockConnections()
+        nx.draw(self.network, pos=nx.random_layout(self.network), with_labels =True)
+        plt.show()
+        
     def addBlock(self,blk):
         self.blocks.append(blk)
 
@@ -46,20 +110,50 @@ class Line():
     def loadBeacons(self):
         for i in range(len(self.blocks)):
             if self.blocks[i].approachingBeacon[0]:
-                self.blocks.approachingBeacon[1] = self.blocks[i+1].station[1]+ "/" + self.blocks[i+1].station[3]
-            elif self.blocks[i].stationBeacon[0]:
+                self.blocks[i].approachingBeacon[1] = str(self.blocks[i+1].station[1]) + "/" + str(self.blocks[i+1].station[3])
+                # print(self.blocks[i].approachingBeacon[1])
+            elif self.blocks[i].stationBeacon[0] or self.blocks[i].switchBeacon[0]: #This will only work for green line
+                self.blocks[i].stationBeacon[1] += self.blocks[i].name
+                self.blocks[i].stationBeacon[1] += "/"
+                self.blocks[i].stationBeacon[1] += str(self.blocks[i].length)
+                self.blocks[i].stationBeacon[1] += "/"
+                self.blocks[i].stationBeacon[1] += str(self.blocks[i].underground)
+                self.blocks[i].stationBeacon[1] += "/"
+                self.blocks[i].stationBeacon[1] += str(self.blocks[i].limit)
+                self.blocks[i].stationBeacon[1] += "; "
                 for j in range(i+1,len(self.blocks)):
                     if self.blocks[j].stationBeacon[0] or self.blocks[j].switchBeacon[0]:
                         break
                     self.blocks[i].stationBeacon[1] += self.blocks[j].name
                     self.blocks[i].stationBeacon[1] += "/"
-                    self.blocks[i].stationBeacon[1] += self.blocks[j].length
+                    self.blocks[i].stationBeacon[1] += str(self.blocks[j].length)
                     self.blocks[i].stationBeacon[1] += "/"
-                    self.blocks[i].stationBeacon[1] += self.blocks[j].underground
+                    self.blocks[i].stationBeacon[1] += str(self.blocks[j].underground)
                     self.blocks[i].stationBeacon[1] += "/"
-                    self.blocks[i].stationBeacon[1] += self.blocks[j].limit
-            elif self.blocks[i].switchBeacon[0]:
-                pass
+                    self.blocks[i].stationBeacon[1] += str(self.blocks[j].limit)
+                    self.blocks[i].stationBeacon[1] += "; "
+                # print(self.blocks[i].stationBeacon[1])
+  
+    def loadPolarity(self):
+        pass
+
+    def loadBlockConnections(self):
+        self.network = nx.Graph()
+        self.network.add_nodes_from(self.blocks)
+
+        for i in range(len(self.blocks)-1):
+            self.network.add_edge(self.blocks[i], self.blocks[i+1])
+            if (self.blocks[i].switch[0]):
+                self.network.add_edge(self.blocks[i], self.getBlock(self.blocks[i].switch[1]))
+                self.network.add_edge(self.blocks[i], self.getBlock(self.blocks[i].switch[2]))
+            
+        #debug
+        # nodeList = [node.name for node in list(self.network.nodes)]
+        # print(nodeList)
+        # for (e1, e2) in self.network.edges:
+        #     print((e1.name,e2.name))
+
+
 
     #Track Model --> Track Controller
     def getBlockOccupancyList(self):
@@ -105,6 +199,7 @@ class Block():
         self.switchBeacon = [False, ""]
         self.approachingBeacon = [False, ""]
         self.stationBeacon = [False, ""]
+        self.polarity = True
 
     def setOccupied(self):
         self.occupied = True
@@ -153,18 +248,18 @@ class Block():
 
             #All switches are initialized to the left postiion active, AKA, False -> Left active; True -> Right Active,second to last bool shows this
             # Final bool for signal status
-            switch = [True, connectedBlocks[0], connectedBlocks[1], False]
+            self.switch = [True, connectedBlocks[0], connectedBlocks[1], False]
 
         elif nextWord == "TO/FROM":
-            switch = [True, "YARD", ""]
+            self.switch = [True, "YARD", ""]
             #switch to and from the yard
 
         elif nextWord == "TO":
-            switch = [True, "YARD", ""]
+            self.switch = [True, "YARD", ""]
             #switch to yard
 
         elif nextWord == "FROM":
-            switch = [True, "YARD", ""]
+            self.switch = [True, "YARD", ""]
             #switch from yard
             
         else:
@@ -196,71 +291,10 @@ class TrackModel():
             print("File not selected!")
             return
         
-        db = pd.read_csv(path)
-        numOfRows = len(db.index)
+        df = pd.read_csv(path)
 
         #instantiate line:
-        newLine = Line(db.at[0,"Line"] + " Line")
-
-
-        #Instantiate Blocks
-        for i in range(numOfRows):
-            if(not (db.isna().at[i,"Line"])):
-
-                name = (str(db.at[i,"Section"])+str(db.at[i, "Block Number"])).lstrip('nan')
-                length = db.at[i,"Block Length (m)"]
-                grade = db.at[i,"Block Grade (%)"]
-                limit = db.at[i,"Speed Limit (Km/Hr)"]
-                elevation = db.at[i,"ELEVATION (M)"]
-
-                attributes = (name,False,length,grade,limit,elevation)
-                blk = Block(attributes)
-
-            
-                if(db.isna().at[i,"Infrastructure"]):
-                    newLine.addBlock(blk)
-                    continue
-
-                infrastructure = str(db.at[i,"Infrastructure"]).replace(":",";")
-
-                isUnderground = "UNDERGROUND" in infrastructure
-                isStation = "STATION" in infrastructure
-                isSwitch = "SWITCH" in infrastructure
-                isCrossroad = "RAILWAY CROSSING" in infrastructure
-                isSignal = "SIGNAL" in infrastructure
-                isSWBeacon = "SW_BEACON" in infrastructure
-                isSTBeacon = "ST_BEACON" in infrastructure
-
-                if isUnderground:
-                    blk.addUnderground()
-
-                if isStation:
-                    stationSide = str(db.at[i, "Station Side"])
-                    blk.addStation(infrastructure, stationSide)
-
-                if isSwitch:
-                    blk.addSwitch(infrastructure)
-
-                #True -> Closed, False -> Open
-                if isCrossroad:
-                    blk.addCrossroad()
-
-                #Signal Status; True -> Red, False -> Green
-                if isSignal:
-                    blk.addSignal()
-
-                if isSWBeacon:
-                    blk.addBeaconAtSwitch()
-
-                if isSTBeacon:
-                    if isStation:
-                        blk.addBeaconAtStation()
-                    else:
-                        blk.addBeaconBeforeStation()
-
-
-                newLine.addBlock(blk)
-
+        newLine = Line(df)
         self.lines.append(newLine)
 
     def getLineNames(self):
@@ -271,14 +305,13 @@ class TrackModel():
         return self.lines[self.getLineNames().index(lineName)]
     
     #Train Model --> Track Model
-    def updateOccupancy(self,occupancyList):
+    def updateOccupancy(self,*occupancyList):
         #Clear occupancy
         for line in self.lines:
-            for block in self.blocks:
+            for block in line.blocks:
                 block.clearOccupied()
 
-        for i in range(len(occupancyList)):
-            blk_name, line_name = occupancyList
+        for blk_name, line_name in range(len(occupancyList)):
             self.lines[self.lines.index(line_name)].getBlock(blk_name).setOccupied()
 
     #Track Model --> Train Model
