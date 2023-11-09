@@ -6,6 +6,7 @@ import os
 import random
 import networkx as nx
 import matplotlib.pyplot as plt
+
 ## TO CONVERT UI TO PY
 # open terminal at folder with ui
 # pyuic6 -x -o customUI.py mainwindow.ui
@@ -85,7 +86,11 @@ class Line():
         
         self.loadBeacons()
         self.loadBlockConnections()
-        nx.draw(self.network, pos=nx.random_layout(self.network), with_labels =True)
+        
+        labels = {self.blocks[i] : self.blocks[i].name for i in range(len(self.blocks))}
+        pos = nx.spiral_layout(self.network)
+        nx.draw_networkx(self.network, pos,node_size = 100, labels = labels, with_labels=True, font_size = 10, node_color = 'green')
+
         plt.show()
         
     def addBlock(self,blk):
@@ -152,8 +157,6 @@ class Line():
         # print(nodeList)
         # for (e1, e2) in self.network.edges:
         #     print((e1.name,e2.name))
-
-
 
     #Track Model --> Track Controller
     def getBlockOccupancyList(self):
