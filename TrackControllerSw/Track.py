@@ -3,23 +3,32 @@ from Wayside import *
 import Block
 from Block import *
 class Track():
-    waysides:Wayside = []
-    blocks:Block = []
 
-    def __init__(self, ways:Wayside = []):
-        self.waysides = ways
+    def __init__(self, data):
+        #Create a list of track blocks from data given
         self.blocks:Block = []
-        #Create list of blocks from waysides
-        for i in range (len(self.waysides)):
-            for j in range (len(self.waysides[i].blocks)):
-                self.blocks.append(self.waysides[i].getBlock(j))
-        #Sort list of blocks
+        for i in range (len(data[0])):
+            self.blocks.append(Block(data[0][i], data[1][i], data[2][i], data[3][i])) #hasSwitch, hasCrossroad, hasSwitch, name
+            if(data[0][i]):
+                self.blocks[i].setLeft(data[4][i]) #left
+                self.blocks[i].setRight(data[5][i]) #right
+        
+        #Seperate Blocks into designated wayside
+        self.waysides:Wayside = [Wayside("Green1"), Wayside("Green2"), Wayside("Green3"), Wayside("Green4")]
         for i in range (len(self.blocks)):
-            for j in range (i, len(self.blocks)):
-                if(self.blocks[i].name > self.blocks[j].name):
-                    hold = self.blocks[i]
-                    self.blocks[i] = self.blocks[j]
-                    self.blocks[j] = hold
+            if(i <= 31 or i == 149):
+                self.waysides[0].add(self.blocks[i])
+            elif(i <= 72 or i == 150):
+                self.waysides[1].add(self.blocks[i])
+            elif(i <= 100):
+                self.waysides[2].add(self.blocks[i])
+            else:
+                self.waysides[3].add(self.blocks[i])
+
+        return self.waysides
+
+
+            
  
     def getData(self):
         #Created lists

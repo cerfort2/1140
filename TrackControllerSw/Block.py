@@ -1,31 +1,23 @@
 class Block():
-    #Class Variables
-    hasSwitch:bool = False 
-    switchStatus:bool = False #False if left True if right
-    leftBlock:str = "" #Name of left block
-    rightBlock:str = "" #Name of right block
-
-    hasCrossroad:bool = False
-    crossroadStatus:bool = False #False if crossroad open True if crossroad closed
-
-    hasSignal:bool = False #Has signal only when has switch
-    signalStatus:bool = False #False if green True if red
-
-    hasStation:bool = False #Has station
-
-    occupancy:bool = False #If block is occupied
-
-    name:str = ""
-
-
+    
 
     #Default setup
-    def __init__(self, switch:bool, crossroad:bool, signal:bool, station:bool, tag:str):
-        self.hasSwitch = switch
-        self.hasCrossroad = crossroad
-        self.hasSignal = signal
-        self.hasStation = station
-        self.name = tag
+    def __init__(self, switch:bool, crossroad:bool, signal:bool, tag:str):
+        #Class Variables
+        self.hasSwitch:bool = switch #If block has a switch
+        self.switchStatus:bool = False #False if left True if right
+        self.leftBlock:str = "" #Name of left block
+        self.rightBlock:str = "" #Name of right block
+
+        self.hasCrossroad:bool = crossroad #If block has a crossroad
+        self.crossroadStatus:bool = False #False if crossroad open True if crossroad closed
+
+        self.hasSignal:bool = signal #Has signal only when has switch
+        self.signalStatus:bool = False #False if red True if green
+
+        self.occupancy:bool = False #If block is occupied
+
+        self.name:str = tag #Block name
 
     def getHasSwitch(self):
         return self.hasSwitch
@@ -35,9 +27,6 @@ class Block():
     
     def getHasSignal(self):
         return self.hasSignal
-    
-    def getHasStation(self):
-        return self.hasStation
     
     #Returns switch value if has a switch
     def getSwitch(self):
@@ -78,6 +67,10 @@ class Block():
         else:
             print("No switch")
 
+    #Returns block name
+    def getName(self):
+        return self.name
+
     #Sets switch value if has a switch
     def setSwitch(self, set:bool):
         if(self.hasSwitch):
@@ -117,6 +110,9 @@ class Block():
         else:
             print("No switch")
         
+    #Sets the blocks name
+    def setname(self, tag:str):
+        self.name = tag
     
 
 
