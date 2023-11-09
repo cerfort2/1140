@@ -1,13 +1,15 @@
 class SoftwareTrainController():
     
     def __init__(self):
+        self.totalTime=0
+        self.numCycles=0
         self.manualmode=False
         self.ctcSpeed=10                #speed to go in automatic mode when in the middle of a route in m/s
         self.manualcommandedspeed=0      #the value of the slide bar. commandedspeed=manualcommandedspeed if manualMode=True 
         self.nextstop="A Stop"
         self.currentSpeed=0      #current speed in manual or auto (max speed is 70km/hr)
         self.speedLimit=43
-        self.authority=0         #authority in automatic mode
+        self.authority=1         #authority in automatic mode
         self.temperature=70       #temp in degrees fahrenheit
         self.exlights=False     #true=on
         self.intlights=True      #true=on
@@ -21,8 +23,8 @@ class SoftwareTrainController():
         self.ek=0
         self.ekprev=0
         self.uk=0
-        self.kp=11    #proportional gain
-        self.ki=12   #integral gain
+        self.kp=400    #proportional gain
+        self.ki=20   #integral gain
         self.brakeFailure=False  # false is no failure
         self.engineFailure=False
         self.signalFailure=False
@@ -59,6 +61,7 @@ class SoftwareTrainController():
         
     def setNextStop(self,stop):
         self.nextstop=stop
+        self.setAnnouncement('Next stop: ' + self.nextstop)
         
     def setAnnouncement(self,a):
         self.announcement=a
@@ -113,15 +116,15 @@ class SoftwareTrainController():
             self.ekprev=self.ek
             self.ek=(self.manualcommandedspeed/2.2369362921-self.currentSpeed)
             self.uk+=(self.interval/2)*(self.ek-self.ekprev)
-            self.power=(self.ek*self.kp+self.ki*self.uk)
+            self.power=(self.ek*self.kp-self.ki*self.uk)
         else:
             self.ekprev=self.ek
             self.ek=(self.ctcSpeed-self.currentSpeed)
             self.uk+=(self.interval/2)*(self.ek-self.ekprev)
-            self.power=(self.ek*self.kp+self.ki*self.uk)
+            self.power=(self.ek*self.kp-self.ki*self.uk)
 
-        if self.power>120:
-            self.power=120
+        if self.power>120000:
+            self.power=120000
 
         if self.brakeFailure or self.signalFailure or self.engineFailure or self.eBrake or self.power < 0 or self.serviceBrakeFlag:
             self.power=0
@@ -159,14 +162,26 @@ class SoftwareTrainController():
             return self.rightDoor
     
     def computeServiceBrake(self):
+        self.totalTime=self.numCycles*self.interval
+
         if not self.manualmode and self.currentSpeed>0 and self.authority > 0:
-            if not self.serviceBrakeFlag:
-                self.serviceBrakeFlag = self.currentSpeed/0.8 + 1 >= self.authority/self.currentSpeed
-                self.brakeSpeed=self.currentSpeed
-                self.brakeAuthority=self.authority
-            if self.serviceBrakeFlag:
-                print('engaged')
-                self.serviceBrakeSlide=100 - (100 * (1 - max((self.currentSpeed/self.brakeAuthority), (self.authority/self.brakeAuthority))))
+            self.timeToReach=self.authority/self.currentSpeed
+            self.timeToStop=self.currentSpeed/1.2
+            self.timeToApplyDecel=self.timeToReach-self.timeToStop
+
+            if self.totalTime>=self.timeToApplyDecel:
+                self.serviceBrakeSlide=100
+            else:
+                self.serviceBrakeSlide=0
+
+
+            # if not self.serviceBrakeFlag:
+            #     self.serviceBrakeFlag = self.authority/self.currentSpeed >= self.authority/self.currentSpeed
+            #     self.brakeSpeed=self.currentSpeed
+            #     self.brakeAuthority=self.authority
+            # if self.serviceBrakeFlag:
+            #     print('engaged')
+            #     self.serviceBrakeSlide=100 - (100 * (1 - max((self.currentSpeed/self.brakeAuthority), (self.authority/self.brakeAuthority))))
         elif self.currentSpeed < 0:
             self.currentSpeed = 0
             self.brakeAuthority = 0
@@ -174,7 +189,8 @@ class SoftwareTrainController():
 
     def computeDwellTime(self):
         if self.dwelling and not self.manualmode:
-           # print(self.dwellTime)
+            print(self.dwellTime)
+            self.ctcSpeed=0
             if self.dwellTime-self.interval>0:   #subtract the time that it takes the timer to time out
                 self.dwellTime-=self.interval
             else:

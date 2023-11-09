@@ -10,13 +10,13 @@ from trainmodel import train_model_software
 class SoftwareTrainControllerGUI(QMainWindow):
   
     #meters/sec
-    #variables
-    
+    #variables in metric
 
-        #calculation of kp and ki values?
-        #decode beacon messages?
-        #inputs in metric
-        #announcement?
+    
+    # beacon message:
+    # name/length/speedlimit/underground;
+    # 
+    
 
     def __init__(self):
 
@@ -37,6 +37,7 @@ class SoftwareTrainControllerGUI(QMainWindow):
     
     def update_time(self):
          self.ui.time.setDateTime(datetime.now())
+         self.swtrain.controller.numCycles+=1
          self.receiveVals()
         
         
@@ -125,8 +126,11 @@ class SoftwareTrainControllerGUI(QMainWindow):
         self.ui = Ui_MainWindow()           #setup ui
         self.ui.setupUi(self)
         self.modeVals()
+        self.ui.ki.setMaximum(999)
+        self.ui.kp.setMaximum(999)
         self.ui.ki.setValue(20)
-        self.ui.kp.setValue(99)
+        self.ui.kp.setValue(400)
+        self.swtrain.controller.setNextStop('Steel Plaza')
        # self.ui.tbcurrentspeed.textChanged.connect(lambda: self.updateVals) 
 
         self.ui.textEdit_12.setStyleSheet('background-color: orange')
