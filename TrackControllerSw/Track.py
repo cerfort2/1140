@@ -8,7 +8,7 @@ class Track():
         #Create a list of track blocks from data given
         self.blocks:Block = []
         for i in range (len(data[0])):
-            self.blocks.append(Block(data[0][i], data[1][i], data[2][i], data[3][i])) #hasSwitch, hasCrossroad, hasSwitch, name
+            self.blocks.append(Block(data[0][i], data[1][i], data[2][i], data[3][i])) #hasSwitch, hasCrossroad, hasSignal, name
             if(data[0][i]):
                 self.blocks[i].setLeft(data[4][i]) #left
                 self.blocks[i].setRight(data[5][i]) #right
