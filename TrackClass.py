@@ -16,15 +16,12 @@ class Track():
     leftDestination = ""
     switchStatus = True #Default switch to right(True = Right, False = left)
 
-    isStation = False #Specify if the block is a station
-
     trackName = ""
 
-    def __init__(self, switch:bool, crossroad:bool, light:bool, station:bool, trackName:str): #Initlize a Track to be set as a switch or a crossroad
+    def __init__(self, switch:bool, crossroad:bool, light:bool, trackName:str): #Initlize a Track to be set as a switch or a crossroad
         self.isSwitch = switch
         self.isLight = light
         self.isCrossroad = crossroad
-        self.isStation = station
         self.trackName = trackName
     
     def getOccupancy(self): #Get the occupancy
