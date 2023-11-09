@@ -57,7 +57,7 @@ class Track():
         #Create a list of block names
         for i in range (len(self.blocks)):
             if(self.blocks[i].getOccupancy()):
-                data.append(self.blocks[i].name)
+                data.append(self.blocks[i].getName())
         #Return data
         return data
 
