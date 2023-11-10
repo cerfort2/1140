@@ -86,15 +86,38 @@ class Line():
         
         self.loadBeacons()
         self.loadBlockConnections()
-
-        labels = {self.blocks[i] : self.blocks[i].name for i in range(len(self.blocks))}
-        pos = nx.spiral_layout(self.network)
-        nx.draw_networkx(self.network, pos,node_size = 100,
-                          labels = labels, with_labels=True,
-                            font_size = 10, node_color = 'green')
-
-        plt.show()
+          
+    def designMap(self,blockSelected):
         
+        plt.clf()
+
+        pos = nx.kamada_kawai_layout(self.network)
+
+        colors = []
+        labels ={}
+        for i in range(len(self.blocks)):
+            if(self.blocks[i].occupied) or (self.blocks[i].name == blockSelected):
+                labels[self.blocks[i]] = self.blocks[i].name
+            else:
+                labels[self.blocks[i]] = ""
+
+            if self.blocks[i].occupied:
+                colors.append('blue')
+            elif self.blocks[i].crossroad[0]:
+                colors.append('#FFA500') # Orange
+            elif self.blocks[i].underground:
+                colors.append('#964B00') #brown
+            else:
+                colors.append('black')
+
+
+        nx.draw_networkx(self.network, pos,node_size = 50,
+                    labels = labels, with_labels=True,
+                    font_size = 12, node_color = colors, node_shape = 's')# so^>v<dph8.
+
+        plt.draw()
+        plt.show()
+
     def addBlock(self,blk):
         self.blocks.append(blk)
 
@@ -148,12 +171,14 @@ class Line():
         self.network = nx.Graph()
         self.network.add_nodes_from(self.blocks)
 
-        for i in range(len(self.blocks)-1):
+        for i in range(len(self.blocks)-2):
             self.network.add_edge(self.blocks[i], self.blocks[i+1])
             if (self.blocks[i].switch[0]):
                 self.network.add_edge(self.blocks[i], self.getBlock(self.blocks[i].switch[1]))
                 self.network.add_edge(self.blocks[i], self.getBlock(self.blocks[i].switch[2]))
-            
+        
+        if (self.name == "Green Line"):
+            self.network.remove_edge(self.getBlock("Q100"), self.getBlock("R101"))
         #debug
         # nodeList = [node.name for node in list(self.network.nodes)]
         # print(nodeList)
@@ -180,6 +205,24 @@ class Line():
                 #Signal Updating
                 if(self.blocks[i].signal[1] != controlSignals[i][2]):
                     self.blocks[i].toggleSignal()
+
+    def initializeTrackControllerData(self):
+        hasSwitch = [blk.switch[0] for blk in self.blocks]
+        hasCrossroad = [blk.crossroad[0] for blk in self.blocks]
+        hasSignal = [blk.signal[0] for blk in self.blocks]
+        name = [blk.name for blk in self.blocks]
+        leftBlock = []
+        rightBlock = []
+        for blk in self.blocks:
+            if(blk.switch[0]):
+                leftBlock.append(self.switch[1])
+                rightBlock.append(self.swtich[2])
+            else:
+                leftBlock.append("")
+                rightBlock.append("")
+        
+        return [hasSwitch,hasCrossroad,hasSignal,name,leftBlock,rightBlock]
+            
 
 #implement beacon locations, implement beacon data
 class Block():
@@ -310,7 +353,7 @@ class TrackModel():
         return self.lines[self.getLineNames().index(lineName)]
     
     #Train Model --> Track Model
-    def updateOccupancy(self,*occupancyList):
+    def updateOccupancy(self,occupancyList):
         #Clear occupancy
         for line in self.lines:
             for block in line.blocks:
@@ -336,24 +379,30 @@ class functionalUI(Ui_MainWindow):
         super().__init__()
         self.trackModel = TrackModel()
 
-        self.occupied_debug = []
-
     def connect(self):
         self.comboBox_3.currentIndexChanged.connect(self.lineChange)
         self.comboBox_4.currentIndexChanged.connect(self.blockChange)
+        self.comboBox_4.currentIndexChanged.connect(self.updateMap)
         self.pushButton_2.clicked.connect(self.buttonPress)
         self.lineEdit.returnPressed.connect(self.tbChange)
+        self.listWidget_2.itemActivated.connect(self.updateMap)
 
     def tbChange(self):
+        
+        self.listWidget_2.clear()
         tbInfo = self.lineEdit.displayText().split(',')
-    
-        for l in self.trackModel.lines:
-            if(l.name == tbInfo[0]):
-                break
 
+        line = self.trackModel.getLine(tbInfo[0])
         tbInfo.pop(0)
 
-        self.occupied_debug += tbInfo
+        for blk in line.blocks:
+            blk.occupied = False
+
+        for blk in tbInfo:
+            line.getBlock(blk).occupied = True
+
+        test = [blk.name for blk in line.blocks if blk.occupied]
+        self.listWidget_2.addItems(test)
 
     def lineChange(self):
         #Clear the Blocks
@@ -365,9 +414,9 @@ class functionalUI(Ui_MainWindow):
         # Add the blocks associated with that line
         currentLineName = self.comboBox_3.currentText()
 
-        l = self.trackModel.getLine(currentLineName)
-        self.comboBox_4.addItems(l.getBlockNames())
-        self.listWidget_2.addItems(l.getOccupiedBlockNames())
+        line = self.trackModel.getLine(currentLineName)
+        self.comboBox_4.addItems(line.getBlockNames())
+        self.listWidget_2.addItems(line.getOccupiedBlockNames())
 
     def blockChange(self):
         currentBlockName = self.comboBox_4.currentText()
@@ -444,9 +493,12 @@ class functionalUI(Ui_MainWindow):
         self.trackModel.addLine(path)
         self.comboBox_3.clear()
         self.comboBox_3.addItems(self.trackModel.getLineNames())
+        self.updateMap()
       
-    def createMap(self):
-        pass
+    def updateMap(self):
+        blockSelected = self.comboBox_4.currentText()
+        for line in self.trackModel.lines:
+            line.designMap(blockSelected)
 
 app = QApplication([])
 MainWindow = QMainWindow()
