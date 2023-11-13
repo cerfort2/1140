@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="ctc_mainpage">
      <attribute name="title">
@@ -480,6 +480,13 @@
         </rect>
        </property>
        <layout class="QGridLayout" name="manual_layout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Select Line</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="1">
          <widget class="QComboBox" name="manual_dispatch_line">
           <item>
@@ -489,30 +496,13 @@
           </item>
          </widget>
         </item>
-        <item row="2" column="0">
+        <item row="1" column="1">
+         <widget class="QComboBox" name="manual_dispatch_destination"/>
+        </item>
+        <item row="1" column="0">
          <widget class="QLabel" name="label_10">
           <property name="text">
            <string>Select Destination Station</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QComboBox" name="manual_dispatch_destination"/>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_8">
-          <property name="text">
-           <string>Select Line</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QComboBox" name="manual_dispatch_departure"/>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string>Select Departure Station</string>
           </property>
          </widget>
         </item>
