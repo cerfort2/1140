@@ -191,6 +191,8 @@ class Line():
     #Track Model --> Track Controller
     def getBlockOccupancyList(self):
         occupancyMask = [blk.occupied for blk in self.blocks]
+        occupancyMask[0] = True
+        occupancyMask[-1] = True
         return occupancyMask
     
     #Track Controller --> Track Model
