@@ -52,6 +52,45 @@ class CTC(QMainWindow):
         self.start_threads()
         self.initialize_ui()
 
+        """
+        need to ensure a few things for iteration 3
+        
+        grab block occupancies from track controller, attempt to differentiate between them
+        
+        get ticket sales from track model, remember time of last calculation
+        need to exclude passengers from over an hour ago but keep ones within hour
+        
+        need to be able to dispatch a train
+        once dispatched, current system time is departure time, arrival time is input
+        destination station input, all stops input - update ui for this
+        will calculate suggested speed based off this data, cannot exceed speed limits - must implement this
+        can check if suggested speed is over speed limit
+        if suggested speed has to go over speed limit, then throw error
+        also calculate route - list of blocks from yard to destination station (back to yard?)
+        
+        also calculate authority - number of blocks from yard to first stop
+        
+        for scheduled trains - first add to queue, once departure time is reached, call dispatch_train
+        ^^same protocols will follow
+        
+        can create train object that holds all this data to keep track of dispatched trains
+        
+        station list should auto-populate from imported file
+        
+        need to import schedule file, all trains added to schedule 
+        
+        keep track of dispatched trains
+        """
+
+
+
+
+
+
+
+
+
+
     def start_threads(self):
         Thread(target=self.update_occupancy_ui).start()
         Thread(target=self.check_mode).start()
@@ -316,14 +355,9 @@ class CTC(QMainWindow):
 
 
     def calc_throughput(self):
-        if self.ui.throughput_station_tb.currentText() == "Station A":
-            self.station_a_throughput = self.ui.throughput_tb.value()
-        elif self.ui.throughput_station_tb.currentText() == "Station B":
-            self.station_b_throughput = self.ui.throughput_tb.value()
-        elif self.ui.throughput_station_tb.currentText() == "Station C":
-            self.station_c_throughput = self.ui.throughput_tb.value()
-
-        total_throughput = self.station_a_throughput + self.station_b_throughput + self.station_c_throughput
+        #get last time throughput was calculated
+        #get ticket sales from track model
+        
         return total_throughput
         
     def close_track(self, track_num):
