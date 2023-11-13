@@ -36,9 +36,12 @@ class Operations():
         time.sleep(.5)
 
     def plcCode(self, occupancies:[bool]):
-        status = "P"
-        data = bytes(occupancies)
+        status = "C"
+        convertStr = ''.join(map(lambda x: '1' if x else '0', occupancies))
         serialComm.write(status.encode())
         time.sleep(1.1)
-        serialComm.write(data)
+        serialComm.write(convertStr.encode())
+        time.sleep(.5)
+        check = serialComm.readline().decode()
+        print(check)
         

@@ -18,15 +18,6 @@ class HWTrackControllerGUI(QMainWindow):
     route = []
     suggestedSpeed = int
 
-    for i in range(3):
-        for j in range(greenLine.Waysides[i].amountOfTracks()):
-            pureOccupancy = greenLine.Waysides[i].getTrack(i).getOccupancy()
-
-    #Testing for functionality
-    greenLine.Waysides[0].getTrack(32).setLight(False) #Z150 Red
-    greenLine.Waysides[2].getTrack(26).setLight(False) #Q100 Red
-    greenLine.Waysides[0].getTrack(18).setCrossroad(True) #E19 Crossroad Down
-
     greenLine.Waysides[0].getTrack(12).setOccupancy(True) 
     greenLine.Waysides[0].getTrack(13).setOccupancy(True) 
     greenLine.Waysides[0].getTrack(14).setOccupancy(True)
@@ -40,6 +31,18 @@ class HWTrackControllerGUI(QMainWindow):
     greenLine.Waysides[1].getTrack(19).setOccupancy(True) 
     greenLine.Waysides[1].getTrack(20).setOccupancy(True) 
     greenLine.Waysides[1].getTrack(21).setOccupancy(True) 
+
+    for i in range(4):
+        for j in range(greenLine.Waysides[i].amountOfTracks()):
+            print(j)
+            pureOccupancy.append(greenLine.Waysides[i].getTrack(j).getOccupancy())
+            print(greenLine.Waysides[i].getTrack(j).getOccupancy())
+
+    #Testing for functionality
+    greenLine.Waysides[0].getTrack(32).setLight(False) #Z150 Red
+    greenLine.Waysides[2].getTrack(26).setLight(False) #Q100 Red
+    greenLine.Waysides[0].getTrack(18).setCrossroad(True) #E19 Crossroad Down
+
 
     greenLine.Waysides[1].getTrack(25).setSwitch(False)
     greenLine.Waysides[2].getTrack(11).setSwitch(False)
@@ -112,7 +115,7 @@ class HWTrackControllerGUI(QMainWindow):
 
 
     #Time dependent Functions
-    def sendDataModel(self):
+    def sendData(self): #Data of track to be sent to CTC and Track Model
         data = [[],[],[]]
         blocks:Track = []
         for i in range (len(self.greenLine.Waysides)):
@@ -140,9 +143,9 @@ class HWTrackControllerGUI(QMainWindow):
             else:
                 data[2].append(False) 
         return data
-    def getOccupancy(self):
+    def sendOccupancy(self): #Occupancy sent to CTC
         return self.pureOccupancy
-    def recievedOccupancy(self, occupancy:[]):
+    def getOccupancy(self, occupancy:[]): #Current Occupancy from Track Model
         self.pureOccupancy = occupancy
         #All for Wayside 1
         for i in range(31): #A1-G32
@@ -158,20 +161,29 @@ class HWTrackControllerGUI(QMainWindow):
         #All for Wayside 4
         for i in range(47): #S102-Y149
             self.greenLine.Waysides[3].getTrack(i).setOccupancy(occupancy[i+101])
-    def editAuthority(self):
-        return
-    def getAuthority(self):
-        return
-    def getRoute(self):
+    def getRoute(self, route): #Route from the CTC
+        self.route = route
+    def sendRoute(self): #Route sent to Track Model
         return self.route
-    def getFailures(self):
+    def sendFailures(self): #Failures sent to CTC
         failures = []
         for i in range(len(self.greenLine.Waysides)):
             for j in range(len(self.greenLine.Waysides[i])):
                 failures.append(self.greenLine.Waysides[i].getTrack(j).getFailure())
         return failures
-    def getSpeed(self):
+    def sendSpeed(self): #Speed sent to Track Model
         return self.suggestedSpeed
+    def getSpeed(self, speed): #Speed from CTC
+        self.suggestedSpeed = speed
+
+    #Authority functions
+    def getInitAuthority(self, auth):
+        self.yardSwitchAuthority = auth
+    def editAuthority(self):
+        return
+    def sendAuthority(self):
+        return
+
 
 
     #Functions used in Whole UI

@@ -6,12 +6,30 @@ class GreenLine():
     Waysides = [Wayside(), Wayside(), Wayside(), Wayside()] #All The waysides going in order of 1,2,3,4 for Green Line
 
     def setTracks(self, tracks):
-        for i in range(len(tracks)):
-            for j in range(len(tracks[i])):
-                self.switch
-    
-
-    #Configuration of all tracks in Green Line Waysides
+        for i in range(len(tracks[0])):
+            switch = tracks[0][i]
+        for i in range(len(tracks[1])):
+            crossroad = tracks[1][i]
+        for i in range(len(tracks[2])):
+            light = tracks[2][i]
+        for i in range(len(tracks[3])):
+            trackName = tracks[3][i]
+        for i in range(len(tracks[4])):
+            left = tracks[4][i]
+        for i in range(len(tracks[5])):
+            right = tracks[5][i]
+            
+        for i in range(len(tracks[0])):
+            if(i <= 32):
+                Wayside[0].createTrack(switch[i], crossroad[i], light[i], trackName[i], left[i], right[i])
+            if(32 < i <= 74):
+                Wayside[1].createTrack(switch[i], crossroad[i], light[i], trackName[i], left[i], right[i])
+            if(74 < i <= 102):
+                Wayside[2].createTrack(switch[i], crossroad[i], light[i], trackName[i], left[i], right[i])
+            if(i > 102):
+                Wayside[3].createTrack(switch[i], crossroad[i], light[i], trackName[i], left[i], right[i])
+            
+    #Configuration of all tracks in Green Line Waysides - THIS IS FOR TESTING PERSONALLY ONLY
     #switch:bool, crossroad:bool, light:bool, trackName:str, left = "", right = ""
     #Wayside 1
     Waysides[0].createTrack(False, False, True, "A1") #A1 [0]
