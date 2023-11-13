@@ -32,11 +32,11 @@ class HWTrackControllerGUI(QMainWindow):
     greenLine.Waysides[1].getTrack(20).setOccupancy(True) 
     greenLine.Waysides[1].getTrack(21).setOccupancy(True) 
 
+    greenLine.Waysides[3].getTrack(47).setOccupancy(True)
+
     for i in range(4):
         for j in range(greenLine.Waysides[i].amountOfTracks()):
-            print(j)
             pureOccupancy.append(greenLine.Waysides[i].getTrack(j).getOccupancy())
-            print(greenLine.Waysides[i].getTrack(j).getOccupancy())
 
     #Testing for functionality
     greenLine.Waysides[0].getTrack(32).setLight(False) #Z150 Red
