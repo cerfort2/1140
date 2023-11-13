@@ -1,7 +1,7 @@
 import sys
 import subprocess
 from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QPushButton, QComboBox, QMainWindow, QFileDialog
-from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6 import QtCore, QtGui, QtWidgets
 from HWTrackDisplay import Ui_MainWindow
 from TrackClass import Track
@@ -10,13 +10,21 @@ from GreenLineWaysides import GreenLine
 
 operate = Operations() #Class to perform operations on the breadboard
 
-class HWTrackControllerGUI(QMainWindow):
+class HWTrackControllerGUI(QMainWindow, QObject):
     
+    trackModelSuggestedSpeedHW = pyqtSignal(int)
+    CTCOccupancyHW = pyqtSignal(list)
+    trackModelSendRouteHW = pyqtSignal(list)
+    CTCTrackFailuresHW = pyqtSignal(list)
+    trackModelTrackDataHW = pyqtSignal(list)
+    trackModelAuthorityHW = pyqtSignal(list)
+
     greenLine = GreenLine()
     pureOccupancy = []
     yardSwitchAuthority = int
     route = []
     suggestedSpeed = int
+    authority = int
 
     greenLine.Waysides[0].getTrack(12).setOccupancy(True) 
     greenLine.Waysides[0].getTrack(13).setOccupancy(True) 
@@ -107,7 +115,7 @@ class HWTrackControllerGUI(QMainWindow):
         #Buttons/Setup for Whole UI
         self.ui.pushButton_3.clicked.connect(self.openArduinoFile) #Opens PLC File
         
-        
+        #Testing for PLC Code
         self.ui.comboBox.currentIndexChanged.connect(lambda: operate.plcCode(self.pureOccupancy))
 
     def init_ui(self): #SetupUI
@@ -116,6 +124,31 @@ class HWTrackControllerGUI(QMainWindow):
 
 
     #Time dependent Functions
+    #Getting data functions
+    def getOccupancy(self, occupancy:[]): #Current Occupancy from Track Model
+        self.pureOccupancy = occupancy
+        #All for Wayside 1
+        for i in range(32): #A1-G32
+            self.greenLine.Waysides[0].getTrack(i).setOccupancy(occupancy[i])
+        self.greenLine.Waysides[0].getTrack(32).setOccupancy(occupancy[len(occupancy)-2]) #Z150
+        #All for Wayside 2
+        for i in range(41): #H33-L73
+            self.greenLine.Waysides[1].getTrack(i).setOccupancy(occupancy[i+32])
+        self.greenLine.Waysides[1].getTrack(41).setOccupancy(occupancy[len(occupancy)-1]) #Z151/YARD
+        #All for Wayside 3
+        for i in range(28): #M74-R101
+            self.greenLine.Waysides[2].getTrack(i).setOccupancy(occupancy[i+73])
+        #All for Wayside 4
+        for i in range(48): #S102-Y149
+            self.greenLine.Waysides[3].getTrack(i).setOccupancy(occupancy[i+101])
+    def getRoute(self, route): #Route from the CTC
+        self.route = route
+    def getSpeed(self, speed): #Speed from CTC
+        self.suggestedSpeed = speed
+    def getInitAuthority(self, auth):
+        self.yardSwitchAuthority = auth
+    
+    #Sending out functions
     def sendData(self): #Data of track to be sent to CTC and Track Model
         data = [[],[],[]]
         blocks:Track = []
@@ -143,47 +176,25 @@ class HWTrackControllerGUI(QMainWindow):
                 data[2].append(blocks[i].getLight())
             else:
                 data[2].append(False) 
-        return data
+        self.trackModelTrackDataHW.emit(data)
     def sendOccupancy(self): #Occupancy sent to CTC
-        return self.pureOccupancy
-    def getOccupancy(self, occupancy:[]): #Current Occupancy from Track Model
-        self.pureOccupancy = occupancy
-        #All for Wayside 1
-        for i in range(31): #A1-G32
-            self.greenLine.Waysides[0].getTrack(i).setOccupancy(occupancy[i])
-        self.greenLine.Waysides[0].getTrack(32).setOccupancy(occupancy[len(occupancy)-2]) #Z150
-        #All for Wayside 2
-        for i in range(40): #H33-L73
-            self.greenLine.Waysides[1].getTrack(i).setOccupancy(occupancy[i+32])
-        self.greenLine.Waysides[1].getTrack(41).setOccupancy(occupancy[len(occupancy)-1]) #Z151/YARD
-        #All for Wayside 3
-        for i in range(27): #M74-R101
-            self.greenLine.Waysides[2].getTrack(i).setOccupancy(occupancy[i+73])
-        #All for Wayside 4
-        for i in range(47): #S102-Y149
-            self.greenLine.Waysides[3].getTrack(i).setOccupancy(occupancy[i+101])
-    def getRoute(self, route): #Route from the CTC
-        self.route = route
+        self.CTCOccupancyHW.emit(self.pureOccupancy)
     def sendRoute(self): #Route sent to Track Model
-        return self.route
+        self.trackModelSendRouteHW.emit(self.route)
     def sendFailures(self): #Failures sent to CTC
         failures = []
         for i in range(len(self.greenLine.Waysides)):
             for j in range(len(self.greenLine.Waysides[i])):
                 failures.append(self.greenLine.Waysides[i].getTrack(j).getFailure())
-        return failures
+        self.CTCTrackFailuresHW.emit(failures)
     def sendSpeed(self): #Speed sent to Track Model
-        return self.suggestedSpeed
-    def getSpeed(self, speed): #Speed from CTC
-        self.suggestedSpeed = speed
+        self.trackModelSuggestedSpeedHW.emit(self.suggestedSpeed)
 
     #Authority functions
-    def getInitAuthority(self, auth):
-        self.yardSwitchAuthority = auth
     def editAuthority(self):
         return
     def sendAuthority(self):
-        return
+        self.trackModelAuthorityHW.emit(self.authority)
 
 
 
