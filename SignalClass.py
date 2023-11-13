@@ -53,10 +53,7 @@ class God():
     def __init__(self):
         self.MainTimer = QTimer()
         self.timeStep = 1000
-
         self.ctc = CTC()
-        self.trackController = HWTrackControllerGUI()
-        self.trackModel = TrackModel()
         self.trainModel = TrainM()
         self.trainController = TrainC() 
 
@@ -65,7 +62,7 @@ class God():
         self.MainTimer.start(self.timeStep)
         self.MainTimer.timeout.connect(self.onTimeoutFunctions)
 
-        self.trackModel.trackControllerOccupancy.connect(self.trackController.getOccupancy)
+        trackModel.trackControllerOccupancy.connect(trackController.getOccupancy)
 
     ##on timeout emissions
     def onTimeoutFunctions(self):
@@ -73,13 +70,12 @@ class God():
 
 
 
-
-
-        
-
-
 app = QApplication([])
 
+trackController = HWTrackControllerGUI()
+trackModel = TrackModel()
+trackController.show()
+trackModel.show()
 ui = God()
 ui.setupConnections()
 # # Start the event loop.

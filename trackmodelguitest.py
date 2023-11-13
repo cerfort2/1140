@@ -339,6 +339,7 @@ class TrackModel(QObject):
     trackControllerOccupancy = pyqtSignal(list)
 
     def __init__(self):
+        super().__init__()
         self.lines = []
         authority = 0
 
@@ -516,11 +517,11 @@ class functionalUI(Ui_MainWindow):
         for line in self.trackModel.lines:
             line.designMap(self.comboBox_4.currentText())
 
-app = QApplication([])
-MainWindow = QMainWindow()
-ui = functionalUI()
-ui.setupUi(MainWindow)
-ui.connect()
-MainWindow.show()
-# # Start the event loop.
-app.exec()
+# app = QApplication([])
+# MainWindow = QMainWindow()
+# ui = functionalUI()
+# ui.setupUi(MainWindow)
+# ui.connect()
+# MainWindow.show()
+# # # Start the event loop.
+# app.exec()
