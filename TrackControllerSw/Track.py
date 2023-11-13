@@ -182,9 +182,9 @@ class Track():
 
         return self.side
 
+    def getBlocks(self):
+        return self.blocks
 
-            
- 
     def getData(self):
         #Created lists
         data = [[],[],[]]
@@ -205,6 +205,7 @@ class Track():
                 data[2].append(False) 
         #Return data
         return data
+        #trackModelData.emit(data)
     
     def getOccupancy(self):
         #Created lists

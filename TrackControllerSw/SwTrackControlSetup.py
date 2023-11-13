@@ -1,7 +1,7 @@
 import sys
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QPushButton, QComboBox, QMainWindow
-from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import QTimer, pyqtSignal, QObject
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QTableWidgetItem
@@ -13,8 +13,19 @@ import Wayside
 from Wayside import *
 import Block
 from Block import *
+import PLC
+from PLC import *
 
-class SoftwareTrackControllerGUI(QMainWindow):
+class SoftwareTrackControllerGUI(QMainWindow, QObject):
+
+    trackModelData = pyqtSignal(list)
+    trackModelAuthority = pyqtSignal(float)
+    trackModelRoute = pyqtSignal(list)
+    trackModelSpeed = pyqtSignal(float)
+
+    ctcOccupancy = pyqtSignal(list)
+    ctcFailures = pyqtSignal(list)
+
 
 
     def __init__(self):
@@ -216,6 +227,8 @@ class SoftwareTrackControllerGUI(QMainWindow):
     def mode_handler(self):
         way = self.ui.wayside.currentIndex()
         blo = self.ui.block.currentIndex()
+        create = PLC
+        create.logic(0, self.line.getBlocks())
         self.ui.switchDirection.setPixmap(self.left)
 
     def setOccupied(self):
