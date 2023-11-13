@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow, QFileDialog
 from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtCore import QObject, pyqtSignal
 import pandas as pd
 from customUI import Ui_MainWindow
 import os
@@ -22,6 +23,7 @@ kmhrTomihr = 0.621371
 
       
 class Line():
+
     def __init__(self,df):
         numOfRows = len(df.index)
         self.name = df.at[0,"Line"] + " Line"
@@ -95,6 +97,7 @@ class Line():
 
         colors = []
         labels ={}
+
         for i in range(len(self.blocks)):
             if(self.blocks[i].occupied) or (self.blocks[i].name == blockSelected):
                 labels[self.blocks[i]] = self.blocks[i].name
@@ -329,7 +332,10 @@ class Block():
         self.switchBeacon = [True,""]
 
 
-class TrackModel():
+class TrackModel(QObject):
+
+    trackControllerOccupancy = pyqtSignal(list)
+
     def __init__(self):
         self.lines = []
         authority = 0
@@ -352,6 +358,15 @@ class TrackModel():
     def getLine(self, lineName):
         return self.lines[self.getLineNames().index(lineName)]
     
+    #Emit track occupancy
+    def emitOccupancy(self):
+        for line in self.lines:
+            self.trackControllerOccupancy.emit(line.getOccupancy)
+
+    def controlModel(self,controlSignals):
+        for line in self.lines:
+            line.updateTrackStatus(controlSignals)
+
     #Train Model --> Track Model
     def updateOccupancy(self,occupancyList):
         #Clear occupancy
@@ -496,9 +511,8 @@ class functionalUI(Ui_MainWindow):
         self.updateMap()
       
     def updateMap(self):
-        blockSelected = self.comboBox_4.currentText()
         for line in self.trackModel.lines:
-            line.designMap(blockSelected)
+            line.designMap(self.comboBox_4.currentText())
 
 app = QApplication([])
 MainWindow = QMainWindow()
