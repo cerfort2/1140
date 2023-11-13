@@ -41,6 +41,8 @@ class Operations():
         strs = str(convertStr)
         serialComm.write(status.encode())
         time.sleep(1.1)
-        for i in range(len(strs)):
-            serialComm.write(strs[i].encode())
+        #for i in range(len(strs)):
+        #    serialComm.write(strs[i].encode())
+        serialComm.write((strs + '\0').encode())
+        time.sleep(1.1)
         
