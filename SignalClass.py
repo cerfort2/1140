@@ -2,6 +2,8 @@ import typing
 from PyQt6.QtCore import QObject, pyqtSignal, QTimer
 from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow, QFileDialog
 from PyQt6 import QtCore, QtGui, QtWidgets
+from UIFunctionality import *
+from trackmodelguitest import *
 
 ##ALL FUNCTIONAL OBJECTS NEED TO DO THE FOLLOWING
 
@@ -18,6 +20,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 #4. #profit
 
 class CTC(QObject):
+    
     def __init__(self) -> None:
         super().__init__()
 
@@ -47,27 +50,38 @@ class TrainC(QObject):
         super().__init__()
 
 
-class God():
+class God(QMainWindow):
     def __init__(self):
         self.MainTimer = QTimer()
         self.timeStep = 1000
 
         self.ctc = CTC()
-        self.trackController = TrackC()
-        self.trackModel = TrackM()
+        self.trackController = HWTrackControllerGUI()
+        self.trackModel = TrackModel()
         self.trainModel = TrainM()
         self.trainController = TrainC() 
 
     def setupConnections(self):
-        ###timer
+        #timer
         self.MainTimer.start(self.timeStep)
         self.MainTimer.timeout.connect(self.onTimeoutFunctions)
 
-        self.trackModel.firstSignal.connect(self.trackController.getOccupancy)
 
-    ##on timeout emissions
+        self.trackModel.trackControllerOccupancy.connect(self.trackController.getOccupancy)
+
+    #on timeout emissions
     def onTimeoutFunctions(self):
-        self.trackModel.setOccupancy()
+        print("timeout")
+        self.trackModel.emitOccupancy()
+
+    def openTrackModelGUI(self):
+        self.trackModelGUI = functionalUI()
+        self.widget = QWidget()
+
+        self.trackModelGUI.setupUi(self.widget)
+        self.trackModelGUI.connect()
+        self.widget.show()
+
 
 
 
@@ -77,9 +91,9 @@ class God():
 
 
 app = QApplication([])
-
 ui = God()
 ui.setupConnections()
+ui.openTrackModelGUI()
 # # Start the event loop.
 app.exec()
 

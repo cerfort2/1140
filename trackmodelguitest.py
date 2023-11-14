@@ -1,8 +1,8 @@
-from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow, QFileDialog
+from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow, QFileDialog, QWidget
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import QObject, pyqtSignal
 import pandas as pd
-from customUI import Ui_MainWindow
+from customUI import Ui_Form
 import os
 import random
 import networkx as nx
@@ -339,6 +339,7 @@ class TrackModel(QObject):
     trackControllerOccupancy = pyqtSignal(list)
 
     def __init__(self):
+        super().__init__()
         self.lines = []
         authority = 0
 
@@ -391,7 +392,7 @@ class TrackModel(QObject):
         return blocksAndLengths
             
 
-class functionalUI(Ui_MainWindow):
+class functionalUI(Ui_Form):
     def __init__(self) -> None:
         super().__init__()
         self.trackModel = TrackModel()
@@ -516,11 +517,17 @@ class functionalUI(Ui_MainWindow):
         for line in self.trackModel.lines:
             line.designMap(self.comboBox_4.currentText())
 
-app = QApplication([])
-MainWindow = QMainWindow()
-ui = functionalUI()
-ui.setupUi(MainWindow)
-ui.connect()
-MainWindow.show()
+
+
+
+
+# if __name__ == '__main__':
+# # app = QApplication([])
+#     MainWindow = QWidget()
+#     ui = functionalUI()
+#     ui.setupUi(MainWindow)
+#     ui.connect()
+#     MainWindow.show()
+   
 # # Start the event loop.
-app.exec()
+# app.exec()
