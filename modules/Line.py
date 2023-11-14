@@ -3,17 +3,15 @@ from Block import Block
 import pandas as pd
 
 class Line():
-    def __init__(self, file):
+    def __init__(self, name, file):
         super().__init__()
-        self.blocks = self.read_data(filePath = 'Green Line Info.xlsx')
+        self.blocks = self.read_data(file)
+        self.name = name
         
-    
     def read_data(self, filePath):
-        
         df = pd.read_excel(filePath)
         blocks_list = []
         
-
         for index, row in df.iterrows():
             station = None
             switch = False
@@ -64,15 +62,30 @@ class Line():
     def get_route(self, station):
         return
     #returns a suggested velocity for each block given the route
-    def get_velocities(self, blocK_list):
+    def get_velocities(self, block_list, departure_time, arrival_time):
+        #calculate suggested speed for each block, should be constant value except in special cases
+        time1 = datetime.strptime(departure_time, '%H:M:%S')
+        time2 = datetime.strptime(arrival_time, '%H:%M:%S')
+        elapsed_time = time2-time1
+        elapsed_time = elapsed_time.total_seconds()
+        
+        total_length = 0
+        for block in block_list:
+            total_length+=block.get_length()
+        suggested_speed = total_length / elapsed_time
+        for block in block_list:
+            if suggested_speed >= block.get_speed_limit():
+                #for this part, need to adjust suggested speed so that the train will still arrive in the designated period of time
+                #need to ensure that each speed for each block is under the speed limit, speed limit varies
+                break
         return
     #returns the authority from the yard given an input station  
-    def get_authority(self, station):
+    def get_authority(self, first_stop):
         authority_sum = 0
         for block in self.blocks:
             authority_sum += block.get_length()
 
-            if block.get_station() == station:
+            if block.get_station() == first_stop:
                 break
     
         return authority_sum
