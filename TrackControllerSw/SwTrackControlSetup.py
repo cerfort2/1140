@@ -118,7 +118,7 @@ class SoftwareTrackControllerGUI(QMainWindow, QObject):
             self.side[way].getBlock(blo).setCrossroad(False)
             self.ui.crossroadStatus.setPixmap(self.open)
         else:
-            side[way].getBlock(blo).setCrossroad(True)
+            self.side[way].getBlock(blo).setCrossroad(True)
             self.ui.crossroadStatus.setPixmap(self.closed)
         
 
@@ -227,15 +227,45 @@ class SoftwareTrackControllerGUI(QMainWindow, QObject):
     def mode_handler(self):
         way = self.ui.wayside.currentIndex()
         blo = self.ui.block.currentIndex()
-        create = PLC
-        create.logic(0, self.line.getBlocks())
-        self.ui.switchDirection.setPixmap(self.left)
+        if(self.ui.modeButton.isChecked()):
+            create = PLC(self.line.getBlocks())
+            create.logic(0)
+            if(self.side[way].getBlock(blo).getHasSwitch()):
+                #If there is a switch set data and show frame
+                if(self.side[way].getBlock(blo).getSwitch()):
+                    self.ui.switchDirection.setPixmap(self.right)
+                else:
+                    self.ui.switchDirection.setPixmap(self.left)
+                self.ui.leftBlock.setText(self.side[way].getBlock(blo).getLeft())
+                self.ui.rightBlock.setText(self.side[way].getBlock(blo).getRight())
+                self.ui.switchFrame.show()
+            else:
+                self.ui.switchFrame.hide()
+            #Crossroad Update
+            if(self.side[way].getBlock(blo).getHasCrossroad()):
+                #If there is a crossroad set image and show frame
+                if(self.side[way].getBlock(blo).getCrossroad()):
+                    self.ui.crossroadStatus.setPixmap(self.closed)
+                else:
+                    self.ui.crossroadStatus.setPixmap(self.open)
+                self.ui.crossroadFrame.show()
+            else:
+                self.ui.crossroadFrame.hide()
+            if(self.side[way].getBlock(blo).getHasSignal()):
+                #If there is a signal set color and show frame
+                if(self.side[way].getBlock(blo).getSignal()):
+                    self.ui.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
+                else:
+                    self.ui.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
+                self.ui.signalFrame.show()
+            else:
+                self.ui.signalFrame.hide()
 
     def setOccupied(self):
         self.ui.occupationData.clear()
-        #names = whole.getOccupancy()
-        #for i in range (len(names)):
-        #    self.ui.occupationData.addItem(names[i])
+        names = self.line.getOccupancy()
+        for i in range (len(names)):
+            self.ui.occupationData.addItem(names[i])
 
     def init_ui(self):
         self.ui = Ui_MainWindow()

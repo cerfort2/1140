@@ -161,24 +161,41 @@ class Track():
         #Create a list of track blocks from data given
         self.blocks:Block = []
 
-    def create(self,data):
-        for i in range (len(data[0])):
-            self.blocks.append(Block(data[0][i], data[1][i], data[2][i], data[3][i])) #hasSwitch, hasCrossroad, hasSignal, name
-            if(data[0][i]):
-                self.blocks[i].setLeft(data[4][i]) #left
-                self.blocks[i].setRight(data[5][i]) #right
+    def setRoute(self, travel):
+        self.route = travel
         
-        #Seperate Blocks into designated wayside
-        self.waysides:Wayside = [Wayside("Green1"), Wayside("Green2"), Wayside("Green3"), Wayside("Green4")]
+
+    def create(self,data):
+        #TESTING
+        for i in range (len(self.side)):
+            for j in range (len(self.side[i].blocks)):
+                self.blocks.append(self.side[i].getBlock(j))
+
         for i in range (len(self.blocks)):
-            if(i <= 31 or i == 149):
-                self.waysides[0].add(self.blocks[i])
-            elif(i <= 72 or i == 150):
-                self.waysides[1].add(self.blocks[i])
-            elif(i <= 100):
-                self.waysides[2].add(self.blocks[i])
-            else:
-                self.waysides[3].add(self.blocks[i])
+            for j in range (len(self.blocks)):
+                if(self.blocks[i].getName() < self.blocks[j].getName()):
+                    temp = self.blocks[i]
+                    self.blocks[i] = self.blocks[j]
+                    self.blocks[j] =temp
+
+
+        # for i in range (len(data[0])):
+        #     self.blocks.append(Block(data[0][i], data[1][i], data[2][i], data[3][i])) #hasSwitch, hasCrossroad, hasSignal, name
+        #     if(data[0][i]):
+        #         self.blocks[i].setLeft(data[4][i]) #left
+        #         self.blocks[i].setRight(data[5][i]) #right
+        
+        # #Seperate Blocks into designated wayside
+        # self.waysides:Wayside = [Wayside("Green1"), Wayside("Green2"), Wayside("Green3"), Wayside("Green4")]
+        # for i in range (len(self.blocks)):
+        #     if(i <= 31 or i == 149):
+        #         self.waysides[0].add(self.blocks[i])
+        #     elif(i <= 72 or i == 150):
+        #         self.waysides[1].add(self.blocks[i])
+        #     elif(i <= 100):
+        #         self.waysides[2].add(self.blocks[i])
+        #     else:
+        #         self.waysides[3].add(self.blocks[i])
 
         return self.side
 
@@ -219,5 +236,22 @@ class Track():
 
     def setOccupancy(self, data:bool = []):
         #Insert Occupancy
+        prev:bool = []
         for i in range (len(self.blocks)):
-            self.blocks[i].setOccupancy(data[i])
+            prev.append(self.blocks[i].getOccupancy())
+        if(prev != data):
+            for i in range (len(self.blocks)):
+                #Create a list of block names
+                self.blocks[i].setOccupancy(data[i])
+                #If occupied and name is first in route list
+                if(self.blocks[i].getOccupancy() and self.blocks[i].getName() == self.route[0][i]):
+                    #remove first in route list
+                    self.route[0].remove(0)
+                    self.route[1].remove(0)
+                    j=0
+                    #count blocks until stop
+                    while(not self.route[1][j]):
+                        j = j + 1
+        return j
+
+        
