@@ -12,6 +12,7 @@ operate = Operations() #Class to perform operations on the breadboard
 
 class HWTrackControllerGUI(QMainWindow, QObject):
     
+    #Signals sent out
     trackModelSuggestedSpeedHW = pyqtSignal(int)
     CTCOccupancyHW = pyqtSignal(list)
     trackModelSendRouteHW = pyqtSignal(list)
@@ -19,17 +20,20 @@ class HWTrackControllerGUI(QMainWindow, QObject):
     trackModelTrackDataHW = pyqtSignal(list)
     trackModelAuthorityHW = pyqtSignal(list)
 
+    #Global Variables
     greenLine = GreenLine()
     pureOccupancy = []
     yardSwitchAuthority = int
     route = []
     suggestedSpeed = int
     authority = int
+    switchStates = []
 
     greenLine.Waysides[0].getTrack(12).setOccupancy(True) 
     greenLine.Waysides[0].getTrack(13).setOccupancy(True) 
     greenLine.Waysides[0].getTrack(14).setOccupancy(True)
     greenLine.Waysides[0].getTrack(15).setOccupancy(True) 
+    greenLine.Waysides[0].getTrack(32).setOccupancy(True)
 
     greenLine.Waysides[1].getTrack(0).setOccupancy(True) 
     greenLine.Waysides[1].getTrack(1).setOccupancy(True) 
@@ -43,9 +47,20 @@ class HWTrackControllerGUI(QMainWindow, QObject):
     greenLine.Waysides[3].getTrack(47).setOccupancy(True)
     greenLine.Waysides[3].getTrack(45).setOccupancy(True)
 
-    for i in range(4):
-        for j in range(greenLine.Waysides[i].amountOfTracks()):
-            pureOccupancy.append(greenLine.Waysides[i].getTrack(j).getOccupancy())
+    for i in range(32): #A1-G32
+        pureOccupancy.append(greenLine.Waysides[0].getTrack(i).getOccupancy())
+    #All for Wayside 2
+    for i in range(41): #H33-L73
+        pureOccupancy.append(greenLine.Waysides[1].getTrack(i).getOccupancy())
+    #All for Wayside 3
+    for i in range(28): #M74-R101
+        pureOccupancy.append(greenLine.Waysides[2].getTrack(i).getOccupancy())
+    #All for Wayside 4
+    for i in range(48): #S102-Y149
+        pureOccupancy.append(greenLine.Waysides[3].getTrack(i).getOccupancy())
+    pureOccupancy.append(greenLine.Waysides[0].getTrack(32).getOccupancy()) #Z150
+    pureOccupancy.append(greenLine.Waysides[1].getTrack(41).getOccupancy()) #Z151/YARD
+
 
     #Testing for functionality
     greenLine.Waysides[0].getTrack(32).setLight(False) #Z150 Red
@@ -141,6 +156,8 @@ class HWTrackControllerGUI(QMainWindow, QObject):
         #All for Wayside 4
         for i in range(48): #S102-Y149
             self.greenLine.Waysides[3].getTrack(i).setOccupancy(occupancy[i+101])
+        switchStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
+        self.editAuthority() #Edits authority each time
     def getRoute(self, route): #Route from the CTC
         self.route = route
     def getSpeed(self, speed): #Speed from CTC

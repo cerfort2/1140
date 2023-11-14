@@ -42,4 +42,7 @@ class Operations():
         serialComm.write(status.encode())
         time.sleep(1.1)
         serialComm.write((strs + '\0').encode())
+        time.sleep(2)
+        newStates = serialComm.readline().decode()
+        print(newStates)
         

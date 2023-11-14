@@ -28,6 +28,11 @@ class GreenLine():
                 Wayside[2].createTrack(switch[i], crossroad[i], light[i], trackName[i], left[i], right[i])
             if(i > 102):
                 Wayside[3].createTrack(switch[i], crossroad[i], light[i], trackName[i], left[i], right[i])
+    def totalTracks(self):
+        amount = 0
+        for i in range(len(Wayside)):
+            amount = amount + Wayside[i].amountOfTracks()
+        return amount
             
     #Configuration of all tracks in Green Line Waysides - THIS IS FOR TESTING PERSONALLY ONLY
     #switch:bool, crossroad:bool, light:bool, trackName:str, left = "", right = ""
@@ -44,7 +49,7 @@ class GreenLine():
     Waysides[0].createTrack(False, False, False, "C10") #C10 [9]
     Waysides[0].createTrack(False, False, False, "C11") #C11 [10]
     Waysides[0].createTrack(False, False, False, "C12") #C12 [11]
-    Waysides[0].createTrack(True, False, True, "D13", "A1", "C12") #D13 [12]
+    Waysides[0].createTrack(True, False, True, "D13", "C12", "A1") #D13 [12]
     Waysides[0].createTrack(False, False, False, "D14") #D14 [13]
     Waysides[0].createTrack(False, False, False, "D15") #D15 [14]
     Waysides[0].createTrack(False, False, False, "D16") #D16 [15]
@@ -60,7 +65,7 @@ class GreenLine():
     Waysides[0].createTrack(False, False, False, "F26") #F26 [25]
     Waysides[0].createTrack(False, False, False, "F27") #F27 [26]
     Waysides[0].createTrack(False, False, False, "F28") #F28 [27]
-    Waysides[0].createTrack(True, False, True, "G29", "Z150", "G30") #G29 [28]
+    Waysides[0].createTrack(True, False, True, "G29", "G30", "Z150") #G29 [28]
     Waysides[0].createTrack(False, False, False, "G30") #G30 [29]
     Waysides[0].createTrack(False, False, False, "G31") #G31 [30]
     Waysides[0].createTrack(False, False, False, "G32") #G32 [31]
@@ -112,7 +117,7 @@ class GreenLine():
     Waysides[2].createTrack(False, False, False, "M74") #M74 [0]
     Waysides[2].createTrack(False, False, False, "M75") #M75 [1]
     Waysides[2].createTrack(False, False, True, "M76") #M76 [2]
-    Waysides[2].createTrack(True, False, True, "N77", "M76", "R101") #N77 [3]
+    Waysides[2].createTrack(True, False, True, "N77", "R101", "M76") #N77 [3]
     Waysides[2].createTrack(False, False, False, "N78") #N78 [4]
     Waysides[2].createTrack(False, False, False, "N79") #N79 [5]
     Waysides[2].createTrack(False, False, False, "N80") #N80 [6]
@@ -120,7 +125,7 @@ class GreenLine():
     Waysides[2].createTrack(False, False, False, "N82") #N82 [8]
     Waysides[2].createTrack(False, False, False, "N83") #N83 [9]
     Waysides[2].createTrack(False, False, False, "N84") #N84 [10]
-    Waysides[2].createTrack(True, False, True, "N85", "Q100", "O86") #N85 [11]
+    Waysides[2].createTrack(True, False, True, "N85", "O86", "Q100") #N85 [11]
     Waysides[2].createTrack(False, False, False, "O86") #O86 [12]
     Waysides[2].createTrack(False, False, False, "O87") #O87 [13]
     Waysides[2].createTrack(False, False, False, "O88") #O88 [14]
