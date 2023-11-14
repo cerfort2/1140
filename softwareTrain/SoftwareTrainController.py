@@ -1,9 +1,8 @@
 class SoftwareTrainController():
     
     def __init__(self):
-        self.totalTime=0
-        self.numCycles=0
         self.manualmode=False
+        self.simulationSpeed=1
         self.ctcSpeed=10                #speed to go in automatic mode when in the middle of a route in m/s
         self.manualcommandedspeed=0      #the value of the slide bar. commandedspeed=manualcommandedspeed if manualMode=True 
         self.nextstop="A Stop"
@@ -19,7 +18,6 @@ class SoftwareTrainController():
         self.eBrake=False        #false=not pressed
         self.tunnel=False
         self.stationOnLeft='b' #where to let the passengers out. if stationOnLeft is true, that means the left doors open when the station is reached
-        self.serviceBrakeSlide=0
         self.ek=0
         self.ekprev=0
         self.uk=0
@@ -32,7 +30,7 @@ class SoftwareTrainController():
         self.interval=.05
         self.dwelling=False
         self.dwellTime=60
-        self.serviceBrakeFlag=False
+        self.serviceBrake=False
         self.brakeAuthority=0
         self.beaconInfo=''
 
@@ -63,6 +61,17 @@ class SoftwareTrainController():
         self.nextstop=stop
         self.setAnnouncement('Next stop: ' + self.nextstop)
         
+    def computeServiceBrake(self):
+        if not self.manualmode and self.currentSpeed>0 and self.authority > 0:
+            
+            self.brakedistance = self.currentSpeed**2/(2*1.2)
+
+            if self.brakedistance>=self.authority:
+                self.serviceBrake=True
+                print('engaged')
+            else:
+                self.serviceBrake=False
+
     def setAnnouncement(self,a):
         self.announcement=a
 
@@ -71,6 +80,12 @@ class SoftwareTrainController():
 
     def setMode(self,b):
         self.manualmode=b
+
+    def getTemperature(self):
+        return self.temperature
+
+    def setSimulationSpeed(self, s):
+        self.simulationSpeed=s
 
     def getAutoCommandedSpeed(self):
         return self.ctcSpeed
@@ -106,7 +121,7 @@ class SoftwareTrainController():
         self.stationOnLeft=s
 
     def getServiceBrake(self):
-        return self.serviceBrakeSlide
+        return self.serviceBrake
 
     def getPower(self):
         return self.power
@@ -126,7 +141,7 @@ class SoftwareTrainController():
         if self.power>120000:
             self.power=120000
 
-        if self.brakeFailure or self.signalFailure or self.engineFailure or self.eBrake or self.power < 0 or self.serviceBrakeFlag:
+        if self.brakeFailure or self.signalFailure or self.engineFailure or self.eBrake or self.power < 0 or self.serviceBrake==True:
             self.power=0
         
             
@@ -160,32 +175,6 @@ class SoftwareTrainController():
             return True
         else:
             return self.rightDoor
-    
-    def computeServiceBrake(self):
-        self.totalTime=self.numCycles*self.interval
-
-        if not self.manualmode and self.currentSpeed>0 and self.authority > 0:
-            self.timeToReach=self.authority/self.currentSpeed
-            self.timeToStop=self.currentSpeed/1.2
-            self.timeToApplyDecel=self.timeToReach-self.timeToStop
-
-            if self.totalTime>=self.timeToApplyDecel:
-                self.serviceBrakeSlide=100
-            else:
-                self.serviceBrakeSlide=0
-
-
-            # if not self.serviceBrakeFlag:
-            #     self.serviceBrakeFlag = self.authority/self.currentSpeed >= self.authority/self.currentSpeed
-            #     self.brakeSpeed=self.currentSpeed
-            #     self.brakeAuthority=self.authority
-            # if self.serviceBrakeFlag:
-            #     print('engaged')
-            #     self.serviceBrakeSlide=100 - (100 * (1 - max((self.currentSpeed/self.brakeAuthority), (self.authority/self.brakeAuthority))))
-        elif self.currentSpeed < 0:
-            self.currentSpeed = 0
-            self.brakeAuthority = 0
-            self.serviceBrakeFlag = False
 
     def computeDwellTime(self):
         if self.dwelling and not self.manualmode:
@@ -196,26 +185,22 @@ class SoftwareTrainController():
             else:
                 self.dwelling=False
                 self.dwellTime=60        
-    def computeAuthority(self):
-        if self.authority>0:
-            self.authority-=self.currentSpeed*self.interval
-        else:
-            if not self.manualmode:
-                self.dwelling=True
-    def computeAutoSpeed(self):
-        if self.ctcSpeed>=self.speedLimit:
-            self.ctcSpeed=self.speedLimit
-
-                #might need to correct
-        #slowing the train down as authority decreases
+    # def computeAuthority(self):
+    #     if self.authority>0:
+    #         self.authority-=self.currentSpeed*self.interval
+    #     else:
+    #         if not self.manualmode:
+    #             self.dwelling=True
 
 
     def computeManualSpeed(self) ->int:
-        if self.serviceBrakeSlide>0:
+        if self.serviceBrake==True:
             self.manualcommandedspeed=self.currentSpeed #make sure this is good, assume connor sends this back
 
         if not self.manualmode:
-            self.manualcommandedspeed=self.ctcSpeed*2.2369362921
+            if self.ctcSpeed>self.speedLimit:
+                self.ctcSpeed=self.speedLimit
+                self.manualcommandedspeed=self.ctcSpeed*2.2369362921
         else:
             if self.manualcommandedspeed>=self.speedLimit:
                 self.manualcommandedspeed=self.speedLimit        #convert to m/s
@@ -223,8 +208,11 @@ class SoftwareTrainController():
     def setManualCommandedSpeed(self,s):
         self.manualcommandedspeed=s
 
-    def setServiceBrakeSlide(self,s):
-        self.serviceBrakeSlide=s
+    def serviceBrakePressed(self):
+        if self.serviceBrake==True:
+            self.serviceBrake=False
+        else:
+            self.serviceBrake=True
 
     def setTemperature(self,t):
         self.temperature=t
