@@ -236,22 +236,7 @@ class Track():
 
     def setOccupancy(self, data:bool = []):
         #Insert Occupancy
-        prev:bool = []
-        for i in range (len(self.blocks)):
-            prev.append(self.blocks[i].getOccupancy())
-        if(prev != data):
-            for i in range (len(self.blocks)):
-                #Create a list of block names
-                self.blocks[i].setOccupancy(data[i])
-                #If occupied and name is first in route list
-                if(self.blocks[i].getOccupancy() and self.blocks[i].getName() == self.route[0][i]):
-                    #remove first in route list
-                    self.route[0].remove(0)
-                    self.route[1].remove(0)
-                    j=0
-                    #count blocks until stop
-                    while(not self.route[1][j]):
-                        j = j + 1
-        return j
+        for i in range (len(data)):
+            self.blocks[i].setOccupancy(data[i])
 
         
