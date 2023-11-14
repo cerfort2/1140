@@ -21,10 +21,10 @@ class SoftwareTrackControllerGUI(QMainWindow, QObject):
     trackModelData = pyqtSignal(list)
     trackModelAuthority = pyqtSignal(float)
     trackModelRoute = pyqtSignal(list)
-   # trackModelSpeed = pyqtSignal(float)
+    trackModelSpeed = pyqtSignal(float)
 
     ctcOccupancy = pyqtSignal(list)
-    #ctcFailures = pyqtSignal(list)
+    ctcFailures = pyqtSignal(list)
 
 
 
