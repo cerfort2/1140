@@ -26,16 +26,19 @@ class Ui_Form(object):
         self.comboBox_5.setGeometry(QtCore.QRect(170, 70, 101, 22))
         self.comboBox_5.setObjectName("comboBox_5") #Light Selector
         self.comboBox_5.addItem("")
+        self.comboBox_5.setDisabled(True)
 
         self.comboBox_6 = QtWidgets.QComboBox(parent=self.tab_2)
         self.comboBox_6.setGeometry(QtCore.QRect(330, 70, 121, 22))
         self.comboBox_6.setObjectName("comboBox_6") #Crossroad Selector
         self.comboBox_6.addItem("")
+        self.comboBox_6.setDisabled(True)
 
         self.comboBox_7 = QtWidgets.QComboBox(parent=self.tab_2)
         self.comboBox_7.setGeometry(QtCore.QRect(500, 70, 101, 22))
         self.comboBox_7.setObjectName("comboBox_7") #Switch Selector
         self.comboBox_7.addItem("")
+        self.comboBox_7.setDisabled(True)
 
         self.listWidget_7 = QtWidgets.QListWidget(parent=self.tab_2)
         self.listWidget_7.setGeometry(QtCore.QRect(650, 50, 81, 131))
@@ -59,6 +62,7 @@ class Ui_Form(object):
         self.comboBox.setGeometry(QtCore.QRect(10, 110, 121, 22))
         self.comboBox.setObjectName("comboBox") #Wayside Selector
         self.comboBox.addItem("")
+        self.comboBox.setDisabled(True)
 
 
 
@@ -90,29 +94,35 @@ class Ui_Form(object):
         brush.setStyle(QtCore.Qt.BrushStyle.NoBrush)
         item.setForeground(brush)
         self.listWidget_2.addItem(item)
+        self.listWidget_2.setDisabled(True)
 
         self.comboBox_2 = QtWidgets.QComboBox(parent=self.tab)
         self.comboBox_2.setGeometry(QtCore.QRect(160, 60, 101, 22))
         self.comboBox_2.setObjectName("comboBox_2") #Select Light
         self.comboBox_2.addItem("")
+        self.comboBox_2.setDisabled(True)
 
         self.pushButton = QtWidgets.QPushButton(parent=self.tab)
         self.pushButton.setGeometry(QtCore.QRect(320, 120, 101, 51))
         self.pushButton.setObjectName("pushButton") #Toggle Crossroad
+        self.pushButton.setDisabled(True)
 
         self.comboBox_3 = QtWidgets.QComboBox(parent=self.tab)
         self.comboBox_3.setGeometry(QtCore.QRect(310, 60, 121, 22))
         self.comboBox_3.setObjectName("comboBox_3")#Select Crossroad
         self.comboBox_3.addItem("")
+        self.comboBox_3.setDisabled(True)
 
         self.pushButton_2 = QtWidgets.QPushButton(parent=self.tab)
         self.pushButton_2.setGeometry(QtCore.QRect(500, 120, 101, 51))
         self.pushButton_2.setObjectName("pushButton_2") #Toggle Switch
+        self.pushButton_2.setDisabled(True)
 
         self.comboBox_4 = QtWidgets.QComboBox(parent=self.tab)
         self.comboBox_4.setGeometry(QtCore.QRect(500, 60, 101, 22))
         self.comboBox_4.setObjectName("comboBox_4") #Select Switch
         self.comboBox_4.addItem("")
+        self.comboBox_4.setDisabled(True)
 
         self.listWidget_5 = QtWidgets.QListWidget(parent=self.tab)
         self.listWidget_5.setGeometry(QtCore.QRect(630, 50, 81, 131))
@@ -136,6 +146,7 @@ class Ui_Form(object):
         self.comboBox_12.setGeometry(QtCore.QRect(10, 120, 121, 22))
         self.comboBox_12.setObjectName("comboBox_12") #Wayside Selector
         self.comboBox_12.addItem("")
+        self.comboBox_12.setDisabled(True)
 
 
 
@@ -155,25 +166,30 @@ class Ui_Form(object):
         self.comboBox_8.setGeometry(QtCore.QRect(310, 110, 101, 22))
         self.comboBox_8.setObjectName("comboBox_8") #Track selections
         self.comboBox_8.addItem("")
+        self.comboBox_8.setDisabled(True)
 
         self.pushButton_4 = QtWidgets.QPushButton(parent=self.tab_3)
         self.pushButton_4.setGeometry(QtCore.QRect(210, 160, 111, 51))
         self.pushButton_4.setObjectName("pushButton_4") #Toggle Occupancy
+        self.pushButton_4.setDisabled(True)
 
         self.comboBox_9 = QtWidgets.QComboBox(parent=self.tab_3)
         self.comboBox_9.setGeometry(QtCore.QRect(170, 10, 101, 22))
         self.comboBox_9.setObjectName("comboBox_9") #Select Light
         self.comboBox_9.addItem("")
+        self.comboBox_9.setDisabled(True)
 
         self.comboBox_10 = QtWidgets.QComboBox(parent=self.tab_3)
         self.comboBox_10.setGeometry(QtCore.QRect(310, 10, 121, 22))
         self.comboBox_10.setObjectName("comboBox_10") #Select Crossroad
         self.comboBox_10.addItem("")
+        self.comboBox_10.setDisabled(True)
 
         self.comboBox_11 = QtWidgets.QComboBox(parent=self.tab_3)
         self.comboBox_11.setGeometry(QtCore.QRect(470, 10, 101, 22))
         self.comboBox_11.setObjectName("comboBox_11") #Select Switch
         self.comboBox_11.addItem("")
+        self.comboBox_11.setDisabled(True)
 
         self.listWidget_4 = QtWidgets.QListWidget(parent=self.tab_3)
         self.listWidget_4.setGeometry(QtCore.QRect(170, 50, 91, 41))
@@ -199,19 +215,23 @@ class Ui_Form(object):
         self.listWidget_10.addItem(item)
         item = QtWidgets.QListWidgetItem()
         self.listWidget_10.addItem(item)
+        self.listWidget_10.setDisabled(True)
 
         self.listWidget_11 = QtWidgets.QListWidget(parent=self.tab_3)
         self.listWidget_11.setGeometry(QtCore.QRect(470, 50, 91, 41))
         self.listWidget_11.setObjectName("listWidget_11") #Select Switch to change to
+        self.listWidget_11.setDisabled(True)
 
         self.pushButton_5 = QtWidgets.QPushButton(parent=self.tab_3)
         self.pushButton_5.setGeometry(QtCore.QRect(400, 160, 111, 51))
         self.pushButton_5.setObjectName("pushButton_5")#Toggle Track Failure
+        self.pushButton_5.setDisabled(True)
 
         self.comboBox_13 = QtWidgets.QComboBox(parent=self.tab_3)
         self.comboBox_13.setGeometry(QtCore.QRect(10, 110, 121, 22))
         self.comboBox_13.setObjectName("comboBox_13") #Wayside Selector
         self.comboBox_13.addItem("")
+        self.comboBox_13.setDisabled(True)
 
 
         #Dont Change below

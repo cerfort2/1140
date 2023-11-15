@@ -20,14 +20,16 @@ class GreenLine():
             right = tracks[5][i]
             
         for i in range(len(tracks[0])):
-            if(i <= 32):
+            if(i <= 31): #Creates A1-G32
                 Wayside[0].createTrack(switch[i], crossroad[i], light[i], trackName[i], left[i], right[i])
-            if(32 < i <= 74):
+            if(31 < i <= 72): #Creates H33-L73
                 Wayside[1].createTrack(switch[i], crossroad[i], light[i], trackName[i], left[i], right[i])
-            if(74 < i <= 102):
+            if(72 < i <= 100): #Creates M74-R101
                 Wayside[2].createTrack(switch[i], crossroad[i], light[i], trackName[i], left[i], right[i])
-            if(i > 102):
+            if(100 < i <= 148): #Creates S102-Y149
                 Wayside[3].createTrack(switch[i], crossroad[i], light[i], trackName[i], left[i], right[i])
+        Wayside[0].createTrack(switch[149], crossroad[149], light[149], trackName[149], left[149], right[149])
+        Wayside[1].createTrack(switch[150], crossroad[150], light[150], trackName[150], left[150], right[150])
     def totalTracks(self):
         amount = 0
         for i in range(len(Wayside)):
