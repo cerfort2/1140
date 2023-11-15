@@ -1,17 +1,19 @@
 import Block
 from Block import *
+from PyQt6 import QtCore
+from PyQt6.QtCore import pyqtSignal
 class Authority():
-    def __init__(travel, blo, first):
+    def __init__(self, travel, blo, first):
         self.route = travel
         self.blocks = blo
         trackModelAuthority.emit(first)
 
     
-    def getRoute():
+    def getRoute(self):
         #return route
         trackModelRoute.emit(route)
 
-    def calculate():
+    def calculate(self):
         for i in range(len(self.blocks)):
             if(self.blocks[i].getOccupancy()):
                 if(self.route[0][0] == self.blocks[i].getName()):

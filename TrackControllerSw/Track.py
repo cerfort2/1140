@@ -2,6 +2,8 @@ import Wayside
 from Wayside import *
 import Block
 from Block import *
+from PyQt6 import QtCore
+from PyQt6.QtCore import pyqtSignal
 class Track():
 
     def __init__(self):
