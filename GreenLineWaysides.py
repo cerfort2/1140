@@ -1,11 +1,11 @@
 from WaysideClass import Wayside
-from TrackClass import Track
+from Authority import AuthorityClass
 
 class GreenLine():
 
     Waysides = [Wayside(), Wayside(), Wayside(), Wayside()] #All The waysides going in order of 1,2,3,4 for Green Line
-
-    def setTracks(self, tracks):
+    trainAuthority = None
+    def setTracks(self, tracks): #Creates the track on start up of program from Track Model
         switch = []
         crossroad = []
         light =[]
@@ -36,12 +36,30 @@ class GreenLine():
                 self.Waysides[3].createTrack(switch[i], crossroad[i], light[i], trackName[i], left[i], right[i])
         self.Waysides[0].createTrack(switch[149], crossroad[149], light[149], trackName[149], left[149], right[149])
         self.Waysides[1].createTrack(switch[150], crossroad[150], light[150], trackName[150], left[150], right[150])
-    def totalTracks(self):
+        self.trainAuthority = AuthorityClass(self.arrayOfTracks)
+    def totalTracks(self): #Gets total amount of tracks
         amount = 0
         for i in range(len(Wayside)):
             amount = amount + Wayside[i].amountOfTracks()
         return amount
-            
+    def arrayOfTracks(self): #Creates a array of tracks for authority logic
+        trackList = []
+        for i in range(32): #A1-G32
+            trackList.append(self.Waysides[0].getTrack(i))
+        #All for Wayside 2
+        for i in range(41): #H33-L73
+            trackList.append(self.Waysides[1].getTrack(i))
+        #All for Wayside 3
+        for i in range(28): #M74-R101
+            trackList.append(self.Waysides[2].getTrack(i))
+        #All for Wayside 4
+        for i in range(48): #S102-Y149
+            trackList.append(self.Waysides[3].getTrack(i))
+        trackList.append(self.Waysides[0].getTrack(32)) #Z150
+        trackList.append(self.Waysides[1].getTrack(41)) #Z151/YARD
+        return trackList
+    
+    
     #Configuration of all tracks in Green Line Waysides - THIS IS FOR TESTING PERSONALLY ONLY
     #switch:bool, crossroad:bool, light:bool, trackName:str, left = "", right = ""
     #Wayside 1

@@ -13,12 +13,12 @@ operate = Operations() #Class to perform operations on the breadboard
 class HWTrackControllerGUI(Ui_Form, QObject):
     
     #Signals sent out
-    trackModelSuggestedSpeedHW = pyqtSignal(int)
     CTCOccupancyHW = pyqtSignal(list)
-    trackModelSendRouteHW = pyqtSignal(list)
     CTCTrackFailuresHW = pyqtSignal(list)
+    trackModelSendRouteHW = pyqtSignal(list)
+    trackModelSuggestedSpeedHW = pyqtSignal(list)
     trackModelTrackDataHW = pyqtSignal(list)
-    trackModelAuthorityHW = pyqtSignal(list)
+    trackModelAuthorityHW = pyqtSignal(int)
 
     #Global Variables
     greenLine = GreenLine()
@@ -72,7 +72,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     pureOccupancy.append(greenLine.Waysides[1].getTrack(41).getOccupancy()) #Z151/YARD
 
 
-
     def connectFunctions(self):
         #Buttons/Setup for Automatic Mode
         self.listWidget_3.itemClicked.connect(self.checkListAutomatic)
@@ -122,8 +121,9 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         #Buttons/Setup for Whole UI
         self.pushButton_3.clicked.connect(self.openArduinoFile) #Opens PLC File
         
-        #Testing for PLC Code
+        #Testing for PLC Code to run or not
         self.comboBox.currentIndexChanged.connect(lambda: self.getOccupancy(self.pureOccupancy))
+        self.comboBox_12.currentIndexChanged.connect(lambda: self.getOccupancy(self.pureOccupancy))
 
 
     def __init__(self): #Initalizer
@@ -133,7 +133,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
 
     #Time dependent Functions
     def timerFunctions(self):
-        self.sendData()
+        self.sendData
         self.sendOccupancy
         self.sendRoute
         self.sendFailures
@@ -157,11 +157,16 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         #All for Wayside 4
         for i in range(48): #S102-Y149
             self.greenLine.Waysides[3].getTrack(i).setOccupancy(occupancy[i+101])
-        newStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
-        self.setNewDataGreenLine(newStates)
-        #self.editAuthority() #Edits authority each time
-        self.setListsOccupancyAutomatic
-        self.setListsOccupancyManual
+        if(self.tabWidget.currentIndex() == 0):
+            newStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
+            self.setNewDataGreenLine(newStates)
+            self.editAuthority() #Edits authority each time
+            self.setListsOccupancyAutomatic
+            self.setListsOccupancyManual
+        elif(self.tabWidget.currentIndex() == 1):
+            self.setListsOccupancyAutomatic
+            self.setListsOccupancyManual
+            self.editAuthority() #Edits authority each time
     def getRoute(self, route): #Route from the CTC
         self.route = route
     def getSpeed(self, speed): #Speed from CTC
@@ -213,7 +218,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
 
     #Authority functions
     def editAuthority(self):
-        return
+        self.
     def sendAuthority(self):
         self.trackModelAuthorityHW.emit(self.authority)
 
