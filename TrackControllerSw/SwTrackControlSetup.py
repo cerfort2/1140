@@ -5,7 +5,7 @@ from PyQt6.QtCore import QTimer, pyqtSignal, QObject
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QTableWidgetItem
-from TrackController import Ui_MainWindow
+from TrackController import Ui_Form
 
 import Track
 from Track import *
@@ -268,7 +268,7 @@ class SoftwareTrackControllerGUI(QMainWindow, QObject):
             self.ui.occupationData.addItem(names[i])
 
     def init_ui(self):
-        self.ui = Ui_MainWindow()
+        self.ui = Ui_Form()
         self.ui.setupUi(self)
 
         
