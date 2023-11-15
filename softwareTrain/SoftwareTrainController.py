@@ -1,5 +1,49 @@
+from PyQt6.QtCore import QObject, pyqtSignal, QTimer
 class SoftwareTrainController():
     
+    trainmodel_SW_servicebrake=pyqtSignal(bool)
+    trainmodel_SW_ebrake=pyqtSignal(bool)
+    trainmodel_SW_rightDoor=pyqtSignal(bool)
+    trainmodel_SW_leftDoor=pyqtSignal(bool)
+    trainmodel_SW_interiorLight=pyqtSignal(bool)
+    trainmodel_SW_exteriorLight=pyqtSignal(bool)
+    trainmodel_SW_announcment=pyqtSignal(str)
+    trainmodel_SW_temperature=pyqtSignal(str)
+    trainmodel_SW_power=pyqtSignal(str)
+
+    def timeout(self):
+        self.swtrain.update_time()
+
+    def getServiceBrake(self):
+        self.trainmodel_SW_servicebrake.emit(self.swtrain.swtrain.getServiceBrake())
+
+    def getEbrake(self):
+        self.trainmodel_SW_ebrake.emit(self.swtrain.swtrain.getEbrake())
+
+    def getExteriorLights(self):
+        self.trainmodel_SW_exteriorLight.emit(self.swtrain.swtrain.getExteriorLights())
+
+    def getInteriorLights(self):
+        self.trainmodel_SW_interiorLight.emit(self.swtrain.swtrain.getIntLights())
+
+    def getRightDoor(self):
+        self.trainmodel_SW_rightDoor.emit(self.swtrain.swtrain.getRightDoor())
+
+    def getLeftDoor(self):
+        self.trainmodel_SW_leftDoor.emit(self.swtrain.swtrain.getLeftDoor())
+
+    def getPower(self):
+        self.trainmodel_SW_power.emit(self.swtrain.swtrain.getPower())
+
+    def getAnnouncement(self):
+        self.trainmodel_SW_announcment.emit(self.swtrain.swtrain.getAnnouncement())
+
+    def getTemperature(self):
+        self.trainmodel_SW_temperature.emit(self.swtrain.swtrain.getTemperature())
+
+
+
+
     def __init__(self):
         self.manualmode=False
         self.simulationSpeed=1
