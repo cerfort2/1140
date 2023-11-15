@@ -161,7 +161,7 @@ class CTC(QWidget):
         #updating current system time based on speed factor
         self.cur_sys_time = self.cur_sys_time.addSecs(self.speed_factor)
         # Update the QLabel with the new timeW
-        self.system_time_label.setText(self.cur_sys_time.toString("HH:mm:ss"))
+        self.ui.system_time.setText(self.cur_sys_time.toString("HH:mm:ss"))
 
         # Emit signals if other classes need to be notified of the time change
         # self.time_updated.emit(self.cur_sys_time)
@@ -282,7 +282,7 @@ class CTC(QWidget):
 
         if dispatched_line == "Green Line":
             route = self.green_line.get_route(station_list)
-            speeds = self.green_line.get_velocities(route)
+            speeds = self.green_line.get_velocities(route, departure_time, arrival_time)
             if len(station_list) == 1:
                 next_stop = station_list[0]
             else:

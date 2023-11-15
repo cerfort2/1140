@@ -76,7 +76,7 @@ class Line():
             else:
                 stop_or_dest.append(False)
         return route_blocks, stop_or_dest
-    
+    """
     def travel_time_objective(speeds, block_lengths, total_time):
         # Objective function to minimize: sum of squared differences in speeds + penalty for total time deviation
         time_diffs = np.diff(speeds) ** 2
@@ -104,8 +104,7 @@ class Line():
         initial_speeds = block_speed_limits.mean() * np.ones(len(block_list))
         
         # Define the constraints (speed limits and total travel time)
-        constraints = [{'type': 'ineq', 'fun': speed_limit_constraint, 'args': (block_speed_limits,)}]
-        
+        #constraints = [{'type': 'ineq', 'fun': speed_limit_constraint, 'args': (block_speed_limits,)}]
         # Run the optimization
         result = minimize(
             travel_time_objective,
@@ -121,6 +120,7 @@ class Line():
         else:
             # Handle the case where optimization failed
             raise ValueError("Optimization failed to find a feasible solution")
+"""
     #returns a suggested velocity for each block given the route
     def get_velocities(self, block_list, departure_time, arrival_time, num_stops):
         #calculate suggested speed for each block, should be constant value except in special cases
@@ -130,11 +130,12 @@ class Line():
         elapsed_time = (time2-time1).total_seconds()
         
         total_length = 0
-        
+        suggested_speeds = []
+        for block in block_list:
+            suggested_speeds.append(5)
 
 
-
-        return
+        return suggested_speeds
     #returns the authority from the yard given an input station  
     def get_authority(self, first_stop):
         authority_sum = 0
