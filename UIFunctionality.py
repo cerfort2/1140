@@ -104,12 +104,7 @@ class HWTrackControllerGUI(QMainWindow, QObject):
         self.ui.comboBox_12.currentIndexChanged.connect(self.setListsOccupancyManual)
         self.ui.comboBox_12.currentIndexChanged.connect(self.setListsFailureManual)
 
-        #Stuff to be changed
-        """
-        #This way of running PLC code is wrong will be changed a lot
-        self.ui.listWidget_5.model().rowsInserted.connect(self.plcCode)
-        self.ui.listWidget_5.model().rowsRemoved.connect(self.plcCode)
-        """
+
 
         #Buttons/Setup for Test Bench
         self.ui.listWidget_9.itemClicked.connect(self.checkListTest)
@@ -158,6 +153,9 @@ class HWTrackControllerGUI(QMainWindow, QObject):
             self.greenLine.Waysides[3].getTrack(i).setOccupancy(occupancy[i+101])
         switchStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
         self.editAuthority() #Edits authority each time
+        self.setListsOccupancyAutomatic
+        self.setListsOccupancyManual
+
     def getRoute(self, route): #Route from the CTC
         self.route = route
     def getSpeed(self, speed): #Speed from CTC

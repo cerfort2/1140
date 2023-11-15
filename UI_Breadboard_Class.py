@@ -44,7 +44,6 @@ class Operations():
         serialComm.write((strs + '\0').encode())
         time.sleep(.2)
         newStates = serialComm.readline().decode()
-        print(newStates)
-        # bool_array = [c == '1' for c in newStates]
-        # return bool_array
+        bool_array = [c == '1' for c in newStates]
+        
         
