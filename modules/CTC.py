@@ -47,9 +47,12 @@ class CTC(QWidget):
 
         self.line_edits = []
         
+        self.block_occupancies = []
+        self.ticket_sales = 0
         self.throughput = 0
         
         self.train_schedule = []
+        self.speed_factor = 1
 
         self.initialize_connections()
         self.start_threads()
@@ -95,6 +98,13 @@ class CTC(QWidget):
         
     def set_authority(self, authority):
         self.output_authority(authority)
+    
+    def get_block_occupancies(self, occupancies):
+        self.block_occupancies = occupancies
+    
+    def get_ticket_sales(self, tickets):
+        self.ticket_sales = tickets
+        
 
 
     def start_threads(self):
@@ -239,6 +249,10 @@ class CTC(QWidget):
         self.ui.dispatched.addTopLevelItem(QTreeWidgetItem([str(train), str(current_block),str(authority), destination]))
         item = QTableWidgetItem()
         item.setBackground(Qt.GlobalColor.green)
+        #setting route, authority, suggested speed
+        self.set_route(route)
+        self.set_suggested_speed(speeds)
+        self.set_authority(authority)
         #reset stop layout
         return #[speed, route, authority]
     

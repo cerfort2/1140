@@ -66,8 +66,7 @@ class Line():
         #calculate suggested speed for each block, should be constant value except in special cases
         time1 = datetime.strptime(departure_time, '%H:M:%S')
         time2 = datetime.strptime(arrival_time, '%H:%M:%S')
-        elapsed_time = time2-time1
-        elapsed_time = elapsed_time.total_seconds()
+        elapsed_time = (time2-time1).total_seconds()
         
         total_length = 0
         for block in block_list:
@@ -83,10 +82,9 @@ class Line():
     def get_authority(self, first_stop):
         authority_sum = 0
         for block in self.blocks:
-            authority_sum += block.get_length()
-
             if block.get_station() == first_stop:
                 break
+            authority_sum += 1
     
         return authority_sum
     
