@@ -1,7 +1,4 @@
 #Train Model object class, all objects are created in the train model interface
-
-from PyQt6.QtWidgets import QApplication
-from train_controller import SoftwareTrainController, SoftwareTrainControllerGUI
 import math, time
 
 class train_model_software():
@@ -28,10 +25,18 @@ class train_model_software():
         self.left_door = False
         self.mass = 45842.3
         self.announcement = ""
-        self.occupancy = "A1"
+        self.beacon_list = []
+        self.current_polarity = True
+        self.occupancy = ""
+        self.underground_list = []
+        self.underground_val = False
+        self.speed_list = []
+        self.speed_limit = 0
+        self.open_side = "Right"
+        self.current_station = ""
 
         #create instance of train controller
-        self.controller = SoftwareTrainController()
+        #self.controller = SoftwareTrainController()
     
 
 
@@ -212,8 +217,85 @@ class train_model_software():
     #calculates time traveled over a time period
     def calculate_travel(self, speed: float, delta_time: float) -> float:
         return speed * delta_time
-
     
+
+    #
+    #CALCULATING BEACONS AND OCCUPANCY
+    #
+
+    #beacon getter for beacon strings
+    def set_beacon_list_out_station(self, beacon_val: str) -> None:
+
+        self.beacon_list = []
+        self.authority = 0
+        self.underground_list = []
+        self.speed_list = []
+        iterator = 0
+
+        temp = ""
+
+        for i in range(0, len(beacon_val)):
+
+            if beacon_val[i] == " ":
+                continue
+            elif beacon_val[i] != "/" and beacon_val[i] != ";":
+                temp += beacon_val[i]
+            else:
+                if iterator == 0:
+                    self.beacon_list.append(temp)
+                    temp = ""
+                    iterator += 1
+                elif iterator == 1:
+                    self.authority += float(temp)
+                    temp = ""
+                    iterator += 1
+                elif iterator == 2:
+                    self.underground_list.append(bool(temp))
+                    temp = ""
+                    iterator += 1
+                else:
+                    self.speed_list.append(temp)
+                    temp = ""
+                    iterator = 0
+        
+        self.occupancy = self.beacon_list[0]
+
+    #setting station data
+    def set_station_data(self, beacon_val: str) -> None:
+
+        temp = ""
+
+        for i in range(0, len(beacon_val)):
+            if beacon_val[i] != "/":
+                temp += beacon_val[i]
+            else:
+                self.current_station = temp
+                temp = ""
+
+        self.open_side = temp
+
+    #occupancy updater
+    def update_occupancy(self, occupancy: bool) -> None:
+        if occupancy != self.current_polarity:
+
+            self.current_polarity = occupancy
+
+            self.occupancy = self.beacon_list[1] if len(self.beacon_list) > 1 else self.beacon_list[0]
+            if len(self.beacon_list) > 1:
+                self.beacon_list = self.beacon_list[1:]
+
+            self.underground_val = self.underground_list[1] if len(self.underground_list) > 1 else self.underground_list[0]
+            if len(self.underground_list) > 1:
+                self.underground_list = self.underground_list[1:]
+                
+            self.speed_limit = self.speed_list[1] if len(self.speed_list) > 1 else self.speed_list[0]
+            if len(self.speed_list) > 1:
+                self.speed_list = self.speed_list[1:]
+
+    #
+    #OVERALL TRAIN UPDATE FUNCTION
+    #
+
     #updates all train values and recieve inputs from the controller
     def update_train(self) -> None:
         self.set_power()
@@ -228,4 +310,10 @@ class train_model_software():
         self.set_right_door(self.controller.getRightDoor())
         self.set_left_door(self.controller.getLeftDoor())
         self.set_announcement(self.controller.getAnnouncement())
+    
 
+test_model = train_model_software()
+test_model.set_beacon_list_out_station("C9/100.0/False/45.0; C10/100.0/False/45.0; C11/100.0/False/45.0; C12/100.0/False/45.0;")
+print(test_model.occupancy)
+test_model.update_occupancy(False)
+print(test_model.occupancy)
