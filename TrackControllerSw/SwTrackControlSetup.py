@@ -15,15 +15,17 @@ import Block
 from Block import *
 import PLC
 from PLC import *
+import Authority
+from Authority import *
 
 class SoftwareTrackControllerGUI(QMainWindow, QObject):
 
     trackModelData = pyqtSignal(list)
-    trackModelAuthority = pyqtSignal(float)
-    trackModelRoute = pyqtSignal(list)
-   # trackModelSpeed = pyqtSignal(float)
+    #trackModelAuthority = pyqtSignal(float)
+    #trackModelRoute = pyqtSignal(list)
+    #trackModelSpeed = pyqtSignal(float)
 
-    ctcOccupancy = pyqtSignal(list)
+    #ctcOccupancy = pyqtSignal(list)
     #ctcFailures = pyqtSignal(list)
 
 
