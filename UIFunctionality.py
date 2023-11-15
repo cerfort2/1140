@@ -53,6 +53,10 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     #Testing for Switch 6
     #greenLine.Waysides[1].getTrack(24).setOccupancy(True) #I57
 
+    #Testing Crossroad
+    #greenLine.Waysides[0].getTrack(16).setOccupancy(True) #E17
+    #greenLine.Waysides[0].getTrack(19).setOccupancy(True) #E20
+
     for i in range(32): #A1-G32
         pureOccupancy.append(greenLine.Waysides[0].getTrack(i).getOccupancy())
     #All for Wayside 2
@@ -234,6 +238,11 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         self.greenLine.Waysides[0].getTrack(0).setLight(states[1][9])
         self.greenLine.Waysides[1].getTrack(25).setLight(states[1][10])
 
+        if(self.greenLine.Waysides[0].getTrack(16).getOccupancy() or self.greenLine.Waysides[0].getTrack(17).getOccupancy() or self.greenLine.Waysides[0].getTrack(18).getOccupancy() or self.greenLine.Waysides[0].getTrack(19).getOccupancy() or self.greenLine.Waysides[0].getTrack(20).getOccupancy()):
+            self.greenLine.Waysides[0].getTrack(18).setCrossroad(True)
+        else:
+            self.greenLine.Waysides[0].getTrack(18).setCrossroad(False)
+    
     #Functions used in Whole UI
     def openArduinoFile(self): #Functionality for PLC File Opening
         dialog = QFileDialog()
