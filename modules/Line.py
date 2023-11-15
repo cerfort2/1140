@@ -11,7 +11,7 @@ class Line():
     def read_data(self, filePath):
         df = pd.read_excel(filePath)
         blocks_list = []
-        
+        self.green_stations = []
         for index, row in df.iterrows():
             station = None
             switch = False
@@ -60,12 +60,27 @@ class Line():
 
     #returns the route from yard given an input station
     def get_route(self, station):
-        return
+        route_blocks = []
+        stop_or_dest = []
+
+        for block in self.blocks:
+            route_blocks.append(block)
+
+            if block.station == station:
+                stop_or_dest.append(True)
+
+                if block.station == station_list[-1]:
+                    break
+            else:
+                stop_or_dest.append(False)
+        return route_blocks, stop_or_dest
+    
     #returns a suggested velocity for each block given the route
-    def get_velocities(self, block_list, departure_time, arrival_time):
+    def get_velocities(self, block_list, departure_time, arrival_time, num_stops):
         #calculate suggested speed for each block, should be constant value except in special cases
         time1 = datetime.strptime(departure_time, '%H:M:%S')
         time2 = datetime.strptime(arrival_time, '%H:%M:%S')
+
         elapsed_time = (time2-time1).total_seconds()
         
         total_length = 0
@@ -106,13 +121,19 @@ class Line():
         return route_blocks, stop_or_dest
     
     #returns a list of suggested velocities for each block given a list of routes
-    def get_velocities_mul(self, blocK_list_list):
+    def get_velocities_mul(self, block_list_list):
+        velocities_list = []
+        for block_list in block_list_list:
+            velocities_list.append(self.get_velocities(block_list))
         return
     #returns the authority from the yard given a list of input stations
     def get_authorities(self, station_list):
+        authorities_list = []
+        for station in station_list:
+            authorities_list.append(self.get_authority(station))
         return
     
-    #calculates departure time given the arrival station
+"""    #calculates departure time given the arrival station
     def calculate_dep_time(self, station, time):
         return
     
@@ -130,4 +151,4 @@ class Line():
     def calculate_arrival_times(self, stations, times):
         
         delta = timedelta(hours = hrs, minutes = mins, seconds = secs)
-        return delta
+        return delta"""

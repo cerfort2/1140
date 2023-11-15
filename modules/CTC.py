@@ -46,6 +46,7 @@ class CTC(QWidget):
         self.green_line = Line("Green", 'Green Line Info.xlsx')
 
         self.line_edits = []
+        self.green_line_stations = ["K65: GLENBURY", "L73: DORMONT", "N77: MT LEBANON", "O88: POPLAR", "P96: CASTLE SHANNON", "T105: DORMONT","U114: GLENBURY", "W123: OVERBROOK", "W132: INGLEWOOD", "W141: CENTRAL", "A2: PIONEER", "C9: EDGEBROOK", "D16: MONKEYWAY", "F22: WHITED", "G31: SOUTH BANK", "I39: CENTRAL", "I48: INGLEWOOD", "I57: OVERBROOK"]
         
         self.block_occupancies = []
         self.ticket_sales = 0
@@ -101,9 +102,11 @@ class CTC(QWidget):
     
     def get_block_occupancies(self, occupancies):
         self.block_occupancies = occupancies
+        self.update_block_occupancy(self.block_occupancies)
     
     def get_ticket_sales(self, tickets):
         self.ticket_sales = tickets
+        self.calc_throughput(self.ticket_sales)
         
 
 
@@ -117,23 +120,24 @@ class CTC(QWidget):
         self.ui.dispatch_train_btn.clicked.connect(self.dispatch_train)
         self.ui.import_schedule_btn.clicked.connect(self.import_schedule)
         self.ui.apply_changes.clicked.connect(self.apply_tb)
-        #self.station_update.connect(self.update_stations)
+        self.station_update.connect(self.update_stations)
         self.ui.schedule_train_btn.clicked.connect(self.schedule_train)
         self.manual_mode.connect(self.update_manual_mode)
         self.auto_mode.connect(self.update_auto_mode)
+        self.ui.add_stop.clicked.connect(self.add_stop)
 
     
     def initialize_ui(self):
         self.ui.block_occupancy.setVerticalHeaderLabels([str(i) for i in range(1, 16)])
-        self.ui.manual_dispatch_departure.addItem("Station A")
-        self.ui.manual_dispatch_departure.addItem("Station B")
-        self.ui.manual_dispatch_departure.addItem("Station C")
+        #self.ui.manual_dispatch_departure.addItem("Station A")
+        #self.ui.manual_dispatch_departure.addItem("Station B")
+        #self.ui.manual_dispatch_departure.addItem("Station C")
         self.ui.manual_mode_btn.setChecked(True)
         self.ui.label_9.hide()
         self.ui.manual_dispatch_departure.hide()
-        self.ui.manual_dispatch_destination.addItem("Station A")
-        self.ui.manual_dispatch_destination.addItem("Station B")
-        self.ui.manual_dispatch_destination.addItem("Station C")
+        #self.ui.manual_dispatch_destination.addItem("Station A")
+        #self.ui.manual_dispatch_destination.addItem("Station B")
+        #self.ui.manual_dispatch_destination.addItem("Station C")
 
     def update_throughput(self):
         while True:
@@ -144,6 +148,11 @@ class CTC(QWidget):
             if (self.ui.manual_dispatch_departure != self.old_station):
                 self.station_update.emit()
             time.sleep(0.5)
+
+    def update_stations(self):
+        if self.ui.manual_dispatch_line.text() == "Green Line":
+            for station in self.green_line_stations:
+                self.ui.manual_dispatch_destination.addItem(station)
 
 
     def check_occupancy(self):
@@ -156,6 +165,7 @@ class CTC(QWidget):
             self.ui.block_occupancy.setVerticalHeaderLabels([str(i) for i in range(1, 61)])
         elif(self.ui.occupancy_line_box.currentText() == "Green Line"):
             self.occupancy_old_text = "Green Line"
+            self.ui.block_occupancy.setRowCount(row_count)
             self.ui.block_occupancy.setVerticalHeaderLabels([str(i) for i in range(1, 142)])
         elif(self.ui.occupancy_line_box.currentText() == "Blue Line"):
             self.occupancy_old_text = "Blue Line"
@@ -222,15 +232,14 @@ class CTC(QWidget):
         return
 
     def add_stop(self):
-        new_label = QLabel(f"Label")
-        new_line_edit = QLineEdit()
-        self.line_edits.append(new_line_edit)
-        self.stop_layout.addWidget(new_label)
-        self.stop_layout.addWidget(new_line_edit)
+        stop = self.ui.add_stop.text()
+        self.stop_box_list.append(stop)
         
     def dispatch_train(self):
         destination = self.ui.manual_dispatch_destination.currentText()
-        departure_time = 
+        arrival_time = self.ui.arrival_time_dis.currentText()
+        departure_time = self.cur_sys_time
+        self.green_line.get_route(destination)
         #get line from ui
         dispatched_line = self.ui.lines_box.getCurrentText()
         if dispatched_line == "Green Line":
@@ -288,9 +297,8 @@ class CTC(QWidget):
 
 #change to updated_block_occupancy function
 #receive block occupancies from track controller, upon receiving, update corresponding blocks
-    def update_block_occupancy(self):
-        block_combos = [self.ui.track_tb, self.ui.maintenance_tb, self.ui.block_occupancy_tb]
-        state_combos = [self.ui.track_state_tb, self.ui.maintenance_state_tb, self.ui.block_state_tb]
+    def update_block_occupancy(self, occupancies):
+        
 
         # Loop over each block
         for block_combo, state_combo in zip(block_combos, state_combos):
@@ -345,10 +353,8 @@ class CTC(QWidget):
 
     #get departure time, arrival time, destination station, stops
     def schedule_train(self):
-        #trainID = 
-        departure = self.ui.manual_dispatch_departure.currentText()
         
-        delta = self.calculate_time(departure, destination)
+        destination = self.ui.manual_dispatch_departure.currentText()
         
 
         dep_time_str = self.ui.departure_time.text()
@@ -374,7 +380,5 @@ class CTC(QWidget):
 
     
 if __name__ != "__main__":
-    parent_widget = QWidget()
     ctc_widget = CTC()
-    MainWindow.setCentralWidget(ctc_widget)
-    MainWindow.show()
+    ctc_widget.show()
