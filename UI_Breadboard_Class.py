@@ -43,7 +43,11 @@ class Operations():
         time.sleep(1.1)
         serialComm.write((strs + '\0').encode())
         time.sleep(.2)
-        newStates = serialComm.readline().decode()
-        bool_array = [c == '1' for c in newStates]
-        
+        newSwitches = serialComm.readline().decode()
+        switch_array = [c == '1' for c in newSwitches]
+        print(switch_array)
+        time.sleep(1.3)
+        newLights = serialComm.readline().decode()
+        light_array = [c == '1' for c in newLights]
+        print(light_array)
         

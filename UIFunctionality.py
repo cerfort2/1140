@@ -43,6 +43,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     greenLine.Waysides[1].getTrack(19).setOccupancy(True) 
     greenLine.Waysides[1].getTrack(20).setOccupancy(True) 
     greenLine.Waysides[1].getTrack(21).setOccupancy(True) 
+    greenLine.Waysides[1].getTrack(41).setOccupancy(True)
 
     greenLine.Waysides[3].getTrack(47).setOccupancy(True)
     greenLine.Waysides[3].getTrack(45).setOccupancy(True)
