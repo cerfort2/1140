@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta, date
 from Block import Block
 import pandas as pd
+from scipy.optimize import minimize
+import numpy as np
 
 class Line():
     def __init__(self, name, file):
@@ -59,14 +61,14 @@ class Line():
         return blocks_list
 
     #returns the route from yard given an input station
-    def get_route(self, station):
+    def get_route(self, station_list):
         route_blocks = []
         stop_or_dest = []
 
         for block in self.blocks:
             route_blocks.append(block)
 
-            if block.station == station:
+            if block.station in station_list:
                 stop_or_dest.append(True)
 
                 if block.station == station_list[-1]:
@@ -75,23 +77,63 @@ class Line():
                 stop_or_dest.append(False)
         return route_blocks, stop_or_dest
     
+    def travel_time_objective(speeds, block_lengths, total_time):
+        # Objective function to minimize: sum of squared differences in speeds + penalty for total time deviation
+        time_diffs = np.diff(speeds) ** 2
+        travel_times = block_lengths / speeds
+        total_time_penalty = (total_time - np.sum(travel_times)) ** 2
+        return np.sum(time_diffs) + total_time_penalty
+
+    def speed_limit_constraint(speeds, block_speed_limits):
+        # Constraint function: speeds must be less than or equal to block speed limits
+        return block_speed_limits - speeds
+
+    def get_velocities(self, block_list, departure_time, arrival_time):
+        # Parse the times
+        time1 = datetime.strptime(departure_time, '%H:%M:%S')
+        time2 = datetime.strptime(arrival_time, '%H:%M:%S')
+        
+        # Calculate total elapsed time in seconds
+        total_time = (time2 - time1).total_seconds()
+        
+        # Prepare the data for the optimizer
+        block_lengths = np.array([block.get_length() for block in block_list])
+        block_speed_limits = np.array([block.get_speed_limit() for block in block_list])
+        
+        # Initial guess for the speeds (could be the average of the speed limits)
+        initial_speeds = block_speed_limits.mean() * np.ones(len(block_list))
+        
+        # Define the constraints (speed limits and total travel time)
+        constraints = [{'type': 'ineq', 'fun': speed_limit_constraint, 'args': (block_speed_limits,)}]
+        
+        # Run the optimization
+        result = minimize(
+            travel_time_objective,
+            initial_speeds,
+            args=(block_lengths, total_time),
+            constraints=constraints,
+            bounds=[(0, limit) for limit in block_speed_limits]  # Speeds must be non-negative
+        )
+        
+        if result.success:
+            # If the optimization was successful, use the optimized speeds
+            return result.x
+        else:
+            # Handle the case where optimization failed
+            raise ValueError("Optimization failed to find a feasible solution")
     #returns a suggested velocity for each block given the route
     def get_velocities(self, block_list, departure_time, arrival_time, num_stops):
         #calculate suggested speed for each block, should be constant value except in special cases
         time1 = datetime.strptime(departure_time, '%H:M:%S')
         time2 = datetime.strptime(arrival_time, '%H:%M:%S')
-
+        total_dwell_time = num_stops
         elapsed_time = (time2-time1).total_seconds()
         
         total_length = 0
-        for block in block_list:
-            total_length+=block.get_length()
-        suggested_speed = total_length / elapsed_time
-        for block in block_list:
-            if suggested_speed >= block.get_speed_limit():
-                #for this part, need to adjust suggested speed so that the train will still arrive in the designated period of time
-                #need to ensure that each speed for each block is under the speed limit, speed limit varies
-                break
+        
+
+
+
         return
     #returns the authority from the yard given an input station  
     def get_authority(self, first_stop):
@@ -104,7 +146,8 @@ class Line():
         return authority_sum
     
     #returns the route from yard given a list of input stations
-    def get_routes(self, station_list):
+    def get_routes(self, station_list_list):
+        
         route_blocks = []
         stop_or_dest = []
 

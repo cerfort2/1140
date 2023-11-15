@@ -50,7 +50,7 @@
       <rect>
        <x>10</x>
        <y>500</y>
-       <width>461</width>
+       <width>551</width>
        <height>231</height>
       </rect>
      </property>
@@ -72,6 +72,11 @@
      <column>
       <property name="text">
        <string>ETA</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Stops</string>
       </property>
      </column>
     </widget>
@@ -453,69 +458,6 @@
        <height>191</height>
       </rect>
      </property>
-     <widget class="QWidget" name="gridLayoutWidget_2">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>-10</y>
-        <width>361</width>
-        <height>201</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="manual_layout">
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="arrival_time_dis"/>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_9">
-         <property name="text">
-          <string>Arrival Time (HH:MM:DD)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="manual_dispatch_line">
-         <item>
-          <property name="text">
-           <string>Green Line</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Red Line</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>Select Destination Station</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QComboBox" name="manual_dispatch_destination"/>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_8">
-         <property name="text">
-          <string>Select Line</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_12">
-         <property name="text">
-          <string>Add Stop Station</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QComboBox" name="stop_box_list"/>
-       </item>
-      </layout>
-     </widget>
     </widget>
     <widget class="QComboBox" name="dispatched_trains_line">
      <property name="geometry">
@@ -588,7 +530,7 @@
     <widget class="QLabel" name="system_time">
      <property name="geometry">
       <rect>
-       <x>440</x>
+       <x>410</x>
        <y>10</y>
        <width>121</width>
        <height>31</height>
@@ -596,6 +538,9 @@
      </property>
      <property name="text">
       <string>00:07:00</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="QPushButton" name="schedule_train_btn">
@@ -620,7 +565,7 @@
        <height>51</height>
       </rect>
      </property>
-     <layout class="QFormLayout" name="formLayout_2">
+     <layout class="QFormLayout" name="schedule_layout">
       <item row="0" column="0">
        <widget class="QLabel" name="departure_time_label">
         <property name="text">
@@ -639,7 +584,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="lineEdit"/>
+       <widget class="QLineEdit" name="arrival_time"/>
       </item>
      </layout>
     </widget>
@@ -647,7 +592,7 @@
      <property name="geometry">
       <rect>
        <x>380</x>
-       <y>240</y>
+       <y>270</y>
        <width>75</width>
        <height>24</height>
       </rect>
@@ -655,6 +600,80 @@
      <property name="text">
       <string>Add Stop</string>
      </property>
+    </widget>
+    <widget class="QWidget" name="horizontalLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>390</x>
+       <y>40</y>
+       <width>160</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_3"/>
+    </widget>
+    <widget class="QWidget" name="gridLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>110</y>
+       <width>361</width>
+       <height>201</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="manual_layout">
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="arrival_time_dis"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="manual_dispatch_line">
+        <item>
+         <property name="text">
+          <string>Green Line</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Red Line</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QComboBox" name="stop_box_list"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Select Destination Station</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="manual_dispatch_destination"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Select Line</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>Add Stop Stations</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>Arrival Time (HH:MM:DD)</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
    <widget class="QWidget" name="ctc_testbench">
