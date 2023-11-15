@@ -70,9 +70,11 @@ class God(QMainWindow):
 
 
         self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackController.getOccupancy)
+        self.trackController.trackModelSuggestedSpeedHW.connect(self.trackModel.trackModel.suggestedSpeed)
 
     #on timeout emissions
     def onTimeoutFunctions(self):
+        self.trackController.timerFunctions()
         self.trackModel.trackModel.emitOccupancy()
         self.trainController.update_time()
 
@@ -88,6 +90,13 @@ class God(QMainWindow):
         self.trainController.connect()
         self.widget1.show()
 
+    def openTrackControllerHWGUI(self):
+        self.widget2 = QWidget()
+        self.trackController.setupUi(self.widget2)
+        self.trackController.connectFunctions()
+        self.widget2.show()
+
+
 
 
 
@@ -101,6 +110,7 @@ ui = God()
 ui.setupConnections()
 ui.openTrackModelGUI()
 ui.openTrainControllerGUI()
+ui.openTrackControllerHWGUI()
 # # Start the event loop.
 app.exec()
 
