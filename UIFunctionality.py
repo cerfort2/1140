@@ -23,11 +23,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     #Global Variables
     greenLine = GreenLine()
     pureOccupancy = []
-    yardSwitchAuthority = int
-    route = []
-    suggestedSpeed = int
-    authority = int
-    switchStates = []
 
     #Testing for Switch 1
     #greenLine.Waysides[1].getTrack(41).setOccupancy(True) #Z151
@@ -135,9 +130,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     def timerFunctions(self):
         self.sendData
         self.sendOccupancy
-        self.sendRoute
         self.sendFailures
-        self.sendSpeed
         self.sendAuthority
     
     #Getting data functions
@@ -167,13 +160,12 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             self.setListsOccupancyAutomatic
             self.setListsOccupancyManual
             self.editAuthority() #Edits authority each time
-    def getRoute(self, route): #Route from the CTC
-        self.route = route
-    def getSpeed(self, speed): #Speed from CTC
-        self.suggestedSpeed = speed
-    def getInitAuthority(self, auth):
-        self.yardSwitchAuthority = auth
-    
+    def createNewTrainData(self, traveling:[], firstAuth, speed:[]):
+        self.greenLine.trainAuthority.setNewTrain(traveling)
+        self.trackModelSendRouteHW.emit(traveling)
+        self.trackModelAuthorityHW.emit(firstAuth)
+        self.trackModelSuggestedSpeedHW.emit(speed)
+   
     #Sending out functions
     def sendData(self): #Data of track to be sent to CTC and Track Model
         data = [[],[],[]]
@@ -205,23 +197,16 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         self.trackModelTrackDataHW.emit(data)
     def sendOccupancy(self): #Occupancy sent to CTC
         self.CTCOccupancyHW.emit(self.pureOccupancy)
-    def sendRoute(self): #Route sent to Track Model
-        self.trackModelSendRouteHW.emit(self.route)
     def sendFailures(self): #Failures sent to CTC
         failures = []
         for i in range(len(self.greenLine.Waysides)):
             for j in range(len(self.greenLine.Waysides[i])):
                 failures.append(self.greenLine.Waysides[i].getTrack(j).getFailure())
         self.CTCTrackFailuresHW.emit(failures)
-    def sendSpeed(self): #Speed sent to Track Model
-        self.trackModelSuggestedSpeedHW.emit(self.suggestedSpeed)
 
     #Authority functions
-    def editAuthority(self):
-        #self.
-        return
     def sendAuthority(self):
-        self.trackModelAuthorityHW.emit(self.authority)
+        self.trackModelAuthorityHW.emit(self.greenLine.trainAuthority.calculate(0))
 
     #Functions for setting data after PLC Logic
     def setNewDataGreenLine(self, states):
