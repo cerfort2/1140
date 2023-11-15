@@ -197,18 +197,18 @@ class Line():
     
     #Track Controller --> Track Model
     def updateLineStatus(self, controlSignals):
-        for i in range(len(controlSignals)):
+        for i in range(len(controlSignals[0])):
             if(self.blocks[i].switch[0] or self.blocks[i].crossroad[0] or self.blocks[i].signal[0]):
                 #Switch Updating
-                if(self.blocks[i].switch[3] != controlSignals[i][0]):
+                if(self.blocks[i].switch[3] != controlSignals[0][i]):
                     self.blocks[i].toggleSwitch()
                 
                 #Crossroad Updating
-                if(self.blocks[i].crossroad[1] != controlSignals[i][1]):
+                if(self.blocks[i].crossroad[1] != controlSignals[1][i]):
                     self.blocks[i].toggleCrossroad()
                 
                 #Signal Updating
-                if(self.blocks[i].signal[1] != controlSignals[i][2]):
+                if(self.blocks[i].signal[1] != controlSignals[2][i]):
                     self.blocks[i].toggleSignal()
 
     def initializeTrackControllerData(self):
@@ -338,6 +338,7 @@ class TrackModel(QObject):
 
     trackControllerOccupancy = pyqtSignal(list)
     trackControllerInitializeLine = pyqtSignal(list)
+    trainModelSuggestedSpeed = pyqtSignal(float)
 
     def __init__(self):
         super().__init__()
@@ -369,7 +370,7 @@ class TrackModel(QObject):
 
     def controlModel(self,controlSignals):
         for line in self.lines:
-            line.updateTrackStatus(controlSignals)
+            line.updateLineStatus(controlSignals)
 
     #Train Model --> Track Model
     def updateOccupancy(self,occupancyList):
@@ -392,9 +393,17 @@ class TrackModel(QObject):
 
         return blocksAndLengths
 
+    #pass through track model
     def suggestedSpeed(self, SS):
-        print(SS)  
+        self.trainModelSuggestedSpeed.emit(SS)
 
+    def route(self):
+        pass
+    
+    def authority(self):
+        pass
+
+          
     def initTrack(self):
         for line in self.lines:
             self.trackControllerInitializeLine.emit(line.initializeTrackControllerData())
@@ -518,23 +527,29 @@ class functionalUI(Ui_Form):
         self.trackModel.addLine(path)
         self.comboBox_3.clear()
         self.comboBox_3.addItems(self.trackModel.getLineNames())
+        self.trackModel.initTrack()
         self.updateMap()
       
     def updateMap(self):
         for line in self.trackModel.lines:
             line.designMap(self.comboBox_4.currentText())
 
+    def update_time(self):
+        self.trackModel.emitOccupancy()
 
 
 
 
-# if __name__ == '__main__':
-# # app = QApplication([])
-#     MainWindow = QWidget()
-#     ui = functionalUI()
-#     ui.setupUi(MainWindow)
-#     ui.connect()
-#     MainWindow.show()
+
+
+
+if __name__ == '__main__':
+    app = QApplication([])
+    MainWindow = QWidget()
+    ui = functionalUI()
+    ui.setupUi(MainWindow)
+    ui.connect()
+    MainWindow.show()
    
 # # Start the event loop.
-# app.exec()
+    app.exec()

@@ -5,6 +5,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from UIFunctionality import *
 from trackmodelguitest import *
 from SoftwareTrainControllerGUI import *
+from SwTrackControlSetup import *
 
 ##ALL FUNCTIONAL OBJECTS NEED TO DO THE FOLLOWING
 
@@ -55,10 +56,11 @@ class God(QMainWindow):
     def __init__(self):
         super().__init__()
         self.MainTimer = QTimer()
-        self.timeStep = 1000
+        self.timeStep = 5000
 
         self.ctc = CTC()
-        self.trackController = HWTrackControllerGUI()
+        self.trackControllerHW = HWTrackControllerGUI()
+        self.trackControllerSW = SoftwareTrackControllerGUI()
         self.trackModel = functionalUI()
         self.trainModel = TrainM()
         self.trainController = SoftwareTrainControllerGUI() 
@@ -69,15 +71,21 @@ class God(QMainWindow):
         self.MainTimer.timeout.connect(self.onTimeoutFunctions)
 
 
-        self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackController.getOccupancy)
-        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
-        self.trackController.trackModelSuggestedSpeedHW.connect(self.trackModel.trackModel.suggestedSpeed)
+        self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerHW.getOccupancy)
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerHW.greenLine.setTracks)
+        self.trackControllerHW.trackModelSuggestedSpeedHW.connect(self.trackModel.trackModel.suggestedSpeed)
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerSW.setDisplay)
+        self.trackControllerSW.trackModelData.connect(self.trackModel.trackModel.controlModel)
+
+        #Once calls
+        self.trackModel.trackModel.initTrack()
         
 
     #on timeout emissions
     def onTimeoutFunctions(self):
-        self.trackModel.trackModel.initTrack()
-        self.trackController.sendSpeed()
+        self.trackControllerSW.getData()
+        # self.trackControllerSW.mode_handler()
+        self.trackControllerHW.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
         self.trainController.update_time()
 
@@ -95,9 +103,18 @@ class God(QMainWindow):
 
     def openTrackControllerHWGUI(self):
         self.widget2 = QWidget()
-        self.trackController.setupUi(self.widget2)
-        self.trackController.connectFunctions()
+        self.trackControllerHW.setupUi(self.widget2)
+        self.trackControllerHW.connectFunctions()
         self.widget2.show()
+
+    def openTrackControllerSWGUI(self):
+        self.widget3 = QWidget()
+        self.trackControllerSW.setupUi(self.widget3)
+        self.trackControllerSW.retranslateUi(self.widget3)
+        self.trackControllerSW.connectFunctions()
+        self.widget3.show()
+        
+
 
 
 
@@ -114,6 +131,7 @@ ui.setupConnections()
 ui.openTrackModelGUI()
 ui.openTrainControllerGUI()
 ui.openTrackControllerHWGUI()
+ui.openTrackControllerSWGUI()
 # # Start the event loop.
 app.exec()
 
