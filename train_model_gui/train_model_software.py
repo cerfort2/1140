@@ -36,7 +36,7 @@ class train_model_software():
         self.current_station = ""
 
         #create instance of train controller
-        #self.controller = SoftwareTrainController()
+        self.controller = SoftwareTrainController()
     
 
 
