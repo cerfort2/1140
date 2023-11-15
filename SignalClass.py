@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow, QFileDialog
 from PyQt6 import QtCore, QtGui, QtWidgets
 from UIFunctionality import *
 from trackmodelguitest import *
+from SoftwareTrainControllerGUI import *
 
 ##ALL FUNCTIONAL OBJECTS NEED TO DO THE FOLLOWING
 
@@ -52,14 +53,15 @@ class TrainC(QObject):
 
 class God(QMainWindow):
     def __init__(self):
+        super().__init__()
         self.MainTimer = QTimer()
         self.timeStep = 1000
 
         self.ctc = CTC()
         self.trackController = HWTrackControllerGUI()
-        self.trackModel = TrackModel()
+        self.trackModel = functionalUI()
         self.trainModel = TrainM()
-        self.trainController = TrainC() 
+        self.trainController = SoftwareTrainControllerGUI() 
 
     def setupConnections(self):
         #timer
@@ -67,20 +69,24 @@ class God(QMainWindow):
         self.MainTimer.timeout.connect(self.onTimeoutFunctions)
 
 
-        self.trackModel.trackControllerOccupancy.connect(self.trackController.getOccupancy)
+        self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackController.getOccupancy)
 
     #on timeout emissions
     def onTimeoutFunctions(self):
-        print("timeout")
-        self.trackModel.emitOccupancy()
+        self.trackModel.trackModel.emitOccupancy()
+        self.trainController.update_time()
 
     def openTrackModelGUI(self):
-        self.trackModelGUI = functionalUI()
         self.widget = QWidget()
-
-        self.trackModelGUI.setupUi(self.widget)
-        self.trackModelGUI.connect()
+        self.trackModel.setupUi(self.widget)
+        self.trackModel.connect()
         self.widget.show()
+
+    def openTrainControllerGUI(self):
+        self.widget1 = QWidget()
+        self.trainController.setupUi(self.widget1)
+        self.trainController.connect()
+        self.widget1.show()
 
 
 
@@ -94,6 +100,7 @@ app = QApplication([])
 ui = God()
 ui.setupConnections()
 ui.openTrackModelGUI()
+ui.openTrainControllerGUI()
 # # Start the event loop.
 app.exec()
 
