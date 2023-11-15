@@ -18,7 +18,7 @@ from PLC import *
 import Authority
 from Authority import *
 
-class SoftwareTrackControllerGUI(QMainWindow, QObject):
+class SoftwareTrackControllerGUI(Ui_Form, QObject):
 
     trackModelData = pyqtSignal(list)
     #trackModelAuthority = pyqtSignal(float)
