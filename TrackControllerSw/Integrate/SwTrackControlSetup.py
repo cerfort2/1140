@@ -53,7 +53,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         self.trackModelAuthority.emit(auth)
 
     def getAuth(self):
-        self.trackModelAuthority.emit(self.trainAuth.getAuth())
+        self.trackModelAuthority.emit(self.trainAuth.getAuth(0))
 
     def getData(self): #Sends track data to Track Model
         self.trackModelData.emit(self.line.getData())
