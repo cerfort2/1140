@@ -218,7 +218,8 @@ class HWTrackControllerGUI(Ui_Form, QObject):
 
     #Authority functions
     def editAuthority(self):
-        self.
+        #self.
+        return
     def sendAuthority(self):
         self.trackModelAuthorityHW.emit(self.authority)
 
