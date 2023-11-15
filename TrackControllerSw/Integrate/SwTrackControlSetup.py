@@ -46,13 +46,13 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         self.setOccupied()
         self.ctcOccupancy.emit(self.line.getOccupancy())
 
-    def sendTrainDetails(self, route, speed, auth):
+    def sendTrainDetails(self, route, speed, auth): #Receives train dispatch data from CTC
         self.trainAuth.newRoute(auth)
         self.trackModelRoute.emit(route)
         self.trackModelSpeed.emit(speed)
         self.trackModelAuthority.emit(auth)
 
-    def getAuth(self):
+    def getAuth(self): #sends auth to track model
         self.trackModelAuthority.emit(self.trainAuth.getAuth(0))
 
     def getData(self): #Sends track data to Track Model
