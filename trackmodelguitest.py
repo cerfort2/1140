@@ -220,8 +220,8 @@ class Line():
         rightBlock = []
         for blk in self.blocks:
             if(blk.switch[0]):
-                leftBlock.append(self.switch[1])
-                rightBlock.append(self.swtich[2])
+                leftBlock.append(blk.switch[1])
+                rightBlock.append(blk.switch[2])
             else:
                 leftBlock.append("")
                 rightBlock.append("")
@@ -337,6 +337,7 @@ class Block():
 class TrackModel(QObject):
 
     trackControllerOccupancy = pyqtSignal(list)
+    trackControllerInitializeLine = pyqtSignal(list)
 
     def __init__(self):
         super().__init__()
@@ -364,7 +365,7 @@ class TrackModel(QObject):
     #Emit track occupancy
     def emitOccupancy(self):
         for line in self.lines:
-            self.trackControllerOccupancy.emit(line.getOccupancy)
+            self.trackControllerOccupancy.emit(line.getBlockOccupancyList())
 
     def controlModel(self,controlSignals):
         for line in self.lines:
@@ -390,7 +391,13 @@ class TrackModel(QObject):
             blocksAndLengths.append((route[i], line.getBlock(route[i]).length))
 
         return blocksAndLengths
-            
+
+    def suggestedSpeed(self, SS):
+        print(SS)  
+
+    def initTrack(self):
+        for line in self.lines:
+            self.trackControllerInitializeLine.emit(line.initializeTrackControllerData())
 
 class functionalUI(Ui_Form):
     def __init__(self) -> None:

@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow, QFileDialog
 from PyQt6 import QtCore, QtGui, QtWidgets
 from UIFunctionality import *
 from trackmodelguitest import *
-from SoftwareTrainControllerGUI import *
+# from SoftwareTrainControllerGUI import *
 
 ##ALL FUNCTIONAL OBJECTS NEED TO DO THE FOLLOWING
 
@@ -61,7 +61,7 @@ class God(QMainWindow):
         self.trackController = HWTrackControllerGUI()
         self.trackModel = functionalUI()
         self.trainModel = TrainM()
-        self.trainController = SoftwareTrainControllerGUI() 
+        self.trainController = TrainC() 
 
     def setupConnections(self):
         #timer
@@ -70,13 +70,16 @@ class God(QMainWindow):
 
 
         self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackController.getOccupancy)
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
         self.trackController.trackModelSuggestedSpeedHW.connect(self.trackModel.trackModel.suggestedSpeed)
+        
 
     #on timeout emissions
     def onTimeoutFunctions(self):
-        self.trackController.timerFunctions()
+        self.trackModel.trackModel.initTrack()
+        # self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
-        self.trainController.update_time()
+        # self.trainController.update_time()
 
     def openTrackModelGUI(self):
         self.widget = QWidget()
@@ -109,7 +112,7 @@ app = QApplication([])
 ui = God()
 ui.setupConnections()
 ui.openTrackModelGUI()
-ui.openTrainControllerGUI()
+# ui.openTrainControllerGUI()
 ui.openTrackControllerHWGUI()
 # # Start the event loop.
 app.exec()
