@@ -29,24 +29,29 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     authority = int
     switchStates = []
 
-    greenLine.Waysides[0].getTrack(12).setOccupancy(True) 
-    greenLine.Waysides[0].getTrack(13).setOccupancy(True) 
-    greenLine.Waysides[0].getTrack(14).setOccupancy(True)
-    greenLine.Waysides[0].getTrack(15).setOccupancy(True) 
-    greenLine.Waysides[0].getTrack(32).setOccupancy(True)
+    #Testing for Switch 1
+    #greenLine.Waysides[1].getTrack(41).setOccupancy(True) #Z151
+    #greenLine.Waysides[1].getTrack(30).setOccupancy(True) #K63
+    #greenLine.Waysides[1].getTrack(27).setOccupancy(True) #J60
 
-    greenLine.Waysides[1].getTrack(0).setOccupancy(True) 
-    greenLine.Waysides[1].getTrack(1).setOccupancy(True) 
-    greenLine.Waysides[1].getTrack(2).setOccupancy(True) 
-    greenLine.Waysides[1].getTrack(3).setOccupancy(True) 
-    greenLine.Waysides[1].getTrack(18).setOccupancy(True) 
-    greenLine.Waysides[1].getTrack(19).setOccupancy(True) 
-    greenLine.Waysides[1].getTrack(20).setOccupancy(True) 
-    greenLine.Waysides[1].getTrack(21).setOccupancy(True) 
-    greenLine.Waysides[1].getTrack(41).setOccupancy(True)
+    #Testing for Switch 2
+    #greenLine.Waysides[2].getTrack(1).setOccupancy(True) #M75
+    #greenLine.Waysides[2].getTrack(4).setOccupancy(True) #N78
 
-    greenLine.Waysides[3].getTrack(47).setOccupancy(True)
-    greenLine.Waysides[3].getTrack(45).setOccupancy(True)
+    #Testing for Switch 3
+    #greenLine.Waysides[2].getTrack(10).setOccupancy(True) #N84
+    #greenLine.Waysides[2].getTrack(25).setOccupancy(True) #Q99
+
+    #Testing for Switch 4
+    #greenLine.Waysides[0].getTrack(32).setOccupancy(True) #Z150
+    #greenLine.Waysides[0].getTrack(26).setOccupancy(True) #F27
+
+    #Testing for Switch 5
+    #greenLine.Waysides[0].getTrack(1).setOccupancy(True) #A2
+    #greenLine.Waysides[0].getTrack(13).setOccupancy(True) #D14
+
+    #Testing for Switch 6
+    #greenLine.Waysides[1].getTrack(24).setOccupancy(True) #I57
 
     for i in range(32): #A1-G32
         pureOccupancy.append(greenLine.Waysides[0].getTrack(i).getOccupancy())
@@ -61,13 +66,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         pureOccupancy.append(greenLine.Waysides[3].getTrack(i).getOccupancy())
     pureOccupancy.append(greenLine.Waysides[0].getTrack(32).getOccupancy()) #Z150
     pureOccupancy.append(greenLine.Waysides[1].getTrack(41).getOccupancy()) #Z151/YARD
-
-    #Testing for functionality
-    greenLine.Waysides[0].getTrack(32).setLight(False) #Z150 Red
-    greenLine.Waysides[2].getTrack(26).setLight(False) #Q100 Red
-    greenLine.Waysides[0].getTrack(18).setCrossroad(True) #E19 Crossroad Down
-    greenLine.Waysides[1].getTrack(25).setSwitch(False)
-    greenLine.Waysides[2].getTrack(11).setSwitch(False)
 
 
 
@@ -121,7 +119,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         self.pushButton_3.clicked.connect(self.openArduinoFile) #Opens PLC File
         
         #Testing for PLC Code
-        self.comboBox.currentIndexChanged.connect(lambda: operate.plcCode(self.pureOccupancy))
+        self.comboBox.currentIndexChanged.connect(lambda: self.getOccupancy(self.pureOccupancy))
 
 
     def __init__(self): #Initalizer
@@ -155,8 +153,9 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         #All for Wayside 4
         for i in range(48): #S102-Y149
             self.greenLine.Waysides[3].getTrack(i).setOccupancy(occupancy[i+101])
-        switchStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
-        self.editAuthority() #Edits authority each time
+        newStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
+        self.setNewDataGreenLine(newStates)
+        #self.editAuthority() #Edits authority each time
         self.setListsOccupancyAutomatic
         self.setListsOccupancyManual
     def getRoute(self, route): #Route from the CTC
@@ -214,7 +213,26 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     def sendAuthority(self):
         self.trackModelAuthorityHW.emit(self.authority)
 
+    #Functions for setting data after PLC Logic
+    def setNewDataGreenLine(self, states):
+        self.greenLine.Waysides[1].getTrack(29).setSwitch(states[0][0])
+        self.greenLine.Waysides[2].getTrack(3).setSwitch(states[0][1])
+        self.greenLine.Waysides[2].getTrack(11).setSwitch(states[0][2])
+        self.greenLine.Waysides[0].getTrack(28).setSwitch(states[0][3])
+        self.greenLine.Waysides[0].getTrack(12).setSwitch(states[0][4])
+        self.greenLine.Waysides[1].getTrack(25).setSwitch(states[0][5])
 
+        self.greenLine.Waysides[1].getTrack(41).setLight(states[1][0])
+        self.greenLine.Waysides[1].getTrack(28).setLight(states[1][1])
+        self.greenLine.Waysides[2].getTrack(2).setLight(states[1][2])
+        self.greenLine.Waysides[2].getTrack(3).setLight(states[1][3])
+        self.greenLine.Waysides[2].getTrack(11).setLight(states[1][4])
+        self.greenLine.Waysides[2].getTrack(26).setLight(states[1][5])
+        self.greenLine.Waysides[0].getTrack(32).setLight(states[1][6])
+        self.greenLine.Waysides[0].getTrack(28).setLight(states[1][7])
+        self.greenLine.Waysides[0].getTrack(12).setLight(states[1][8])
+        self.greenLine.Waysides[0].getTrack(0).setLight(states[1][9])
+        self.greenLine.Waysides[1].getTrack(25).setLight(states[1][10])
 
     #Functions used in Whole UI
     def openArduinoFile(self): #Functionality for PLC File Opening
