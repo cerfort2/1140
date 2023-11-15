@@ -1,11 +1,15 @@
 from HWTrainControllerUI import Ui_HardwareTrainController
+from HardwareTrainController import HardwareTrainController
 from trainmodel import train_model_software
-from PyQt6 import QtCore, QtGui, QtWidgets, QMainWindow,QApplication
 from time import sleep
 import I2C_LCD_driver
 from datetime import datetime
+from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import QTimer
 from PyQt6.QtCore import QObject
+from PyQt6.QtWidgets import QMainWindow
+from PyQt6.QtWidgets import QApplication
+import serial
 
 
 import sys
@@ -14,25 +18,107 @@ import sys
 class HWTrainControllerGUI(QMainWindow):
 
 
-    def __init__(self,Automatic):
-        self.hwtrain = train_model_software()
+    def __init__(self):
         super().__init__()
+        self.hwtrain = HardwareTrainController()
+        self.ui = Ui_HardwareTrainController()
+        self.ui.setupUi(self)
+
+        #arduino setup
+        # EngineData = serial.Engine('com3',115200)
+        # SignalData = serial.Signal('com3',115200)
+        # BrakeData = serial.Brake('com3',115200)
         
 
         self.timer_parent = QObject()
-
         self.timer = QTimer(self.timer_parent)
-        self.timer.timeout.connect(self.update_all)
+        self.timer.timeout.connect(self.changeMode)
         self.timer.start(50)
-        self.proportional_gain.valueChanged.connect(self.disp_info)
-        self.integral_gain.valueChanged.connect(self.disp_info)
-        self.manual_speed.valueChanged.connect(self.setCommanded)
-        self.e_brake.pressed.connect(self.stop_train)
-        self.exterior_light.stateChanged(self.exterior_light_disp)
-        self.interir_light.stateChanged(self.interior_light_disp)
-        self.right_door.stateChanged(self.right_door_disp)
-        self.left_door.stateChanged(self.left_door_disp)
-        self.temperature.pressed(self.)
+
+        
+        self.ui.mode.currentTextChanged.connect(self.changeMode)
+        self.ui.integral_gain.valueChanged.connect(self.changeKI)
+        self.ui.proportional_gain.valueChanged.connect(self.changeKP)
+        self.ui.annoucements_button.clicked.connect(self.updateAnnoucement_manual)
+
+
+     
+
+    def changeMode(self):
+        selected_text = self.ui.mode.currentText()
+
+        #check for failures
+        # if(self.hwtrain.brakeFailure == True):
+        #     #change led
+        # else if(self.hwtrain.engineFailure == True):
+
+        # else if(self.hwtrain.signalFailure == True):
+        
+
+        
+        self.hwtrain.calcPower()
+        self.ui.power.display(self.hwtrain.power)
+        
+        self.ui.current_speed.display(self.hwtrain.currentSpeed)
+        self.ui.speed_limit.display(self.hwtrain.speedLimit)
+        self.ui.authority.display(self.hwtrain.authority)
+
+
+
+
+        if selected_text == "Automatic":
+            self.ui.manual_speed.setEnabled(0)
+            self.ui.annoucements_button.setEnabled(0)
+            self.ui.service_slider.setEnabled(0)
+            self.ui.right_door.setEnabled(0)
+            self.ui.left_door.setEnabled(0)
+            self.ui.exterior_lights.setEnabled(0)
+            self.ui.interior_lights.setEnabled(0)
+            self.ui.manual_temperature.setEnabled(0)
+            self.update_auto()
+            self.hwtrain.manualmode = False
+        else:
+            self.ui.manual_speed.setEnabled(1)
+            self.ui.annoucements_button.setEnabled(1)
+            self.ui.service_slider.setEnabled(1)
+            self.ui.right_door.setEnabled(1)
+            self.ui.left_door.setEnabled(1)
+            self.ui.exterior_lights.setEnabled(1)
+            self.ui.interior_lights.setEnabled(1)
+            self.ui.manual_temperature.setEnabled(1)
+            #self.update_manual()
+            self.hwtrain.manualmode = True
+
+    def update_auto(self):
+        
+        self.ui.commanded_speed.display(self.hwtrain.ctcSpeed)
+
+        self.ui.annoucements.displayText(self.hwtrain.annoucement) #change display onto LCD, is annoucements only regarding next stop?
+
+        self.ui.temperature.display(self.hwtrain.temperature)
+
+        #doors,lights,service/ebrake will be represented on the circuit board using leds and switches.
+        
+    def update_manual(self):
+
+        self.ui.commanded_speed.display(self.ui.manual_speed.value())
+        
+        self.hwtrain.setCommanded_speed(self.ui.manual_speed.value())
+
+
+
+    def updateAnnoucement_manual(self):
+        
+
+
+
+
+    def changeKI(self):
+        self.hwtrain.setKi(self.ui.integral_gain.value())
+
+    def changeKP(self):
+        self.hwtrain.setKp(self.ui.integral_gain.value())
+
 
 
 
@@ -40,182 +126,6 @@ class HWTrainControllerGUI(QMainWindow):
         self.ui = Ui_HardwareTrainController()           #setup ui
         self.ui.setupUi(self)
         self.changeMode()
-       
-        
-
-    def update_all(self):
-
-        self.commanded_speed.display(self.hwtrain.getManual_commanded())
-        self.current_speed.display(self.hwtrain.getCurrent_speed())
-        self.hwtrain.computeAuthority()
-        self.hwtrain.calcPower()
-        self.disp_info()
-
-    def disp_info(self):
-
-        mylcd = I2C_LCD_driver.lcd()
-
-        mylcd.lcd_display_string("Temp:" + str(self.hwtrain.getTemperature()),1,0)
-        mylcd.lcd_display_string("Power Value:" + str(self.hwtrain.getPower()),2,0)
-        mylcd.lcd_display_string("Current Speed:" + str(self.hwtrain.getCurrent_speed()),3,0)
-        mylcd.lcd_display_string("Authority:" + str(self.hwtrain.getAuthority()),4,0)
-        mylcd.lcd_display_string("IG:" + str(self.hwtrain.getKi()),1,15)
-        mylcd.lcd_display_string("PG:" + str(self.hwtrain.getKp()),2,15)
-    
-        sleep(.5)
-
-
-    def setCommanded(self):
-        self.commanded_speed.display(self.manual_speed.value())
-        self.hwtrain.setManualCommandedSpeed(self.manual_speed.value())
-  
-    
-    def stop_train(self):
-        self.hwtrain.setManual_commanded(0)
-        self.commanded_speed.display(0)
-        self.power.display(0)
-        self.current_speed.display(self.hwtrain.getCurrent_speed())
-        self.hwtrain.ebrakePressed()
-
-    def sendTemperature(self):
-        self.hwtrain.setTemperature(self.temperature.value())
-    
-    def sendAnnoucements(self):
-        self.hwtrain.setAnnoucement(self.annoucements.displayText())
-
-
-
-    def changeMode(self):
-        selected_text = self.mode.currentText()
-
-        if selected_text == "Automatic":
-            self.manual_speed.setEnabled(0)
-            self.annoucements_button.setEnabled(0)
-            self.service_slider.setEnabled(0)
-            self.right_door_status.setEnabled(0)
-            self.left_door.setEnabled(0)
-            self.exterior_lights.setEnabled(0)
-            self.interior_lights.setEnabled(0)
-
-        else:
-            self.manual_speed.setEnabled(1)
-            self.annoucements_button.setEnabled(1)
-            self.service_slider.setEnabled(1)
-            self.right_door_status.setEnabled(1)
-            self.left_door.setEnabled(1)
-            self.exterior_lights.setEnabled(1)
-            self.interior_lights.setEnabled(1)
-
- 
-    def annoucements_disp(self):
-
-        padding = " " * 12
-      
-        lcd = I2C_LCD_driver.lcd()
-        my_long_string = self.annoucements_display_auto.displayText()
-        #lcd.lcd_display_string("Annoucements: ",2,0)
-        
-        for i in range (0, len(my_long_string)):
-            lcd.lcd_display_string("Annoucements: ",2,0)
-            lcd_text = my_long_string[i:(i+20)]
-            lcd.lcd_display_string(lcd_text,3)
-            sleep(0.25)
-            lcd.lcd_clear()
-            #lcd.lcd_display_string(padding,3)
-        
-        lcd.lcd_clear()
-        sleep(1)
-        #lcd.lcd_clear()
-        self.annoucements_display_auto.clear()
-        self.check_value()
-
-
-
-    def right_door_disp(self):
-         
-        mylcd = I2C_LCD_driver.lcd()
-        mylcd.lcd_display_string("Notification: ",1,0)
-        mylcd.lcd_display_string("The door status",2,0)
-        mylcd.lcd_display_string("was changed.",3,0)
-        sleep(1.5)
-        mylcd.lcd_clear()
-        self.check_value()
-    
-    def left_door_disp(self):
-         
-        mylcd = I2C_LCD_driver.lcd()
-        mylcd.lcd_display_string("Notification: ",1,0)
-        mylcd.lcd_display_string("The left status",2,0)
-        mylcd.lcd_display_string("was changed.",3,0)
-        sleep(1.5)
-        mylcd.lcd_clear()
-        self.check_value()
-
-    def exterior_light_disp(self):
-         
-        mylcd = I2C_LCD_driver.lcd()
-        mylcd.lcd_display_string("Notification: ",1,0)
-        mylcd.lcd_display_string("The light one status",2,0)
-        mylcd.lcd_display_string("was changed.",3,0)
-        sleep(1.5)
-        mylcd.lcd_clear()
-        self.check_value()
-
-    def interior_light_disp(self):
-         
-        mylcd = I2C_LCD_driver.lcd()
-        mylcd.lcd_display_string("Notification: ",1,0)
-        mylcd.lcd_display_string("The light two status",2,0)
-        mylcd.lcd_display_string("was changed.",3,0)
-        sleep(1.5)
-        mylcd.lcd_clear()
-        self.check_value()
-
-    def e_brake(self):
-         
-        mylcd = I2C_LCD_driver.lcd()
-        mylcd.lcd_display_string("Notification: ",1,0)
-        mylcd.lcd_display_string("The e-brake status",2,0)
-        mylcd.lcd_display_string("was changed.",3,0)
-        sleep(1.5)
-        mylcd.lcd_clear()
-        self.check_value()
-
-
-    def tunnel_stat(self):
-         
-        mylcd = I2C_LCD_driver.lcd()
-        mylcd.lcd_display_string("Notification: ",1,0)
-        mylcd.lcd_display_string("The tunnel status",2,0)
-        mylcd.lcd_display_string("was changed.",3,0)
-        sleep(1.5)
-        mylcd.lcd_clear()
-        self.check_value()
-        
-    def moving_stat(self):
-         
-        mylcd = I2C_LCD_driver.lcd()
-        mylcd.lcd_display_string("Notification: ",1,0)
-        mylcd.lcd_display_string("The movement status",2,0)
-        mylcd.lcd_display_string("was changed.",3,0)
-        sleep(1.5)
-        mylcd.lcd_clear()
-        self.check_value()
-    
-    def stationary_stat(self):
-         
-        mylcd = I2C_LCD_driver.lcd()
-        mylcd.lcd_display_string("Notification: ",1,0)
-        mylcd.lcd_display_string("The stationary status",2,0)
-        mylcd.lcd_display_string("was changed.",3,0)
-        sleep(1.5)
-        mylcd.lcd_clear()
-        self.check_value()
-        
-
-
-
-        
   
 
 

@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
+""" # -*- coding: utf-8 -*-
 # Original code found at:
 # https://gist.github.com/DenisFromHR/cc863375a6e19dce359d
 
 """
-Compiled, mashed and generally mutilated 2014-2015 by Denis Pleic
-Made available under GNU GENERAL PUBLIC LICENSE
+""" Compiled, mashed and generally mutilated 2014-2015 by Denis Pleic
+Made available under GNU GENERAL PUBLIC LICENSE """
 
 # Modified Python I2C library for Raspberry Pi
 # as found on http://www.recantha.co.uk/blog/?p=4849
@@ -175,4 +175,4 @@ class lcd:
       self.lcd_write(0x40);
       for char in fontdata:
          for line in char:
-            self.lcd_write_char(line)
+            self.lcd_write_char(line) """

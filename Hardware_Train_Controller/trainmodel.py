@@ -1,4 +1,5 @@
-from SoftwareTrainController import SoftwareTrainController
+
+from HardwareTrainController import HardwareTrainController
 import math, time
 
 class train_model_software():
@@ -27,7 +28,8 @@ class train_model_software():
         self.announcement = "Test Announcementf"
 
         #create instance of train controller
-        self.controller = SoftwareTrainController()
+        self.controller = HardwareTrainController()
+
     
 
     #

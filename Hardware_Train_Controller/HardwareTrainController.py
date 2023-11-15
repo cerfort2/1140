@@ -1,5 +1,25 @@
+from PyQt6.QtCore import pyqtSignal
+
+
+
+
+
 class HardwareTrainController():
     
+    #both
+    trainmodel_HW_power = pyqtSignal(float)
+    trainmodel_HW_servicebrake = pyqtSignal(bool)
+    trainmodel_HW_ebrake = pyqtSignal(bool)
+    
+
+    #manual
+    trainmodel_HW_rightdoor = pyqtSignal(bool)
+    trainmodel_HW_leftdoor = pyqtSignal(bool)
+    trainmodel_HW_exterior = pyqtSignal(bool)
+    trainmodel_HW_interior = pyqtSignal(bool)
+    trainmodel_HW_temperature = pyqtSignal(bool)
+    trainmodel_HW_annoucements = pyqtSignal(bool)
+
 
     
     def __init__(self):
@@ -14,7 +34,8 @@ class HardwareTrainController():
         self.tunnel = False
         self.stationOnLeft = False
         self.stationOnRight = False
-        self.serviceBrakeSlide = False
+        self.rightdoor = False
+        self.leftdoor = False
         self.manualcommandedspeed = 0
         self.temperature = 0
         self.power = 0
@@ -23,20 +44,52 @@ class HardwareTrainController():
         self.speedLimit = 43
         self.dwelling = False
         self.manualmode = False
-        self.eBrake = False
-        self.exlights = False
+        self.exterior = False
+        self.interior = False
         self.brakeAuthority = 0
         self.brakeSpeed = 0
         self.serviceBrakeFlag = False
+        self.eBrakeFlag = False
         self.dwellTime = 0
         self.e_k = 0
         self.e_k_prev = 0
         self.u_k = 0
         self.u_k_prev = 0
+        self.kp = 0
+        self.ki = 0
+
+    #emitting signals for both modes automatic/manual
+
+    def getServiceBrake(self):
+        self.trainmodel_HW_servicebrake(self.serviceBrakeFlag)
+
+    def getPower(self):
+        self.trainmodel_HW_power.emit(self.power)
     
+    def getEbrake(self):
+        self.trainmodel_HW_ebrake.emit(self.eBrakeFlag)
 
+    #emitting manual signals
 
+    def getRD(self):
+        self.trainmodel_HW_rightdoor.emit(self.rightdoor)
+    
+    def getLD(self):
+        self.trainmodel_HW_leftdoor.emit(self.leftdoor)
 
+    def getExterior(self):
+        self.trainmodel_HW_exterior.emit(self.exterior)
+
+    def getInterior(self):
+        self.trainmodel_HW_interior.emit(self.interior)
+    
+    def getTemperature(self):
+        self.trainmodel_HW_temperature(self.temperature)
+
+    def getAnnoucements(self):
+        self.trainmodel_HW_temperature(self.annoucement)
+
+    
     def getManualMode(self):
         return self.manualmode
      
@@ -58,15 +111,15 @@ class HardwareTrainController():
             self.exlights=False
         return self.exlights
 
-
-
+    def setCTC(self,x):
+        self.ctcSpeed = x
+        
     def setBeaconInfo(self,s):
         self.beaconInfo=s
-    
-    def setCommandedSpeed(self,s):
-        self.ctcSpeed=s
+
     def setCurrentSpeed(self,s):
         self.currentSpeed=s
+
     def setSpeedLimit(self,s):
         self.speedLimit=s*2.2369362921
         if self.speedLimit>43:
@@ -99,34 +152,15 @@ class HardwareTrainController():
     def setStationOnRight(self,s):
         self.stationOnRight = s
 
-    def getServiceBrake(self):
-        return self.serviceBrakeSlide
-
-    def getPower(self):
-        return self.power
-    
-    def setManualCommandedSpeed(self,s):
-        self.manualcommandedspeed=s
-
     def setServiceBrakeSlide(self,s):
         self.serviceBrakeSlide=s
 
     def setTemperature(self,t):
         self.temperature=t
+
+    def setCommanded_speed(self,x):
+        self.manualcommandedspeed = x
     
-    def computeServiceBrake(self):
-        if not self.manualmode and self.currentSpeed>0 and self.authority > 0:
-            if not self.serviceBrakeFlag:
-                self.serviceBrakeFlag = self.currentSpeed/0.6 + 1 >= self.authority/self.currentSpeed
-                self.brakeSpeed=self.currentSpeed
-                self.brakeAuthority=self.authority
-            if self.serviceBrakeFlag:
-                print('engaged')
-                self.serviceBrakeSlide=100 - (100 * (1 - max((self.currentSpeed/self.brakeAuthority), (self.authority/self.brakeAuthority))))
-        elif self.currentSpeed < 0:
-            self.currentSpeed = 0
-            self.brakeAuthority = 0
-            self.serviceBrakeFlag = False
 
     def computeDwellTime(self):
         if self.dwelling and not self.manualmode:
@@ -137,25 +171,13 @@ class HardwareTrainController():
                 self.dwelling=False
                 self.dwellTime=60        
     
-    def computeAuthority(self):
-        if self.authority>0:
-            self.authority-=self.currentSpeed*self.interval
-        else:
-            if not self.manualmode:
-                self.dwelling=True
-    def computeAutoSpeed(self):
-        if self.ctcSpeed>=self.speedLimit:
-            self.ctcSpeed=self.speedLimit
-
-                #might need to correct
-        #slowing the train down as authority decreases
 
     def computeManualSpeed(self) ->int:
         if self.serviceBrakeSlide>0:
             self.manualcommandedspeed=self.currentSpeed #make sure this is good, assume connor sends this back
 
         if not self.manualmode:
-            self.manualcommandedspeed=self.automaticcommandedspeed*2.2369362921
+            self.manualcommandedspeed=self.ctcSpeed*2.2369362921
         else:
             if self.manualcommandedspeed>=self.speedLimit:
                 self.manualcommandedspeed=self.speedLimit        #convert to m/s
@@ -168,7 +190,11 @@ class HardwareTrainController():
 
         self.u_k_prev = self.u_k
 
-        e_k = self.manualcommandedspeed - self.currentSpeed() #current speed from train model
+        if(self.manualmode == False):
+            self.e_k = self.ctcSpeed - self.currentSpeed
+        else:
+            self.e_k = self.manualcommandedspeed - self.currentSpeed()
+
 
         self.u_k = self.u_k_prev + (.05)/2 * (self.e_k+self.e_k_prev)
 
@@ -187,23 +213,19 @@ class HardwareTrainController():
     def setKp(self, k):
         self.kp=k
 
-    def getKi(self):
-        return self.ki
-    
-    def getKp(self):
-        return self.kp
-
     def getManual_commanded(self):
-        return self.commandedmanualspeed
+        return self.manualcommandedspeed
     
     def getCurrent_speed(self):
         return self.currentSpeed
     
-    def getTemperature(self):
-        return self.temperature
-    
-    def getAnnoucements(self):
-        return self.annoucement
-    
     def getSpeedLimit(self):
         return self.speedLimit
+    
+    def getCTCspeed(self):
+        return self.ctcSpeed
+    
+    def getAuthority(self):
+        return self.authority
+    
+    
