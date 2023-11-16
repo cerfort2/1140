@@ -43,16 +43,6 @@ class God(QMainWindow):
         self.traininterface.update_trains()
 
 
-    def openSWTrainControllerGUI(self):
-        self.widget1 = QWidget()
-        self.traininterface.access_train(1).controller.ui.setupUi(self.widget1)
-        self.traininterface.access_train(1).controller.ui.connect()
-        self.widget1.show()
-    
-    def openTrainModelGUI(self):
-        self.widget2 = QWidget()
-        self.traininterface.access_train(1).ui.setupUi(self.widget2)
-        self.widget2.show()
 
 
         
@@ -61,8 +51,7 @@ class God(QMainWindow):
 app = QApplication([])
 ui = God()
 ui.setupConnections()
-ui.openSWTrainControllerGUI()
-ui.openTrainModelGUI()
+ui.traininterface.show_GUI(1)
 ui.traininterface.access_train(1).controller.setCommandedSpeed(12)
 print(ui.traininterface.access_train(1).controller.getAutoCommandedSpeed())
 # # Start the event loop.
