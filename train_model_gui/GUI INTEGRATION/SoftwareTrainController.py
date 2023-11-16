@@ -85,7 +85,7 @@ class SoftwareTrainController():
 
     def update_time(self):
          self.ui.time.setDateTime(datetime.now())
-         self.ui.announcement.currentTextChanged.connect(self.manualannouncementchange)
+         self.ui.notify.clicked.connect(self.setAnnouncement)
          self.ui.serviceBrake.clicked.connect(self.serviceBrakePressed)
          self.ui.ebrake.clicked.connect(self.eBrakePressed)
          self.getVals()    

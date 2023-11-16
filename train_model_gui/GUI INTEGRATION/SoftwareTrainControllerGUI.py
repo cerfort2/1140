@@ -57,6 +57,7 @@ class SoftwareTrainControllerGUI(Ui_Form):
             self.internallight.setDisabled(True)
             self.temp.setDisabled(True)
             self.announcement.setDisabled(True)
+            self.notify.setDisabled(True)
             self.serviceBrake.setDisabled(True)
             self.manualcommandedspeed.setDisabled(True)
         else:
@@ -65,6 +66,7 @@ class SoftwareTrainControllerGUI(Ui_Form):
             self.externallight.setDisabled(False)
             self.internallight.setDisabled(False)
             self.temp.setDisabled(False)
+            self.notify.setDisabled(False)
             self.announcement.setDisabled(False)
             self.serviceBrake.setDisabled(False)
             self.manualcommandedspeed.setDisabled(False)      
