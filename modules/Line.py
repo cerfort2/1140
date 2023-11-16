@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, date
-from Block import Block
+from modules.Block import Block
 import pandas as pd
 from scipy.optimize import minimize
 import numpy as np
@@ -13,50 +13,46 @@ class Line():
     def read_data(self, filePath):
         df = pd.read_excel(filePath)
         blocks_list = []
-        self.green_stations = []
+
         for index, row in df.iterrows():
-            station = None
+            station = "0"  # Default value if no station is present
             switch = False
             underground = False
-            if pd.notna(row['Infrastructure']):
-            # Split the infrastructure data into components
-                infra_components = row['Infrastructure'].split(';')
-                
-                station = None
-                has_stations = []
-                switch = False
-                underground = False
-                # Parse each component
-                for component in infra_components:
-                    component = component.strip()  # Remove any leading/trailing whitespace
-                    if 'STATION' in component:
-                        station = component.replace('STATION:', '').strip()  # Get the station name
-                        has_stations.append(True)
-                    else:
-                        station = "0"
-                        has_stations.append(False)
-                    if 'SWITCH' in component:
-                        switch = True
-                    if 'UNDERGROUND' in component or 'UNDERDROUND' in component:  # Handling a typo
-                        underground = True
-            self.has_stations = has_stations
-            self.sections = df['Section'].tolist()
-            self.block_num = df['Block Number'].tolist()
-            self.block_lengths = df['Block Length (m)'].tolist()
-            self.speed_limits = df['Speed Limit (Km/Hr)'].tolist()
 
-            # Create a new Block object with the parsed data and append it to the list
+            if pd.notna(row['Infrastructure']):
+                infra_components = row['Infrastructure'].split(';')
+
+                for component in infra_components:
+                    component_cleaned = component.strip()  # Remove any leading/trailing whitespace
+
+                    if 'STATION' in component_cleaned:
+                        # Extract the station name and exclude 'UNDERGROUND' if present
+                        station_name = component_cleaned.replace('STATION:', '').replace('UNDERGROUND', '').strip()
+                        station = station_name if station_name else "0"
+                    
+                    if 'SWITCH' in component_cleaned:
+                        switch = True
+                    
+                    if 'UNDERGROUND' in component_cleaned:
+                        underground = True
+
+            # Create a Block object with the parsed data
             block = Block(
                 section=row['Section'],
                 number=row['Block Number'],
                 length=row['Block Length (m)'],
                 spd_lim=row['Speed Limit (Km/Hr)'],
-                station=station,
+                station=station,  # This will have the cleaned station name
                 dwell=0,  # Assuming default dwell time is 0, since it's not provided
                 has_switch=switch,
                 is_underground=underground
             )
             blocks_list.append(block)
+        #self.has_stations = has_stations
+        #self.sections = df['Section'].tolist()
+        #self.block_num = df['Block Number'].tolist()
+        #self.block_lengths = df['Block Length (m)'].tolist()
+        #self.speed_limits = df['Speed Limit (Km/Hr)'].tolist()
 
         return blocks_list
 
@@ -64,14 +60,16 @@ class Line():
     def get_route(self, station_list):
         route_blocks = []
         stop_or_dest = []
-
+        print(f"last stop: {station_list[-1]}") 
         for block in self.blocks:
-            route_blocks.append(block)
-
-            if block.station in station_list:
+            route_blocks.append(str(block.get_section())+str(block.get_number()))
+            station_check = str(block.get_section())+str(block.get_number()) + ": " + str(block.get_station())
+            print(f"station: {station_check}")
+            
+            if station_check in station_list:
                 stop_or_dest.append(True)
-
-                if block.station == station_list[-1]:
+                
+                if station_check == station_list[-1]:
                     break
             else:
                 stop_or_dest.append(False)
@@ -124,8 +122,8 @@ class Line():
     #returns a suggested velocity for each block given the route
     def get_velocities(self, block_list, departure_time, arrival_time, num_stops):
         #calculate suggested speed for each block, should be constant value except in special cases
-        time1 = datetime.strptime(departure_time, '%H:M:%S')
-        time2 = datetime.strptime(arrival_time, '%H:%M:%S')
+        time1 = datetime.strptime(departure_time.toString(), '%H:%M:%S')
+        time2 = datetime.strptime(arrival_time.toString(), '%H:%M:%S')
         total_dwell_time = num_stops
         elapsed_time = (time2-time1).total_seconds()
         
@@ -134,13 +132,13 @@ class Line():
         for block in block_list:
             suggested_speeds.append(5)
 
-
         return suggested_speeds
     #returns the authority from the yard given an input station  
     def get_authority(self, first_stop):
         authority_sum = 0
         for block in self.blocks:
-            if block.get_station() == first_stop:
+            station_check = str(block.get_section())+str(block.get_number())+str(block.get_station())
+            if station_check == first_stop:
                 break
             authority_sum += 1
     
