@@ -336,6 +336,7 @@ class train_model_software():
 
     #updates all train values and recieve inputs from the controller
     def update_train(self) -> None:
+        self.scrape_ui()
         self.set_power()
         self.set_speed()
         self.set_authority()
@@ -374,3 +375,19 @@ class train_model_software():
 
         self.ui.announcement.setText(self.announcement)
     
+    #get values from ui
+    def scrape_ui(self) -> None:
+        self.ui.emergency_brake.clicked.connect(self.controller.eBrakePressed)
+
+        if self.ui.engine_button.isChecked():
+            self.controller.engineFailure = True
+        else:
+            self.controller.engineFailure = False
+        if self.ui.brake_button.isChecked():
+            self.controller.brakeFailure = True
+        else:
+            self.controller.brakeFailure = False
+        if self.ui.signal_button.isChecked():
+            self.controller.signalFailure = True
+        else:
+            self.controller.signalFailure = False

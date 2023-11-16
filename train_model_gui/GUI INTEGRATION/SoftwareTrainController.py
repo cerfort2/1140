@@ -128,7 +128,7 @@ class SoftwareTrainController():
         self.ui.externallight.setChecked(self.computeExtLights())
 
         self.ui.speedlimit.display(int(self.getSpeedLimit()))
-        self.ui.authority.display(int(self.getAuthority()*2.23693629))
+        self.ui.authority.display(int(self.getAuthority()*3.280839895013123))
         
 
 
@@ -188,12 +188,12 @@ class SoftwareTrainController():
     def getEbrake(self):
         return self.eBrake
         
-    def setBrakeFailure(self,a):
-        self.brakeFailure=a
-    def setSignalFailure(self,a):
-        self.signalFailure=a
-    def setEngineFailure(self,a):
-        self.engineFailure=a
+    def setBrakeFailure(self):
+        self.brakeFailure= not self.brakeFailure
+    def setSignalFailure(self):
+        self.signalFailure= not self.signalFailure
+    def setEngineFailure(self):
+        self.engineFailure= not self.engineFailure
 
     def eBrakePressed(self):
         if self.eBrake and self.currentSpeed==0:
