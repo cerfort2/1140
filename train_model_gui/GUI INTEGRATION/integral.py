@@ -23,7 +23,7 @@ class God(QMainWindow):
     def __init__(self):
         super().__init__()
         self.MainTimer = QTimer()
-        self.timeStep = 200
+        self.timeStep = 500
 
 
        # self.trainControllergui = SoftwareTrainControllerGUI()

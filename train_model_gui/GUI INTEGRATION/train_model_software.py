@@ -311,6 +311,7 @@ class train_model_software():
         self.set_speed()
         self.set_authority()
         self.set_temperature(self.controller.temperature)
+        print(self.temperature)
         self.set_engine_failure(self.controller.engineFailure)
         self.set_brake_failure(self.controller.brakeFailure)
         self.set_signal_failure(self.controller.signalFailure)
@@ -331,6 +332,19 @@ class train_model_software():
         self.ui.power.setText(str(round(self.power, 2)) + " Watts")
         self.ui.current_velocity.setText(str(round(self.speed * 2.23694, 2)) + " MPH")
         self.ui.authority.setText(str(round(self.authority * 3.28084, 2)) + " Feet")
+        self.ui.acceleration.setText(str(round(self.acceleration * 3.280839895013123, 2)) + "Ft/s^2")
+        self.ui.air_conditioning.setText(str(self.temperature) + "Degrees")
+
+        self.ui.inside_lights.setChecked(self.inside_lights)
+        self.ui.outside_lights.setChecked(self.outside_lights)
+        self.ui.left_door.setChecked(self.left_door)
+        self.ui.right_door.setChecked(self.right_door)
+
+        self.ui.engine_button.setChecked(self.engine_failure)
+        self.ui.brake_button.setChecked(self.brake_failure)
+        self.ui.signal_button.setChecked(self.signal_failure)
+
+        self.ui.announcement.setText(self.announcement)
     
 
 # test_model = train_model_software()
