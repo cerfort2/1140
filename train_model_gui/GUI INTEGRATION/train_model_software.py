@@ -325,7 +325,6 @@ class train_model_software():
         self.set_speed()
         self.set_authority()
         self.set_temperature(self.controller.temperature)
-        print(self.temperature)
         self.set_engine_failure(self.controller.engineFailure)
         self.set_brake_failure(self.controller.brakeFailure)
         self.set_signal_failure(self.controller.signalFailure)
@@ -360,9 +359,3 @@ class train_model_software():
 
         self.ui.announcement.setText(self.announcement)
     
-
-# test_model = train_model_software()
-# test_model.set_beacon_list_out_station("C9/100.0/False/45.0; C10/100.0/False/45.0; C11/100.0/False/45.0; C12/100.0/False/45.0;")
-# print(test_model.occupancy)
-# test_model.update_occupancy(False)
-# print(test_model.occupancy)
