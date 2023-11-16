@@ -46,8 +46,8 @@ class SoftwareTrainControllerGUI(Ui_Form):
         self.modeVals()
 
     def update_time(self):
-         self.time.setDateTime(datetime.now())
-         self.receiveVals()
+        self.time.setDateTime(datetime.now())
+        self.receiveVals()
         
         
         #cannot edit doors or light statuses in automatic mode

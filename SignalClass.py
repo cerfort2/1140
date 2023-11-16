@@ -58,7 +58,7 @@ class God(Home, QMainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.setupConnections()
+        
         self.MainTimer = QTimer()
         self.timeStep = 1000
 
@@ -67,6 +67,8 @@ class God(Home, QMainWindow):
         self.trackModel = functionalUI()
         self.trainModel = TrainM()
         self.trainController = SoftwareTrainControllerGUI() 
+        self.setupConnections()
+        self.create_modules()
 
     def setupConnections(self):
         #home page connections
@@ -92,29 +94,35 @@ class God(Home, QMainWindow):
         #self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
         self.trainController.update_time()
-
-    def openTrackModelGUI(self):
+    
+    def create_modules(self):
+        #setup track model
         self.widget = QWidget()
         self.trackModel.setupUi(self.widget)
         self.trackModel.connect()
-        self.widget.show()
-
-    def openTrainControllerGUI(self):
+        
         self.widget1 = QWidget()
         self.trainController.setupUi(self.widget1)
         self.trainController.connect()
-        self.widget1.show()
-
-    def openTrackControllerHWGUI(self):
+        
         self.widget2 = QWidget()
         self.trackController.setupUi(self.widget2)
         self.trackController.connectFunctions()
-        self.widget2.show()
-    
-    def openCTCGUI(self):
+        
         self.widget3 = QWidget()
         self.ctc.setupUi(self.widget3)
         self.ctc.initialize_ctc()
+
+    def openTrackModelGUI(self):
+        self.widget.show()
+
+    def openTrainControllerGUI(self):
+        self.widget1.show()
+
+    def openTrackControllerHWGUI(self):
+        self.widget2.show()
+    
+    def openCTCGUI(self):
         self.widget3.show()
 
 
