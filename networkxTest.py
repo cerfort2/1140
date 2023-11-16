@@ -2,11 +2,24 @@ import networkx as nx
 
 G = nx.Graph()
 
-G.add_nodes_from([1,2,3,4])
-G.add_edge(3,1)
-G.add_edge(1,2)
-G.add_edge(3,4)
+class test():
+    a = False
 
-print(G.adj[1])
+a = test()
+b = test()
+c = test()
+d = test()
+G.add_nodes_from([a,b,c,d])
+G.add_edge(a,b)
+G.add_edge(b,c)
+G.add_edge(c,d)
+G.add_edge(d,a)
+
+for obj in G.nodes:
+    for node in G.adj:
+        pass
+        
+        
+    print("Done")
 print(G.nodes)
 print(G.edges)

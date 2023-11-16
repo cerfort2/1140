@@ -56,7 +56,7 @@ class God(QMainWindow):
     def __init__(self):
         super().__init__()
         self.MainTimer = QTimer()
-        self.timeStep = 5000
+        self.timeStep = 1000
 
         self.ctc = CTC()
         self.trackControllerHW = HWTrackControllerGUI()

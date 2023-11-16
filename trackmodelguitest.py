@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 # comboBox_3 = Line Box
 
 
+#polarity, #switch beacons, #updating map, #updating authority 
 metersToFeet = 3.28084
 kmhrTomihr = 0.621371
 
@@ -137,6 +138,13 @@ class Line():
         occupied_list = [blk.name for blk in self.blocks if blk.occupied]
         return occupied_list
     
+    def getOccupiedBlocks(self):
+        if(len(self.blocks) == 0):
+            return []
+
+        occupied_list = [blk for blk in self.blocks if blk.occupied]
+        return occupied_list
+
     def getBlock(self,blockName):
         return self.blocks[self.getBlockNames().index(blockName)]
   
@@ -191,8 +199,6 @@ class Line():
     #Track Model --> Track Controller
     def getBlockOccupancyList(self):
         occupancyMask = [blk.occupied for blk in self.blocks]
-        occupancyMask[0] = True
-        occupancyMask[-1] = True
         return occupancyMask
     
     #Track Controller --> Track Model
@@ -210,6 +216,7 @@ class Line():
                 #Signal Updating
                 if(self.blocks[i].signal[1] != controlSignals[2][i]):
                     self.blocks[i].toggleSignal()
+
 
     def initializeTrackControllerData(self):
         hasSwitch = [blk.switch[0] for blk in self.blocks]
@@ -339,6 +346,8 @@ class TrackModel(QObject):
     trackControllerOccupancy = pyqtSignal(list)
     trackControllerInitializeLine = pyqtSignal(list)
     trainModelSuggestedSpeed = pyqtSignal(float)
+    trainModelAuthority = pyqtSignal(int)
+    trainModelBeacon = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -368,6 +377,17 @@ class TrackModel(QObject):
         for line in self.lines:
             self.trackControllerOccupancy.emit(line.getBlockOccupancyList())
 
+    def emitBeacon(self):
+        for line in self.lines:
+            occupiedList = line.getOccupiedBlocks()
+            for blk in occupiedList:
+                if blk.approachingBeacon[0]:
+                    self.trainModelBeacon.emit(blk.approachingBeacon[1])
+                if blk.stationBeacon[0]:
+                    self.trainModelBeacon.emit(blk.stationBeacon[1])
+                if blk.switchBeacon[0]:
+                    self.trainModelBeacon.emit(blk.switchBeacon[1])
+
     def controlModel(self,controlSignals):
         for line in self.lines:
             line.updateLineStatus(controlSignals)
@@ -379,17 +399,18 @@ class TrackModel(QObject):
             for block in line.blocks:
                 block.clearOccupied()
 
-        for blk_name, line_name in range(len(occupancyList)):
-            self.lines[self.lines.index(line_name)].getBlock(blk_name).setOccupied()
+        if
+        for blk_name in range(len(occupancyList)):
+            self.lines[self.lines.index(self.lines[0])].getBlock(blk_name).setOccupied()
 
     #Track Model --> Train Model
     def routeToBlockLengths(self, route):
-        line = self.getLine(route[0])
 
-        blocksAndLengths = []
+        for line in self.lines:
+            blocksAndLengths = []
 
-        for i in range(1, len(route)):
-            blocksAndLengths.append((route[i], line.getBlock(route[i]).length))
+            for i in range(1, len(route)):
+                blocksAndLengths.append((route[i], line.getBlock(route[i]).length))
 
         return blocksAndLengths
 
@@ -397,12 +418,23 @@ class TrackModel(QObject):
     def suggestedSpeed(self, SS):
         self.trainModelSuggestedSpeed.emit(SS)
 
-    def route(self):
-        pass
-    
-    def authority(self):
-        pass
+    def route(self, r):
+        self.trainRoute = r
 
+    #convert block authority to feet authority
+    def authority(self, authorityInBlocks):
+        for line in self.lines:
+            occupiedList = line.getOccupiedBlockNames()
+            for blkname in occupiedList:
+                authorityInM = 0
+                for i in range(self.trainRoute.index(blkname)+1,self.trainRoute.index(blkname)+1+authorityInBlocks):
+                    if (i == self.trainRoute.index(blkname)+authorityInBlocks):
+                        authorityInM += line.getBlock(self.trainRoute[i].length/2)
+                    else:
+                        authorityInM += line.getBlock(self.trainRoute[i]).length
+                
+        
+        self.trainModelAuthority.emit(authorityInM)
           
     def initTrack(self):
         for line in self.lines:
@@ -536,6 +568,8 @@ class functionalUI(Ui_Form):
 
     def update_time(self):
         self.trackModel.emitOccupancy()
+        self.updateMap()
+        self.trackModel.emitBeacon()
 
 
 
