@@ -14,6 +14,12 @@ class Authority():
 
     def calculate(self, num):
         #For every block that is occupied count the blocks to the next stop
+        occupied = False
+        for i in range(len(self.blocks)):
+            if(self.blocks[i].getOccupancy()):
+                occupied = True
+        if(not occupied):
+            return
         for i in range(len(self.blocks)):
             if(self.blocks[i].getOccupancy()):
                 if(self.route[num][0][0] == self.blocks[i].getName()):
