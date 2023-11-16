@@ -127,11 +127,10 @@ class Line():
         
         total_length = 0
         suggested_speeds = []
-        print(block_list)
+
         for i, block in enumerate(block_list):
             block_list_block = str(self.blocks[i].get_section()) + str(self.blocks[i].get_number())
-            print("input" + str(block))
-            print("output"+ block_list_block)
+
             if block_list_block == block:
                 total_length += self.blocks[i].get_length()
             

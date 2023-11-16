@@ -215,11 +215,12 @@ class CTC(Ui_Form, QWidget):
             self.occupancy_old_text = "Green Line"
             self.block_occupancy.setRowCount(141)
             self.block_occupancy.setVerticalHeaderLabels([str(i) for i in range(1, 142)])
-            for i, infrastructure in enumerate(self.infrastructure_data):
-                item = QTableWidgetItem(infrastructure)
-                item.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
-                self.block_occupancy.setItem(i, 1, item)  # Column index 1 for the second column
-                self.block_occupancy.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+            # for i in range(20):
+            #     item = QTableWidgetItem("")
+            #     item.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
+            #     self.block_occupancy.setItem(i, 1, item)  # Column index 1 for the second column
+            
+            # self.block_occupancy.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
 
 
     def check_mode(self):
@@ -423,6 +424,9 @@ class CTC(Ui_Form, QWidget):
 
         authority = self.green_line.get_authority(next_stop)
         self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
+        self.suggested_speed_tb.setText(str(speeds))
+        self.authority_tb.setText(str(authority))
+        self.route_tb.setText(str(route[0]))
         
         self.remove_train_from_schedule(trainID)
         self.train_dispatch(route, authority, speeds)
