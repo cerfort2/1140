@@ -131,7 +131,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         self.sendData
         self.sendOccupancy
         self.sendFailures
-        self.sendAuthority
     
     #Getting data functions
     def getOccupancy(self, occupancy:[]): #Current Occupancy from Track Model
@@ -150,16 +149,22 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         #All for Wayside 4
         for i in range(48): #S102-Y149
             self.greenLine.Waysides[3].getTrack(i).setOccupancy(occupancy[i+101])
+        check = False
+        for i in range(len(occupancy)):
+            if(occupancy[i] == True):
+                check = True
         if(self.tabWidget.currentIndex() == 0):
             newStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
             self.setNewDataGreenLine(newStates)
-            self.editAuthority() #Edits authority each time
-            self.setListsOccupancyAutomatic
-            self.setListsOccupancyManual
+            if(check == True):
+                self.sendAuthority()
+            self.setListsOccupancyAutomatic()
+            self.setListsOccupancyManual()
         elif(self.tabWidget.currentIndex() == 1):
+            if(check == True):
+                self.sendAuthority()
             self.setListsOccupancyAutomatic
             self.setListsOccupancyManual
-            self.editAuthority() #Edits authority each time
     def createNewTrainData(self, traveling:[], firstAuth, speed:[]):
         self.greenLine.trainAuthority.setNewTrain(traveling)
         self.trackModelSendRouteHW.emit(traveling)
@@ -206,7 +211,8 @@ class HWTrackControllerGUI(Ui_Form, QObject):
 
     #Authority functions
     def sendAuthority(self):
-        self.trackModelAuthorityHW.emit(self.greenLine.trainAuthority.calculate(0))
+        auth = self.greenLine.trainAuthority.calculate(0)
+        self.trackModelAuthorityHW.emit(auth)
 
     #Functions for setting data after PLC Logic
     def setNewDataGreenLine(self, states):

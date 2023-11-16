@@ -2,8 +2,9 @@ from TrackClass import Track
 
 class AuthorityClass():
     route = []
+    blocks = []
 
-    def init(self, blo):
+    def __init__(self, blo):
         self.blocks = blo
 
     def setNewTrain(self, travel:[]):
