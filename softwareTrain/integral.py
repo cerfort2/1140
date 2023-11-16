@@ -3,6 +3,7 @@ from PyQt6.QtCore import QObject, pyqtSignal, QTimer
 from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow, QFileDialog
 from PyQt6 import QtCore, QtGui, QtWidgets
 from SoftwareTrainControllerGUI import *
+from train_model_interface_software import *
 
 ##ALL FUNCTIONAL OBJECTS NEED TO DO THE FOLLOWING
 
@@ -26,7 +27,10 @@ class God(QMainWindow):
         self.timeStep = 50
 
 
-        self.trainController = SoftwareTrainControllerGUI() 
+       # self.trainControllergui = SoftwareTrainControllerGUI()
+        self.traininterface = train_model_interface_software()
+        self.traininterface.new_train()
+        #self.traininterface.access_train(1).controller.generateSoftwareTrainUI()
 
     def setupConnections(self):
         #timer
@@ -37,14 +41,15 @@ class God(QMainWindow):
 
     #on timeout emissions
     def onTimeoutFunctions(self):
-        self.trainController.update_time()
+        self.traininterface.update_trains()
 
 
-    def openTrainControllerGUI(self):
+    def openSWTrainControllerGUI(self):
         self.widget1 = QWidget()
-        self.trainController.setupUi(self.widget1)
-        self.trainController.connect()
+        self.traininterface.access_train(1).controller.ui.setupUi(self.widget1)
+        self.traininterface.access_train(1).controller.ui.connect()
         self.widget1.show()
+
 
         
 
@@ -52,7 +57,9 @@ class God(QMainWindow):
 app = QApplication([])
 ui = God()
 ui.setupConnections()
-ui.openTrainControllerGUI()
+ui.openSWTrainControllerGUI()
+ui.traininterface.access_train(1).controller.setCommandedSpeed(12)
+print(ui.traininterface.access_train(1).controller.getAutoCommandedSpeed())
 # # Start the event loop.
 app.exec()
 

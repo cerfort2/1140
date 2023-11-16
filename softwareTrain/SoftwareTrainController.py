@@ -1,50 +1,49 @@
 from PyQt6.QtCore import QObject, pyqtSignal, QTimer
+from SoftwareTrainControllerGUI import *
+
 class SoftwareTrainController():
     
-    trainmodel_SW_servicebrake=pyqtSignal(bool)
-    trainmodel_SW_ebrake=pyqtSignal(bool)
-    trainmodel_SW_rightDoor=pyqtSignal(bool)
-    trainmodel_SW_leftDoor=pyqtSignal(bool)
-    trainmodel_SW_interiorLight=pyqtSignal(bool)
-    trainmodel_SW_exteriorLight=pyqtSignal(bool)
-    trainmodel_SW_announcment=pyqtSignal(str)
-    trainmodel_SW_temperature=pyqtSignal(str)
-    trainmodel_SW_power=pyqtSignal(str)
+    # trainmodel_SW_servicebrake=pyqtSignal(bool)
+    # trainmodel_SW_ebrake=pyqtSignal(bool)
+    # trainmodel_SW_rightDoor=pyqtSignal(bool)
+    # trainmodel_SW_leftDoor=pyqtSignal(bool)
+    # trainmodel_SW_interiorLight=pyqtSignal(bool)
+    # trainmodel_SW_exteriorLight=pyqtSignal(bool)
+    # trainmodel_SW_announcment=pyqtSignal(str)
+    # trainmodel_SW_temperature=pyqtSignal(str)
+    # trainmodel_SW_power=pyqtSignal(str)
 
-    def timeout(self):
-        self.swtrain.update_time()
+    # def getServiceBrake(self):
+    #     self.trainmodel_SW_servicebrake.emit(self.getServiceBrake())
 
-    def getServiceBrake(self):
-        self.trainmodel_SW_servicebrake.emit(self.swtrain.swtrain.getServiceBrake())
+    # def getEbrake(self):
+    #     self.trainmodel_SW_ebrake.emit(self.getEbrake())
 
-    def getEbrake(self):
-        self.trainmodel_SW_ebrake.emit(self.swtrain.swtrain.getEbrake())
+    # def getExteriorLights(self):
+    #     self.trainmodel_SW_exteriorLight.emit(self.getExteriorLights())
 
-    def getExteriorLights(self):
-        self.trainmodel_SW_exteriorLight.emit(self.swtrain.swtrain.getExteriorLights())
+    # def getInteriorLights(self):
+    #     self.trainmodel_SW_interiorLight.emit(self.getIntLights())
 
-    def getInteriorLights(self):
-        self.trainmodel_SW_interiorLight.emit(self.swtrain.swtrain.getIntLights())
+    # def getRightDoor(self):
+    #     self.trainmodel_SW_rightDoor.emit(self.getRightDoor())
 
-    def getRightDoor(self):
-        self.trainmodel_SW_rightDoor.emit(self.swtrain.swtrain.getRightDoor())
+    # def getLeftDoor(self):
+    #     self.trainmodel_SW_leftDoor.emit(self.getLeftDoor())
 
-    def getLeftDoor(self):
-        self.trainmodel_SW_leftDoor.emit(self.swtrain.swtrain.getLeftDoor())
+    # def getPower(self):
+    #     self.trainmodel_SW_power.emit(self.getPower())
 
-    def getPower(self):
-        self.trainmodel_SW_power.emit(self.swtrain.swtrain.getPower())
+    # def getAnnouncement(self):
+    #     self.trainmodel_SW_announcment.emit(self.getAnnouncement())
 
-    def getAnnouncement(self):
-        self.trainmodel_SW_announcment.emit(self.swtrain.swtrain.getAnnouncement())
-
-    def getTemperature(self):
-        self.trainmodel_SW_temperature.emit(self.swtrain.swtrain.getTemperature())
-
-
+    # def getTemperature(self):
+    #     self.trainmodel_SW_temperature.emit(self.getTemperature())
 
 
     def __init__(self):
+        self.ui=SoftwareTrainControllerGUI()
+        self.uiopen=False
         self.manualmode=False
         self.simulationSpeed=1
         self.ctcSpeed=10                #speed to go in automatic mode when in the middle of a route in m/s
@@ -78,19 +77,74 @@ class SoftwareTrainController():
         self.brakeAuthority=0
         self.beaconInfo=''
 
-    def setBeaconInfo(self,s):
-        self.beaconInfo=s
+    def update_time(self):
+         self.ui.time.setDateTime(datetime.now())
+         self.ui.announcement.currentTextChanged.connect(self.manualannouncementchange)
+         self.ui.serviceBrake.clicked.connect(self.serviceBrakePressed)
+         self.ui.ebrake.clicked.connect(self.eBrakePressed)
+         self.getVals()    
 
-    def decodeBeaconInfo(self):
-        self.nextstop='Station Square'
+    def getVals(self):
+        self.ki=self.ui.ki.value()
+        self.kp=self.ui.kp.value()
+        self.setManualMode(self.ui.mode.currentText())
+        self.announcement=self.ui.announcement.currentText()
+        self.temperature=self.ui.temp.value()
+        self.manualcommandedspeed=self.ui.manualcommandedspeed.value()
+        self.externallight=self.ui.externallight.isChecked()
+        self.internallight=self.ui.internallight.isChecked()
+        self.leftDoor=self.ui.leftdoor.isChecked()
+        self.rightDoor=self.ui.rightdoor.isChecked()
+        self.computeVals()
 
-    def eBrakePressed(self): 
-        if self.currentSpeed==0 and self.eBrake==True:    #ebrake already pressed
-            print('Ebrake released')
-            self.eBrake=False
+    def setManualMode(self,m):
+        if m=='Automatic':
+            self.manualmode=False
         else:
-            print('Ebrake pressed')
-            self.eBrake=True
+            self.manualmode=True
+
+    def computeVals(self):
+        self.computeManualSpeed()
+        self.computeAuthority()
+        self.computeServiceBrake()
+        self.computeDwellTime()
+        self.computePower()
+        self.updateVals()
+
+    def updateVals(self):
+        self.ui.power.display(self.getPower())
+        self.ui.currentspeed.display(self.getCurrentSpeed()*2.2369362921)
+        self.ui.nextstop.setPlainText(self.getNextStop())
+        self.ui.autocommandedspeed.display(2.23693629*self.getAutoCommandedSpeed())
+        self.ui.manualcommandedspeed.setValue(int(self.getManualCommandedSpeed()))
+        self.ui.leftdoor.setChecked(self.getLeftDoor())
+        self.ui.rightdoor.setChecked(self.getRightDoor())
+        
+        self.ui.externallight.setChecked(self.computeExtLights())
+        self.ui.announcement.setCurrentText(self.computeAnnouncement())
+
+        self.ui.speedlimit.display(int(self.getSpeedLimit()))
+        self.ui.authority.display(int(self.getAuthority()*2.23693629))
+        
+    def manualannouncementchange(self):
+        self.setAnnouncement(self.announcement.currentText())
+        
+    def computeAnnouncement(self):
+                #do not allow duplicate announcements to overpopulate the announcement box
+        if self.announcement!=self.ui.announcement.currentText():
+            if not any(self.announcement()== self.ui.announcement.itemText(i) for i in range(self.ui.announcement.count())):
+                if self.manualmode():
+                    self.ui.announcement.addItem(self.getAnnouncement()) 
+                    return self.announcement.currentText() 
+                else:
+                    return self.getAnnouncement()
+        else: 
+            return self.getAnnouncement()
+
+
+    #def generateSoftwareTrainUI(self):
+
+
     
     def setCommandedSpeed(self,s):
         self.ctcSpeed=s
@@ -106,9 +160,9 @@ class SoftwareTrainController():
         self.setAnnouncement('Next stop: ' + self.nextstop)
         
     def computeServiceBrake(self):
-        if not self.manualmode and self.currentSpeed>0 and self.authority > 0:
+        if not self.manualmode and self.currentSpeed>0:
             
-            self.brakedistance = self.currentSpeed**2/(2*1.2)
+            self.brakedistance = self.currentSpeed**2/(1.2)
 
             if self.brakedistance>=self.authority:
                 self.serviceBrake=True
@@ -145,6 +199,12 @@ class SoftwareTrainController():
         self.signalFailure=a
     def setEngineFailure(self,a):
         self.engineFailure=a
+
+    def eBrakePressed(self):
+        if self.eBrake and self.currentSpeed==0:
+            self.eBrake=False
+        else:
+            self.eBrake=True
 
     def getExteriorLights(self):
             return self.exlights
@@ -187,7 +247,7 @@ class SoftwareTrainController():
 
         if self.brakeFailure or self.signalFailure or self.engineFailure or self.eBrake or self.power < 0 or self.serviceBrake==True:
             self.power=0
-        
+    
             
     def getLeftDoor(self):
         if self.authority==0 and self.currentSpeed==0 and self.stationOnLeft=='l' and not self.manualmode:
@@ -228,13 +288,12 @@ class SoftwareTrainController():
                 self.dwellTime-=self.interval
             else:
                 self.dwelling=False
-                self.dwellTime=60        
-    # def computeAuthority(self):
-    #     if self.authority>0:
-    #         self.authority-=self.currentSpeed*self.interval
-    #     else:
-    #         if not self.manualmode:
-    #             self.dwelling=True
+                self.dwellTime=60     
+                self.authority+=10   
+    def computeAuthority(self):
+        if self.authority<=0 and self.currentSpeed==0:
+            if not self.manualmode:
+                self.dwelling=True
 
 
     def computeManualSpeed(self) ->int:
@@ -244,6 +303,8 @@ class SoftwareTrainController():
         if not self.manualmode:
             if self.ctcSpeed>self.speedLimit:
                 self.ctcSpeed=self.speedLimit
+                self.manualcommandedspeed=self.ctcSpeed*2.2369362921
+            else:
                 self.manualcommandedspeed=self.ctcSpeed*2.2369362921
         else:
             if self.manualcommandedspeed>=self.speedLimit:
