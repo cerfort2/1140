@@ -30,37 +30,51 @@
      <enum>QLayout::SetNoConstraint</enum>
     </property>
     <item>
-     <widget class="QPushButton" name="ctc">
+     <widget class="QPushButton" name="ctc_btn">
       <property name="text">
        <string>CTC</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="track_model">
+     <widget class="QPushButton" name="track_model_btn">
       <property name="text">
        <string>Track Model</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="track_controller">
+     <widget class="QPushButton" name="track_controller_sw_btn">
       <property name="text">
        <string>Track Controller (Software)</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="train_model">
+     <widget class="QPushButton" name="track_controller_hw_btn">
+      <property name="text">
+       <string>Track Controller (Hardware)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="train_model_btn">
       <property name="text">
        <string>Train Model</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="train_controller">
+     <widget class="QPushButton" name="train_controller_sw_btn">
       <property name="text">
        <string>Train Controller (Software)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="train_controller_hw_btn">
+      <property name="text">
+       <string>Train Controller (Hardware)</string>
       </property>
      </widget>
     </item>
