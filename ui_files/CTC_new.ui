@@ -71,7 +71,7 @@
      </column>
      <column>
       <property name="text">
-       <string>ETA</string>
+       <string>Arrival Time</string>
       </property>
      </column>
      <column>

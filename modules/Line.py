@@ -20,16 +20,16 @@ class Line():
             underground = False
 
             if pd.notna(row['Infrastructure']):
-                infra_components = row['Infrastructure'].split(';')
+                infra_components = row['Infrastructure']
 
                 for component in infra_components:
                     component_cleaned = component.strip()  # Remove any leading/trailing whitespace
-
+                    print(component_cleaned)
                     if 'STATION' in component_cleaned:
                         # Extract the station name and exclude 'UNDERGROUND' if present
                         station_name = component_cleaned.replace('STATION:', '').replace('UNDERGROUND', '').strip()
                         station = station_name if station_name else "0"
-                    
+                        
                     if 'SWITCH' in component_cleaned:
                         switch = True
                     
@@ -167,13 +167,13 @@ class Line():
         velocities_list = []
         for block_list in block_list_list:
             velocities_list.append(self.get_velocities(block_list))
-        return
+        return velocities_list
     #returns the authority from the yard given a list of input stations
     def get_authorities(self, station_list):
         authorities_list = []
         for station in station_list:
             authorities_list.append(self.get_authority(station))
-        return
+        return authorities_list
     
 """    #calculates departure time given the arrival station
     def calculate_dep_time(self, station, time):
@@ -193,4 +193,5 @@ class Line():
     def calculate_arrival_times(self, stations, times):
         
         delta = timedelta(hours = hrs, minutes = mins, seconds = secs)
-        return delta"""
+        return delta
+"""
