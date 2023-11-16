@@ -123,25 +123,36 @@ class Line():
         time1 = datetime.strptime(departure_time.toString(), '%H:%M:%S')
         time2 = datetime.strptime(arrival_time.toString(), '%H:%M:%S')
         total_dwell_time = num_stops
-        elapsed_time = (time2-time1).total_seconds()
+        moving_time = (time2-time1).total_seconds() - total_dwell_time
         
         total_length = 0
         suggested_speeds = []
-        for block in block_list:
-            suggested_speeds.append(5)
+        print(block_list)
+        for i, block in enumerate(block_list):
+            block_list_block = str(self.blocks[i].get_section()) + str(self.blocks[i].get_number())
+            print("input" + str(block))
+            print("output"+ block_list_block)
+            if block_list_block == block:
+                total_length += self.blocks[i].get_length()
+            
+            #suggested_speeds.append(5)
+        speed_initial = total_length/moving_time
+        for i in range(len(block_list)):
+            suggested_speeds.append(speed_initial)
 
         return suggested_speeds
     #returns the authority from the yard given an input station  
     def get_authority(self, first_stop):
         authority_sum = 0
         for block in self.blocks:
-            station_check = str(block.get_section())+str(block.get_number())+str(block.get_station())
+            station_check = str(block.get_section())+str(block.get_number())+": " +str(block.get_station())
+
             if station_check == first_stop:
                 break
             authority_sum += 1
     
         return authority_sum
-    
+
     #returns the route from yard given a list of input stations
     def get_routes(self, station_list_list):
         
@@ -151,10 +162,10 @@ class Line():
         for block in self.blocks:
             route_blocks.append(block)
 
-            if block.station in station_list:
+            if block.station in station_list_list:
                 stop_or_dest.append(True)
 
-                if block.station == station_list[-1]:
+                if block.station == station_list_list[-1]:
                     break
             else:
                 stop_or_dest.append(False)

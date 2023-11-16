@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from PyQt6.QtCore import pyqtSignal, QEvent, Qt, QDateTime, QTimer, QObject
-from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QTableWidgetItem, QLabel, QLineEdit
+from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QTableWidgetItem, QLabel, QLineEdit, QHeaderView
 
 from modules.Line import Line
 from modules.CTC_new import Ui_Form
@@ -79,6 +79,7 @@ class CTC(Ui_Form, QWidget):
         self.throughput_val - value of throughput displayed
         self.dispatched_trains_line - selecting line to show which trains have been dispatched
         self.system_time - displays current time of system
+        self.remove_schedule - button to remove from schedule
         """
     def initialize_ctc(self):
         self.num_trains_dispatched = 0
@@ -158,7 +159,6 @@ class CTC(Ui_Form, QWidget):
 
     
     def initialize_ui(self):
-        self.block_occupancy.setVerticalHeaderLabels([str(i) for i in range(1, 16)])
         self.manual_mode_btn.setChecked(True)
         self.import_schedule_btn.hide()
 
@@ -215,9 +215,12 @@ class CTC(Ui_Form, QWidget):
             self.occupancy_old_text = "Green Line"
             self.block_occupancy.setRowCount(141)
             self.block_occupancy.setVerticalHeaderLabels([str(i) for i in range(1, 142)])
-        elif(self.occupancy_line_box.currentText() == "Blue Line"):
-            self.occupancy_old_text = "Blue Line"
-            self.block_occupancy.setVerticalHeaderLabels([str(i) for i in range(1, 16)])
+            for i, infrastructure in enumerate(self.infrastructure_data):
+                item = QTableWidgetItem(infrastructure)
+                item.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
+                self.block_occupancy.setItem(i, 1, item)  # Column index 1 for the second column
+                self.block_occupancy.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+
 
     def check_mode(self):
         while True:
@@ -242,6 +245,7 @@ class CTC(Ui_Form, QWidget):
         self.departure_time_label.show()
         self.arrival_time.show()
         self.add_stop.show()
+        self.label.show()
 
     
     def update_auto_mode(self):
@@ -257,6 +261,7 @@ class CTC(Ui_Form, QWidget):
         self.departure_time.hide()
         self.departure_time_label.hide()
         self.arrival_time.hide()
+        self.label.hide()
 
     def import_schedule(self):
         options = QFileDialog.Option.ReadOnly
@@ -324,7 +329,7 @@ class CTC(Ui_Form, QWidget):
         num_stops = len(self.stops)
         if dispatched_line == "Green Line":
             route = self.green_line.get_route(station_list)
-            speeds = self.green_line.get_velocities(route, departure_time, arrival_time, num_stops)
+            speeds = self.green_line.get_velocities(route[0], departure_time, arrival_time, num_stops)
             if len(station_list) == 1:
                 next_stop = station_list[0]
             else:
@@ -335,6 +340,13 @@ class CTC(Ui_Form, QWidget):
         train = Train(trainID, destination, departure_time, arrival_time, self.stops)
         self.trains_dispatched.append(train)
         self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
+        print(route)
+        print(authority)
+        print(speeds)
+
+        self.suggested_speed_tb.setText(str(speeds))
+        self.authority_tb.setText(str(authority))
+        self.route_tb.setText(str(route[0]))
 
         #setting route, authority, suggested speed
         self.train_dispatch(route, authority, speeds)
@@ -355,7 +367,7 @@ class CTC(Ui_Form, QWidget):
         num_stops = len(self.stops)
         if dispatched_line == "Green Line":
             route = self.green_line.get_route(station_list)
-            speeds = self.green_line.get_velocities(route, departure_time, arrival_time, num_stops)
+            speeds = self.green_line.get_velocities(route[0], departure_time, arrival_time, num_stops)
             if len(station_list) == 1:
                 next_stop = station_list[0]
             else:
@@ -403,7 +415,7 @@ class CTC(Ui_Form, QWidget):
         route = self.green_line.get_route(station_list)
         num_stops = len(self.stops)
 
-        speeds = self.green_line.get_velocities(route, departure_time, arrival_time, num_stops)
+        speeds = self.green_line.get_velocities(route[0], departure_time, arrival_time, num_stops)
         if len(station_list) == 1:
             next_stop = station_list[0]
         else:
