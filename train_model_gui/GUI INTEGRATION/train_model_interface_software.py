@@ -1,6 +1,6 @@
 #Train model interface to house all train objects
 
-from train_model_software import train_model_software
+from train_model_software import *
 
 class train_model_interface_software():
 
