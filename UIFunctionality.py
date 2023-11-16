@@ -120,7 +120,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         # self.comboBox.currentIndexChanged.connect(lambda: self.getOccupancy(self.pureOccupancy))
         # self.comboBox_12.currentIndexChanged.connect(lambda: self.getOccupancy(self.pureOccupancy))
 
-
     def __init__(self): #Initalizer
         super().__init__()
 
