@@ -19,6 +19,14 @@ from modules.Line import Line
 from modules.CTC_new import Ui_Form
 
 
+class Train:
+    def __init__(self, trainID, destination, departure_time, arrival_time, stops):
+        self.trainID = trainID
+        self.destination = destination
+        self.departure_time = departure_time
+        self.arrival_time = arrival_time
+        self.stops = stops
+
 class CTC(Ui_Form, QObject):
     occupancy_update = pyqtSignal()
     station_update = pyqtSignal()
@@ -26,6 +34,7 @@ class CTC(Ui_Form, QObject):
     auto_mode = pyqtSignal()
     maint_mode = pyqtSignal()
     train_dispatched = pyqtSignal(list, int, list)
+    schedule_dispatch = pyqtSignal()
     stop_update = pyqtSignal()
     #output_speed = pyqtSignal(list)
     #output_route = pyqtSignal(list)
@@ -145,6 +154,7 @@ class CTC(Ui_Form, QObject):
         Thread(target=self.check_mode).start()
         Thread(target=self.check_stations).start()
         Thread(target=self.update_throughput).start()
+        Thread(target=self.start_dispatch_check).start()
 
     def initialize_connections(self):
         self.dispatch_train_btn.clicked.connect(self.dispatch_train)
@@ -155,6 +165,7 @@ class CTC(Ui_Form, QObject):
         self.auto_mode.connect(self.update_auto_mode)
         self.add_stop.clicked.connect(self.add_stops)
         self.stop_update.connect(self.update_stops)
+        self.schedule_dispatch.connect(self.dispatch_scheduled_train)
 
     
     def initialize_ui(self):
@@ -175,6 +186,7 @@ class CTC(Ui_Form, QObject):
     def update_throughput(self):
         while True:
             return
+
     def updated_dispatched_trains_info(self):
         while True:
             return
@@ -267,6 +279,8 @@ class CTC(Ui_Form, QObject):
             #can randomly generate train IDs
             #train_ids = df['Train ID'].tolist()
             #departing_stations = df['Departing From'].tolist() - don't need
+            trainID = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
+
             arriving_stations = df['Arriving to'].tolist()
             departure_times = df['Departure Time'].tolist()
             self.update_schedule(train_ids, departing_stations, arriving_stations, departure_times)
@@ -277,7 +291,7 @@ class CTC(Ui_Form, QObject):
         return
 
     def add_stops(self):
-        stop = self.add_stop.text()
+        stop = self.stop_box_list.currentText()
         if stop in self.stops:
             return
         else:
@@ -320,11 +334,11 @@ class CTC(Ui_Form, QObject):
         station_list = [destination]
         for stop in self.stops:
             station_list.append(stop)
-        arrival_time = QDateTime.fromString(self.arrival_time_dis.currentText(), "HH:mm:ss")
-        departure_time = QDateTime.fromString(self.departure_time.currentText(), "HH:mm:ss")
+        arrival_time = QDateTime.fromString(self.arrival_time.text(), "HH:mm:ss")
+        departure_time = QDateTime.fromString(self.departure_time.text(), "HH:mm:ss")
 
         #get line from ui
-        dispatched_line = self.lines_box.getCurrentText()
+        dispatched_line = self.manual_dispatch_line.currentText()
 
         if dispatched_line == "Green Line":
             route = self.green_line.get_route(station_list)
@@ -336,23 +350,55 @@ class CTC(Ui_Form, QObject):
             authority = self.green_line.get_authority(next_stop)
 
         trainID = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
+        stop_string = ""
+        for stop in self.stops:
+            if stop == self.stops[-1]:
+                stop_string += stop
+            else:
+                stop_string += stop + ","
+        self.schedule.addTopLevelItem(QTreeWidgetItem([str(trainID), destination, str(departure_time), str(arrival_time), stop_string]))
+        train = Train(trainID, destination, departure_time.toString(), arrival_time.toString(), self.stops)
+        self.train_schedule.append(train)
         
-        self.schedule.addTopLevelItem(QTreeWidgetItem([str(trainID), destination, str(departure_time), str(arrival_time), ]))
-        self.train_schedule.append()
+        #self.update_schedule(train)
         self.stops = []
         self.arrival_time.clear()
         self.departure_time.clear()
 
     def check_for_dispatched(self):
+        current_time = self.cur_sys_time
+        for train in self.train_schedule:
+            if train.departure_time == self.cur_sys_time.toString():
+                self.dispatch_scheduled_train(train)
+                self.train_schedule.remove(train)
+    
+    def start_dispatch_check(self):
         while True:
-            if self.train_schedule[0].departure_time == self.cur_sys_time:
-                self.dispatch_scheduled_train
-            
+            self.check_for_dispatched()
+            time.sleep(1)
 
-    def dispatch_scheduled_train(self):
-        departure_time = self.train_schedule[0].departure_time
-                
-        return
+    def dispatch_scheduled_train(self, train):
+        departure_time = QDateTime.fromString(train.departure_time.text(), "HH:mm:ss").time()
+        arrival_time = QDateTime.fromString(train.arrival_time.text(), "HH:mm:ss").time()
+        trainID = train.trainID
+        destination = train.destination
+        stops = train.stops
+        station_list = [destination]
+        for stop in self.stops:
+            station_list.append(stop)
+        route = self.green_line.get_route(station_list)
+        num_stops = len(self.stops)
+
+        speeds = self.green_line.get_velocities(route, departure_time, arrival_time, num_stops)
+        if len(station_list) == 1:
+            next_stop = station_list[0]
+        else:
+            next_stop = station_list[1]
+
+        authority = self.green_line.get_authority(next_stop)
+        self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
+        self.train_dispatch(route, authority, speeds)
+
 
     #updates schedule on main page
     def update_schedule(self, train_ids="0", departure_="0", destination_="0", departure_time_="0"):
