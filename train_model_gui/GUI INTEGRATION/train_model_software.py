@@ -75,6 +75,10 @@ class train_model_software():
             self.authority = 0
         self.controller.authority=self.authority
         
+    #get new authority value
+    def new_authoriy(self, input: int) -> None:
+        self.authority = float(input)
+    
     #authority getter
     def get_authority(self) -> None:
         return self.authority
@@ -262,7 +266,7 @@ class train_model_software():
                     temp = ""
                     iterator += 1
                 elif iterator == 1:
-                    self.authority += float(temp)
+                    #self.authority += float(temp)
                     temp = ""
                     iterator += 1
                 elif iterator == 2:
