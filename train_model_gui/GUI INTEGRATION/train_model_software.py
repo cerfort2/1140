@@ -9,7 +9,7 @@ class train_model_software():
     def __init__(self) -> None:
 
         #set local vars to test vals
-        self.authority = 1000.0
+        self.authority = 0.0
         self.speed = 0.0
         self.passengers = 0
         self.power = 0.0
@@ -36,6 +36,7 @@ class train_model_software():
         self.speed_limit = 0
         self.open_side = "Right"
         self.current_station = ""
+        self.suggested_speed_list =[]
 
         #create instance of train controller
         self.controller = SoftwareTrainController()
@@ -206,6 +207,9 @@ class train_model_software():
     def get_occupancy(self) -> str:
         return self.occupancy
 
+    #suggested speed getter
+    def get_suggested_speed(self) -> int:
+        return self.suggested_speed_list[0]
 
 
     #
@@ -272,6 +276,10 @@ class train_model_software():
         
         self.occupancy = self.beacon_list[0]
 
+    #get suggest speed list from CTC
+    def get_suggested_speeds(self, speed_list: list) -> None:
+        self.suggested_speed_list = speed_list
+        
     #setting station data
     def set_station_data(self, beacon_val: str) -> None:
 
@@ -303,6 +311,9 @@ class train_model_software():
             self.speed_limit = self.speed_list[1] if len(self.speed_list) > 1 else self.speed_list[0]
             if len(self.speed_list) > 1:
                 self.speed_list = self.speed_list[1:]
+                
+            if len(self.suggested_speed_list) > 1:
+                self.suggested_speed_list = self.suggested_speed_list[1:]
 
     #
     #OVERALL TRAIN UPDATE FUNCTION
