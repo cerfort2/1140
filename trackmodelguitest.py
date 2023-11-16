@@ -89,6 +89,7 @@ class Line():
         
         self.loadBeacons()
         self.loadBlockConnections()
+        self.loadPolarity()
           
     def designMap(self,blockSelected):
         
@@ -176,7 +177,13 @@ class Line():
                 # print(self.blocks[i].stationBeacon[1])
   
     def loadPolarity(self):
-        pass
+        for blk in list(self.network.nodes):
+            for neighbor in self.network.adj[blk]:
+                if(blk.polarity == neighbor.polarity):
+                    neighbor.polarity = not blk.polarity
+
+        test = [blk.polarity for blk in self.blocks]
+        print(test)
 
     def loadBlockConnections(self):
         self.network = nx.Graph()
@@ -354,7 +361,9 @@ class TrackModel(QObject):
     trainModelGrade = pyqtSignal(list)
     trainModelCreation = pyqtSignal()
     trainModelPolarity = pyqtSignal(list)
-    
+
+    CTCticketSales = pyqtSignal(int)
+
 
     def __init__(self):
         super().__init__()
@@ -407,8 +416,13 @@ class TrackModel(QObject):
 
     def grade(self):
         for line in self.lines:
-            gradeList = [blk for blk in line.blocks if blk.occupied]
+            gradeList = [blk.grade for blk in line.blocks if blk.occupied]
             self.trainModelGrade.emit(gradeList)
+
+    def polarity(self):
+        for line in self.lines:
+            polarityList = [blk.polarity for blk in line.blocks if blk.occupied]
+            self.trainModelPolarity.emit(polarityList)
 
     def controlModel(self,controlSignals):
         for line in self.lines:
@@ -467,6 +481,12 @@ class TrackModel(QObject):
         for line in self.lines:
             self.trackControllerInitializeLine.emit(line.initializeTrackControllerData())
 
+    def getTicketsSales(self):
+        for line in self.lines:
+            tickets = [blk.station[2] for blk in line.getOccupiedBlocks() if blk.station[0]]
+
+        self.CTCticketSales.emit(tickets)
+        
 class functionalUI(Ui_Form):
     def __init__(self) -> None:
         super().__init__()

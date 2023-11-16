@@ -15,11 +15,15 @@ G.add_edge(b,c)
 G.add_edge(c,d)
 G.add_edge(d,a)
 
-for obj in G.nodes:
-    for node in G.adj:
-        pass
-        
-        
+for main in list(G.nodes):
+    for neighbors in G.adj[main]:
+        if(main.a == neighbors.a):
+            neighbors.a = not main.a
     print("Done")
+
+print(a.a)
+print(b.a)
+print(c.a)
+print(d.a)
 print(G.nodes)
 print(G.edges)
