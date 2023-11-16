@@ -7,6 +7,7 @@ from UIFunctionality import *
 from trackmodelguitest import *
 from SoftwareTrainControllerGUI import *
 from modules.CTC import *
+from modules.Home_ui import Ui_Form as Home
 
 ##ALL FUNCTIONAL OBJECTS NEED TO DO THE FOLLOWING
 
@@ -53,9 +54,11 @@ class TrainC(QObject):
         super().__init__()
 
 
-class God(QMainWindow):
+class God(Home, QMainWindow):
     def __init__(self):
         super().__init__()
+        self.setupUi(self)
+        self.setupConnections()
         self.MainTimer = QTimer()
         self.timeStep = 1000
 
@@ -66,6 +69,13 @@ class God(QMainWindow):
         self.trainController = SoftwareTrainControllerGUI() 
 
     def setupConnections(self):
+        #home page connections
+        self.ctc_btn.clicked.connect(self.openCTCGUI)
+        self.track_model_btn.clicked.connect(self.openTrackModelGUI)
+        self.train_controller_btn.clicked.connect(self.openTrainControllerGUI)
+        self.track_controller_btn.clicked.connect(self.openTrackControllerHWGUI)
+        #self.home.train_model_btn.clicked.connect(self.openTrainModelGUI)
+        
         #timer
         self.MainTimer.start(self.timeStep)
         self.MainTimer.timeout.connect(self.onTimeoutFunctions)
@@ -112,11 +122,11 @@ class God(QMainWindow):
 
 app = QApplication([])
 ui = God()
-ui.setupConnections()
-ui.openTrackModelGUI()
-ui.openTrainControllerGUI()
-ui.openTrackControllerHWGUI()
-ui.openCTCGUI()
+ui.show()
+#ui.openTrackModelGUI()
+#ui.openTrainControllerGUI()
+#ui.openTrackControllerHWGUI()
+#ui.openCTCGUI()
 # # Start the event loop.
 app.exec()
 
