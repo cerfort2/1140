@@ -345,9 +345,16 @@ class TrackModel(QObject):
 
     trackControllerOccupancy = pyqtSignal(list)
     trackControllerInitializeLine = pyqtSignal(list)
-    trainModelSuggestedSpeed = pyqtSignal(float)
+
+    trainModelSuggestedSpeed = pyqtSignal(list)
     trainModelAuthority = pyqtSignal(int)
-    trainModelBeacon = pyqtSignal(str)
+    trainModelSwitchBeacon = pyqtSignal(str)
+    trainModelApproachingBeacon = pyqtSignal(str)
+    trainModelStationBeacon = pyqtSignal(str)
+    trainModelGrade = pyqtSignal(list)
+    trainModelCreation = pyqtSignal()
+    trainModelPolarity = pyqtSignal(list)
+    
 
     def __init__(self):
         super().__init__()
@@ -377,16 +384,31 @@ class TrackModel(QObject):
         for line in self.lines:
             self.trackControllerOccupancy.emit(line.getBlockOccupancyList())
 
-    def emitBeacon(self):
+    def emitStationBeacon(self):
+        for line in self.lines:
+            occupiedList = line.getOccupiedBlocks()
+            for blk in occupiedList:
+                if blk.stationBeacon[0]:
+                    self.trainModelBeacon.emit(blk.stationBeacon[1])
+
+    def emitSwitchBeacon(self):
+        for line in self.lines:
+            occupiedList = line.getOccupiedBlocks()
+            for blk in occupiedList:
+                if blk.switchBeacon[0]:
+                    self.trainModelBeacon.emit(blk.switchBeacon[1])
+
+    def emitApproachingBeacon(self):
         for line in self.lines:
             occupiedList = line.getOccupiedBlocks()
             for blk in occupiedList:
                 if blk.approachingBeacon[0]:
                     self.trainModelBeacon.emit(blk.approachingBeacon[1])
-                if blk.stationBeacon[0]:
-                    self.trainModelBeacon.emit(blk.stationBeacon[1])
-                if blk.switchBeacon[0]:
-                    self.trainModelBeacon.emit(blk.switchBeacon[1])
+
+    def grade(self):
+        for line in self.lines:
+            gradeList = [blk for blk in line.blocks if blk.occupied]
+            self.trainModelGrade.emit(gradeList)
 
     def controlModel(self,controlSignals):
         for line in self.lines:
@@ -399,7 +421,9 @@ class TrackModel(QObject):
             for block in line.blocks:
                 block.clearOccupied()
 
-        if
+        if len(self.lines) == 0:
+            return
+        
         for blk_name in range(len(occupancyList)):
             self.lines[self.lines.index(self.lines[0])].getBlock(blk_name).setOccupied()
 
@@ -416,6 +440,9 @@ class TrackModel(QObject):
 
     #pass through track model
     def suggestedSpeed(self, SS):
+        #create a train
+        self.trainModelCreation.emit()
+
         self.trainModelSuggestedSpeed.emit(SS)
 
     def route(self, r):
