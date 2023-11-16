@@ -44,22 +44,6 @@ class CTC(Ui_Form, QWidget):
         super().__init__()
        
         """
-        need to ensure a few things for iteration 3
-        
-        grab block occupancies from track controller, attempt to differentiate between them
-        
-        get ticket sales from track model, remember time of last calculation
-        need to exclude passengers from over an hour ago but keep ones within hour
-        
-        
-        also calculate authority - number of blocks from yard to first stop
-        
-        for scheduled trains - first add to queue, once departure time is reached, call dispatch_train
-        ^^same protocols will follow
-                        
-        need to import schedule file, all trains added to schedule 
-        
-        keep track of dispatched trains
         REFERENCE:
 
         self.dispatch_train_btn - dispatches train
@@ -81,6 +65,7 @@ class CTC(Ui_Form, QWidget):
         self.system_time - displays current time of system
         self.remove_schedule - button to remove from schedule
         """
+        
     def initialize_ctc(self):
         self.num_trains_dispatched = 0
         self.trainIDs = []
@@ -96,7 +81,7 @@ class CTC(Ui_Form, QWidget):
         self.occupancy_old_text = None
         self.old_station = None
         #self.red_line = Line("Red")
-        self.green_line = Line("Green", 'Green Line Info.xlsx')
+        self.green_line = Line("Green", 'Green Line Info_.xlsx')
 
         self.stops = []
         self.green_line_stations = ["K65: GLENBURY", "L73: DORMONT", "N77: MT LEBANON", "O88: POPLAR", "P96: CASTLE SHANNON", "T105: DORMONT","U114: GLENBURY", "W123: OVERBROOK", "W132: INGLEWOOD", "W141: CENTRAL", "A2: PIONEER", "C9: EDGEBROOK", "D16: MONKEYWAY", "F22: WHITED", "G31: SOUTH BANK", "I39: CENTRAL", "I48: INGLEWOOD", "I57: OVERBROOK"]
@@ -161,6 +146,115 @@ class CTC(Ui_Form, QWidget):
     def initialize_ui(self):
         self.manual_mode_btn.setChecked(True)
         self.import_schedule_btn.hide()
+        station_info = ["",
+        "STATION; PIONEER",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "STATION; EDGEBROOK",
+        "SWITCH",
+        "",
+        "STATION",
+        "",
+        "",
+        "STATION; WHITED",
+        "",
+        "",
+        "",
+        "SWITCH",
+        "STATION; SOUTH BANK",
+        "",
+        "",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "STATION; CENTRAL; UNDERDROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "STATION; INGLEWOOD; UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "STATION; OVERBROOK; UNDERGROUND",
+        "SWITCH TO YARD",
+        "SWITCH FROM YARD",
+        "",
+        "",
+        "STATION; GLENBURY",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "STATION; DORMONT",
+        "SWITCH",
+        "STATION; MT LEBANON",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "SWITCH",
+        "STATION; POPLAR",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "STATION; CASTLE SHANNON",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "STATION; DORMONT",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "STATION; GLENBURY",
+        "",
+        "",
+        "",
+        "",
+        "UNDERGROUND",
+        "STATION; OVERBROOK; UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "STATION; INGLEWOOD; UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "UNDERGROUND",
+        "STATION; CENTRAL; UNDERDROUND"]
+
+        for row,value in enumerate(station_info):
+            item = QTableWidgetItem(value)
+            self.block_occupancy.setItem(row, 1, item)
 
 
     def update_time(self):
@@ -189,6 +283,7 @@ class CTC(Ui_Form, QWidget):
             time.sleep(0.5)
 
     def update_stations(self):
+        self.manual_dispatch_destination.clear()
         if self.manual_dispatch_line.currentText() == "Green Line":
             for station in self.green_line_stations:
                 if station not in self.stops:
@@ -341,9 +436,6 @@ class CTC(Ui_Form, QWidget):
         train = Train(trainID, destination, departure_time, arrival_time, self.stops)
         self.trains_dispatched.append(train)
         self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
-        print(route)
-        print(authority)
-        print(speeds)
 
         self.suggested_speed_tb.setText(str(speeds))
         self.authority_tb.setText(str(authority))

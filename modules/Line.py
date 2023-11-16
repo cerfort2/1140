@@ -54,7 +54,22 @@ class Line():
         #self.speed_limits = df['Speed Limit (Km/Hr)'].tolist()
 
         return blocks_list
-
+    #returns the route from yard given an input station
+    def get_route_for_velocity(self, station_list):
+        route_blocks = []
+        stop_or_dest = []
+        
+        for block in self.blocks:
+            route_blocks.append(str(block.get_section())+str(block.get_number()))
+            station_check = str(block.get_section())+str(block.get_number()) + ": " + str(block.get_station())
+            
+            if station_check in station_list:
+                stop_or_dest.append(True)
+                if station_check == station_list[-1]:
+                    break
+            else:
+                stop_or_dest.append(False)
+        return route_blocks, stop_or_dest
     #returns the route from yard given an input station
     def get_route(self, station_list):
         route_blocks = []
@@ -66,9 +81,6 @@ class Line():
             
             if station_check in station_list:
                 stop_or_dest.append(True)
-                
-                if station_check == station_list[0]:
-                    break
             else:
                 stop_or_dest.append(False)
         return route_blocks, stop_or_dest
@@ -124,16 +136,19 @@ class Line():
         time2 = datetime.strptime(arrival_time.toString(), '%H:%M:%S')
         total_dwell_time = num_stops
         moving_time = (time2-time1).total_seconds() - total_dwell_time
-        
         total_length = 0
         suggested_speeds = []
-
+        index = 0
+        for i in range(len(block_list[1]) - 1, -1, -1):
+                if block_list[1][i] == 1:
+                    index = i
+                    
         for i, block in enumerate(block_list):
             block_list_block = str(self.blocks[i].get_section()) + str(self.blocks[i].get_number())
 
             if block_list_block == block:
                 total_length += self.blocks[i].get_length()
-            
+                
             #suggested_speeds.append(5)
         speed_initial = total_length/moving_time
         for i in range(len(block_list)):
