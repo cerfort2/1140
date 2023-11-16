@@ -163,7 +163,7 @@ class SoftwareTrainController():
         
     def setNextStop(self,stop):
         self.nextstop=stop
-        self.setAnnouncement('Next stop: ' + self.nextstop)
+        self.setAnnouncement()
         
     def computeServiceBrake(self):
         if not self.manualmode and self.currentSpeed>0:
@@ -176,8 +176,13 @@ class SoftwareTrainController():
             else:
                 self.serviceBrake=False
 
-    def setAnnouncement(self,a):
-        self.announcement=a
+    def setAnnouncement(self):
+        if self.manualmode:
+            self.announcement = self.ui.announcement.toPlainText()
+        else:
+            self.announcement = "Next Stop " + self.nextstop
+        self.ui.announcement.setPlainText(self.announcement)
+        
 
     def setAuthority(self,a):
         self.authority=a
