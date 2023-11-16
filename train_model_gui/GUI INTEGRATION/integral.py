@@ -45,8 +45,6 @@ class God(QMainWindow):
 
 
 
-        
-
 
 app = QApplication([])
 ui = God()

@@ -575,10 +575,6 @@ class Ui_Form_train_model(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.time_label.setText(_translate("Form", "System Time: "))
-        self.curr_time.setText(_translate("Form", "XX:XX:XX"))
-        self.play_button.setText(_translate("Form", "Play"))
-        self.pause_button.setText(_translate("Form", "Pause"))
         self.announcement_label.setText(_translate("Form", "Current \n"
 "Announcement"))
         self.announcement.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
