@@ -113,7 +113,7 @@ class Line():
             elif self.blocks[i].underground:
                 colors.append('#964B00') #brown
             else:
-                colors.append('black')
+                colors.append('green')
 
 
         nx.draw_networkx(self.network, pos,node_size = 50,
@@ -179,8 +179,9 @@ class Line():
     def loadPolarity(self):
         for blk in list(self.network.nodes):
             for neighbor in self.network.adj[blk]:
-                if(blk.polarity == neighbor.polarity):
+                if((blk.polarity == neighbor.polarity) and (not neighbor.polaritySetted)):
                     neighbor.polarity = not blk.polarity
+                    neighbor.polaritySetted = True
 
         test = [blk.polarity for blk in self.blocks]
         print(test)
@@ -267,6 +268,7 @@ class Block():
         self.approachingBeacon = [False, ""]
         self.stationBeacon = [False, ""]
         self.polarity = True
+        self.polaritySetted = False
 
     def setOccupied(self):
         self.occupied = True
@@ -485,7 +487,7 @@ class TrackModel(QObject):
         for line in self.lines:
             tickets = [blk.station[2] for blk in line.getOccupiedBlocks() if blk.station[0]]
 
-        self.CTCticketSales.emit(tickets)
+        self.CTCticketSales.emit(tickets[0])
         
 class functionalUI(Ui_Form):
     def __init__(self) -> None:
@@ -498,6 +500,7 @@ class functionalUI(Ui_Form):
         self.comboBox_4.currentIndexChanged.connect(self.updateMap)
         self.pushButton_2.clicked.connect(self.buttonPress)
         self.lineEdit.returnPressed.connect(self.tbChange)
+        self.lineEdit.returnPressed.connect(self.updateMap)
         self.listWidget_2.itemActivated.connect(self.updateMap)
 
     def tbChange(self):
@@ -616,7 +619,9 @@ class functionalUI(Ui_Form):
     def update_time(self):
         self.trackModel.emitOccupancy()
         self.updateMap()
-        self.trackModel.emitBeacon()
+        self.trackModel.emitStationBeacon()
+        self.trackModel.emitSwitchBeacon()
+        self.trackModel.emitApproachingBeacon()
 
 
 
