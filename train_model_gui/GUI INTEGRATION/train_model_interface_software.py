@@ -29,3 +29,8 @@ class train_model_interface_software():
             out_list.append(train.get_occupancy())
         
         return out_list
+
+    #show GUIs
+    def show_GUI(self, train_num: int) -> None:
+        self.trains(train_num - 1).open_GUI()
+        self.trains(train_num - 1).controller.open_GUI()

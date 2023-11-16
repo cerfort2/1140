@@ -77,6 +77,12 @@ class SoftwareTrainController():
         self.brakeAuthority=0
         self.beaconInfo=''
 
+    def show_GUI(self):
+        self.widget = QWidget()
+        self.ui.setupUi(self.widget2)
+        self.ui.connect()
+        self.widget2.show()
+
     def update_time(self):
          self.ui.time.setDateTime(datetime.now())
          self.ui.announcement.currentTextChanged.connect(self.manualannouncementchange)
