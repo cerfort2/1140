@@ -20,19 +20,18 @@ class Line():
             underground = False
 
             if pd.notna(row['Infrastructure']):
-                infra_components = row['Infrastructure']
+                infra_components = row['Infrastructure'].split('\n')
+
 
                 for component in infra_components:
-                    component_cleaned = component.strip()  # Remove any leading/trailing whitespace
-                    print(component_cleaned)
+                    component_cleaned = component.strip()
+                    
                     if 'STATION' in component_cleaned:
-                        # Extract the station name and exclude 'UNDERGROUND' if present
-                        station_name = component_cleaned.replace('STATION:', '').replace('UNDERGROUND', '').strip()
-                        station = station_name if station_name else "0"
-                        
+                        station_name = component_cleaned.replace('STATION', '').replace('UNDERGROUND', '').replace(';', '').strip()
+                        station = station_name if station_name else "0"    
                     if 'SWITCH' in component_cleaned:
                         switch = True
-                    
+                        
                     if 'UNDERGROUND' in component_cleaned:
                         underground = True
 
@@ -60,16 +59,15 @@ class Line():
     def get_route(self, station_list):
         route_blocks = []
         stop_or_dest = []
-        print(f"last stop: {station_list[-1]}") 
+        
         for block in self.blocks:
             route_blocks.append(str(block.get_section())+str(block.get_number()))
             station_check = str(block.get_section())+str(block.get_number()) + ": " + str(block.get_station())
-            print(f"station: {station_check}")
             
             if station_check in station_list:
                 stop_or_dest.append(True)
                 
-                if station_check == station_list[-1]:
+                if station_check == station_list[0]:
                     break
             else:
                 stop_or_dest.append(False)

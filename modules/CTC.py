@@ -27,7 +27,7 @@ class Train:
         self.arrival_time = arrival_time
         self.stops = stops
 
-class CTC(Ui_Form, QObject):
+class CTC(Ui_Form, QWidget):
     occupancy_update = pyqtSignal()
     station_update = pyqtSignal()
     manual_mode = pyqtSignal()
@@ -51,23 +51,12 @@ class CTC(Ui_Form, QObject):
         get ticket sales from track model, remember time of last calculation
         need to exclude passengers from over an hour ago but keep ones within hour
         
-        need to be able to dispatch a train
-        once dispatched, current system time is departure time, arrival time is input
-        destination station input, all stops input - update ui for this
-        will calculate suggested speed based off this data, cannot exceed speed limits - must implement this
-        can check if suggested speed is over speed limit
-        if suggested speed has to go over speed limit, then throw error
-        also calculate route - list of blocks from yard to destination station (back to yard?)
         
         also calculate authority - number of blocks from yard to first stop
         
         for scheduled trains - first add to queue, once departure time is reached, call dispatch_train
         ^^same protocols will follow
-        
-        can create train object that holds all this data to keep track of dispatched trains
-        
-        station list should auto-populate from imported file
-        
+                        
         need to import schedule file, all trains added to schedule 
         
         keep track of dispatched trains
@@ -108,7 +97,6 @@ class CTC(Ui_Form, QObject):
         #self.red_line = Line("Red")
         self.green_line = Line("Green", 'Green Line Info.xlsx')
 
-        self.line_edits = []
         self.stops = []
         self.green_line_stations = ["K65: GLENBURY", "L73: DORMONT", "N77: MT LEBANON", "O88: POPLAR", "P96: CASTLE SHANNON", "T105: DORMONT","U114: GLENBURY", "W123: OVERBROOK", "W132: INGLEWOOD", "W141: CENTRAL", "A2: PIONEER", "C9: EDGEBROOK", "D16: MONKEYWAY", "F22: WHITED", "G31: SOUTH BANK", "I39: CENTRAL", "I48: INGLEWOOD", "I57: OVERBROOK"]
         
@@ -118,6 +106,7 @@ class CTC(Ui_Form, QObject):
         self.throughput = 0
         
         self.train_schedule = []
+        self.trains_dispatched = []
         self.speed_factor = 1
 
         self.initialize_connections()
@@ -202,15 +191,17 @@ class CTC(Ui_Form, QObject):
     def update_stations(self):
         if self.manual_dispatch_line.currentText() == "Green Line":
             for station in self.green_line_stations:
-                self.manual_dispatch_destination.addItem(station)
+                if station not in self.stops:
+                    self.manual_dispatch_destination.addItem(station)
 
     def update_stops(self):
+        self.stop_box_list.clear()
         if self.manual_dispatch_line.currentText() == "Green Line":
+            current_destination = self.manual_dispatch_destination.currentText()
             for station in self.green_line_stations:
-                if station == self.manual_dispatch_destination.currentText():
-                    pass
-                else:
+                if station != current_destination and station not in self.stops:
                     self.stop_box_list.addItem(station)
+
 
     def check_occupancy(self):
         if(self.occupancy_line_box.currentText() != self.occupancy_old_text):
@@ -249,12 +240,15 @@ class CTC(Ui_Form, QObject):
         self.schedule_train_btn.show()
         self.departure_time.show()
         self.departure_time_label.show()
+        self.arrival_time.show()
+        self.add_stop.show()
 
     
     def update_auto_mode(self):
         self.import_schedule_btn.show()
         self.dispatch_train_btn.setEnabled(False)
         self.manual_widget.hide()
+        self.add_stop.hide()
         # for i in range(self.manual_layout.count()):
         #     widget = self.manual_layout.itemAt(i).widget()
         #     if widget is not None:
@@ -262,33 +256,51 @@ class CTC(Ui_Form, QObject):
         self.schedule_train_btn.hide()
         self.departure_time.hide()
         self.departure_time_label.hide()
+        self.arrival_time.hide()
 
     def import_schedule(self):
         options = QFileDialog.Option.ReadOnly
-        filePath, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)", options=options)
+        filePath, _ = QFileDialog.getOpenFileName(self, "Open File", "", "Excel Files (*.xlsx);;CSV Files (*.csv);;All Files (*)", options=options)
 
         if filePath:
-            #self.label.setText(f'Selected File: {filePath}')
+            # Determine file type and read the file
             if filePath.endswith('.xlsx'):
                 df = pd.read_excel(filePath)
             elif filePath.endswith('.csv'):
                 df = pd.read_csv(filePath)
             else:
-                self.textEdit.setText("Unsupported file format!")
+                #self.textEdit.setText("Unsupported file format!")
                 return
-            #can randomly generate train IDs
-            #train_ids = df['Train ID'].tolist()
-            #departing_stations = df['Departing From'].tolist() - don't need
-            trainID = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
-
-            arriving_stations = df['Arriving to'].tolist()
+            
+            # Assuming the Excel structure matches the provided format
+            arrival_stations = df['Arriving to'].tolist()
             departure_times = df['Departure Time'].tolist()
-            self.update_schedule(train_ids, departing_stations, arriving_stations, departure_times)
+            arrival_times = df['Arrival Time'].tolist()
+            stopping_at = df['Stopping At'].tolist()
 
-            #lines = df['Line'].tolist()
-            #infrastructures = df['Infrastructure'].tolist()
-            #times = df['Time to Station'].tolist()
+            train_ids = []
+            destinations = []
+            dep_times = []
+            arr_times = []
+            stops = []
+
+            for dest, d_time, a_time, stop in zip(arrival_stations, departure_times, arrival_times, stopping_at):
+                train_id = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
+                # Add each value to its respective list
+                train_ids.append(train_id)
+                destinations.append(dest)
+                dep_times.append(d_time)
+                arr_times.append(a_time)
+                stops.append([stop.strip() for stop in stop.split(',')])
+
+            # Update the schedule with the new data
+            self.update_schedule(train_ids, destinations, dep_times, arr_times, stops)
+
+            # Provide some feedback or update the UI to reflect the changes
+            # self.label.setText(f'Schedule imported successfully from {filePath}')
+            # ... other UI updates ...
         return
+
 
     def add_stops(self):
         stop = self.stop_box_list.currentText()
@@ -320,7 +332,8 @@ class CTC(Ui_Form, QObject):
             authority = self.green_line.get_authority(next_stop)
 
         trainID = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
-
+        train = Train(trainID, destination, departure_time, arrival_time, self.stops)
+        self.trains_dispatched.append(train)
         self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
 
         #setting route, authority, suggested speed
@@ -330,19 +343,19 @@ class CTC(Ui_Form, QObject):
 
     #get departure time, arrival time, destination station, stops
     def schedule_train(self):
-        destination = self.manual_dispatch_departure.currentText()
+        destination = self.manual_dispatch_destination.currentText()
         station_list = [destination]
         for stop in self.stops:
             station_list.append(stop)
-        arrival_time = QDateTime.fromString(self.arrival_time.text(), "HH:mm:ss")
-        departure_time = QDateTime.fromString(self.departure_time.text(), "HH:mm:ss")
+        arrival_time = QDateTime.fromString(self.arrival_time.text(), "HH:mm:ss").time()
+        departure_time = QDateTime.fromString(self.departure_time.text(), "HH:mm:ss").time()
 
         #get line from ui
         dispatched_line = self.manual_dispatch_line.currentText()
-
+        num_stops = len(self.stops)
         if dispatched_line == "Green Line":
             route = self.green_line.get_route(station_list)
-            speeds = self.green_line.get_velocities(route)
+            speeds = self.green_line.get_velocities(route, departure_time, arrival_time, num_stops)
             if len(station_list) == 1:
                 next_stop = station_list[0]
             else:
@@ -356,8 +369,9 @@ class CTC(Ui_Form, QObject):
                 stop_string += stop
             else:
                 stop_string += stop + ","
-        self.schedule.addTopLevelItem(QTreeWidgetItem([str(trainID), destination, str(departure_time), str(arrival_time), stop_string]))
-        train = Train(trainID, destination, departure_time.toString(), arrival_time.toString(), self.stops)
+                
+        self.schedule.addTopLevelItem(QTreeWidgetItem([str(trainID), destination, departure_time.toString(), arrival_time.toString(), stop_string]))
+        train = Train(trainID, destination, departure_time, arrival_time, self.stops)
         self.train_schedule.append(train)
         
         #self.update_schedule(train)
@@ -368,7 +382,7 @@ class CTC(Ui_Form, QObject):
     def check_for_dispatched(self):
         current_time = self.cur_sys_time
         for train in self.train_schedule:
-            if train.departure_time == self.cur_sys_time.toString():
+            if train.departure_time.toString() == self.cur_sys_time.toString():
                 self.dispatch_scheduled_train(train)
                 self.train_schedule.remove(train)
     
@@ -378,8 +392,8 @@ class CTC(Ui_Form, QObject):
             time.sleep(1)
 
     def dispatch_scheduled_train(self, train):
-        departure_time = QDateTime.fromString(train.departure_time.text(), "HH:mm:ss").time()
-        arrival_time = QDateTime.fromString(train.arrival_time.text(), "HH:mm:ss").time()
+        departure_time = train.departure_time
+        arrival_time = train.arrival_time
         trainID = train.trainID
         destination = train.destination
         stops = train.stops
@@ -397,11 +411,20 @@ class CTC(Ui_Form, QObject):
 
         authority = self.green_line.get_authority(next_stop)
         self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
+        
+        self.remove_train_from_schedule(trainID)
         self.train_dispatch(route, authority, speeds)
 
-
+    def remove_train_from_schedule(self, trainID):
+        root = self.schedule.invisibleRootItem()
+        for i in range(root.childCount()):
+            item = root.child(i)
+            if item.text(0) == trainID:  # Assuming the train ID is in the first column
+                root.removeChild(item)
+                break
+            
     #updates schedule on main page
-    def update_schedule(self, train_ids="0", departure_="0", destination_="0", departure_time_="0"):
+    def update_schedule(self, train_ids="0", destination_="0", departure_time_="0", arrival_time_="0", stops_="0"):
         if(self.manual_mode_btn.isChecked()):
             train = self.trainID
             self.trainID+=1
@@ -415,18 +438,16 @@ class CTC(Ui_Form, QObject):
             self.schedule.addTopLevelItem(QTreeWidgetItem([str(train), destination, str(dep_time_str), str(eta)]))
         elif self.auto_mode_btn.isChecked():
             # Assuming train_ids, departure_, destination_, and departure_time_ are lists
-            for t_id, dep, dest, dep_time in zip(train_ids, departure_, destination_, departure_time_):
-                if isinstance(dep_time, str):
-                    dep_time_obj = datetime.strptime(dep_time, "%H:%M:%S").time()
-                else:
-                    dep_time_obj = dep_time
-
-                delta = self.calculate_time(dep, dest)
-                eta = (datetime.combine(date.today(), dep_time_obj) + delta).time().strftime("%H:%M:%S")
-
-                self.blue_line_schedule.append(QTreeWidgetItem([str(t_id), dest, str(dep_time_obj), str(eta)]))
-                self.schedule.addTopLevelItem(QTreeWidgetItem([str(t_id), dest, str(dep_time_obj), str(eta)]))
-    
+            for t_id, dest, dep_time, arr_time, stop in zip(train_ids, destination_, departure_time_, arrival_time_, stops_):
+                # if isinstance(dep_time, str):
+                #     dep_time_obj = datetime.strptime(dep_time, "%H:%M:%S").time()
+                # else:
+                #     dep_time_obj = dep_time
+                
+                #self.blue_line_schedule.append(QTreeWidgetItem([str(t_id), dest, str(dep_time_obj), str(eta)]))
+                train = Train(t_id, dest, dep_time, arr_time, stop)
+                self.train_schedule.append(train)
+                self.schedule.addTopLevelItem(QTreeWidgetItem([str(t_id), str(dest), str(dep_time), str(arr_time), str(stop)]))
         return
     
 
