@@ -487,7 +487,8 @@ class TrackModel(QObject):
         for line in self.lines:
             tickets = [blk.station[2] for blk in line.getOccupiedBlocks() if blk.station[0]]
 
-        self.CTCticketSales.emit(tickets[0])
+        if len(tickets) != 0:
+            self.CTCticketSales.emit(tickets[0])
         
 class functionalUI(Ui_Form):
     def __init__(self) -> None:
@@ -622,6 +623,10 @@ class functionalUI(Ui_Form):
         self.trackModel.emitStationBeacon()
         self.trackModel.emitSwitchBeacon()
         self.trackModel.emitApproachingBeacon()
+        self.trackModel.authority()
+        self.trackModel.getTicketsSales()
+        self.trackModel.polarity()
+        self.trackModel.grade()
 
 
 
