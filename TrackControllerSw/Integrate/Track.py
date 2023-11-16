@@ -8,10 +8,8 @@ class Track():
     def __init__(self):
         #Create a list of track blocks from data given
         self.blocks:Block = []
-
-    def setRoute(self, travel):
-        self.route = travel
-        
+        self.prevOccupancy = []
+    
 
     def create(self,data):
 
@@ -81,6 +79,11 @@ class Track():
 
     def setOccupancy(self, data:bool = []):
         #Insert Occupancy
+        length = len(self.prevOccupancy)
+        if(length != 0):
+            for i in range (length):
+                pass
+
         for i in range (len(data)):
             self.blocks[i].setOccupancy(data[i])
 

@@ -8,7 +8,7 @@ class PLC():
         #D Switch
         #12 is D13
         #0 is A1
-        if(self.blocks[12].getOccupancy()): 
+        if(self.blocks[13].getOccupancy()): 
             self.blocks[12].setSwitch(False)
         if(self.blocks[0].getOccupancy()):
             self.blocks[12].setSwitch(True)
@@ -25,7 +25,7 @@ class PLC():
         #G Switch
         #28 is G29
         #149 is Z150
-        if(self.blocks[28].getOccupancy()):
+        if(self.blocks[27].getOccupancy()):
             self.blocks[28].setSwitch(False)
         if(self.blocks[149].getOccupancy()):
             self.blocks[28].setSwitch(True)
@@ -75,7 +75,7 @@ class PLC():
         #76 is N77
         if(self.blocks[75].getOccupancy()):
             self.blocks[76].setSwitch(True)
-        if(self.blocks[76].getOccupancy()):
+        if(self.blocks[77].getOccupancy()):
             self.blocks[76].setSwitch(False)
         #Signal
         if(self.blocks[75].getOccupancy()):
@@ -90,7 +90,7 @@ class PLC():
         #O Switch
         #84 is N85
         #99 is Q100
-        if(self.blocks[84].getOccupancy()):
+        if(self.blocks[83].getOccupancy()):
             self.blocks[84].setSwitch(False)
         if(self.blocks[99].getOccupancy()):
             self.blocks[84].setSwitch(True)
