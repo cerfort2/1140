@@ -77,8 +77,8 @@ class SoftwareTrainController():
         self.brakeAuthority=0
         self.beaconInfo=''
 
-    def show_GUI(self):
-        self.widget = QWidget()
+    def open_GUI(self):
+        self.widget2 = QWidget()
         self.ui.setupUi(self.widget2)
         self.ui.connect()
         self.widget2.show()
@@ -94,7 +94,6 @@ class SoftwareTrainController():
         self.ki=self.ui.ki.value()
         self.kp=self.ui.kp.value()
         self.setManualMode(self.ui.mode.currentText())
-        self.announcement=self.ui.announcement.currentText()
         self.temperature=self.ui.temp.value()
         self.manualcommandedspeed=self.ui.manualcommandedspeed.value()
         self.externallight=self.ui.externallight.isChecked()
@@ -127,25 +126,10 @@ class SoftwareTrainController():
         self.ui.rightdoor.setChecked(self.getRightDoor())
         
         self.ui.externallight.setChecked(self.computeExtLights())
-        self.ui.announcement.setCurrentText(self.computeAnnouncement())
 
         self.ui.speedlimit.display(int(self.getSpeedLimit()))
         self.ui.authority.display(int(self.getAuthority()*2.23693629))
         
-    def manualannouncementchange(self):
-        self.setAnnouncement(self.announcement.currentText())
-        
-    def computeAnnouncement(self):
-                #do not allow duplicate announcements to overpopulate the announcement box
-        if self.announcement!=self.ui.announcement.currentText():
-            if not any(self.announcement()== self.ui.announcement.itemText(i) for i in range(self.ui.announcement.count())):
-                if self.manualmode():
-                    self.ui.announcement.addItem(self.getAnnouncement()) 
-                    return self.announcement.currentText() 
-                else:
-                    return self.getAnnouncement()
-        else: 
-            return self.getAnnouncement()
 
 
     #def generateSoftwareTrainUI(self):
