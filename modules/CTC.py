@@ -440,6 +440,10 @@ class CTC(Ui_Form, QWidget):
         self.suggested_speed_tb.setText(str(speeds))
         self.authority_tb.setText(str(authority))
         self.route_tb.setText(str(route[0]))
+        
+        print(speeds)
+        print(authority)
+        print(route)
 
         #setting route, authority, suggested speed
         self.train_dispatch(route, authority, speeds)
@@ -519,6 +523,10 @@ class CTC(Ui_Form, QWidget):
         self.suggested_speed_tb.setText(str(speeds))
         self.authority_tb.setText(str(authority))
         self.route_tb.setText(str(route[0]))
+        
+        print(speeds)
+        print(authority)
+        print(route)
         
         self.remove_train_from_schedule(trainID)
         self.train_dispatch(route, authority, speeds)
