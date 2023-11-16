@@ -500,6 +500,7 @@ class CTC(Ui_Form, QWidget):
         # Optionally remove old entries outside of the 1-hour window
         self.ticket_sales_log = [(timestamp, sales) for timestamp, sales in self.ticket_sales_log if timestamp > one_hour_ago]
 
+        self.throughput.display(total_throughput)
         # Return or update the UI with the total throughput
         return total_throughput
     
