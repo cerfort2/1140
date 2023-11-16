@@ -43,7 +43,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
 
     def getData(self):
         self.trackModelData.emit(self.line.getData())
-        
+
     def setDisplay(self, data):
         self.side:Wayside = self.line.create(data)
         for i in range(len(self.side)):
@@ -55,6 +55,11 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             self.blockTB.addItem(self.side[0].getBlock(i).name)
         self.waysideData.setText(self.side[0].getName())
         self.blockData.setText(self.side[0].getBlock(0).getName())
+
+    def setOccupancy(self, data):
+        self.line.setOccupancy(data)
+        self.mode_handler()
+        self.setOccupied()
 
 
     def connectFunctions(self):
@@ -241,7 +246,11 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         way = self.wayside.currentIndex()
         blo = self.block.currentIndex()
         if(self.modeButton.isChecked()):
-            create = PLC(self.side.getBlocks())
+            self.toggleDirection.hide()
+            self.toggleCrossroad.hide()
+            self.greenButton.hide()
+            self.redButton.hide()
+            create = PLC(self.line.getBlocks())
             create.logic(0)
             if(self.side[way].getBlock(blo).getHasSwitch()):
                 #If there is a switch set data and show frame
@@ -273,6 +282,13 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
                 self.signalFrame.show()
             else:
                 self.signalFrame.hide()
+        else:
+            self.toggleDirection.show()
+            self.toggleCrossroad.show()
+            self.greenButton.show()
+            self.redButton.show()
+
+            
 
     def setOccupied(self):
         self.occupationData.clear()

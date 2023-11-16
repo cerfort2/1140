@@ -76,6 +76,7 @@ class God(QMainWindow):
         # self.trackControllerHW.trackModelSuggestedSpeedHW.connect(self.trackModel.trackModel.suggestedSpeed)
         self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerSW.setDisplay)
         self.trackControllerSW.trackModelData.connect(self.trackModel.trackModel.controlModel)
+        self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerSW.setOccupancy)
 
         # self.trackModel.trackModel.trainModelSuggestedSpeed.connect(self.trainModel.access_train(len(self.trainModel.trains)).set_suggested_speeds)
         # self.trackModel.trackModel.trainModelAuthority.connect(self.trainModel.access_train(1).new_authority)

@@ -34,7 +34,7 @@ class Line():
         for i in range(numOfRows):
             if(not (df.isna().at[i,"Line"])):
 
-                name = (str(df.at[i,"Section"])+str(df.at[i, "Block Number"])).lstrip('nan')
+                name = (str(df.at[i,"Section"])+str(int(df.at[i, "Block Number"]))).lstrip('nan')
                 length = df.at[i,"Block Length (m)"]
                 grade = df.at[i,"Block Grade (%)"]
                 limit = df.at[i,"Speed Limit (Km/Hr)"]
