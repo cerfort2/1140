@@ -1,5 +1,5 @@
 from WaysideClass import Wayside
-from Authority import AuthorityClass
+from AuthorityClass import AuthorityClass
 
 class GreenLine():
 

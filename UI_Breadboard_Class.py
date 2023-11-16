@@ -45,11 +45,9 @@ class Operations():
         time.sleep(.2)
         newSwitches = serialComm.readline().decode()
         switch_array = [c == '1' for c in newSwitches]
-        print(switch_array)
         time.sleep(1.3)
         newLights = serialComm.readline().decode()
         light_array = [c == '1' for c in newLights]
-        print(light_array)
         newData = [switch_array, light_array]
         return newData
         

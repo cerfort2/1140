@@ -52,19 +52,19 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     #greenLine.Waysides[0].getTrack(16).setOccupancy(True) #E17
     #greenLine.Waysides[0].getTrack(19).setOccupancy(True) #E20
 
-    for i in range(32): #A1-G32
-        pureOccupancy.append(greenLine.Waysides[0].getTrack(i).getOccupancy())
-    #All for Wayside 2
-    for i in range(41): #H33-L73
-        pureOccupancy.append(greenLine.Waysides[1].getTrack(i).getOccupancy())
-    #All for Wayside 3
-    for i in range(28): #M74-R101
-        pureOccupancy.append(greenLine.Waysides[2].getTrack(i).getOccupancy())
-    #All for Wayside 4
-    for i in range(48): #S102-Y149
-        pureOccupancy.append(greenLine.Waysides[3].getTrack(i).getOccupancy())
-    pureOccupancy.append(greenLine.Waysides[0].getTrack(32).getOccupancy()) #Z150
-    pureOccupancy.append(greenLine.Waysides[1].getTrack(41).getOccupancy()) #Z151/YARD
+    # for i in range(32): #A1-G32
+    #     pureOccupancy.append(greenLine.Waysides[0].getTrack(i).getOccupancy())
+    # #All for Wayside 2
+    # for i in range(41): #H33-L73
+    #     pureOccupancy.append(greenLine.Waysides[1].getTrack(i).getOccupancy())
+    # #All for Wayside 3
+    # for i in range(28): #M74-R101
+    #     pureOccupancy.append(greenLine.Waysides[2].getTrack(i).getOccupancy())
+    # #All for Wayside 4
+    # for i in range(48): #S102-Y149
+    #     pureOccupancy.append(greenLine.Waysides[3].getTrack(i).getOccupancy())
+    # pureOccupancy.append(greenLine.Waysides[0].getTrack(32).getOccupancy()) #Z150
+    # pureOccupancy.append(greenLine.Waysides[1].getTrack(41).getOccupancy()) #Z151/YARD
 
 
     def connectFunctions(self):
@@ -116,9 +116,9 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         #Buttons/Setup for Whole UI
         self.pushButton_3.clicked.connect(self.openArduinoFile) #Opens PLC File
         
-        #Testing for PLC Code to run or not
-        self.comboBox.currentIndexChanged.connect(lambda: self.getOccupancy(self.pureOccupancy))
-        self.comboBox_12.currentIndexChanged.connect(lambda: self.getOccupancy(self.pureOccupancy))
+        # Testing for PLC Code to run or not
+        # self.comboBox.currentIndexChanged.connect(lambda: self.getOccupancy(self.pureOccupancy))
+        # self.comboBox_12.currentIndexChanged.connect(lambda: self.getOccupancy(self.pureOccupancy))
 
 
     def __init__(self): #Initalizer
@@ -130,7 +130,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     def timerFunctions(self):
         self.sendData
         self.sendOccupancy
-        self.sendFailures
+        #self.sendFailures
     
     #Getting data functions
     def getOccupancy(self, occupancy:[]): #Current Occupancy from Track Model
@@ -165,7 +165,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                 self.sendAuthority()
             self.setListsOccupancyAutomatic
             self.setListsOccupancyManual
-    def createNewTrainData(self, traveling:[], firstAuth, speed:[]):
+    def createNewTrainData(self, traveling:[], firstAuth, speed:[]): #Called once by Track Model
         self.greenLine.trainAuthority.setNewTrain(traveling)
         self.trackModelSendRouteHW.emit(traveling)
         self.trackModelAuthorityHW.emit(firstAuth)
@@ -202,7 +202,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         self.trackModelTrackDataHW.emit(data)
     def sendOccupancy(self): #Occupancy sent to CTC
         self.CTCOccupancyHW.emit(self.pureOccupancy)
-    def sendFailures(self): #Failures sent to CTC
+    #def sendFailures(self): #Failures sent to CTC
         failures = []
         for i in range(len(self.greenLine.Waysides)):
             for j in range(len(self.greenLine.Waysides[i])):
