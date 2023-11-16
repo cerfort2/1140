@@ -315,6 +315,12 @@ class train_model_software():
             if len(self.suggested_speed_list) > 1:
                 self.suggested_speed_list = self.suggested_speed_list[1:]
 
+    #function to open train GUI on current train
+    def open_GUI(self) -> None:
+        self.widget2 = QWidget()
+        self.ui.setupUi(self.widget2)
+        self.widget2.show()
+
     #
     #OVERALL TRAIN UPDATE FUNCTION
     #
