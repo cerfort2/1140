@@ -391,3 +391,5 @@ class train_model_software():
             self.controller.signalFailure = True
         else:
             self.controller.signalFailure = False
+
+        self.ui.apply_changes_button.clicked.connect(self.scrape_test_bench())

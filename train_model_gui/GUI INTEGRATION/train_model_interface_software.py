@@ -4,6 +4,9 @@ from train_model_software import train_model_software
 
 class train_model_interface_software():
 
+    #create signal
+    track_model_occupancy_list = pyqtSignal(list)
+
     #constructor, create list to house trains
     def __init__(self):
         self.trains = []
@@ -28,7 +31,7 @@ class train_model_interface_software():
         for train in self.trains:
             out_list.append(train.get_occupancy())
         
-        return out_list
+        self.track_model_occupancy_list.emit(out_list)
 
     #set slopes from track model
     def set_slopes(self, input_list: list) -> None:
