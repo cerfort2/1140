@@ -79,7 +79,7 @@ class SoftwareTrainController():
 
     def update_time(self):
          self.ui.time.setDateTime(datetime.now())
-         self.ui.announcement.currentTextChanged.connect(self.manualannouncementchange)
+         self.ui.notify.clicked.connect(self.setAnnouncement)
          self.ui.serviceBrake.clicked.connect(self.serviceBrakePressed)
          self.ui.ebrake.clicked.connect(self.eBrakePressed)
          self.getVals()    
@@ -88,7 +88,6 @@ class SoftwareTrainController():
         self.ki=self.ui.ki.value()
         self.kp=self.ui.kp.value()
         self.setManualMode(self.ui.mode.currentText())
-        self.announcement=self.ui.announcement.currentText()
         self.temperature=self.ui.temp.value()
         self.manualcommandedspeed=self.ui.manualcommandedspeed.value()
         self.externallight=self.ui.externallight.isChecked()
@@ -121,25 +120,11 @@ class SoftwareTrainController():
         self.ui.rightdoor.setChecked(self.getRightDoor())
         
         self.ui.externallight.setChecked(self.computeExtLights())
-        self.ui.announcement.setCurrentText(self.computeAnnouncement())
+        #self.ui.announcement.setPlainText(self.getAnnouncement())
 
         self.ui.speedlimit.display(int(self.getSpeedLimit()))
         self.ui.authority.display(int(self.getAuthority()*2.23693629))
         
-    def manualannouncementchange(self):
-        self.setAnnouncement(self.announcement.currentText())
-        
-    def computeAnnouncement(self):
-                #do not allow duplicate announcements to overpopulate the announcement box
-        if self.announcement!=self.ui.announcement.currentText():
-            if not any(self.announcement()== self.ui.announcement.itemText(i) for i in range(self.ui.announcement.count())):
-                if self.manualmode():
-                    self.ui.announcement.addItem(self.getAnnouncement()) 
-                    return self.announcement.currentText() 
-                else:
-                    return self.getAnnouncement()
-        else: 
-            return self.getAnnouncement()
 
 
     #def generateSoftwareTrainUI(self):
@@ -157,7 +142,7 @@ class SoftwareTrainController():
         
     def setNextStop(self,stop):
         self.nextstop=stop
-        self.setAnnouncement('Next stop: ' + self.nextstop)
+        self.setAnnouncement()
         
     def computeServiceBrake(self):
         if not self.manualmode and self.currentSpeed>0:
@@ -170,8 +155,12 @@ class SoftwareTrainController():
             else:
                 self.serviceBrake=False
 
-    def setAnnouncement(self,a):
-        self.announcement=a
+    def setAnnouncement(self):
+        if self.manualmode:
+            self.announcement=self.ui.announcement.toPlainText()
+        else:
+            self.announcement='Next stop: ' + self.nextstop
+        self.ui.announcement.setPlainText(self.announcement)
 
     def setAuthority(self,a):
         self.authority=a

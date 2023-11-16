@@ -57,11 +57,13 @@ class SoftwareTrainControllerGUI(Ui_Form):
             self.internallight.setDisabled(True)
             self.temp.setDisabled(True)
             self.announcement.setDisabled(True)
+            self.notify.setDisabled(True)
             self.serviceBrake.setDisabled(True)
             self.manualcommandedspeed.setDisabled(True)
         else:
             self.rightdoor.setDisabled(False)
             self.leftdoor.setDisabled(False)
+            self.notify.setDisabled(False)
             self.externallight.setDisabled(False)
             self.internallight.setDisabled(False)
             self.temp.setDisabled(False)
