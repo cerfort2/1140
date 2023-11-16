@@ -1,0 +1,14 @@
+import serial
+
+class arduinoInstructions():
+
+    def __init__(self):
+
+        self.arduinoData = serial.Serial('/dev/cu.usbmodem1101',115200)
+
+    
+    def updateEngine(self,status):
+        self.arduinoData.write(status.encode())
+
+        
+    
