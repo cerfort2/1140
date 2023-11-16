@@ -281,7 +281,7 @@ class train_model_software():
         self.occupancy = self.beacon_list[0]
 
     #get suggest speed list from CTC
-    def get_suggested_speeds(self, speed_list: list) -> None:
+    def set_suggested_speeds(self, speed_list: list) -> None:
         self.suggested_speed_list = speed_list
         
     #setting station data
@@ -294,10 +294,15 @@ class train_model_software():
                 temp += beacon_val[i]
             else:
                 self.current_station = temp
+                self.announcement = "Arriving at " + self.current_station
                 temp = ""
 
         self.open_side = temp
 
+    #switch beacon
+    def set_switch_data(self) -> None:
+        None
+    
     #occupancy updater
     def update_occupancy(self, occupancy: bool) -> None:
         if occupancy != self.current_polarity:

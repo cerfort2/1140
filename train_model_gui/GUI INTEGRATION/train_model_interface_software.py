@@ -30,6 +30,16 @@ class train_model_interface_software():
         
         return out_list
 
+    #set slopes from track model
+    def set_slopes(self, input_list: list) -> None:
+        for i in range(0, len(input_list)):
+            self.trains[i].set_slope(input_list[i])
+
+    #set polarities from track model
+    def set_polarities(self, input_list: list) -> None:
+        for i in range(0, len(input_list)):
+            self.trains[i].update_occupancy(input_list[i])
+
     #show GUIs
     def show_GUI(self, train_num: int) -> None:
         self.trains(train_num - 1).open_GUI()
