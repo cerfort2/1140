@@ -343,7 +343,6 @@ class HardwareTrainController():
     def update_power(self):
         values = f"{self.manualmode},{self.currentSpeed},{self.manualcommandedspeed},{self.ctcSpeed},{self.kp},{self.ki}\n"
         arduinoData.write(values.encode())
-        time.sleep(1)
 
         arduino_data = arduinoData.readline().decode().strip()
         self.power = float(arduino_data)

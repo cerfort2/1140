@@ -9,7 +9,7 @@ class train_model_software():
     def __init__(self) -> None:
 
         #set local vars to test vals
-        self.authority = 0.0
+        self.authority = 500.0
         self.speed = 0.0
         self.passengers = 0
         self.power = 0.0
@@ -339,7 +339,7 @@ class train_model_software():
         self.scrape_ui()
         self.set_power()
         self.set_speed()
-        #self.set_authority()
+        self.set_authority()
         # self.set_temperature(self.controller.temperature)
         # self.set_engine_failure(self.controller.engineFailure)
         # self.set_brake_failure(self.controller.brakeFailure)
