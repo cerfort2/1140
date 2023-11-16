@@ -110,3 +110,25 @@ class PLC():
             self.blocks[18].setCrossroad(True)
         else:
             self.blocks[18].setCrossroad(False)
+
+        def failures(self, prev):
+            for i in range(len(self.blocks)):
+                if(self.blocks[i].getOccupancy()):
+                    if(i == 0):
+                        pass
+                    if(i == 12):
+                        pass
+                    if(i == 28):
+                        pass
+                    if(i == 61):
+                        pass
+                    if(i == 76):
+                        pass
+                    if(i == 84):
+                        pass
+                    if(i == 149):
+                        pass
+                    if(i == 150):
+                        pass
+
+

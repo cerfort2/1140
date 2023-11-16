@@ -59,6 +59,8 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         self.trackModelData.emit(self.line.getData())
         
     def setDisplay(self, data): #Inililizes waysides from Track Model
+        self.block.clear()
+        self.wayside.clear()
         self.side:Wayside = self.line.create(data)
         self.trainAuth:Authority = Authority(self.line.getBlocks())
         for i in range(len(self.side)):
@@ -67,7 +69,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         for i in range(len(self.side[0].blocks)):
             self.block.addItem(self.side[0].getBlock(i).getName())
         for i in range(len(self.side[0].blocks)):
-            self.blockTB.addItem(self.side[0].getBlock(i).name)
+            self.blockTB.addItem(self.side[0].getBlock(i).getName())
         self.waysideData.setText(self.side[0].getName())
         self.blockData.setText(self.side[0].getBlock(0).getName())
 
