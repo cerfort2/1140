@@ -1,10 +1,14 @@
 import Block
 from Block import *
 class PLC():
+    self.auth = 0
     def __init__(self, blo:Block = []):
         self.blocks = blo
 
-    def logic(self, auth:int): 
+    def setAuth(self, authin:int):
+        self.auth = authin
+
+    def logic(self): 
         #D Switch
         #12 is D13
         #0 is A1
@@ -41,7 +45,7 @@ class PLC():
 
         #To Yard Switch
         #57 is J58
-        if(auth == 0):
+        if(self.auth == 0):
             self.blocks[57].setSwitch(False)
         else:
             self.blocks[57].setSwitch(True)

@@ -15,8 +15,6 @@ import Block
 from Block import *
 import PLC
 from PLC import *
-import Authority
-from Authority import *
 
 class SoftwareTrackControllerGUI(Ui_Form, QObject):
 
@@ -32,22 +30,25 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
 
     def __init__(self):
         super().__init__()
-        # self.init_ui()
+        #Creates Track On initilization
         self.line:Track = Track()
 
     def sendFailures(self): #Sends failures to CTC
+        #Senses failures using PLC and
         fail:str = []
         self.ctcFailures.emit(fail)
         
 
     def setOccupancy(self, data): #Receives occupancy from Track Model
+        #Gets occupancy and sets occupancy
         self.line.setOccupancy(data)
+        #Sets new auto states and sets occupied list
         self.mode_handler()
         self.setOccupied()
+        #sends occupancy to ctc
         self.ctcOccupancy.emit(self.line.getOccupancy())
 
     def sendTrainDetails(self, route, speed, auth): #Receives train dispatch data from CTC
-        self.trainAuth.newRoute(auth)
         self.trackModelRoute.emit(route)
         self.trackModelSpeed.emit(speed)
         self.trackModelAuthority.emit(auth)
@@ -62,7 +63,6 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         self.block.clear()
         self.wayside.clear()
         self.side:Wayside = self.line.create(data)
-        self.trainAuth:Authority = Authority(self.line.getBlocks())
         for i in range(len(self.side)):
             self.wayside.addItem(self.side[i].getName())
             self.waysideTB.addItem(self.side[i].getName())
@@ -259,7 +259,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         blo = self.block.currentIndex()
         if(self.modeButton.isChecked()):
             create = PLC(self.side.getBlocks())
-            create.logic(0)
+            create.logic()
             if(self.side[way].getBlock(blo).getHasSwitch()):
                 #If there is a switch set data and show frame
                 if(self.side[way].getBlock(blo).getSwitch()):
@@ -309,3 +309,5 @@ if __name__ == "__main__":
     MainWindow = SoftwareTrackControllerGUI()
     MainWindow.show()
     sys.exit(app.exec())
+
+

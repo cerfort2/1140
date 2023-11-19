@@ -73,8 +73,7 @@ class Track():
         #Create a list of block names
         for i in range (len(self.blocks)):
                 data.append(self.blocks[i].getOccupancy())
-        #Return data
-        # ctcOccupancy.emit(data)
+        return data
 
     def setOccupancy(self, data:bool = []):
         for i in range (len(data)):
