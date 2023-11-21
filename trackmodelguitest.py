@@ -7,6 +7,7 @@ import os
 import random
 import networkx as nx
 import matplotlib.pyplot as plt
+import mplcursors 
 
 ## TO CONVERT UI TO PY
 # open terminal at folder with ui
@@ -22,7 +23,12 @@ import matplotlib.pyplot as plt
 metersToFeet = 3.28084
 kmhrTomihr = 0.621371
 
-      
+
+#Paint unused edge in a switch white
+#Label the first block of each section (A1,B4,C12,D17)
+#Display station and station name,
+#displaying signals on track
+
 class Line():
 
     def __init__(self,df):
@@ -87,12 +93,14 @@ class Line():
 
                 self.blocks.append(blk)
         
-        self.loadBeacons()
         self.loadBlockConnections()
+        self.loadBeacons()
         self.loadPolarity()
+        self.testBeacons()
           
-    def designMap(self,blockSelected):
+    def designMap(self, blockSelected, figureNumber):
         
+        plt.figure(figureNumber)
         plt.clf()
 
         pos = nx.kamada_kawai_layout(self.network)
@@ -101,10 +109,17 @@ class Line():
         labels ={}
 
         for i in range(len(self.blocks)):
-            if(self.blocks[i].occupied) or (self.blocks[i].name == blockSelected):
+            # if(self.blocks[i].occupied) or (self.blocks[i].name == blockSelected):
+            #     labels[self.blocks[i]] = self.blocks[i].name
+            # else:
+            #     labels[self.blocks[i]] = ""
+
+            if(self.blocks[i].switchBeacon[0] or self.blocks[i].stationBeacon[0] or self.blocks[i].approachingBeacon[0]) or (self.blocks[i].name == blockSelected):
                 labels[self.blocks[i]] = self.blocks[i].name
             else:
                 labels[self.blocks[i]] = ""
+
+            # labels[self.blocks[i]] = self.blocks[i].name
 
             if self.blocks[i].occupied:
                 colors.append('blue')
@@ -113,7 +128,7 @@ class Line():
             elif self.blocks[i].underground:
                 colors.append('#964B00') #brown
             else:
-                colors.append('green')
+                colors.append(self.name.split()[0])
 
 
         nx.draw_networkx(self.network, pos,node_size = 50,
@@ -149,33 +164,6 @@ class Line():
     def getBlock(self,blockName):
         return self.blocks[self.getBlockNames().index(blockName)]
   
-    def loadBeacons(self):
-        for i in range(len(self.blocks)):
-            if self.blocks[i].approachingBeacon[0]:
-                self.blocks[i].approachingBeacon[1] = str(self.blocks[i+1].station[1]) + "/" + str(self.blocks[i+1].station[3])
-                # print(self.blocks[i].approachingBeacon[1])
-            elif self.blocks[i].stationBeacon[0] or self.blocks[i].switchBeacon[0]: #This will only work for green line
-                self.blocks[i].stationBeacon[1] += self.blocks[i].name
-                self.blocks[i].stationBeacon[1] += "/"
-                self.blocks[i].stationBeacon[1] += str(self.blocks[i].length)
-                self.blocks[i].stationBeacon[1] += "/"
-                self.blocks[i].stationBeacon[1] += str(self.blocks[i].underground)
-                self.blocks[i].stationBeacon[1] += "/"
-                self.blocks[i].stationBeacon[1] += str(self.blocks[i].limit)
-                self.blocks[i].stationBeacon[1] += "; "
-                for j in range(i+1,len(self.blocks)):
-                    if self.blocks[j].stationBeacon[0] or self.blocks[j].switchBeacon[0]:
-                        break
-                    self.blocks[i].stationBeacon[1] += self.blocks[j].name
-                    self.blocks[i].stationBeacon[1] += "/"
-                    self.blocks[i].stationBeacon[1] += str(self.blocks[j].length)
-                    self.blocks[i].stationBeacon[1] += "/"
-                    self.blocks[i].stationBeacon[1] += str(self.blocks[j].underground)
-                    self.blocks[i].stationBeacon[1] += "/"
-                    self.blocks[i].stationBeacon[1] += str(self.blocks[j].limit)
-                    self.blocks[i].stationBeacon[1] += "; "
-                # print(self.blocks[i].stationBeacon[1])
-  
     def loadPolarity(self):
         for blk in list(self.network.nodes):
             for neighbor in self.network.adj[blk]:
@@ -183,8 +171,8 @@ class Line():
                     neighbor.polarity = not blk.polarity
                     neighbor.polaritySetted = True
 
-        test = [blk.polarity for blk in self.blocks]
-        print(test)
+        # test = [blk.polarity for blk in self.blocks]
+        # print(test)
 
     def loadBlockConnections(self):
         self.network = nx.Graph()
@@ -198,11 +186,94 @@ class Line():
         
         if (self.name == "Green Line"):
             self.network.remove_edge(self.getBlock("Q100"), self.getBlock("R101"))
-        #debug
-        # nodeList = [node.name for node in list(self.network.nodes)]
-        # print(nodeList)
-        # for (e1, e2) in self.network.edges:
-        #     print((e1.name,e2.name))
+
+        if (self.name == "Red Line"):
+            self.network.remove_edge(self.getBlock("Q71"),self.getBlock("R72"))
+            self.network.remove_edge(self.getBlock("N66"),self.getBlock("O67"))
+
+        if(self.name == "Blue Line"):
+            self.network.remove_edge(self.getBlock("B10"), self.getBlock("C11"))
+            self.network.add_edge(self.getBlock("C14"), self.getBlock("C15"))
+
+
+    #Check beacons in an order: approaching, station, switch
+
+    #if train going in block order: 
+    # (switch or station) beacon  --> (switch or station) beacon 
+    #basically, ignore approaching beacons,(you should still read in the station name and side from them)
+
+    # if train going in opposite block order: 
+    # (switch or approaching) beacon --> (switch or approaching) beacon
+    #basically ignore station beacons
+
+    # note that your order can change through the route
+    def loadBeacons(self):
+        #create a working copy of the network
+        workingGraph = self.network.copy()
+
+        #Create splits in the graph to seperate sections that are capped on both ends by beacons
+        for edge in list(workingGraph.edges):
+            blkOne,blkTwo = edge
+
+            adjacentSwitchBeaconBlocks = blkOne.switchBeacon[0] and blkTwo.switchBeacon[0]
+            stationThenApproaching = blkOne.stationBeacon[0] and blkTwo.approachingBeacon[0]
+            approachingThenStation = blkOne.approachingBeacon[0] and blkTwo.stationBeacon[0]
+
+            if adjacentSwitchBeaconBlocks or stationThenApproaching or approachingThenStation:
+                workingGraph.remove_edge(blkOne,blkTwo)
+
+        #Add station name and side to the approachingBeacons
+        for i in range(len(self.blocks)):
+            if self.blocks[i].approachingBeacon[0]:
+                self.blocks[i].approachingBeacon[1] = str(self.blocks[i+1].station[1]) + "/" + str(self.blocks[i+1].station[3] + "; ")
+
+        #Iterate through each connected segment of the track
+        for connectedSet in nx.connected_components(workingGraph):
+            sortedBlocks = list(sorted(connectedSet, key=self.sortBlocks))
+            test = [blk.name for blk in sortedBlocks]
+            print(test)
+
+            #Iterate from the top of the segment and add data to the head beacon
+            if sortedBlocks[0].approachingBeacon[0]:
+                for blk in sortedBlocks:
+                    sortedBlocks[0].approachingBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+            elif sortedBlocks[0].stationBeacon[0]:
+                for blk in sortedBlocks:
+                    sortedBlocks[0].stationBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+            elif sortedBlocks[0].switchBeacon[0]:
+                for blk in sortedBlocks:
+                    sortedBlocks[0].switchBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+
+            #check for singletons in connected sets and don't double add
+            if len(sortedBlocks) == 1:
+                continue
+
+            #Iterate from the bottom of the segment and add the data to the tail beacon
+            if sortedBlocks[-1].approachingBeacon[0]:
+                for blk in reversed(sortedBlocks):
+                    sortedBlocks[-1].approachingBeacon[1] += str(blk.name) + "/" + str(blk.length) + "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+            elif sortedBlocks[-1].stationBeacon[0]:
+                for blk in reversed(sortedBlocks):
+                    sortedBlocks[-1].stationBeacon[1] += str(blk.name) + "/" + str(blk.length) + "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+            elif sortedBlocks[-1].switchBeacon[0]:
+                for blk in reversed(sortedBlocks):
+                    sortedBlocks[-1].switchBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+            
+    #sorting function only    
+    def sortBlocks(self,element):
+        return int(element.name[1:])
+    
+    def testBeacons(self):
+        for blk in self.blocks:
+
+            if(blk.approachingBeacon[0]):
+                print(blk.name + ":Approaching:" + blk.approachingBeacon[1])
+            elif(blk.stationBeacon[0]):
+                print(blk.name + ":Station:" + blk.stationBeacon[1])
+            elif(blk.switchBeacon[0]):
+                print(blk.name + ":Switch:" + blk.switchBeacon[1])
+            else:
+                print(blk.name)
 
     #Track Model --> Track Controller
     def getBlockOccupancyList(self):
@@ -224,7 +295,6 @@ class Line():
                 #Signal Updating
                 if(self.blocks[i].signal[1] != controlSignals[2][i]):
                     self.blocks[i].toggleSignal()
-
 
     def initializeTrackControllerData(self):
         hasSwitch = [blk.switch[0] for blk in self.blocks]
@@ -496,13 +566,16 @@ class functionalUI(Ui_Form):
         self.trackModel = TrackModel()
 
     def connect(self):
-        self.comboBox_3.currentIndexChanged.connect(self.lineChange)
-        self.comboBox_4.currentIndexChanged.connect(self.blockChange)
-        self.comboBox_4.currentIndexChanged.connect(self.updateMap)
+        self.comboBox_3.textActivated.connect(self.lineChange)
+
+        self.comboBox_4.textActivated.connect(self.blockChange)
+        self.comboBox_4.textActivated.connect(self.updateMap)
+
         self.pushButton_2.clicked.connect(self.buttonPress)
+
         self.lineEdit.returnPressed.connect(self.tbChange)
         self.lineEdit.returnPressed.connect(self.updateMap)
-        self.listWidget_2.itemActivated.connect(self.updateMap)
+        # self.listWidget_2.itemActivated.connect(self.updateMap)
 
     def tbChange(self):
         
@@ -608,14 +681,16 @@ class functionalUI(Ui_Form):
         fd = QFileDialog()
         path, _ = fd.getOpenFileName(None, 'Select a file:')
         self.trackModel.addLine(path)
+
         self.comboBox_3.clear()
         self.comboBox_3.addItems(self.trackModel.getLineNames())
+
         self.trackModel.initTrack()
         self.updateMap()
       
     def updateMap(self):
-        for line in self.trackModel.lines:
-            line.designMap(self.comboBox_4.currentText())
+        for i in range(len(self.trackModel.lines)):
+            self.trackModel.lines[i].designMap(self.comboBox_4.currentText(), i)
 
     def update_time(self):
         self.trackModel.emitOccupancy()
@@ -641,6 +716,6 @@ if __name__ == '__main__':
     ui.setupUi(MainWindow)
     ui.connect()
     MainWindow.show()
-   
-# # Start the event loop.
+
+    # Start the event loop.
     app.exec()
