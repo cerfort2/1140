@@ -39,7 +39,7 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">background-color: rgb(220, 220, 220);</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -57,7 +57,7 @@
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -132,7 +132,7 @@
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -242,7 +242,7 @@
      <widget class="QComboBox" name="wayside">
       <property name="geometry">
        <rect>
-        <x>80</x>
+        <x>10</x>
         <y>20</y>
         <width>101</width>
         <height>22</height>
@@ -259,7 +259,7 @@
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -305,7 +305,7 @@
      <widget class="QComboBox" name="block">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>150</x>
         <y>20</y>
         <width>101</width>
         <height>22</height>
@@ -318,20 +318,20 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>80</x>
-        <y>90</y>
+        <x>10</x>
+        <y>100</y>
         <width>101</width>
         <height>231</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
      </widget>
      <widget class="QLabel" name="occupationLabel">
       <property name="geometry">
        <rect>
-        <x>80</x>
+        <x>10</x>
         <y>60</y>
         <width>101</width>
         <height>21</height>
@@ -355,7 +355,7 @@
      <widget class="QLabel" name="failuresLabel">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>150</x>
         <y>60</y>
         <width>101</width>
         <height>21</height>
@@ -382,14 +382,14 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>210</x>
-        <y>90</y>
+        <x>150</x>
+        <y>100</y>
         <width>101</width>
         <height>231</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
      </widget>
     </widget>
