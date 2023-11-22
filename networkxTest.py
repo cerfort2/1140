@@ -25,7 +25,7 @@ for main in list(G.nodes):
         #     neighbors.setted = True
 
 for edge in list(G.edges):
-
+    pass
 
 
 
