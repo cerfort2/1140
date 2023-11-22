@@ -1,14 +1,18 @@
 import Block
 from Block import *
 class PLC():
+    auth = 0
     def __init__(self, blo:Block = []):
         self.blocks = blo
 
-    def logic(self, auth:int): 
+    def setAuth(self, authin:int):
+        self.auth = authin
+
+    def logic(self): 
         #D Switch
         #12 is D13
         #0 is A1
-        if(self.blocks[12].getOccupancy()): 
+        if(self.blocks[13].getOccupancy()): 
             self.blocks[12].setSwitch(False)
         if(self.blocks[0].getOccupancy()):
             self.blocks[12].setSwitch(True)
@@ -25,7 +29,7 @@ class PLC():
         #G Switch
         #28 is G29
         #149 is Z150
-        if(self.blocks[28].getOccupancy()):
+        if(self.blocks[27].getOccupancy()):
             self.blocks[28].setSwitch(False)
         if(self.blocks[149].getOccupancy()):
             self.blocks[28].setSwitch(True)
@@ -41,7 +45,7 @@ class PLC():
 
         #To Yard Switch
         #57 is J58
-        if(auth == 0):
+        if(self.auth == 0):
             self.blocks[57].setSwitch(False)
         else:
             self.blocks[57].setSwitch(True)
@@ -75,7 +79,7 @@ class PLC():
         #76 is N77
         if(self.blocks[75].getOccupancy()):
             self.blocks[76].setSwitch(True)
-        if(self.blocks[76].getOccupancy()):
+        if(self.blocks[77].getOccupancy()):
             self.blocks[76].setSwitch(False)
         #Signal
         if(self.blocks[75].getOccupancy()):
@@ -90,7 +94,7 @@ class PLC():
         #O Switch
         #84 is N85
         #99 is Q100
-        if(self.blocks[84].getOccupancy()):
+        if(self.blocks[83].getOccupancy()):
             self.blocks[84].setSwitch(False)
         if(self.blocks[99].getOccupancy()):
             self.blocks[84].setSwitch(True)
@@ -110,3 +114,25 @@ class PLC():
             self.blocks[18].setCrossroad(True)
         else:
             self.blocks[18].setCrossroad(False)
+
+        def failures(self, prev):
+            for i in range(len(self.blocks)):
+                if(self.blocks[i].getOccupancy()):
+                    if(i == 0):
+                        pass
+                    if(i == 12):
+                        pass
+                    if(i == 28):
+                        pass
+                    if(i == 61):
+                        pass
+                    if(i == 76):
+                        pass
+                    if(i == 84):
+                        pass
+                    if(i == 149):
+                        pass
+                    if(i == 150):
+                        pass
+
+

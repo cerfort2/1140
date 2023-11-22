@@ -23,3 +23,6 @@ class Wayside():
     
     def getBlock(self, index:int):
         return self.blocks[index]
+
+    def getBlocks(self):
+        return self.blocks

@@ -15,263 +15,295 @@ import Block
 from Block import *
 import PLC
 from PLC import *
-import Authority
-from Authority import *
+
 
 class SoftwareTrackControllerGUI(Ui_Form, QObject):
 
     trackModelData = pyqtSignal(list)
-    #trackModelAuthority = pyqtSignal(float)
-    #trackModelRoute = pyqtSignal(list)
-    #trackModelSpeed = pyqtSignal(float)
+    trackModelRoute = pyqtSignal(list)
+    trackModelSpeed = pyqtSignal(list)
+    trackModelAuthority = pyqtSignal(int)
 
-    #ctcOccupancy = pyqtSignal(list)
-    #ctcFailures = pyqtSignal(list)
+    ctcOccupancy = pyqtSignal(list)
+    ctcFailures = pyqtSignal(list)
 
 
 
     def __init__(self):
         super().__init__()
-        self.init_ui()
+        ##
+        #self.init_ui()
+        ##
+        #Creates Track On initilization
+        self.line:Track = Track()
 
+    def sendFailures(self): #Sends failures to CTC
+        #Senses failures using PLC and
+        fail:str = []
+        self.ctcFailures.emit(fail)
+        
+
+    def setOccupancy(self, data): #Receives occupancy from Track Model
+        #Gets occupancy and sets occupancy
+        self.line.setOccupancy(data)
+        #Sets new states in automatic
+        self.mode_handler()
+        #Sets occupied list
+        self.setOccupied()
+        #sends occupancy to ctc
+        self.ctcOccupancy.emit(self.line.getOccupancy())
+
+    def sendTrainDetails(self, route, speed, auth): 
+        #Receives train dispatch data from CTC and sends to Track Model
+        self.trackModelRoute.emit(route)
+        self.trackModelSpeed.emit(speed)
+        self.trackModelAuthority.emit(auth)
+
+    def getAuth(self): 
+        #Sends only auth to track model
+        self.trackModelAuthority.emit(self.trainAuth.getAuth(0))
+
+    def getData(self): 
+        #Sends track states to track Model
+        self.trackModelData.emit(self.line.getData())
+        
+    def setDisplay(self, data): 
+        #Inililizes waysides from Track Model
+        self.side:Wayside = self.line.create(data)
+        #Clears lists
+        self.block.clear()
+        self.wayside.clear()
+        #Sets the list of waysides
+        for i in range(len(self.side)):
+            self.wayside.addItem(self.side[i].getName())
+            self.waysideTB.addItem(self.side[i].getName())
+        #Sets the lists of block for the first wayside
+        for i in range(len(self.side[0].getBlocks())):
+            self.block.addItem(self.side[0].getBlock(i).getName())
+            self.blockTB.addItem(self.side[0].getBlock(i).getName())
+        
+
+
+    def connectFunctions(self):
         #Required pixmaps created after application
         self.left = QPixmap("left.jpg")
         self.right = QPixmap("light.jpg")
         self.open = QPixmap("crosso.jpg")
         self.closed = QPixmap("crossc.jpg")
-        self.line:Track = Track()
-        self.side:Wayside = self.line.create([[0],[0],[0],[0],[0]])
-        #Creating Track Map
-        ###########################################
-
-        #Set default text
-        for i in range(len(self.side)):
-            self.ui.wayside.addItem(self.side[i].getName())
-            self.ui.waysideTB.addItem(self.side[i].getName())
-        for i in range(len(self.side[0].blocks)):
-            self.ui.block.addItem(self.side[0].getBlock(i).name)
-        for i in range(len(self.side[0].blocks)):
-            self.ui.blockTB.addItem(self.side[0].getBlock(i).name)
-        self.ui.waysideData.setText(self.side[0].getName())
-        self.ui.blockData.setText(self.side[0].getBlock(0).getName())
-        self.ui.failureData.setText("No failure")
-        self.ui.switchFrame.hide()
-        self.ui.crossroadFrame.hide()
-        self.setOccupied()
+        #Hide frames by default
+        # self.switchFrame.hide()
+        # self.crossroadFrame.hide()
+        # self.signalFrame.hide()
         #Switch Toggle Signal
-        self.ui.toggleDirection.clicked.connect(self.toggle_direction_handler)
+        self.toggleDirection.clicked.connect(self.toggle_direction_handler)
         #Crossroad Toggle Signal
-        self.ui.toggleCrossroad.clicked.connect(self.toggle_crossroad_handler)
+        self.toggleCrossroad.clicked.connect(self.toggle_crossroad_handler)
         #Green button
-        self.ui.greenButton.clicked.connect(self.green_handler)
+        self.greenButton.clicked.connect(self.green_handler)
         #Red button
-        self.ui.redButton.clicked.connect(self.red_handler)
+        self.redButton.clicked.connect(self.red_handler)
         #Change Wayside
-        self.ui.wayside.currentIndexChanged.connect(self.new_wayside)
+        self.wayside.currentIndexChanged.connect(self.new_wayside)
         #Change Block
-        self.ui.block.currentIndexChanged.connect(self.new_block)
+        self.block.currentIndexChanged.connect(self.new_block)
         #Set occupied
-        self.ui.tab.currentChanged.connect(self.setOccupied)
+        self.tab.currentChanged.connect(self.setOccupied)
         #Mode
-        self.ui.modeButton.toggled.connect(self.mode_handler)
+        self.modeButton.toggled.connect(self.mode_handler)
         #TB
-        self.ui.occupationTB.stateChanged.connect(self.TB_o_handler)
-        self.ui.waysideTB.currentIndexChanged.connect(self.TB_w_handler)
-        self.ui.blockTB.currentIndexChanged.connect(self.TB_b_handler)
+        # self.occupationTB.stateChanged.connect(self.TB_o_handler)
+        # self.waysideTB.currentIndexChanged.connect(self.TB_w_handler)
+        # self.blockTB.currentIndexChanged.connect(self.TB_b_handler)
 
-    def TB_o_handler(self):
-        way = self.ui.waysideTB.currentIndex()
-        blo = self.ui.blockTB.currentIndex()
-        self.side[way].getBlock(blo).setOccupancy(self.ui.occupationTB.isChecked())
+    # def TB_o_handler(self):
+    #     way = self.waysideTB.currentIndex()
+    #     blo = self.blockTB.currentIndex()
+    #     self.side[way].getBlock(blo).setOccupancy(self.occupationTB.isChecked())
 
-    def TB_w_handler(self):
-        way = self.ui.waysideTB.currentIndex()
-        blo = 0
-        self.ui.blockTB.clear()
-        for i in range(len(self.side[way].blocks)):
-            self.ui.blockTB.addItem(self.side[way].getBlock(i).name)
-        self.ui.occupationTB.setChecked(self.side[way].getBlock(blo).getOccupied())
+    # def TB_w_handler(self):
+    #     way = self.waysideTB.currentIndex()
+    #     blo = 0
+    #     self.blockTB.clear()
+    #     for i in range(len(self.side[way].getBlocks())):
+    #         self.blockTB.addItem(self.side[way].getBlock(i).name)
+    #     self.occupationTB.setChecked(self.side[way].getBlock(blo).getOccupied())
     
-    def TB_b_handler(self):
-        way = self.ui.waysideTB.currentIndex()
-        blo = self.ui.blockTB.currentIndex()
-        self.ui.occupationTB.setChecked(self.side[way].getBlock(blo).getOccupied())
+    # def TB_b_handler(self):
+    #     way = self.waysideTB.currentIndex()
+    #     blo = self.blockTB.currentIndex()
+    #     self.occupationTB.setChecked(self.side[way].getBlock(blo).getOccupied())
 
     
 
     def toggle_direction_handler(self):
         #Get current block and wayside
-        way = self.ui.wayside.currentIndex()
-        blo = self.ui.block.currentIndex()
+        way = self.wayside.currentIndex()
+        blo = self.block.currentIndex()
         #If left turn right if right turn left
         if(self.side[way].getBlock(blo).getSwitch()):
             self.side[way].getBlock(blo).setSwitch(False)
-            self.ui.switchDirection.setPixmap(self.left)
+            self.switchDirection.setPixmap(self.left)
         else:
             self.side[way].getBlock(blo).setSwitch(True)
-            self.ui.switchDirection.setPixmap(self.right)
+            self.switchDirection.setPixmap(self.right)
     
     def toggle_crossroad_handler(self):
         #Get current block and wayside
-        way = self.ui.wayside.currentIndex()
-        blo = self.ui.block.currentIndex()
+        way = self.wayside.currentIndex()
+        blo = self.block.currentIndex()
         #If open close if closed open
         if(self.side[way].getBlock(blo).getCrossroad()):
             self.side[way].getBlock(blo).setCrossroad(False)
-            self.ui.crossroadStatus.setPixmap(self.open)
+            self.crossroadStatus.setPixmap(self.open)
         else:
             self.side[way].getBlock(blo).setCrossroad(True)
-            self.ui.crossroadStatus.setPixmap(self.closed)
+            self.crossroadStatus.setPixmap(self.closed)
         
 
     def green_handler(self):
         #Get current block and wayside
-        way = self.ui.wayside.currentIndex()
-        blo = self.ui.block.currentIndex()
+        way = self.wayside.currentIndex()
+        blo = self.block.currentIndex()
         #If red change green
         if(not self.side[way].getBlock(blo).getSignal()):
             self.side[way].getBlock(blo).setSignal(True)
-            self.ui.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
+            self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
 
     def red_handler(self):
         #Get current block and wayside
-        way = self.ui.wayside.currentIndex()
-        blo = self.ui.block.currentIndex()
+        way = self.wayside.currentIndex()
+        blo = self.block.currentIndex()
         #If Green change red
         if(self.side[way].getBlock(blo).getSignal()):
             self.side[way].getBlock(blo).setSignal(False)
-            self.ui.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
+            self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
 
     def new_wayside(self):
-        #Get current wayside and block index is zero
-        way = self.ui.wayside.currentIndex()
+        #Get current wayside and set block index zero
+        way = self.wayside.currentIndex()
         blo = 0
         #Create new block list
-        self.ui.block.clear()
-        for i in range(len(self.side[way].blocks)):
-            self.ui.block.addItem(self.side[way].getBlock(i).name)
-        #Set the lables of block wayside and occupation
-        self.ui.waysideData.setText(self.side[way].name)
-        self.ui.blockData.setText(self.side[way].getBlock(blo).name)
+        self.block.clear()
+        for i in range(len(self.side[way].getBlocks)):
+            self.block.addItem(self.side[way].getBlock(i).name)
         #Switch Update
         if(self.side[way].getBlock(blo).getHasSwitch()):
             #If there is a switch set data and show frame
             if(self.side[way].getBlock(blo).getSwitch()):
-                self.ui.switchDirection.setPixmap(self.right)
+                self.switchDirection.setPixmap(self.right)
             else:
-                self.ui.switchDirection.setPixmap(self.left)
-            self.ui.leftBlock.setText(self.side[way].getBlock(blo).getLeft())
-            self.ui.rightBlock.setText(self.side[way].getBlock(blo).getRight())
-            self.ui.switchFrame.show()
+                self.switchDirection.setPixmap(self.left)
+            self.leftBlock.setText(self.side[way].getBlock(blo).getLeft())
+            self.rightBlock.setText(self.side[way].getBlock(blo).getRight())
+            self.switchFrame.show()
         else:
-            self.ui.switchFrame.hide()
+            self.switchFrame.hide()
         #Crossroad Update
         if(self.side[way].getBlock(blo).getHasCrossroad()):
             #If there is a crossroad set image and show frame
             if(self.side[way].getBlock(blo).getCrossroad()):
-                self.ui.crossroadStatus.setPixmap(self.closed)
+                self.crossroadStatus.setPixmap(self.closed)
             else:
-                self.ui.crossroadStatus.setPixmap(self.open)
-            self.ui.crossroadFrame.show()
+                self.crossroadStatus.setPixmap(self.open)
+            self.crossroadFrame.show()
         else:
-            self.ui.crossroadFrame.hide()
+            self.crossroadFrame.hide()
+        #Signal Update
         if(self.side[way].getBlock(blo).getHasSignal()):
             #If there is a signal set color and show frame
             if(self.side[way].getBlock(blo).getSignal()):
-                self.ui.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
+                self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
             else:
-                self.ui.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
-            self.ui.signalFrame.show()
+                self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
+            self.signalFrame.show()
         else:
-            self.ui.signalFrame.hide()
+            self.signalFrame.hide()
 
 
 
     def new_block(self):
         #Get current wayside and block index
-        way = self.ui.wayside.currentIndex()
-        blo = self.ui.block.currentIndex()
-        #Set data lables
-        self.ui.waysideData.setText(self.side[way].name)
-        self.ui.blockData.setText(self.side[way].getBlock(blo).name)
+        way = self.wayside.currentIndex()
+        blo = self.block.currentIndex()
         #Switch Update
         if(self.side[way].getBlock(blo).getHasSwitch()):
             #If there is a switch set data and show frame
             if(self.side[way].getBlock(blo).getSwitch()):
-                self.ui.switchDirection.setPixmap(self.right)
+                self.switchDirection.setPixmap(self.right)
             else:
-                self.ui.switchDirection.setPixmap(self.left)
-            self.ui.leftBlock.setText(self.side[way].getBlock(blo).getLeft())
-            self.ui.rightBlock.setText(self.side[way].getBlock(blo).getRight())
-            self.ui.switchFrame.show()
+                self.switchDirection.setPixmap(self.left)
+            self.leftBlock.setText(self.side[way].getBlock(blo).getLeft())
+            self.rightBlock.setText(self.side[way].getBlock(blo).getRight())
+            self.switchFrame.show()
         else:
-            self.ui.switchFrame.hide()
+            self.switchFrame.hide()
         #Crossroad Update
         if(self.side[way].getBlock(blo).getHasCrossroad()):
             #If there is a crossroad set image and show frame
             if(self.side[way].getBlock(blo).getCrossroad()):
-                self.ui.crossroadStatus.setPixmap(self.closed)
+                self.crossroadStatus.setPixmap(self.closed)
             else:
-                self.ui.crossroadStatus.setPixmap(self.open)
-            self.ui.crossroadFrame.show()
+                self.crossroadStatus.setPixmap(self.open)
+            self.crossroadFrame.show()
         else:
-            self.ui.crossroadFrame.hide()
+            self.crossroadFrame.hide()
+        #Signal Update
         if(self.side[way].getBlock(blo).getHasSignal()):
             #If there is a signal set color and show frame
             if(self.side[way].getBlock(blo).getSignal()):
-                self.ui.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
+                self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
             else:
-                self.ui.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
-            self.ui.signalFrame.show()
+                self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
+            self.signalFrame.show()
         else:
-            self.ui.signalFrame.hide()
+            self.signalFrame.hide()
 
     def mode_handler(self):
-        way = self.ui.wayside.currentIndex()
-        blo = self.ui.block.currentIndex()
-        if(self.ui.modeButton.isChecked()):
-            create = PLC(self.line.getBlocks())
-            create.logic(0)
+        way = self.wayside.currentIndex()
+        blo = self.block.currentIndex()
+        if(self.modeButton.isChecked()):
+            create = PLC(self.side.getBlocks())
+            create.logic()
             if(self.side[way].getBlock(blo).getHasSwitch()):
                 #If there is a switch set data and show frame
                 if(self.side[way].getBlock(blo).getSwitch()):
-                    self.ui.switchDirection.setPixmap(self.right)
+                    self.switchDirection.setPixmap(self.right)
                 else:
-                    self.ui.switchDirection.setPixmap(self.left)
-                self.ui.leftBlock.setText(self.side[way].getBlock(blo).getLeft())
-                self.ui.rightBlock.setText(self.side[way].getBlock(blo).getRight())
-                self.ui.switchFrame.show()
+                    self.switchDirection.setPixmap(self.left)
+                self.leftBlock.setText(self.side[way].getBlock(blo).getLeft())
+                self.rightBlock.setText(self.side[way].getBlock(blo).getRight())
+                self.switchFrame.show()
             else:
-                self.ui.switchFrame.hide()
+                self.switchFrame.hide()
             #Crossroad Update
             if(self.side[way].getBlock(blo).getHasCrossroad()):
                 #If there is a crossroad set image and show frame
                 if(self.side[way].getBlock(blo).getCrossroad()):
-                    self.ui.crossroadStatus.setPixmap(self.closed)
+                    self.crossroadStatus.setPixmap(self.closed)
                 else:
-                    self.ui.crossroadStatus.setPixmap(self.open)
-                self.ui.crossroadFrame.show()
+                    self.crossroadStatus.setPixmap(self.open)
+                self.crossroadFrame.show()
             else:
-                self.ui.crossroadFrame.hide()
+                self.crossroadFrame.hide()
             if(self.side[way].getBlock(blo).getHasSignal()):
                 #If there is a signal set color and show frame
                 if(self.side[way].getBlock(blo).getSignal()):
-                    self.ui.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
+                    self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
                 else:
-                    self.ui.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
-                self.ui.signalFrame.show()
+                    self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
+                self.signalFrame.show()
             else:
-                self.ui.signalFrame.hide()
+                self.signalFrame.hide()
 
     def setOccupied(self):
-        self.ui.occupationData.clear()
+        self.occupationData.clear()
         names = self.line.getOccupied()
-        for i in range (len(names)):
-            self.ui.occupationData.addItem(names[i])
+        for i in names:
+            self.occupationData.addItem(i)
 
     def init_ui(self):
-        self.ui = Ui_Form()
-        self.ui.setupUi(self)
+        self = Ui_Form()
+        self.setupUi(self)
 
         
     
@@ -281,3 +313,5 @@ if __name__ == "__main__":
     MainWindow = SoftwareTrackControllerGUI()
     MainWindow.show()
     sys.exit(app.exec())
+
+

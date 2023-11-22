@@ -2,17 +2,13 @@ import Wayside
 from Wayside import *
 import Block
 from Block import *
-from PyQt6 import QtCore
-from PyQt6.QtCore import pyqtSignal
+from SwTrackControlSetup import *
 class Track():
 
     def __init__(self):
         #Create a list of track blocks from data given
         self.blocks:Block = []
-
-    def setRoute(self, travel):
-        self.route = travel
-        
+    
 
     def create(self,data):
 
@@ -26,13 +22,13 @@ class Track():
         self.waysides:Wayside = [Wayside("Green1"), Wayside("Green2"), Wayside("Green3"), Wayside("Green4")]
         for i in range (len(self.blocks)):
             if(i <= 31 or i == 149):
-                self.waysides[0].append(self.blocks[i])
+                self.waysides[0].add(self.blocks[i])
             elif(i <= 72 or i == 150):
-                self.waysides[1].append(self.blocks[i])
+                self.waysides[1].add(self.blocks[i])
             elif(i <= 100):
-                self.waysides[2].append(self.blocks[i])
+                self.waysides[2].add(self.blocks[i])
             else:
-                self.waysides[3].append(self.blocks[i])
+                self.waysides[3].add(self.blocks[i])
 
         return self.waysides
 
@@ -58,8 +54,8 @@ class Track():
             else:
                 data[2].append(False) 
         #Return data
-        #return data
-        trackModelData.emit(data)
+        return data
+
     
     def getOccupied(self):
         #Created lists
@@ -77,11 +73,9 @@ class Track():
         #Create a list of block names
         for i in range (len(self.blocks)):
                 data.append(self.blocks[i].getOccupancy())
-        #Return data
-        ctcOccupancy.emit(data)
+        return data
 
     def setOccupancy(self, data:bool = []):
-        #Insert Occupancy
         for i in range (len(data)):
             self.blocks[i].setOccupancy(data[i])
 
