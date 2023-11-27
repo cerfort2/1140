@@ -168,10 +168,9 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             self.setListsOccupancyAutomatic()
             self.setListsOccupancyManual()
         self.oldOccupancy = occupancy
-    def createNewTrainData(self, traveling:[], firstAuth, speed:[]): #Called once by Track Model
-        self.greenLine.trainAuthority.setNewTrain(traveling)
+    def createNewTrainData(self, traveling:[], Auth:[], speed:[]): #Called once by Track Model
         self.trackModelSendRouteHW.emit(traveling)
-        self.trackModelAuthorityHW.emit(firstAuth)
+        self.trackModelAuthorityHW.emit(Auth)
         self.trackModelSuggestedSpeedHW.emit(speed)
    
     #Sending out functions
@@ -224,7 +223,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         self.greenLine.Waysides[2].getTrack(11).setSwitch(states[0][2])
         self.greenLine.Waysides[0].getTrack(28).setSwitch(states[0][3])
         self.greenLine.Waysides[0].getTrack(12).setSwitch(states[0][4])
-        self.greenLine.Waysides[1].getTrack(25).setSwitch(states[0][5])
+        #self.greenLine.Waysides[1].getTrack(25).setSwitch(states[0][5])
 
         self.greenLine.Waysides[1].getTrack(41).setLight(states[1][0])
         self.greenLine.Waysides[1].getTrack(28).setLight(states[1][1])
@@ -236,8 +235,11 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         self.greenLine.Waysides[0].getTrack(28).setLight(states[1][7])
         self.greenLine.Waysides[0].getTrack(12).setLight(states[1][8])
         self.greenLine.Waysides[0].getTrack(0).setLight(states[1][9])
-        self.greenLine.Waysides[1].getTrack(25).setLight(states[1][10])
+        #self.greenLine.Waysides[1].getTrack(25).setLight(states[1][10])
 
+        #Do switch 6 logic here
+        
+        #Crossroad logic
         if(self.greenLine.Waysides[0].getTrack(16).getOccupancy() or self.greenLine.Waysides[0].getTrack(17).getOccupancy() or self.greenLine.Waysides[0].getTrack(18).getOccupancy() or self.greenLine.Waysides[0].getTrack(19).getOccupancy() or self.greenLine.Waysides[0].getTrack(20).getOccupancy()):
             self.greenLine.Waysides[0].getTrack(18).setCrossroad(True)
         else:
