@@ -23,6 +23,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     #Global Variables
     greenLine = GreenLine()
     pureOccupancy = []
+    oldOccupancy = []
 
     #Testing for Switch 1
     #greenLine.Waysides[1].getTrack(41).setOccupancy(True) #Z151
@@ -148,22 +149,25 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         #All for Wayside 4
         for i in range(48): #S102-Y149
             self.greenLine.Waysides[3].getTrack(i).setOccupancy(occupancy[i+101])
-        check = False
+
+        check = False #Checking if the new input has changed occupancy or not
         for i in range(len(occupancy)):
-            if(occupancy[i] == True):
+            if(self.pureOccupancy[i] != self.oldOccupancy[i]):
                 check = True
+
+        #Runs the functions accordingly after recieving new occupancies
         if(self.tabWidget.currentIndex() == 0):
-            newStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
-            self.setNewDataGreenLine(newStates)
             if(check == True):
-                self.sendAuthority()
+                newStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
+                self.setNewDataGreenLine(newStates)
+            self.sendAuthority()
             self.setListsOccupancyAutomatic()
             self.setListsOccupancyManual()
         elif(self.tabWidget.currentIndex() == 1):
-            if(check == True):
-                self.sendAuthority()
-            self.setListsOccupancyAutomatic
-            self.setListsOccupancyManual
+            self.sendAuthority()
+            self.setListsOccupancyAutomatic()
+            self.setListsOccupancyManual()
+        self.oldOccupancy = occupancy
     def createNewTrainData(self, traveling:[], firstAuth, speed:[]): #Called once by Track Model
         self.greenLine.trainAuthority.setNewTrain(traveling)
         self.trackModelSendRouteHW.emit(traveling)
@@ -201,7 +205,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         self.trackModelTrackDataHW.emit(data)
     def sendOccupancy(self): #Occupancy sent to CTC
         self.CTCOccupancyHW.emit(self.pureOccupancy)
-    #def sendFailures(self): #Failures sent to CTC
+    def sendFailures(self): #Failures sent to CTC
         failures = []
         for i in range(len(self.greenLine.Waysides)):
             for j in range(len(self.greenLine.Waysides[i])):
