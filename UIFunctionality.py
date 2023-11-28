@@ -7,6 +7,7 @@ from HWTrackUI import Ui_Form
 from TrackClass import Track
 from UI_Breadboard_Class import Operations
 from GreenLineWaysides import GreenLine
+from RedLineWaysides import RedLine
 
 operate = Operations() #Class to perform operations on the breadboard
 
@@ -22,6 +23,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
 
     #Global Variables
     greenLine = GreenLine()
+    redLine = RedLine()
     pureOccupancy = []
     oldOccupancy = []
 
@@ -124,13 +126,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     def __init__(self): #Initalizer
         super().__init__()
 
-
-
-    #Time dependent Functions
-    def timerFunctions(self):
-        self.sendData
-        self.sendOccupancy
-        #self.sendFailures
     
     #Getting data functions
     def getOccupancy(self, occupancy:[]): #Current Occupancy from Track Model
@@ -160,7 +155,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             if(check == True):
                 newStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
                 self.setNewDataGreenLine(newStates)
-            self.sendAuthority()
             self.setListsOccupancyAutomatic()
             self.setListsOccupancyManual()
         elif(self.tabWidget.currentIndex() == 1):
@@ -213,8 +207,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
 
     #Authority functions
     def sendAuthority(self):
-        auth = self.greenLine.trainAuthority.calculate(0)
-        self.trackModelAuthorityHW.emit(auth)
+        self.trackModelAuthorityHW.emit()
 
     #Functions for setting data after PLC Logic
     def setNewDataGreenLine(self, states):
@@ -263,12 +256,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     def checkListAutomatic(self): #Checks if a Line is selected or not to grey out combo boxes and list
         if self.listWidget_3.currentItem() is not None:
             self.comboBox.setEnabled(True)
-        value = self.listWidget_3.currentItem()
-        if value.text() == "Green Line":
-            self.configureWaysidesAutomaticGreen()
-        elif value.text() == "Red Line":
-            for i in range(self.comboBox.count(), 0, -1):
-                self.comboBox.removeItem(i)
+        self.configureWaysidesAutomaticGreen()
     def checkWaysideSelectionAutomatic(self): #Checks if still selecting crossroad to grey out button
         value = self.comboBox.currentText()
         if value == "Select Wayside":
@@ -316,15 +304,27 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     def setListsOccupancyAutomatic(self): #Shows occupancy on the lists for displaying
         waysideNumber = self.comboBox.currentIndex()-1 #Gets the current wayside selected
         self.listWidget_7.clear()
-        for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
-            if self.greenLine.Waysides[waysideNumber].getTrack(j).getOccupancy() == True:
-                self.listWidget_7.addItem(self.greenLine.Waysides[waysideNumber].getTrackName(j))
+        value = self.listWidget_3.currentItem()
+        if(value.text() == "Green Line"):
+            for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
+                if self.greenLine.Waysides[waysideNumber].getTrack(j).getOccupancy() == True:
+                    self.listWidget_7.addItem(self.greenLine.Waysides[waysideNumber].getTrackName(j))
+        elif(value.text() == "Red Line"):
+            for j in range(self.redLine.Waysides[waysideNumber].amountOfTracks()):
+                if self.redLine.Waysides[waysideNumber].getTrack(j).getOccupancy() == True:
+                    self.listWidget_7.addItem(self.redLine.Waysides[waysideNumber].getTrackName(j))
     def setListsFailureAutomatic(self): #Shows failures on the list for displaying
         waysideNumber = self.comboBox.currentIndex()-1 #Gets the current wayside selected
         self.listWidget_8.clear()
-        for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
-            if self.greenLine.Waysides[waysideNumber].getTrack(j).getFailure() == True:
-                self.listWidget_8.addItem(self.greenLine.Waysides[waysideNumber].getTrackName(j))
+        value = self.listWidget_3.currentItem()
+        if(value.text() == "Green Line"):
+            for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
+                if self.greenLine.Waysides[waysideNumber].getTrack(j).getFailure() == True:
+                    self.listWidget_8.addItem(self.greenLine.Waysides[waysideNumber].getTrackName(j))
+        elif(value.text() == "Red Line"):
+            for j in range(self.redLine.Waysides[waysideNumber].amountOfTracks()):
+                if self.redLine.Waysides[waysideNumber].getTrack(j).getFailure() == True:
+                    self.listWidget_8.addItem(self.redLine.Waysides[waysideNumber].getTrackName(j))
 
 
     #Functions used in Manual Mode
@@ -346,12 +346,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     def checkListManual(self): #Checks if a wayside is selected or not to grey out combo boxes or not
         if self.listWidget.currentItem() is not None:
             self.comboBox_12.setEnabled(True)
-        value = self.listWidget.currentItem()
-        if value.text() == "Green Line":
-            self.configureWaysidesManualGreen()
-        elif value.text() == "Red Line":
-            for i in range(self.comboBox_12.count(), 0, -1):
-                self.comboBox_12.removeItem(i)
+        self.configureWaysidesManualGreen()
     def checkWaysideSelectionManual(self): #Checks if still selecting crossroad to grey out button
         value = self.comboBox_12.currentText()
         if value == "Select Wayside":
@@ -441,18 +436,29 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     def setListsOccupancyManual(self): #Shows occupancy on the lists for displaying
         waysideNumber = self.comboBox_12.currentIndex()-1 #Gets the current wayside selected
         self.listWidget_5.clear()
-        for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
-            if self.greenLine.Waysides[waysideNumber].getTrack(j).getOccupancy() == True:
-                self.listWidget_5.addItem(self.greenLine.Waysides[waysideNumber].getTrackName(j))
+        value = self.listWidget.currentItem()
+        if(value.text() == "Green Line"):
+            for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
+                if self.greenLine.Waysides[waysideNumber].getTrack(j).getOccupancy() == True:
+                    self.listWidget_5.addItem(self.greenLine.Waysides[waysideNumber].getTrackName(j))
+        elif(value.text() == "Red Line"):
+            for j in range(self.redLine.Waysides[waysideNumber].amountOfTracks()):
+                if self.redLine.Waysides[waysideNumber].getTrack(j).getOccupancy() == True:
+                    self.listWidget_5.addItem(self.redLine.Waysides[waysideNumber].getTrackName(j))
     def setListsFailureManual(self): #Shows failures on the list for displaying
         waysideNumber = self.comboBox_12.currentIndex()-1 #Gets the current wayside selected
         self.listWidget_6.clear()
-        for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
-            if self.greenLine.Waysides[waysideNumber].getTrack(j).getFailure() == True:
-                self.listWidget_6.addItem(self.greenLine.Waysides[waysideNumber].getTrackName(j))
+        value = self.listWidget.currentItem()
+        if(value.text() == "Green Line"):
+            for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
+                if self.greenLine.Waysides[waysideNumber].getTrack(j).getFailure() == True:
+                    self.listWidget_6.addItem(self.greenLine.Waysides[waysideNumber].getTrackName(j))
+        elif(value.text() == "Red Line"):
+            for j in range(self.redLine.Waysides[waysideNumber].amountOfTracks()):
+                if self.redLine.Waysides[waysideNumber].getTrack(j).getFailure() == True:
+                    self.listWidget_6.addItem(self.redLine.Waysides[waysideNumber].getTrackName(j))
 
-
-    #Functions used in Test Bench
+    #Functions used in Test Bench - Not updated for red line
     def checkListTest(self): #Checks if a line is selected or not to grey out combo boxes
         if self.listWidget_9.currentItem() is not None:
             self.comboBox_13.setEnabled(True)
@@ -599,97 +605,149 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     def configureWaysidesAutomaticGreen(self):
         for i in range(self.comboBox.count(), 0, -1):
             self.comboBox.removeItem(i)
-        self.comboBox.addItem("Wayside 1")
-        self.comboBox.addItem("Wayside 2")
-        self.comboBox.addItem("Wayside 3")
-        self.comboBox.addItem("Wayside 4")
+        value = self.listWidget_3.currentItem()
+        if(value.text() == "Green Line"):
+            self.comboBox.addItem("Wayside 1")
+            self.comboBox.addItem("Wayside 2")
+            self.comboBox.addItem("Wayside 3")
+            self.comboBox.addItem("Wayside 4")
+        elif(value.text() == "Red Line"):
+            self.comboBox.addItem("Wayside 1")
+            self.comboBox.addItem("Wayside 2")      
     def configureLightsAutomaticGreen(self, currentWayside): #Sets proper lights for each wayside selection
         self.comboBox_5.setCurrentIndex(0)
         for i in range(self.comboBox_5.count(), 0, -1):
             self.comboBox_5.removeItem(i)
-        if(currentWayside == "Wayside 1"):
-            self.comboBox_5.addItem("Light A1")
-            self.comboBox_5.addItem("Light D13")
-            self.comboBox_5.addItem("Light G29")
-            self.comboBox_5.addItem("Light Z150")
-        elif(currentWayside == "Wayside 2"):
-            self.comboBox_5.addItem("Light J58")
-            self.comboBox_5.addItem("Light J61")
-            self.comboBox_5.addItem("Light YARD")
-        elif(currentWayside == "Wayside 3"):
-            self.comboBox_5.addItem("Light M76")
-            self.comboBox_5.addItem("Light N77")
-            self.comboBox_5.addItem("Light N85")
-            self.comboBox_5.addItem("Light Q100")
+        value = self.listWidget_3.currentItem()
+        if(value.text() == "Green Line"):
+            if(currentWayside == "Wayside 1"):
+                self.comboBox_5.addItem("Light A1")
+                self.comboBox_5.addItem("Light D13")
+                self.comboBox_5.addItem("Light G29")
+                self.comboBox_5.addItem("Light Z150")
+            elif(currentWayside == "Wayside 2"):
+                self.comboBox_5.addItem("Light J58")
+                self.comboBox_5.addItem("Light J61")
+                self.comboBox_5.addItem("Light YARD")
+            elif(currentWayside == "Wayside 3"):
+                self.comboBox_5.addItem("Light M76")
+                self.comboBox_5.addItem("Light N77")
+                self.comboBox_5.addItem("Light N85")
+                self.comboBox_5.addItem("Light Q100")
+        if(value.text() == "Red Line"):
+            return
     def configureCrossroadsAutomaticGreen(self, currentWayside): #Sets proper crossroads for each wayside selection
         self.comboBox_6.setCurrentIndex(0)
         for i in range(self.comboBox_6.count(), 0, -1):
             self.comboBox_6.removeItem(i)
-        if(currentWayside == "Wayside 1"):
-            self.comboBox_6.addItem("Crossroad E19")
+        value = self.listWidget_3.currentItem()
+        if(value.text() == "Green Line"):
+            if(currentWayside == "Wayside 1"):
+                self.comboBox_6.addItem("Crossroad E19")
+        elif(value.text() == "Red Line"):
+            if(currentWayside == "Wayside 2"):
+                self.comboBox_6.addItem("Crossroad I47")
     def configureSwitchAutomaticGreen(self, currentWayside): #Sets proper switches for each wayside selection
         self.comboBox_7.setCurrentIndex(0)
         for i in range(self.comboBox_7.count(), 0, -1):
             self.comboBox_7.removeItem(i)
-        if(currentWayside == "Wayside 1"):
-            self.comboBox_7.addItem("D13")
-            self.comboBox_7.addItem("G29")
-        elif(currentWayside == "Wayside 2"):
-            self.comboBox_7.addItem("J58")
-            self.comboBox_7.addItem("J62")
-        elif(currentWayside == "Wayside 3"):
-            self.comboBox_7.addItem("N77")
-            self.comboBox_7.addItem("N85")
+        value = self.listWidget_3.currentItem()
+        if(value.text() == "Green Line"):
+            if(currentWayside == "Wayside 1"):
+                self.comboBox_7.addItem("D13")
+                self.comboBox_7.addItem("G29")
+            elif(currentWayside == "Wayside 2"):
+                self.comboBox_7.addItem("J58")
+                self.comboBox_7.addItem("J62")
+            elif(currentWayside == "Wayside 3"):
+                self.comboBox_7.addItem("N77")
+                self.comboBox_7.addItem("N85")
+        elif(value.text() == "Red Line"):
+            if(currentWayside == "Wayside 1"):
+                self.comboBox_7.addItem("C9")
+                self.comboBox_7.addItem("E15")
+                self.comboBox_7.addItem("H27")
+                self.comboBox_7.addItem("H32")
+            elif(currentWayside == "Wayside 2"):
+                self.comboBox_7.addItem("H38")
+                self.comboBox_7.addItem("H43")
+                self.comboBox_7.addItem("J52")
         
     
     #Manual Mode
     def configureWaysidesManualGreen(self):
         for i in range(self.comboBox_12.count(), 0, -1):
             self.comboBox_12.removeItem(i)
-        self.comboBox_12.addItem("Wayside 1")
-        self.comboBox_12.addItem("Wayside 2")
-        self.comboBox_12.addItem("Wayside 3")
-        self.comboBox_12.addItem("Wayside 4")
+        value = self.listWidget.currentItem()
+        if(value.text() == "Green Line"):
+            self.comboBox_12.addItem("Wayside 1")
+            self.comboBox_12.addItem("Wayside 2")
+            self.comboBox_12.addItem("Wayside 3")
+            self.comboBox_12.addItem("Wayside 4")
+        elif(value.text() == "Red Line"):
+            self.comboBox_12.addItem("Wayside 1")
+            self.comboBox_12.addItem("Wayside 2")  
     def configureLightsManualGreen(self, currentWayside): #Sets proper lights for each wayside selection
         self.comboBox_2.setCurrentIndex(0)
         for i in range(self.comboBox_2.count(), 0, -1):
             self.comboBox_2.removeItem(i)
-        if(currentWayside == "Wayside 1"):
-            self.comboBox_2.addItem("Light A1")
-            self.comboBox_2.addItem("Light D13")
-            self.comboBox_2.addItem("Light G29")
-            self.comboBox_2.addItem("Light Z150")
-        elif(currentWayside == "Wayside 2"):
-            self.comboBox_2.addItem("Light J58")
-            self.comboBox_2.addItem("Light J61")
-            self.comboBox_2.addItem("Light YARD")
-        elif(currentWayside == "Wayside 3"):
-            self.comboBox_2.addItem("Light M76")
-            self.comboBox_2.addItem("Light N77")
-            self.comboBox_2.addItem("Light N85")
-            self.comboBox_2.addItem("Light Q100")
+        value = self.listWidget.currentItem()
+        if(value.text() == "Green Line"):
+            if(currentWayside == "Wayside 1"):
+                self.comboBox_2.addItem("Light A1")
+                self.comboBox_2.addItem("Light D13")
+                self.comboBox_2.addItem("Light G29")
+                self.comboBox_2.addItem("Light Z150")
+            elif(currentWayside == "Wayside 2"):
+                self.comboBox_2.addItem("Light J58")
+                self.comboBox_2.addItem("Light J61")
+                self.comboBox_2.addItem("Light YARD")
+            elif(currentWayside == "Wayside 3"):
+                self.comboBox_2.addItem("Light M76")
+                self.comboBox_2.addItem("Light N77")
+                self.comboBox_2.addItem("Light N85")
+                self.comboBox_2.addItem("Light Q100")
+        if(value.text() == "Red Line"):
+            return
     def configureCrossroadsManualGreen(self, currentWayside): #Sets proper crossroads for each wayside selection
         self.comboBox_3.setCurrentIndex(0)
         for i in range(self.comboBox_3.count(), 0, -1):
             self.comboBox_3.removeItem(i)
-        if(currentWayside == "Wayside 1"):
-            self.comboBox_3.addItem("Crossroad E19")
+        value = self.listWidget.currentItem()
+        if(value.text() == "Green Line"):
+            if(currentWayside == "Wayside 1"):
+                self.comboBox_3.addItem("Crossroad E19")
+        elif(value.text() == "Red Line"):
+            if(currentWayside == "Wayside 2"):
+                self.comboBox_3.addItem("Crossroad I47")
     def configureSwitchManualGreen(self, currentWayside): #Sets proper switches for each wayside selection
         self.comboBox_4.setCurrentIndex(0)
         for i in range(self.comboBox_4.count(), 0, -1):
             self.comboBox_4.removeItem(i)
-        if(currentWayside == "Wayside 1"):
-            self.comboBox_4.addItem("D13")
-            self.comboBox_4.addItem("G29")
-        elif(currentWayside == "Wayside 2"):
-            self.comboBox_4.addItem("J58")
-            self.comboBox_4.addItem("J62")
-        elif(currentWayside == "Wayside 3"):
-            self.comboBox_4.addItem("N77")
-            self.comboBox_4.addItem("N85")
+        value = self.listWidget.currentItem()
+        if(value.text() == "Green Line"):
+            if(currentWayside == "Wayside 1"):
+                self.comboBox_4.addItem("D13")
+                self.comboBox_4.addItem("G29")
+            elif(currentWayside == "Wayside 2"):
+                self.comboBox_4.addItem("J58")
+                self.comboBox_4.addItem("J62")
+            elif(currentWayside == "Wayside 3"):
+                self.comboBox_4.addItem("N77")
+                self.comboBox_4.addItem("N85")
+        elif(value.text() == "Red Line"):
+            if(currentWayside == "Wayside 1"):
+                self.comboBox_4.addItem("C9")
+                self.comboBox_4.addItem("E15")
+                self.comboBox_4.addItem("H27")
+                self.comboBox_4.addItem("H32")
+            elif(currentWayside == "Wayside 2"):
+                self.comboBox_4.addItem("H38")
+                self.comboBox_4.addItem("H43")
+                self.comboBox_4.addItem("J52")
         
 
-    #Test Bench
+    #Test Bench - Not updated with red line stuff
     def configureWaysidesTestGreen(self):
         for i in range(self.comboBox_13.count(), 0, -1):
             self.comboBox_13.removeItem(i)

@@ -1,10 +1,9 @@
 from WaysideClass import Wayside
-from AuthorityClass import AuthorityClass
+#from AuthorityClass import AuthorityClass
 
 class GreenLine():
 
     Waysides = [Wayside(), Wayside(), Wayside(), Wayside()] #All The waysides going in order of 1,2,3,4 for Green Line
-    trainAuthority = None
     trackList = []
 
     def setTracks(self, tracks): #Creates the track on start up of program from Track Model

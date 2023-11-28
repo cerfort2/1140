@@ -1,6 +1,6 @@
 from TrackClass import Track
 
-class AuthorityClass():
+class AuthorityClass(): #NOT USED ANYMORE
     route = []
     blocks = []
 
