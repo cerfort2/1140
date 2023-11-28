@@ -78,7 +78,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         self.comboBox_6.currentTextChanged.connect(self.defaultCrossroad)
         self.comboBox_7.currentTextChanged.connect(self.defaultSwitch)
 
-        #Temp need to implement timer for this
+        #Comment this out for when the system is fully integrated
         self.comboBox.currentIndexChanged.connect(self.setListsOccupancyAutomatic)
         self.comboBox.currentIndexChanged.connect(self.setListsFailureAutomatic)
 
@@ -96,32 +96,29 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         self.pushButton_2.clicked.connect(self.editSwitch)
         self.comboBox_4.currentTextChanged.connect(self.defaultSwitchManual)
 
-        #Temp need to implement timer for this
+        #Comment this out for when the system is fully integrated
         self.comboBox_12.currentIndexChanged.connect(self.setListsOccupancyManual)
         self.comboBox_12.currentIndexChanged.connect(self.setListsFailureManual)
 
-        #Buttons/Setup for Test Bench
-        self.listWidget_9.itemClicked.connect(self.checkListTest)
-        self.comboBox_8.currentIndexChanged.connect(self.trackChangeTest)
-        self.comboBox_9.currentIndexChanged.connect(self.lightChangeTest)
-        self.comboBox_10.currentIndexChanged.connect(self.crossChangeTest)
-        self.comboBox_11.currentIndexChanged.connect(self.switchChangeTest)
-        self.comboBox_11.currentTextChanged.connect(self.switchSelection)
-        self.comboBox_13.currentIndexChanged.connect(self.checkWaysideSelectionTest)
-        redTest = self.listWidget_4
-        self.listWidget_4.itemClicked.connect(lambda item=redTest: self.editLightTest(item.text()))
-        cross = self.listWidget_10
-        self.listWidget_10.itemClicked.connect(lambda item=cross: self.editCrossroadTest(item.text()))
-        self.listWidget_11.currentRowChanged.connect(self.editSwitchTest)
-        self.pushButton_4.clicked.connect(self.toggleTrack)
-        self.pushButton_5.clicked.connect(self.toggleFailure)
+        #Buttons/Setup for Test Bench - No longer in use at this point
+        self.tabWidget.removeTab(2)
+        # self.listWidget_9.itemClicked.connect(self.checkListTest)
+        # self.comboBox_8.currentIndexChanged.connect(self.trackChangeTest)
+        # self.comboBox_9.currentIndexChanged.connect(self.lightChangeTest)
+        # self.comboBox_10.currentIndexChanged.connect(self.crossChangeTest)
+        # self.comboBox_11.currentIndexChanged.connect(self.switchChangeTest)
+        # self.comboBox_11.currentTextChanged.connect(self.switchSelection)
+        # self.comboBox_13.currentIndexChanged.connect(self.checkWaysideSelectionTest)
+        # redTest = self.listWidget_4
+        # self.listWidget_4.itemClicked.connect(lambda item=redTest: self.editLightTest(item.text()))
+        # cross = self.listWidget_10
+        # self.listWidget_10.itemClicked.connect(lambda item=cross: self.editCrossroadTest(item.text()))
+        # self.listWidget_11.currentRowChanged.connect(self.editSwitchTest)
+        # self.pushButton_4.clicked.connect(self.toggleTrack)
+        # self.pushButton_5.clicked.connect(self.toggleFailure)
 
         #Buttons/Setup for Whole UI
         self.pushButton_3.clicked.connect(self.openArduinoFile) #Opens PLC File
-        
-        # Testing for PLC Code to run or not
-        # self.comboBox.currentIndexChanged.connect(lambda: self.getOccupancy(self.pureOccupancy))
-        # self.comboBox_12.currentIndexChanged.connect(lambda: self.getOccupancy(self.pureOccupancy))
 
     def __init__(self): #Initalizer
         super().__init__()
@@ -238,6 +235,10 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         else:
             self.greenLine.Waysides[0].getTrack(18).setCrossroad(False)
     
+
+
+
+
     #Functions used in Whole UI
     def openArduinoFile(self): #Functionality for PLC File Opening
         dialog = QFileDialog()
@@ -274,33 +275,58 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             return
         properText = text.replace("Light ", "") #Get Just track Number and letter into a string
         waysideNumber = self.comboBox.currentIndex()-1 #Gets the current wayside selected
-        for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
-            if(properText == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
-                break
-        operate.changeLight(self.greenLine.Waysides[waysideNumber].getTrack(i).getLight())
+        value = self.listWidget_3.currentItem()
+        if(value.text() == "Green Line"):
+            for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
+                if(properText == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            operate.changeLight(self.greenLine.Waysides[waysideNumber].getTrack(i).getLight())
+        elif(value.text() == "Red Line"):
+            for i in range(self.redLine.Waysides[waysideNumber].amountOfTracks()):
+                if(properText == self.redLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            operate.changeLight(self.redLine.Waysides[waysideNumber].getTrack(i).getLight())
     def defaultCrossroad(self):
         text = self.comboBox_6.currentText()
         if text == "Select Crossroad":
             return
         properText = text.replace("Crossroad ", "") #Get Just track Number and letter into a string
         waysideNumber = self.comboBox.currentIndex()-1 #Gets the current wayside selected
-        for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
-            if(properText == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
-                break
-        operate.crossroad(self.greenLine.Waysides[waysideNumber].getTrack(i).getCrossroad())
+        value = self.listWidget_3.currentItem()
+        if(value.text() == "Green Line"):
+            for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
+                if(properText == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            operate.crossroad(self.greenLine.Waysides[waysideNumber].getTrack(i).getCrossroad())
+        elif(value.text() == "Red Line"):
+            for i in range(self.redLine.Waysides[waysideNumber].amountOfTracks()):
+                if(properText == self.redLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            operate.crossroad(self.redLine.Waysides[waysideNumber].getTrack(i).getCrossroad())
     def defaultSwitch(self):
         text = self.comboBox_7.currentText()
         if text == "Select Switch":
             return
         waysideNumber = self.comboBox.currentIndex()-1 #Gets the current wayside selected
-        for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
-            if(text == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
-                break
-        trackStatus = self.greenLine.Waysides[waysideNumber].getTrack(i).getSwitch()
-        if trackStatus == True: #Right
-            operate.switch(self.greenLine.Waysides[waysideNumber].getTrackName(i), self.greenLine.Waysides[waysideNumber].getTrack(i).getRightDest(), trackStatus)
-        elif trackStatus == False: #Left
-            operate.switch(self.greenLine.Waysides[waysideNumber].getTrackName(i), self.greenLine.Waysides[waysideNumber].getTrack(i).getLeftDest(), trackStatus)
+        value = self.listWidget_3.currentItem()
+        if(value.text() == "Green Line"):
+            for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
+                if(text == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            trackStatus = self.greenLine.Waysides[waysideNumber].getTrack(i).getSwitch()
+            if trackStatus == True: #Right
+                operate.switch(self.greenLine.Waysides[waysideNumber].getTrackName(i), self.greenLine.Waysides[waysideNumber].getTrack(i).getRightDest(), trackStatus)
+            elif trackStatus == False: #Left
+                operate.switch(self.greenLine.Waysides[waysideNumber].getTrackName(i), self.greenLine.Waysides[waysideNumber].getTrack(i).getLeftDest(), trackStatus)
+        elif(value.text() == "Red Line"):
+            for i in range(self.redLine.Waysides[waysideNumber].amountOfTracks()):
+                if(text == self.redLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            trackStatus = self.redLine.Waysides[waysideNumber].getTrack(i).getSwitch()
+            if trackStatus == True: #Right
+                operate.switch(self.redLine.Waysides[waysideNumber].getTrackName(i), self.redLine.Waysides[waysideNumber].getTrack(i).getRightDest(), trackStatus)
+            elif trackStatus == False: #Left
+                operate.switch(self.redLine.Waysides[waysideNumber].getTrackName(i), self.redLine.Waysides[waysideNumber].getTrack(i).getLeftDest(), trackStatus)
     def setListsOccupancyAutomatic(self): #Shows occupancy on the lists for displaying
         waysideNumber = self.comboBox.currentIndex()-1 #Gets the current wayside selected
         self.listWidget_7.clear()
@@ -325,7 +351,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             for j in range(self.redLine.Waysides[waysideNumber].amountOfTracks()):
                 if self.redLine.Waysides[waysideNumber].getTrack(j).getFailure() == True:
                     self.listWidget_8.addItem(self.redLine.Waysides[waysideNumber].getTrackName(j))
-
 
     #Functions used in Manual Mode
     def crossChangeManual(self): #Checks if still selecting crossroad to grey out button
@@ -364,75 +389,134 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             return
         properText = light.replace("Light ", "") #Get Just track Number and letter into a string
         waysideNumber = self.comboBox_12.currentIndex()-1 #Gets the current wayside selected
-        for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
-            if(properText == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
-                break
-        if text == "Red":
-            color = True
-        elif text == "Green":
-            color = False
-        self.greenLine.Waysides[waysideNumber].getTrack(i).setLight(color)
-        operate.changeLight(self.greenLine.Waysides[waysideNumber].getTrack(i).getLight())
+        value = self.listWidget.currentItem()
+        if(value.text() == "Green Line"):
+            for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
+                if(properText == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            if text == "Red":
+                color = True
+            elif text == "Green":
+                color = False
+            self.greenLine.Waysides[waysideNumber].getTrack(i).setLight(color)
+            operate.changeLight(self.greenLine.Waysides[waysideNumber].getTrack(i).getLight())
+        elif(value.text() == "Red Line"):
+            for i in range(self.redLine.Waysides[waysideNumber].amountOfTracks()):
+                if(properText == self.redLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            if text == "Red":
+                color = True
+            elif text == "Green":
+                color = False
+            self.redLine.Waysides[waysideNumber].getTrack(i).setLight(color)
+            operate.changeLight(self.redLine.Waysides[waysideNumber].getTrack(i).getLight())
     def editCrossroad(self): #Edits crossroad when toggle switch pressed
         text = self.comboBox_3.currentText()
         if text == "Select Crossroad":
             return
         properText = text.replace("Crossroad ", "") #Get Just track Number and letter into a string
         waysideNumber = self.comboBox_12.currentIndex()-1 #Gets the current wayside selected
-        for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
-            if(properText == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
-                break
-        newVal = not self.greenLine.Waysides[waysideNumber].getTrack(i).getCrossroad() #Toggling the current value
-        self.greenLine.Waysides[waysideNumber].getTrack(i).setCrossroad(newVal) #Setting it to the track it is associated with
-        operate.crossroad(self.greenLine.Waysides[waysideNumber].getTrack(i).getCrossroad())
+        value = self.listWidget.currentItem()
+        if(value.text() == "Green Line"):
+            for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
+                if(properText == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            newVal = not self.greenLine.Waysides[waysideNumber].getTrack(i).getCrossroad() #Toggling the current value
+            self.greenLine.Waysides[waysideNumber].getTrack(i).setCrossroad(newVal) #Setting it to the track it is associated with
+            operate.crossroad(self.greenLine.Waysides[waysideNumber].getTrack(i).getCrossroad())
+        elif(value.text() == "Red Line"):
+            for i in range(self.redLine.Waysides[waysideNumber].amountOfTracks()):
+                if(properText == self.redLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            newVal = not self.redLine.Waysides[waysideNumber].getTrack(i).getCrossroad() #Toggling the current value
+            self.redLine.Waysides[waysideNumber].getTrack(i).setCrossroad(newVal) #Setting it to the track it is associated with
+            operate.crossroad(self.redLine.Waysides[waysideNumber].getTrack(i).getCrossroad())
     def editSwitch(self): #Edits switch data when toggle switch is pressed
         text = self.comboBox_4.currentText()
         if text == "Select Crossroad":
             return
         waysideNumber = self.comboBox_12.currentIndex()-1 #Gets the current wayside selected
-        for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
-            if(text == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
-                break
-        newVal = not self.greenLine.Waysides[waysideNumber].getTrack(i).getSwitch() #Toggling the current value
-        self.greenLine.Waysides[waysideNumber].getTrack(i).setSwitch(newVal) #Setting it to the track it is associated with
-        trackStatus = self.greenLine.Waysides[waysideNumber].getTrack(i).getSwitch()
-        if trackStatus == True: #Right
-            operate.switch(self.greenLine.Waysides[waysideNumber].getTrackName(i), self.greenLine.Waysides[waysideNumber].getTrack(i).getRightDest(), trackStatus)
-        elif trackStatus == False: #Left
-            operate.switch(self.greenLine.Waysides[waysideNumber].getTrackName(i), self.greenLine.Waysides[waysideNumber].getTrack(i).getLeftDest(), trackStatus)
+        value = self.listWidget.currentItem()
+        if(value.text() == "Green Line"):
+            for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
+                if(text == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            newVal = not self.greenLine.Waysides[waysideNumber].getTrack(i).getSwitch() #Toggling the current value
+            self.greenLine.Waysides[waysideNumber].getTrack(i).setSwitch(newVal) #Setting it to the track it is associated with
+            trackStatus = self.greenLine.Waysides[waysideNumber].getTrack(i).getSwitch()
+            if trackStatus == True: #Right
+                operate.switch(self.greenLine.Waysides[waysideNumber].getTrackName(i), self.greenLine.Waysides[waysideNumber].getTrack(i).getRightDest(), trackStatus)
+            elif trackStatus == False: #Left
+                operate.switch(self.greenLine.Waysides[waysideNumber].getTrackName(i), self.greenLine.Waysides[waysideNumber].getTrack(i).getLeftDest(), trackStatus)
+        elif(value.text() == "Red Line"):
+            for i in range(self.redLine.Waysides[waysideNumber].amountOfTracks()):
+                if(text == self.redLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            newVal = not self.redLine.Waysides[waysideNumber].getTrack(i).getSwitch() #Toggling the current value
+            self.redLine.Waysides[waysideNumber].getTrack(i).setSwitch(newVal) #Setting it to the track it is associated with
+            trackStatus = self.redLine.Waysides[waysideNumber].getTrack(i).getSwitch()
+            if trackStatus == True: #Right
+                operate.switch(self.redLine.Waysides[waysideNumber].getTrackName(i), self.redLine.Waysides[waysideNumber].getTrack(i).getRightDest(), trackStatus)
+            elif trackStatus == False: #Left
+                operate.switch(self.redLine.Waysides[waysideNumber].getTrackName(i), self.redLine.Waysides[waysideNumber].getTrack(i).getLeftDest(), trackStatus)
     def defaultLightManual(self): #Displaying default value of light
         text = self.comboBox_2.currentText()
         if text == "Select Light":
             return
         properText = text.replace("Light ", "") #Get Just track Number and letter into a string
         waysideNumber = self.comboBox_12.currentIndex()-1 #Gets the current wayside selected
-        for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
-            if(properText == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
-                break
-        operate.changeLight(self.greenLine.Waysides[waysideNumber].getTrack(i).getLight())
+        value = self.listWidget.currentItem()
+        if(value.text() == "Green Line"):
+            for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
+                if(properText == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            operate.changeLight(self.greenLine.Waysides[waysideNumber].getTrack(i).getLight())
+        elif(value.text() == "Red Line"):
+            for i in range(self.redLine.Waysides[waysideNumber].amountOfTracks()):
+                if(properText == self.redLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            operate.changeLight(self.redLine.Waysides[waysideNumber].getTrack(i).getLight())
     def defaultCrossroadManual(self): #Displaying default value of Crossroad
         text = self.comboBox_3.currentText()
         if text == "Select Crossroad":
             return
         properText = text.replace("Crossroad ", "") #Get Just track Number and letter into a string
         waysideNumber = self.comboBox_12.currentIndex()-1 #Gets the current wayside selected
-        for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
-            if(properText == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
-                break
-        operate.crossroad(self.greenLine.Waysides[waysideNumber].getTrack(i).getCrossroad())
+        value = self.listWidget.currentItem()
+        if(value.text() == "Green Line"):
+            for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
+                if(properText == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            operate.crossroad(self.greenLine.Waysides[waysideNumber].getTrack(i).getCrossroad())
+        elif(value.text() == "Red Line"):
+            for i in range(self.redLine.Waysides[waysideNumber].amountOfTracks()):
+                if(properText == self.redLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            operate.crossroad(self.redLine.Waysides[waysideNumber].getTrack(i).getCrossroad())
     def defaultSwitchManual(self): #Displaying default value of switch
         text = self.comboBox_4.currentText()
         if text == "Select Switch":
             return
         waysideNumber = self.comboBox_12.currentIndex()-1 #Gets the current wayside selected
-        for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
-            if(text == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
-                break
-        trackStatus = self.greenLine.Waysides[waysideNumber].getTrack(i).getSwitch()
-        if trackStatus == True: #Right
-            operate.switch(self.greenLine.Waysides[waysideNumber].getTrackName(i), self.greenLine.Waysides[waysideNumber].getTrack(i).getRightDest(), trackStatus)
-        elif trackStatus == False: #Left
-            operate.switch(self.greenLine.Waysides[waysideNumber].getTrackName(i), self.greenLine.Waysides[waysideNumber].getTrack(i).getLeftDest(), trackStatus)
+        value = self.listWidget.currentItem()
+        if(value.text() == "Green Line"):
+            for i in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
+                if(text == self.greenLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            trackStatus = self.greenLine.Waysides[waysideNumber].getTrack(i).getSwitch()
+            if trackStatus == True: #Right
+                operate.switch(self.greenLine.Waysides[waysideNumber].getTrackName(i), self.greenLine.Waysides[waysideNumber].getTrack(i).getRightDest(), trackStatus)
+            elif trackStatus == False: #Left
+                operate.switch(self.greenLine.Waysides[waysideNumber].getTrackName(i), self.greenLine.Waysides[waysideNumber].getTrack(i).getLeftDest(), trackStatus)
+        elif(value.text() == "Red Line"):
+            for i in range(self.redLine.Waysides[waysideNumber].amountOfTracks()):
+                if(text == self.redLine.Waysides[waysideNumber].getTrackName(i)):
+                    break
+            trackStatus = self.redLine.Waysides[waysideNumber].getTrack(i).getSwitch()
+            if trackStatus == True: #Right
+                operate.switch(self.redLine.Waysides[waysideNumber].getTrackName(i), self.redLine.Waysides[waysideNumber].getTrack(i).getRightDest(), trackStatus)
+            elif trackStatus == False: #Left
+                operate.switch(self.redLine.Waysides[waysideNumber].getTrackName(i), self.redLine.Waysides[waysideNumber].getTrack(i).getLeftDest(), trackStatus)
     def setListsOccupancyManual(self): #Shows occupancy on the lists for displaying
         waysideNumber = self.comboBox_12.currentIndex()-1 #Gets the current wayside selected
         self.listWidget_5.clear()
@@ -599,8 +683,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         newVal = not self.greenLine.Waysides[waysideNumber].getTrack(i).getFailure() #Toggling the current value
         self.greenLine.Waysides[waysideNumber].getTrack(i).setFailure(newVal) #Setting it to the track it is associated with
 
-
-    #Code for configuration of Green Line Values
+    #Code for configuration of Green and Red Line Values
     #Automatic Mode
     def configureWaysidesAutomaticGreen(self):
         for i in range(self.comboBox.count(), 0, -1):
@@ -673,7 +756,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                 self.comboBox_7.addItem("H43")
                 self.comboBox_7.addItem("J52")
         
-    
     #Manual Mode
     def configureWaysidesManualGreen(self):
         for i in range(self.comboBox_12.count(), 0, -1):
@@ -746,7 +828,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                 self.comboBox_4.addItem("H43")
                 self.comboBox_4.addItem("J52")
         
-
     #Test Bench - Not updated with red line stuff
     def configureWaysidesTestGreen(self):
         for i in range(self.comboBox_13.count(), 0, -1):
