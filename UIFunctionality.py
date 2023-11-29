@@ -237,7 +237,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     
 
 
-
+    #Anything below this shouldn't need to be touched or edited
 
     #Functions used in Whole UI
     def openArduinoFile(self): #Functionality for PLC File Opening
@@ -251,7 +251,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             arduino = "C:\Program Files (x86)\Arduino\\arduino.exe"
             command = f'"{arduino}" "{fileLocation}"'
             subprocess.run(command, shell=True) 
-    
     
     #Functions used in Automatic Mode
     def checkListAutomatic(self): #Checks if a Line is selected or not to grey out combo boxes and list
