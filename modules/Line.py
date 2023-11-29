@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, date
-from Block import Block
+from modules.Block import Block
 import pandas as pd
 from scipy.optimize import minimize
 import numpy as np

@@ -15,8 +15,8 @@ from typing import List, Optional
 from PyQt6.QtCore import pyqtSignal, QEvent, Qt, QDateTime, QTimer, QObject
 from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QTableWidgetItem, QLabel, QLineEdit, QHeaderView
 
-from Line import Line
-from CTC_new import Ui_Form
+from modules.Line import Line
+from modules.CTC_new import Ui_Form
 
 
 class Train:
@@ -95,9 +95,9 @@ class CTC(Ui_Form, QWidget):
         self.trains_dispatched = []
         self.speed_factor = 1
 
-        #self.initialize_connections()
-        #self.start_threads()
-        #self.initialize_ui()
+        self.initialize_connections()
+        self.start_threads()
+        self.initialize_ui()
 
 
 #outputs
@@ -412,21 +412,16 @@ class CTC(Ui_Form, QWidget):
         index = self.stop_box_list.findText(stop)
         self.stop_box_list.removeItem(index)
         
-    def dispatch_train(self, destination = None, stops = [], arrival_time = None, departure_time = None, dispatched_line = None):
-        self.stops = stops
-        if not destination:
-            destination = self.manual_dispatch_destination.currentText()
+    def dispatch_train(self):
+        destination = self.manual_dispatch_destination.currentText()
         station_list = [destination]
         for stop in self.stops:
             station_list.append(stop)
-        if not arrival_time:
-            arrival_time = QDateTime.fromString(self.arrival_time_dis.text(), "HH:mm:ss").time()
-        if not arrival_time:
-            departure_time = self.cur_sys_time
+        arrival_time = QDateTime.fromString(self.arrival_time_dis.text(), "HH:mm:ss").time()
+        departure_time = self.cur_sys_time
 
         #get line from ui
-        if not dispatched_line:
-            dispatched_line = self.manual_dispatch_line.currentText()
+        dispatched_line = self.manual_dispatch_line.currentText()
         num_stops = len(self.stops)
         if dispatched_line == "Green Line":
             route = self.green_line.get_route(station_list)
@@ -440,17 +435,20 @@ class CTC(Ui_Form, QWidget):
         trainID = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
         train = Train(trainID, destination, departure_time, arrival_time, self.stops)
         self.trains_dispatched.append(train)
-        #self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
+        self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
 
-        #self.suggested_speed_tb.setText(str(speeds))
-        #self.authority_tb.setText(str(authority))
-        #self.route_tb.setText(str(route[0]))
+        self.suggested_speed_tb.setText(str(speeds))
+        self.authority_tb.setText(str(authority))
+        self.route_tb.setText(str(route[0]))
+        
+        print(speeds)
+        print(authority)
+        print(route)
 
         #setting route, authority, suggested speed
         self.train_dispatch(route, authority, speeds)
         self.stops = []
-        #self.arrival_time_dis.clear()
-        return route, authority, speeds
+        self.arrival_time_dis.clear()
 
     #get departure time, arrival time, destination station, stops
     def schedule_train(self):

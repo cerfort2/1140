@@ -3,11 +3,13 @@ from PyQt6.QtCore import QObject, pyqtSignal, QTimer
 from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow, QFileDialog
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from UIFunctionality import *
-from trackmodelguitest import *
-from SoftwareTrainControllerGUI import *
+from Hardware_Track_Controller.UIFunctionality import *
+from Track_Model.trackmodelguitest import *
+from Software_Track_Controller.SwTrackControlSetup import *
 from modules.CTC import *
 from modules.Home_ui import Ui_Form as Home
+# from Software_Train_Controller.SoftwareTrainControllerGUI import *
+# from Train_Model.train_model_interface_software import train_model_interface_software
 
 ##ALL FUNCTIONAL OBJECTS NEED TO DO THE FOLLOWING
 
@@ -40,10 +42,6 @@ class TrackM(QObject):
 
     def __init__(self) -> None:
         super().__init__()
-        
-    
-    def setOccupancy(self):
-        self.firstSignal.emit([[True, False, True],["hi"],["bye"]])
 
 class TrainM(QObject):
     def __init__(self) -> None:
@@ -52,7 +50,6 @@ class TrainM(QObject):
 class TrainC(QObject):
     def __init__(self) -> None:
         super().__init__()
-
 
 class God(Home, QMainWindow):
     def __init__(self):
@@ -63,37 +60,78 @@ class God(Home, QMainWindow):
         self.timeStep = 1000
 
         self.ctc = CTC()
-        self.trackController = HWTrackControllerGUI()
+        self.trackControllerHW = HWTrackControllerGUI()
+        self.trackControllerSW = SoftwareTrackControllerGUI()
         self.trackModel = functionalUI()
-        self.trainModel = TrainM()
-        self.trainController = SoftwareTrainControllerGUI() 
+        # self.trainInterface = train_model_interface_software()
         self.setupConnections()
         self.create_modules()
 
     def setupConnections(self):
-        #home page connections
+        #GOD UI main page
         self.ctc_btn.clicked.connect(self.openCTCGUI)
         self.track_model_btn.clicked.connect(self.openTrackModelGUI)
-        self.train_controller_btn.clicked.connect(self.openTrainControllerGUI)
-        self.track_controller_btn.clicked.connect(self.openTrackControllerHWGUI)
-        #self.home.train_model_btn.clicked.connect(self.openTrainModelGUI)
+        # if self.trainInterface.trains != []:
+        #     self.train_controller_sw_btn.clicked.connect(self.trainInterface.access_train(1).controller.open_GUI)
+        self.track_controller_hw_btn.clicked.connect(self.openTrackControllerHWGUI)
+        self.track_controller_sw_btn.clicked.connect(self.openTrackControllerSW)
+        # if self.trainInterface.trains != []:
+        #     self.train_model_btn.clicked.connect(self.trainInterface.access_train(1).open_GUI)
+        
         
         #timer
         self.MainTimer.start(self.timeStep)
         self.MainTimer.timeout.connect(self.onTimeoutFunctions)
 
-        self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackController.getOccupancy)
-        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
-        self.trackController.trackModelSuggestedSpeedHW.connect(self.trackModel.trackModel.suggestedSpeed)
-        self.ctc.train_dispatched.connect(self.trackController.createNewTrainData)
+
+        #Timer functions between CTC and Track Controller
+        #Hardware
+        self.trackControllerHW.CTCOccupancyHW.connect(self.ctc.get_block_occupancies)
+        #Software
+        self.trackControllerSW.ctcOccupancy.connect(self.ctc.get_block_occupancies)
+
+        #Sent from CTC to Track Controller
+        self.ctc.train_dispatched.connect(self.trackControllerHW.createNewTrainData)
+        self.ctc.train_dispatched.connect(self.trackControllerSW.sendTrainDetails)
+
+        #Timer functions between Track Model and Track Controller
+        #Hardware
+        self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerHW.getOccupancy)
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerHW.greenLine.setTracks)
+        self.trackControllerHW.trackModelSuggestedSpeedHW.connect(self.trackModel.trackModel.suggestedSpeed)
+        self.trackControllerHW.trackModelAuthorityHW.connect(self.trackModel.trackModel.authority)
+        self.trackControllerHW.trackModelSendRouteHW.connect(self.trackModel.trackModel.route)
+        self.trackControllerHW.trackModelTrackDataHW.connect(self.trackModel.trackModel.controlModel)
+        #Software
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerSW.setDisplay)
+        self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerSW.setOccupancy)
+        self.trackControllerSW.trackModelData.connect(self.trackModel.trackModel.controlModel)
+        self.trackControllerSW.trackModelRoute.connect(self.trackModel.trackModel.route)
+        self.trackControllerSW.trackModelSpeed.connect(self.trackModel.trackModel.suggestedSpeed)
+        self.trackControllerSW.trackModelAuthority.connect(self.trackModel.trackModel.authority)
+        #Once calls for both
+        self.trackModel.trackModel.initTrack()
+        # self.trainInterface.track_model_occupancy_list.connect(self.trackModel.trackModel.updateOccupancy)
+        # self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
         
+        #Track Model and Train Model and Train Controller
+        # self.trackModel.trackModel.trainModelCreation.connect(self.trainInterface.new_train)
+        # if self.trainInterface.trains != []:
+        #     self.trackModel.trackModel.trainModelSuggestedSpeed.connect(self.trainInterface.access_train(len(self.trainInterface.trains)).set_suggested_speeds)
+        #     self.trackModel.trackModel.trainModelAuthority.connect(self.trainInterface.access_train(1).new_authoriy)
+        #     self.trackModel.trackModel.trainModelGrade.connect(self.trainInterface.set_slopes)
+        #     self.trackModel.trackModel.trainModelApproachingBeacon.connect(self.trainInterface.access_train(1).set_station_data)
+        #     self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.access_train(1).set_beacon_list_out_station)
+        #     self.trackModel.trackModel.trainModelSwitchBeacon.connect(self.trainInterface.access_train(1).set_switch_data)
+        #     self.trackModel.trackModel.trainModelPolarity.connect(self.trainInterface.set_polarities)
 
     #on timeout emissions
     def onTimeoutFunctions(self):
-        self.trackModel.trackModel.initTrack()
+        # self.trackModel.trackModel.initTrack()
         #self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
-        self.trainController.update_time()
+        # if self.trainInterface.trains != []:
+        #     self.trainInterface.update_trains()
     
     def create_modules(self):
         #setup track model
@@ -101,29 +139,29 @@ class God(Home, QMainWindow):
         self.trackModel.setupUi(self.widget)
         self.trackModel.connect()
         
-        self.widget1 = QWidget()
-        self.trainController.setupUi(self.widget1)
-        self.trainController.connect()
-        
         self.widget2 = QWidget()
-        self.trackController.setupUi(self.widget2)
-        self.trackController.connectFunctions()
+        self.trackControllerHW.setupUi(self.widget2)
+        self.trackControllerHW.connectFunctions()
         
         self.widget3 = QWidget()
         self.ctc.setupUi(self.widget3)
         self.ctc.initialize_ctc()
 
+        self.widget4 = QWidget()
+        self.trackControllerSW.setupUi(self.widget4)
+        self.trackControllerSW.connectFunctions()
+
     def openTrackModelGUI(self):
         self.widget.show()
-
-    def openTrainControllerGUI(self):
-        self.widget1.show()
 
     def openTrackControllerHWGUI(self):
         self.widget2.show()
     
     def openCTCGUI(self):
         self.widget3.show()
+    
+    def openTrackControllerSW(self):
+        self.widget4.show()
 
 
 

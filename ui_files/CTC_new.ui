@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1367</width>
+    <width>1149</width>
     <height>763</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1361</width>
+     <width>1151</width>
      <height>761</height>
     </rect>
    </property>
@@ -50,7 +50,7 @@
       <rect>
        <x>10</x>
        <y>500</y>
-       <width>761</width>
+       <width>551</width>
        <height>231</height>
       </rect>
      </property>
@@ -189,7 +189,7 @@
       <rect>
        <x>780</x>
        <y>0</y>
-       <width>451</width>
+       <width>341</width>
        <height>501</height>
       </rect>
      </property>
@@ -243,8 +243,7 @@
         </column>
         <item row="0" column="1">
          <property name="text">
-          <string>STATION; PIONEER
-</string>
+          <string>Station A</string>
          </property>
         </item>
         <item row="0" column="2">
@@ -454,80 +453,17 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>100</y>
-       <width>401</width>
-       <height>201</height>
+       <y>90</y>
+       <width>371</width>
+       <height>191</height>
       </rect>
      </property>
-     <widget class="QWidget" name="gridLayoutWidget_2">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>0</y>
-        <width>361</width>
-        <height>201</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="manual_layout">
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="arrival_time_dis"/>
-       </item>
-       <item row="1" column="1">
-        <widget class="QComboBox" name="manual_dispatch_line">
-         <item>
-          <property name="text">
-           <string>Green Line</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Red Line</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QComboBox" name="stop_box_list"/>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>Select Destination Station</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QComboBox" name="manual_dispatch_destination"/>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_8">
-         <property name="text">
-          <string>Select Line</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_12">
-         <property name="text">
-          <string>Add Stop Stations</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_9">
-         <property name="text">
-          <string>Arrival Time (HH:MM:DD)</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
     </widget>
     <widget class="QComboBox" name="dispatched_trains_line">
      <property name="geometry">
       <rect>
-       <x>1240</x>
-       <y>470</y>
+       <x>590</x>
+       <y>480</y>
        <width>101</width>
        <height>22</height>
       </rect>
@@ -546,7 +482,7 @@
     <widget class="QWidget" name="gridLayoutWidget_3">
      <property name="geometry">
       <rect>
-       <x>780</x>
+       <x>590</x>
        <y>500</y>
        <width>551</width>
        <height>231</height>
@@ -656,7 +592,7 @@
      <property name="geometry">
       <rect>
        <x>380</x>
-       <y>260</y>
+       <y>270</y>
        <width>75</width>
        <height>24</height>
       </rect>
@@ -676,18 +612,68 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_3"/>
     </widget>
-    <widget class="QPushButton" name="remove_schedule">
+    <widget class="QWidget" name="gridLayoutWidget_2">
      <property name="geometry">
       <rect>
-       <x>480</x>
-       <y>460</y>
-       <width>141</width>
-       <height>24</height>
+       <x>10</x>
+       <y>110</y>
+       <width>361</width>
+       <height>201</height>
       </rect>
      </property>
-     <property name="text">
-      <string>Remove from Schedule</string>
-     </property>
+     <layout class="QGridLayout" name="manual_layout">
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="arrival_time_dis"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="manual_dispatch_line">
+        <item>
+         <property name="text">
+          <string>Green Line</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Red Line</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QComboBox" name="stop_box_list"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Select Destination Station</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="manual_dispatch_destination"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Select Line</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>Add Stop Stations</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>Arrival Time (HH:MM:DD)</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
    <widget class="QWidget" name="ctc_testbench">
@@ -1198,7 +1184,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Output Train Data</string>
+      <string>Change Train Data</string>
      </property>
      <property name="textFormat">
       <enum>Qt::AutoText</enum>
@@ -1207,56 +1193,95 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QWidget" name="formLayoutWidget_2">
+    <widget class="QWidget" name="gridLayoutWidget">
      <property name="geometry">
       <rect>
-       <x>330</x>
+       <x>370</x>
        <y>270</y>
-       <width>851</width>
-       <height>341</height>
+       <width>521</width>
+       <height>181</height>
       </rect>
      </property>
-     <layout class="QFormLayout" name="output_data_tb">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_22">
-        <property name="text">
-         <string>Suggested Speed (per block) (m/s):</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="suggested_speed_tb">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_24">
-        <property name="text">
-         <string>Authority</string>
-        </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="1" column="2">
+       <widget class="QComboBox" name="comboBox_11">
+        <item>
+         <property name="text">
+          <string>Alternate Route</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLabel" name="authority_tb">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
+       <widget class="QComboBox" name="comboBox_10">
+        <item>
+         <property name="text">
+          <string>Train ID</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QComboBox" name="comboBox_4">
+        <item>
+         <property name="text">
+          <string>Select Line</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QComboBox" name="comboBox_6">
+        <item>
+         <property name="text">
+          <string>Delays</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QComboBox" name="comboBox_7">
+        <item>
+         <property name="text">
+          <string>Select Line</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="comboBox_5">
+        <item>
+         <property name="text">
+          <string>Train ID</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label_26">
-        <property name="text">
-         <string>Route</string>
-        </property>
+       <widget class="QComboBox" name="comboBox_12">
+        <item>
+         <property name="text">
+          <string>Select Line</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLabel" name="route_tb">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
+       <widget class="QComboBox" name="comboBox_13">
+        <item>
+         <property name="text">
+          <string>Train ID</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QComboBox" name="comboBox_14">
+        <item>
+         <property name="text">
+          <string>Emergency Stop</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>
