@@ -11,7 +11,7 @@ import mplcursors
 
 ## TO CONVERT UI TO PY
 # open terminal at folder with ui
-# pyuic6 -x -o customUI.py mainwindow.ui
+# pyuic6 -x -o customUI.py trackModelWidget.ui
 #profit
 #################
 
@@ -23,11 +23,14 @@ import mplcursors
 metersToFeet = 3.28084
 kmhrTomihr = 0.621371
 
-
+#UI changes
 #Paint unused edge in a switch white
 #Label the first block of each section (A1,B4,C12,D17)
-#Display station and station name,
 #displaying signals on track
+
+#Functional Changes
+#Split the trouble blocks for polarity purposes (might need to hard code this)
+
 
 class Line():
 
@@ -273,7 +276,6 @@ class Line():
     
     def testBeacons(self):
         for blk in self.blocks:
-
             if(blk.approachingBeacon[0]):
                 print(blk.name + ":Approaching:" + blk.approachingBeacon[1])
             elif(blk.stationBeacon[0]):
@@ -327,8 +329,7 @@ class Block():
     def __init__(self,attributes):
         name, occupied, length, grade, limit, elevation = attributes
 
-        # underground, station, switch, crossroad, signal
-
+        #Basic Attributes
         self.name = name #string with name ex: "A2"
         self.occupied = occupied #bool with occupancy
         self.length = length #double with block length
@@ -336,17 +337,27 @@ class Block():
         self.limit = limit # double with speed limit
         self.elevation = elevation # double with elevation
         self.underground = False # bool with underground status
+        
+        #Infrastructure Attributes
         self.station = [False, "", -1, ""] # list with if the station exists, station name, tickets sold, and station side ex
                                 # [True, "SHADYSIDE", 86, "Left/Right"]
         self.switch = [False, "", "",False] # list with if the switch exists, block name pointing towards, block name pointing away
                             # [True, "16", "1"]
         self.crossroad = [False, True]
-        self.signal = [False, True] #need to implement red or green
+        self.signal = [False, True] 
         self.switchBeacon = [False, ""]
         self.approachingBeacon = [False, ""]
         self.stationBeacon = [False, ""]
+        self.trackHeater = False
+
+        #Polarity Attributes
         self.polarity = True
         self.polaritySetted = False
+
+        #Failure Attributes
+        self.brokenRail = False
+        self.trackCircuitFailure = False
+        self.powerFailure = False
 
     def setOccupied(self):
         self.occupied = True
@@ -593,19 +604,18 @@ class functionalUI(Ui_Form):
 
     def connect(self):
         self.comboBox_3.textActivated.connect(self.lineChange)
-
         self.comboBox_4.textActivated.connect(self.blockChange)
-        self.comboBox_4.textActivated.connect(self.updateMap)
+        # self.comboBox_4.textActivated.connect(self.updateMap)
 
-        self.pushButton_2.clicked.connect(self.buttonPress)
+        self.pushButton.clicked.connect(self.toggleBrokenRail)
+        self.pushButton_2.clicked.connect(self.uploadTrack)
+        self.pushButton_3.clicked.connect(self.toggleTrackCircuitFailure)
+        self.pushButton_4.clicked.connect(self.togglePowerFailure)
 
         self.lineEdit.returnPressed.connect(self.tbChange)
         self.lineEdit.returnPressed.connect(self.updateMap)
-        # self.listWidget_2.itemActivated.connect(self.updateMap)
 
     def tbChange(self):
-        
-        self.listWidget_2.clear()
         tbInfo = self.lineEdit.displayText().split(',')
 
         line = self.trackModel.getLine(tbInfo[0])
@@ -617,22 +627,27 @@ class functionalUI(Ui_Form):
         for blk in tbInfo:
             line.getBlock(blk).occupied = True
 
-        test = [blk.name for blk in line.blocks if blk.occupied]
-        self.listWidget_2.addItems(test)
+        self.listWidgetChange()
+
+    def listWidgetChange(self):
+        self.listWidget_2.clear()
+        currentLineName = self.comboBox_3.currentText()
+
+        if (currentLineName != ''):
+            line = self.trackModel.getLine(currentLineName)
+            self.listWidget_2.addItems(line.getOccupiedBlockNames())
 
     def lineChange(self):
         #Clear the Blocks
         self.comboBox_4.clear()
-        #Clear the Occupancy
-        self.listWidget_2.clear()
 
 
         # Add the blocks associated with that line
         currentLineName = self.comboBox_3.currentText()
-
         line = self.trackModel.getLine(currentLineName)
         self.comboBox_4.addItems(line.getBlockNames())
-        self.listWidget_2.addItems(line.getOccupiedBlockNames())
+
+        self.listWidgetChange()
 
     def blockChange(self):
         currentBlockName = self.comboBox_4.currentText()
@@ -703,7 +718,41 @@ class functionalUI(Ui_Form):
             self.tableWidget_6.item(0,0).setText("")
             self.tableWidget_6.item(1,0).setText("")
 
-    def buttonPress(self):
+        #Signal
+        if(b.signal[0]):
+            self.tableWidget_3.item(10,0).setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self.tableWidget_3.item(10,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+        #Track Heater
+        if(b.trackHeater):
+            self.tableWidget_3.item(11,0).setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self.tableWidget_3.item(11,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+        #Broken Rail
+        if(b.brokenRail):
+            self.tableWidget_3.item(12,0).setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self.tableWidget_3.item(12,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+        #Track Circuit Failure
+        if(b.trackCircuitFailure):
+            self.tableWidget_3.item(13,0).setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self.tableWidget_3.item(13,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+        #Power Failure
+        if(b.powerFailure):
+            self.tableWidget_3.item(14,0).setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self.tableWidget_3.item(14,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+
+        self.updateMap()
+        self.listWidgetChange()
+
+    def uploadTrack(self):
         fd = QFileDialog()
         path, _ = fd.getOpenFileName(None, 'Select a file:')
         self.trackModel.addLine(path)
@@ -714,6 +763,69 @@ class functionalUI(Ui_Form):
         self.trackModel.initTrack()
         self.updateMap()
       
+    def toggleBrokenRail(self):
+        currentBlockName = self.comboBox_4.currentText()
+        currentLineName = self.comboBox_3.currentText()
+
+        if (currentBlockName == '') or (currentLineName == ''):
+            return
+
+        blk = self.trackModel.getLine(currentLineName).getBlock(currentBlockName)
+
+        if(blk.trackCircuitFailure or blk.powerFailure):
+            return
+        
+        if(blk.brokenRail):
+            blk.clearOccupied()
+        else:
+            blk.setOccupied()
+
+        blk.brokenRail = not blk.brokenRail
+        
+        self.blockChange()
+
+    def toggleTrackCircuitFailure(self):
+        currentBlockName = self.comboBox_4.currentText()
+        currentLineName = self.comboBox_3.currentText()
+
+        if(currentBlockName == '') or (currentLineName == ''):
+            return
+
+        blk = self.trackModel.getLine(currentLineName).getBlock(currentBlockName)
+
+        if(blk.brokenRail or blk.powerFailure):
+            return
+        
+        if(blk.trackCircuitFailure):
+            blk.clearOccupied()
+        else:
+            blk.setOccupied()
+            
+        blk.trackCircuitFailure = not blk.trackCircuitFailure
+
+        self.blockChange()
+
+    def togglePowerFailure(self):
+        currentBlockName = self.comboBox_4.currentText()
+        currentLineName = self.comboBox_3.currentText()
+
+        if(currentBlockName == '') or (currentLineName == ''):
+            return
+
+        blk = self.trackModel.getLine(currentLineName).getBlock(currentBlockName)
+
+        if(blk.brokenRail or blk.trackCircuitFailure):
+            return
+        
+        if(blk.powerFailure):
+            blk.clearOccupied()
+        else:
+            blk.setOccupied()
+            
+        blk.powerFailure = not blk.powerFailure
+
+        self.blockChange()
+    
     def updateMap(self):
         for i in range(len(self.trackModel.lines)):
             self.trackModel.lines[i].designMap(self.comboBox_4.currentText(), i+1)
