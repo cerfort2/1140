@@ -1,5 +1,6 @@
 #Train Model object class, all objects are created in the train model interface
 import math, time
+from train_controller import *
 
 class train_model_software():
 
@@ -311,9 +312,3 @@ class train_model_software():
         self.set_left_door(self.controller.getLeftDoor())
         self.set_announcement(self.controller.getAnnouncement())
     
-
-test_model = train_model_software()
-test_model.set_beacon_list_out_station("C9/100.0/False/45.0; C10/100.0/False/45.0; C11/100.0/False/45.0; C12/100.0/False/45.0;")
-print(test_model.occupancy)
-test_model.update_occupancy(False)
-print(test_model.occupancy)

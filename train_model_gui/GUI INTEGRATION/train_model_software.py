@@ -226,7 +226,6 @@ class train_model_software():
         return calculated if calculated > 0 else 0
 
     #calculate the acceleration across a certain time period
-    #THIS DOES NOT YET ACCOUNT FOR GRAVITY
     def calculate_acceleration(self, power: float, mass: float, delta_time: float) -> float:
         self.acceleration = math.sqrt(power / (2 * mass * delta_time))
         if self.controller.serviceBrake or self.controller.eBrake:
