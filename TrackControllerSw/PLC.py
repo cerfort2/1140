@@ -8,131 +8,131 @@ class PLC():
     def setAuth(self, authin:int):
         self.auth = authin
 
-    def logic(self): 
-        #D Switch
-        #12 is D13
-        #0 is A1
+    def logic(self):
+        loop1 = False
+        loop2 = False
+        for i in range(0, 29):
+            loop1 = loop1 or self.blocks[i].getOccupancy()
+        for i in range(76, 100):
+            loop2 = loop2 or self.blocks[i].getOccupancy()
+
+        #Switch D13 - C12 , D13 - A1
         if(self.blocks[13].getOccupancy()): 
             self.blocks[12].setSwitch(False)
         if(self.blocks[0].getOccupancy()):
             self.blocks[12].setSwitch(True)
-        #Signals
+        #Signal A1
         if(self.blocks[0].getOccupancy()):
             self.blocks[0].setSignal(True)
         else:
             self.blocks[0].setSignal(False)
-        if(self.blocks[12].getOccupancy()):
+        #Signal D13
+        if(self.blocks[13].getOccupancy()):
             self.blocks[12].setSignal(True)
         else:
             self.blocks[12].setSignal(False)
 
-        #G Switch
-        #28 is G29
-        #149 is Z150
+        #Crossroad E19
+        if(self.blocks[17].getOccupancy() or self.blocks[18].getOccupancy() or self.blocks[19].getOccupancy()):
+            self.blocks[18].setCrossroad(True)
+        else:
+            self.blocks[18].setCrossroad(False)
+
+        #Switch G29 - G30 , G29 - Z150
         if(self.blocks[27].getOccupancy()):
             self.blocks[28].setSwitch(False)
         if(self.blocks[149].getOccupancy()):
             self.blocks[28].setSwitch(True)
-        #Signal
+        #Signal G29
         if(self.blocks[28].getOccupancy()):
             self.blocks[28].setSignal(True)
         else:
             self.blocks[28].setSignal(False)
+        #Signal Z150
         if(self.blocks[149].getOccupancy()):
             self.blocks[149].setSignal(True)
         else:
             self.blocks[149].setSignal(False)
 
-        #To Yard Switch
-        #57 is J58
+        #Collision Logic
+        #Z150
+        if(loop1):
+            pass
+        #G30 -> M75
+        for i in range(29, 75):
+            if(self.blocks[i].getOccupancy()):
+                if(self.blocks[i+2].getOccupancy()):
+                    pass
+
+        #Switch J58 - Yard , J58 - J59
         if(self.auth == 0):
             self.blocks[57].setSwitch(False)
         else:
             self.blocks[57].setSwitch(True)
-        #Signal
+        #Signal J58
         if(self.blocks[57].getOccupancy()):
             self.blocks[57].setSignal(True)
         else:
             self.blocks[57].setSignal(False)
 
-        #From Yard Switch
-        #60 is J61
-        #61 is J62
-        #150 is YARD
+        #Switch J62 - J61 , J62 - Yard
         if(self.blocks[60].getOccupancy()):
             self.blocks[61].setSwitch(False)
         if(self.blocks[150].getOccupancy()):
             self.blocks[61].setSwitch(True)
-        #Signal
+        #Signal yard
         if(self.blocks[150].getOccupancy()):
             self.blocks[150].setSignal(True)
         else:
             self.blocks[150].setSignal(False)
+        #signal J61
         if(self.blocks[60].getOccupancy()):
             self.blocks[60].setSignal(True)
         else:
             self.blocks[60].setSignal(False)
 
             
-        #N Switch
-        #75 is M76
-        #76 is N77
+        #Switch N77 - R101 , N77 - M76
         if(self.blocks[75].getOccupancy()):
             self.blocks[76].setSwitch(True)
         if(self.blocks[77].getOccupancy()):
             self.blocks[76].setSwitch(False)
-        #Signal
+        #Signal M76
         if(self.blocks[75].getOccupancy()):
             self.blocks[75].setSignal(True)
         else:
             self.blocks[75].setSignal(False)
+        #signal N77
         if(self.blocks[76].getOccupancy()):
             self.blocks[76].setSignal(True)
         else:
             self.blocks[76].setSignal(False)
 
-        #O Switch
-        #84 is N85
-        #99 is Q100
+        #Switch N85 - O86 , N85 - Q100
         if(self.blocks[83].getOccupancy()):
             self.blocks[84].setSwitch(False)
         if(self.blocks[99].getOccupancy()):
             self.blocks[84].setSwitch(True)
-        #Signal
+        #Signal N85
         if(self.blocks[84].getOccupancy()):
             self.blocks[84].setSignal(True)
         else:
             self.blocks[84].setSignal(False)
+        #Signal Q100
         if(self.blocks[99].getOccupancy()):
             self.blocks[99].setSignal(True)
         else:
             self.blocks[99].setSignal(False)
 
-        #Crossroad
-        #18 is E19
-        if(self.blocks[17].getOccupancy() or self.blocks[18].getOccupancy() or self.blocks[19].getOccupancy()):
-            self.blocks[18].setCrossroad(True)
-        else:
-            self.blocks[18].setCrossroad(False)
+        #Collision Logic
+        #M76
+        if(loop2):
+            pass
+        #R101 -> Y148
+        for i in range(100, 148):
+            if(self.blocks[i].getOccupancy()):
+                if(self.blocks[i+2].getOccupancy()):
+                    pass
 
-        def failures(self, prev):
-            for i in range(len(self.blocks)):
-                if(self.blocks[i].getOccupancy()):
-                    if(i == 0):
-                        pass
-                    if(i == 12):
-                        pass
-                    if(i == 28):
-                        pass
-                    if(i == 61):
-                        pass
-                    if(i == 76):
-                        pass
-                    if(i == 84):
-                        pass
-                    if(i == 149):
-                        pass
-                    if(i == 150):
-                        pass
 
 
