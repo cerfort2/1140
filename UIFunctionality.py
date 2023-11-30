@@ -148,6 +148,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                 check = True
 
         #Runs the functions accordingly after recieving new occupancies
+        self.collisionLogicGreen(occupancy) #run collision logic each new list we get
         if(self.tabWidget.currentIndex() == 0):
             if(check == True):
                 newStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
@@ -234,19 +235,20 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             self.greenLine.Waysides[0].getTrack(18).setCrossroad(True)
         else:
             self.greenLine.Waysides[0].getTrack(18).setCrossroad(False)
-    def collisionLogic(self):
+    def collisionLogicGreen(self, blocks):
         #G30 -> M75
         for i in range(29, 75):
-            if(self.blocks[i].getOccupancy()):
-                if(self.blocks[i+2].getOccupancy()):
+            if(blocks[i] == True):
+                if(blocks[i+2] == True):
                     pass
         #Collision Logic
         #R101 -> Y148
         for i in range(100, 148):
-            if(self.blocks[i].getOccupancy()):
-                if(self.blocks[i+2].getOccupancy()):
+            if(blocks[i] == True):
+                if(blocks[i+2] == True):
                     pass
-
+    def redLinePLCLogic(self, occu):
+        return
 
     #Anything below this shouldn't need to be touched or edited
 
