@@ -51,7 +51,7 @@ class SoftwareTrainController():
         self.nextstop="A Stop"
         self.currentSpeed=0      #current speed in manual or auto (max speed is 70km/hr)
         self.speedLimit=43
-        self.authority=1         #authority in automatic mode
+        self.authority=1000         #authority in automatic mode
         self.temperature=70       #temp in degrees fahrenheit
         self.exlights=False     #true=on
         self.intlights=True      #true=on

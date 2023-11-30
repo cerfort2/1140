@@ -8,8 +8,7 @@ from Track_Model.trackmodelguitest import *
 from Software_Track_Controller.SwTrackControlSetup import *
 from modules.CTC import *
 from modules.Home_ui import Ui_Form as Home
-# from Software_Train_Controller.SoftwareTrainControllerGUI import *
-# from Train_Model.train_model_interface_software import train_model_interface_software
+from trains_interface.train_model_interface_software import train_model_interface_software
 
 ##ALL FUNCTIONAL OBJECTS NEED TO DO THE FOLLOWING
 
@@ -63,7 +62,7 @@ class God(Home, QMainWindow):
         #self.trackControllerHW = HWTrackControllerGUI()
         self.trackControllerSW = SoftwareTrackControllerGUI()
         self.trackModel = functionalUI()
-        #self.trainInterface = train_model_interface_software()
+        self.trainInterface = train_model_interface_software()
         self.setupConnections()
         self.create_modules()
 
@@ -71,12 +70,8 @@ class God(Home, QMainWindow):
         #GOD UI main page
         self.ctc_btn.clicked.connect(self.openCTCGUI)
         self.track_model_btn.clicked.connect(self.openTrackModelGUI)
-        if self.trainInterface.trains != []:
-            self.train_controller_sw_btn.clicked.connect(self.trainInterface.access_train(1).controller.open_GUI)
-        self.track_controller_hw_btn.clicked.connect(self.openTrackControllerHWGUI)
+        #self.track_controller_hw_btn.clicked.connect(self.openTrackControllerHWGUI)
         self.track_controller_sw_btn.clicked.connect(self.openTrackControllerSW)
-        if self.trainInterface.trains != []:
-            self.train_model_btn.clicked.connect(self.trainInterface.access_train(1).open_GUI)
         
         
         #timer
@@ -86,22 +81,25 @@ class God(Home, QMainWindow):
 
         #Timer functions between CTC and Track Controller
         #Hardware
-        self.trackControllerHW.CTCOccupancyHW.connect(self.ctc.get_block_occupancies)
+        #self.trackControllerHW.CTCOccupancyHW.connect(self.ctc.get_block_occupancies)
         #Software
         self.trackControllerSW.ctcOccupancy.connect(self.ctc.get_block_occupancies)
 
         #Sent from CTC to Track Controller
-        self.ctc.train_dispatched.connect(self.trackControllerHW.createNewTrainData)
+        #self.ctc.train_dispatched.connect(self.trackControllerHW.createNewTrainData)
         self.ctc.train_dispatched.connect(self.trackControllerSW.sendTrainDetails)
+
+        #CTC to initialize train on dispatch
+        self.ctc.train_dispatched.connect(self.init_train)
 
         #Timer functions between Track Model and Track Controller
         #Hardware
-        self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerHW.getOccupancy)
-        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerHW.greenLine.setTracks)
-        self.trackControllerHW.trackModelSuggestedSpeedHW.connect(self.trackModel.trackModel.suggestedSpeed)
-        self.trackControllerHW.trackModelAuthorityHW.connect(self.trackModel.trackModel.authority)
-        self.trackControllerHW.trackModelSendRouteHW.connect(self.trackModel.trackModel.route)
-        self.trackControllerHW.trackModelTrackDataHW.connect(self.trackModel.trackModel.controlModel)
+        #elf.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerHW.getOccupancy)
+        #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerHW.greenLine.setTracks)
+        #self.trackControllerHW.trackModelSuggestedSpeedHW.connect(self.trackModel.trackModel.suggestedSpeed)
+        #self.trackControllerHW.trackModelAuthorityHW.connect(self.trackModel.trackModel.authority)
+        #self.trackControllerHW.trackModelSendRouteHW.connect(self.trackModel.trackModel.route)
+        #self.trackControllerHW.trackModelTrackDataHW.connect(self.trackModel.trackModel.controlModel)
         #Software
         self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerSW.setDisplay)
         self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerSW.setOccupancy)
@@ -114,7 +112,10 @@ class God(Home, QMainWindow):
         # self.trainInterface.track_model_occupancy_list.connect(self.trackModel.trackModel.updateOccupancy)
         # self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
         
-        #Track Model and Train Model and Train Controller
+
+    def init_train(self):
+        self.trainInterface.new_train()
+        self.trainInterface.show_GUI(1)
         self.trackModel.trackModel.trainModelSuggestedSpeed.connect(self.trainInterface.access_train(len(self.trainInterface.trains)).set_suggested_speeds)
         self.trackModel.trackModel.trainModelAuthority.connect(self.trainInterface.access_train(1).new_authoriy)
         self.trackModel.trackModel.trainModelGrade.connect(self.trainInterface.set_slopes)
@@ -126,10 +127,11 @@ class God(Home, QMainWindow):
     #on timeout emissions
     def onTimeoutFunctions(self):
         self.trackModel.trackModel.initTrack()
-        self.trackController.sendSpeed()
+        #self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
         if self.trainInterface.trains != []:
             self.trainInterface.update_trains()
+            print(self.trainInterface.access_train(1).occupancy)
     
     def create_modules(self):
         #setup track model
@@ -138,8 +140,8 @@ class God(Home, QMainWindow):
         self.trackModel.connect()
         
         self.widget2 = QWidget()
-        self.trackControllerHW.setupUi(self.widget2)
-        self.trackControllerHW.connectFunctions()
+        #self.trackControllerHW.setupUi(self.widget2)
+        #self.trackControllerHW.connectFunctions()
         
         self.widget3 = QWidget()
         self.ctc.setupUi(self.widget3)
@@ -152,8 +154,8 @@ class God(Home, QMainWindow):
     def openTrackModelGUI(self):
         self.widget.show()
 
-    def openTrackControllerHWGUI(self):
-        self.widget2.show()
+    #def openTrackControllerHWGUI(self):
+        #self.widget2.show()
     
     def openCTCGUI(self):
         self.widget3.show()

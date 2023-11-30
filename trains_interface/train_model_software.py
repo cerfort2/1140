@@ -9,7 +9,7 @@ class train_model_software():
     def __init__(self) -> None:
 
         #set local vars to test vals
-        self.authority = 0.0
+        self.authority = 1000.0
         self.speed = 0.0
         self.passengers = 0
         self.power = 0.0
@@ -335,8 +335,9 @@ class train_model_software():
     #
 
     #updates all train values and recieve inputs from the controller
-    def update_train(self) -> None:
-        self.scrape_ui()
+    def update_train(self, UI_flag: bool) -> None:
+        if UI_flag:
+            self.scrape_ui()
         self.set_power()
         self.set_speed()
         self.set_authority()
@@ -349,8 +350,10 @@ class train_model_software():
         self.set_right_door(self.controller.getRightDoor())
         self.set_left_door(self.controller.getLeftDoor())
         self.set_announcement(self.controller.getAnnouncement())
-        self.controller.update_time()
-        self.update_ui()
+        if UI_flag:
+            self.controller.update_time()
+        if UI_flag:
+            self.update_ui()
 
     #update train ui
     def update_ui(self) -> None:

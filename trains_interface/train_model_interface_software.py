@@ -9,6 +9,7 @@ class train_model_interface_software():
 
     #constructor, create list to house trains
     def __init__(self):
+        self.UI_flag = False
         self.trains = []
     
     #add a new train to the list of trains
@@ -22,7 +23,7 @@ class train_model_interface_software():
     #update all trains
     def update_trains(self) -> None:
         for train in self.trains:
-            train.update_train()
+            train.update_train(self.UI_flag)
 
     #get occupancy list
     def get_occupancies(self) -> list[str]:
@@ -45,5 +46,6 @@ class train_model_interface_software():
 
     #show GUIs
     def show_GUI(self, train_num: int) -> None:
+        self.UI_flag = True
         self.trains[train_num - 1].open_GUI()
         self.trains[train_num - 1].controller.open_GUI()
