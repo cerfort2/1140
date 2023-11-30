@@ -3,7 +3,7 @@ from PyQt6.QtCore import QObject, pyqtSignal, QTimer
 from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow, QFileDialog
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from Hardware_Track_Controller.UIFunctionality import *
+#from Hardware_Track_Controller.UIFunctionality import *
 from Track_Model.trackmodelguitest import *
 from Software_Track_Controller.SwTrackControlSetup import *
 from modules.CTC import *
@@ -60,10 +60,10 @@ class God(Home, QMainWindow):
         self.timeStep = 1000
 
         self.ctc = CTC()
-        self.trackControllerHW = HWTrackControllerGUI()
+        #self.trackControllerHW = HWTrackControllerGUI()
         self.trackControllerSW = SoftwareTrackControllerGUI()
         self.trackModel = functionalUI()
-        # self.trainInterface = train_model_interface_software()
+        #self.trainInterface = train_model_interface_software()
         self.setupConnections()
         self.create_modules()
 
@@ -71,12 +71,12 @@ class God(Home, QMainWindow):
         #GOD UI main page
         self.ctc_btn.clicked.connect(self.openCTCGUI)
         self.track_model_btn.clicked.connect(self.openTrackModelGUI)
-        # if self.trainInterface.trains != []:
-        #     self.train_controller_sw_btn.clicked.connect(self.trainInterface.access_train(1).controller.open_GUI)
+        if self.trainInterface.trains != []:
+            self.train_controller_sw_btn.clicked.connect(self.trainInterface.access_train(1).controller.open_GUI)
         self.track_controller_hw_btn.clicked.connect(self.openTrackControllerHWGUI)
         self.track_controller_sw_btn.clicked.connect(self.openTrackControllerSW)
-        # if self.trainInterface.trains != []:
-        #     self.train_model_btn.clicked.connect(self.trainInterface.access_train(1).open_GUI)
+        if self.trainInterface.trains != []:
+            self.train_model_btn.clicked.connect(self.trainInterface.access_train(1).open_GUI)
         
         
         #timer
@@ -115,23 +115,21 @@ class God(Home, QMainWindow):
         # self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
         
         #Track Model and Train Model and Train Controller
-        # self.trackModel.trackModel.trainModelCreation.connect(self.trainInterface.new_train)
-        # if self.trainInterface.trains != []:
-        #     self.trackModel.trackModel.trainModelSuggestedSpeed.connect(self.trainInterface.access_train(len(self.trainInterface.trains)).set_suggested_speeds)
-        #     self.trackModel.trackModel.trainModelAuthority.connect(self.trainInterface.access_train(1).new_authoriy)
-        #     self.trackModel.trackModel.trainModelGrade.connect(self.trainInterface.set_slopes)
-        #     self.trackModel.trackModel.trainModelApproachingBeacon.connect(self.trainInterface.access_train(1).set_station_data)
-        #     self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.access_train(1).set_beacon_list_out_station)
-        #     self.trackModel.trackModel.trainModelSwitchBeacon.connect(self.trainInterface.access_train(1).set_switch_data)
-        #     self.trackModel.trackModel.trainModelPolarity.connect(self.trainInterface.set_polarities)
+        self.trackModel.trackModel.trainModelSuggestedSpeed.connect(self.trainInterface.access_train(len(self.trainInterface.trains)).set_suggested_speeds)
+        self.trackModel.trackModel.trainModelAuthority.connect(self.trainInterface.access_train(1).new_authoriy)
+        self.trackModel.trackModel.trainModelGrade.connect(self.trainInterface.set_slopes)
+        self.trackModel.trackModel.trainModelApproachingBeacon.connect(self.trainInterface.access_train(1).set_station_data)
+        self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.access_train(1).set_beacon_list_out_station)
+        self.trackModel.trackModel.trainModelSwitchBeacon.connect(self.trainInterface.access_train(1).set_switch_data)
+        self.trackModel.trackModel.trainModelPolarity.connect(self.trainInterface.set_polarities)
 
     #on timeout emissions
     def onTimeoutFunctions(self):
-        # self.trackModel.trackModel.initTrack()
-        #self.trackController.sendSpeed()
+        self.trackModel.trackModel.initTrack()
+        self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
-        # if self.trainInterface.trains != []:
-        #     self.trainInterface.update_trains()
+        if self.trainInterface.trains != []:
+            self.trainInterface.update_trains()
     
     def create_modules(self):
         #setup track model
@@ -169,10 +167,5 @@ class God(Home, QMainWindow):
 app = QApplication([])
 ui = God()
 ui.show()
-#ui.openTrackModelGUI()
-#ui.openTrainControllerGUI()
-#ui.openTrackControllerHWGUI()
-#ui.openCTCGUI()
-# # Start the event loop.
 app.exec()
 
