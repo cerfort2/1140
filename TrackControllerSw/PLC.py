@@ -8,7 +8,14 @@ class PLC():
     def setAuth(self, authin:int):
         self.auth = authin
 
-    def logic(self): 
+    def logic(self):
+        loop1 = False
+        loop2 = False
+        for i in range(0, 29):
+            loop1 = loop1 or self.blocks[i].getOccupancy()
+        for i in range(76, 100):
+            loop2 = loop2 or self.blocks[i].getOccupancy()
+
         #Switch D13 - C12 , D13 - A1
         if(self.blocks[13].getOccupancy()): 
             self.blocks[12].setSwitch(False)
@@ -48,6 +55,8 @@ class PLC():
             self.blocks[149].setSignal(False)
 
         #Collision Logic
+        if(loop1):
+            pass
         #G30 -> M75
         for i in range(29, 75):
             if(self.blocks[i].getOccupancy()):
@@ -115,6 +124,8 @@ class PLC():
             self.blocks[99].setSignal(False)
 
         #Collision Logic
+        if(loop2):
+            pass
         #R101 -> Y148
         for i in range(100, 148):
             if(self.blocks[i].getOccupancy()):
