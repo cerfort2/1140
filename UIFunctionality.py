@@ -234,7 +234,18 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             self.greenLine.Waysides[0].getTrack(18).setCrossroad(True)
         else:
             self.greenLine.Waysides[0].getTrack(18).setCrossroad(False)
-    
+    def collisionLogic(self):
+        #G30 -> M75
+        for i in range(29, 75):
+            if(self.blocks[i].getOccupancy()):
+                if(self.blocks[i+2].getOccupancy()):
+                    pass
+        #Collision Logic
+        #R101 -> Y148
+        for i in range(100, 148):
+            if(self.blocks[i].getOccupancy()):
+                if(self.blocks[i+2].getOccupancy()):
+                    pass
 
 
     #Anything below this shouldn't need to be touched or edited
