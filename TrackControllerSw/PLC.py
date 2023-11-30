@@ -9,9 +9,7 @@ class PLC():
         self.auth = authin
 
     def logic(self): 
-        #D Switch
-        #12 is D13
-        #0 is A1
+        #Switch D13 - C12 , D13 - A1
         if(self.blocks[13].getOccupancy()): 
             self.blocks[12].setSwitch(False)
         if(self.blocks[0].getOccupancy()):
@@ -49,8 +47,14 @@ class PLC():
         else:
             self.blocks[149].setSignal(False)
 
-        #To Yard Switch
-        #57 is J58
+        #Collision Logic
+        #G30 -> M75
+        for i in range(29, 75):
+            if(self.blocks[i].getOccupancy()):
+                if(self.blocks[i+2].getOccupancy()):
+                    pass
+
+        #Switch J58 - Yard , J58 - J59
         if(self.auth == 0):
             self.blocks[57].setSwitch(False)
         else:
@@ -110,31 +114,12 @@ class PLC():
         else:
             self.blocks[99].setSignal(False)
 
-        #Crossroad
-        #18 is E19
-        if(self.blocks[17].getOccupancy() or self.blocks[18].getOccupancy() or self.blocks[19].getOccupancy()):
-            self.blocks[18].setCrossroad(True)
-        else:
-            self.blocks[18].setCrossroad(False)
+        #Collision Logic
+        #R101 -> Y148
+        for i in range(100, 148):
+            if(self.blocks[i].getOccupancy()):
+                if(self.blocks[i+2].getOccupancy()):
+                    pass
 
-        def failures(self, prev):
-            for i in range(len(self.blocks)):
-                if(self.blocks[i].getOccupancy()):
-                    if(i == 0):
-                        pass
-                    if(i == 12):
-                        pass
-                    if(i == 28):
-                        pass
-                    if(i == 61):
-                        pass
-                    if(i == 76):
-                        pass
-                    if(i == 84):
-                        pass
-                    if(i == 149):
-                        pass
-                    if(i == 150):
-                        pass
 
 
