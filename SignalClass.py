@@ -6,6 +6,7 @@ from UIFunctionality import *
 from trackmodelguitest import *
 from SoftwareTrainControllerGUI import *
 from SwTrackControlSetup import *
+from train_model_interface_software import *
 
 ##ALL FUNCTIONAL OBJECTS NEED TO DO THE FOLLOWING
 
@@ -62,8 +63,9 @@ class God(QMainWindow):
         self.trackControllerHW = HWTrackControllerGUI()
         self.trackControllerSW = SoftwareTrackControllerGUI()
         self.trackModel = functionalUI()
-        self.trainModel = TrainModelInterface()
-        self.trainController = SoftwareTrainControllerGUI() 
+        self.train = train_model_interface_software()
+
+
 
     def setupConnections(self):
         #timer
@@ -77,13 +79,18 @@ class God(QMainWindow):
         self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerSW.setDisplay)
         self.trackControllerSW.trackModelData.connect(self.trackModel.trackModel.controlModel)
         self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerSW.setOccupancy)
+        self.trackModel.trackModel.trainModelCreation.connect(self.train.new_train)
+        self.trackModel.trackModel.createTrain()
+        self.trackModel.trackModel.trainModelGrade.connect(self.train.set_slopes)
+        self.trackModel.trackModel.trainModelPolarity.connect(self.train.set_polarities)
+        self.train.track_model_occupancy_list.connect(self.trackModel.trackModel.updateOccupancy)
 
         # self.trackModel.trackModel.trainModelSuggestedSpeed.connect(self.trainModel.access_train(len(self.trainModel.trains)).set_suggested_speeds)
         # self.trackModel.trackModel.trainModelAuthority.connect(self.trainModel.access_train(1).new_authority)
         # self.trackModel.trackModel.trainModelGrade.connect(self.trainModel.set_slopes)
-        # self.trackModel.trackModel.trainModelApproachingBeacon.connect(self.trainModel.access_train(1).set_station_data)
-        # self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainModel.access_train(1).set_beacon_list_out_station)
-        # self.trackModel.trackModel.trainModelSwitchBeacon.connect(self.trainModel.access_train(1).set_switch_data)
+        self.trackModel.trackModel.trainModelApproachingBeacon.connect(self.train.access_train(1).read_station_beacon)
+        self.trackModel.trackModel.trainModelStationBeacon.connect(self.train.access_train(1).read_station_beacon)
+        self.trackModel.trackModel.trainModelSwitchBeacon.connect(self.train.access_train(1).read_switch_beacon)
         # self.trackModel.trackModel.trainModelCreation.connect(self.trainModel.new_train)
         # self.trackModel.trackModel.trainModelPolarity.connect(self.trainModel.set_polarities)
 
@@ -91,6 +98,8 @@ class God(QMainWindow):
 
         #Once calls
         self.trackModel.trackModel.initTrack()
+
+
         
 
     #on timeout emissions
@@ -98,8 +107,9 @@ class God(QMainWindow):
         self.trackControllerSW.getData()
         # self.trackControllerSW.mode_handler()
         self.trackControllerHW.sendSpeed()
-        self.trackModel.trackModel.emitOccupancy()
-        self.trainController.update_time()
+        self.trackModel.update_time()
+        self.train.update_trains()
+        self.train.get_occupancies()
 
     def openTrackModelGUI(self):
         self.widget = QWidget()
@@ -109,8 +119,7 @@ class God(QMainWindow):
 
     def openTrainControllerGUI(self):
         self.widget1 = QWidget()
-        self.trainController.setupUi(self.widget1)
-        self.trainController.connect()
+        self.train.show_GUI(1)
         self.widget1.show()
 
     def openTrackControllerHWGUI(self):

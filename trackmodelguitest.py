@@ -123,7 +123,7 @@ class Line():
             # else:
             #     labels[self.blocks[i]] = ""
 
-            # labels[self.blocks[i]] = self.blocks[i].name
+            # labels[self.blocks[i]] = self.blocks[i].polarity
 
             dataToAnnotate = self.blocks[i].name
             if self.blocks[i].station[0]:
@@ -236,7 +236,9 @@ class Line():
         #Add station name and side to the approachingBeacons
         for i in range(len(self.blocks)):
             if self.blocks[i].approachingBeacon[0]:
-                self.blocks[i].approachingBeacon[1] = str(self.blocks[i+1].station[1]) + "/" + str(self.blocks[i+1].station[3] + "; ")
+                self.blocks[i].approachingBeacon[1] = str(self.blocks[i+1].station[1]) + "/" + str(self.blocks[i+1].station[3]) + "; "
+            if self.blocks[i].stationBeacon[0]:
+                self.blocks[i].stationBeacon[1] = str(self.blocks[i].station[1]) + "/" + str(self.blocks[i].station[3]) + "; "
 
         #Iterate through each connected segment of the track
         for connectedSet in nx.connected_components(workingGraph):
@@ -444,6 +446,7 @@ class TrackModel(QObject):
     def __init__(self):
         super().__init__()
         self.lines = []
+        self.occupancyList =[]
 
     #--------------------
     #Internal Functions
@@ -488,50 +491,42 @@ class TrackModel(QObject):
     #Emit Station Beacon
     trainModelStationBeacon = pyqtSignal(str)
     def emitStationBeacon(self):
-        for line in self.lines:
-            occupiedList = line.getOccupiedBlocks()
-            for blk in occupiedList:
-                if blk.stationBeacon[0]:
-                    self.trainModelBeacon.emit(blk.stationBeacon[1])
+        for blk in self.occupancyList:
+            if blk.stationBeacon[0]:
+                self.trainModelBeacon.emit(blk.stationBeacon[1])
 
     #Emit Switch Beacons
     trainModelSwitchBeacon = pyqtSignal(str)
     def emitSwitchBeacon(self):
-        for line in self.lines:
-            occupiedList = line.getOccupiedBlocks()
-            for blk in occupiedList:
-                if blk.switchBeacon[0]:
-                    self.trainModelBeacon.emit(blk.switchBeacon[1])
+        for blk in self.occupancyList:
+            if blk.switchBeacon[0]:
+                self.trainModelBeacon.emit(blk.switchBeacon[1])
 
     #Emit Approaching Beacons
     trainModelApproachingBeacon = pyqtSignal(str)
     def emitApproachingBeacon(self):
-        for line in self.lines:
-            occupiedList = line.getOccupiedBlocks()
-            for blk in occupiedList:
-                if blk.approachingBeacon[0]:
-                    self.trainModelBeacon.emit(blk.approachingBeacon[1])
+        for blk in self.occupancyList:
+            if blk.approachingBeacon[0]:
+                self.trainModelBeacon.emit(blk.approachingBeacon[1])
 
     #Emit grade of occupied blocks
     trainModelGrade = pyqtSignal(list)
     def grade(self):
-        for line in self.lines:
-            gradeList = [blk.grade for blk in line.blocks if blk.occupied]
-            self.trainModelGrade.emit(gradeList)
+        gradeList = [blk.grade for blk in self.occupancyList if blk.occupied]
+        self.trainModelGrade.emit(gradeList)
 
     #Emit polarity of occupied blocks
     trainModelPolarity = pyqtSignal(list)
     def polarity(self):
-        for line in self.lines:
-            polarityList = [blk.polarity for blk in line.blocks if blk.occupied]
-            self.trainModelPolarity.emit(polarityList)
+        polarityList = [blk.polarity for blk in self.occupancyList if blk.occupied]
+        self.trainModelPolarity.emit(polarityList)
 
     #pass through track model
     def suggestedSpeed(self, SS):
-        #create a train
-        self.trainModelCreation.emit()
-
         self.trainModelSuggestedSpeed.emit(SS)
+
+    def createTrain(self):
+        self.trainModelCreation.emit()
 
     #convert block authority to feet authority
     def authority(self, authorityInBlocks):
@@ -557,7 +552,6 @@ class TrackModel(QObject):
         if len(tickets) != 0:
             self.CTCticketSales.emit(tickets)
      
-
     #------------------
     #Receiving Signals
     #------------------
@@ -569,13 +563,19 @@ class TrackModel(QObject):
     #Train Model --> Track Model
     #Need to talk about how multiple lines worth of occupancy will be sent
     def updateOccupancy(self,occupancyList):
+        if len(self.lines) == 0 or occupancyList[0] == '':
+            return
+        
+
+        test = [self.lines[0].getBlock(name) for name in occupancyList]
+        self.occupancyList = test
+
         #Clear occupancy
         for line in self.lines:
             for block in line.blocks:
                 block.clearOccupied()
 
-        if len(self.lines) == 0:
-            return
+
         
         for blk_name in range(len(occupancyList)):
             self.lines[self.lines.index(self.lines[0])].getBlock(blk_name).setOccupied()
@@ -836,8 +836,8 @@ class functionalUI(Ui_Form):
         self.trackModel.emitStationBeacon()
         self.trackModel.emitSwitchBeacon()
         self.trackModel.emitApproachingBeacon()
-        self.trackModel.authority()
-        self.trackModel.getTicketsSales()
+        # self.trackModel.authority()
+        # self.trackModel.getTicketsSales()
         self.trackModel.polarity()
         self.trackModel.grade()
 
