@@ -7,10 +7,11 @@ import os
 import random
 import networkx as nx
 import matplotlib.pyplot as plt
+import mplcursors 
 
 ## TO CONVERT UI TO PY
 # open terminal at folder with ui
-# pyuic6 -x -o customUI.py mainwindow.ui
+# pyuic6 -x -o customUI.py trackModelWidget.ui
 #profit
 #################
 
@@ -22,7 +23,15 @@ import matplotlib.pyplot as plt
 metersToFeet = 3.28084
 kmhrTomihr = 0.621371
 
-      
+#UI changes
+#Paint unused edge in a switch white
+#Label the first block of each section (A1,B4,C12,D17)
+#displaying signals on track
+
+#Functional Changes
+#Split the trouble blocks for polarity purposes (might need to hard code this)
+
+
 class Line():
 
     def __init__(self,df):
@@ -87,18 +96,21 @@ class Line():
 
                 self.blocks.append(blk)
         
-        self.loadBeacons()
         self.loadBlockConnections()
+        self.loadBeacons()
         self.loadPolarity()
+        self.testBeacons()
           
-    def designMap(self,blockSelected):
+    def designMap(self, blockSelected, figureNumber):
         
+        plt.figure(figureNumber)
         plt.clf()
 
         pos = nx.kamada_kawai_layout(self.network)
 
         colors = []
-        labels ={}
+        labels = {}
+        annotations = []
 
         for i in range(len(self.blocks)):
             if(self.blocks[i].occupied) or (self.blocks[i].name == blockSelected):
@@ -106,25 +118,40 @@ class Line():
             else:
                 labels[self.blocks[i]] = ""
 
+            # if(self.blocks[i].switchBeacon[0] or self.blocks[i].stationBeacon[0] or self.blocks[i].approachingBeacon[0]) or (self.blocks[i].name == blockSelected):
+            #     labels[self.blocks[i]] = self.blocks[i].name
+            # else:
+            #     labels[self.blocks[i]] = ""
+
+            # labels[self.blocks[i]] = self.blocks[i].polarity
+
+            dataToAnnotate = self.blocks[i].name
+            if self.blocks[i].station[0]:
+                dataToAnnotate += "\n" + str(self.blocks[i].station[1]) + "\n" + "Tickets Sold:" + str(self.blocks[i].station[2])
+            annotations.append(dataToAnnotate)
+
             if self.blocks[i].occupied:
                 colors.append('blue')
+            elif self.blocks[i].station[0]:
+                colors.append("#40E0D0")
             elif self.blocks[i].crossroad[0]:
                 colors.append('#FFA500') # Orange
             elif self.blocks[i].underground:
                 colors.append('#964B00') #brown
             else:
-                colors.append('green')
+                colors.append(self.name.split()[0])
 
 
         nx.draw_networkx(self.network, pos,node_size = 50,
                     labels = labels, with_labels=True,
                     font_size = 12, node_color = colors, node_shape = 's')# so^>v<dph8.
+        # nx.draw_networkx_labels(self.network,pos,labels, horizontalalignment='right',verticalalignment='top')
 
+        mplcursors.cursor(hover = 2).connect(
+            "add", lambda sel: sel.annotation.set_text(annotations[sel.index]))
+        
         plt.draw()
         plt.show()
-
-    def addBlock(self,blk):
-        self.blocks.append(blk)
 
     def getBlockNames(self):
         if len(self.blocks) == 0:
@@ -149,39 +176,15 @@ class Line():
     def getBlock(self,blockName):
         return self.blocks[self.getBlockNames().index(blockName)]
   
-    def loadBeacons(self):
-        for i in range(len(self.blocks)):
-            if self.blocks[i].approachingBeacon[0]:
-                self.blocks[i].approachingBeacon[1] = str(self.blocks[i+1].station[1]) + "/" + str(self.blocks[i+1].station[3])
-                # print(self.blocks[i].approachingBeacon[1])
-            elif self.blocks[i].stationBeacon[0] or self.blocks[i].switchBeacon[0]: #This will only work for green line
-                self.blocks[i].stationBeacon[1] += self.blocks[i].name
-                self.blocks[i].stationBeacon[1] += "/"
-                self.blocks[i].stationBeacon[1] += str(self.blocks[i].length)
-                self.blocks[i].stationBeacon[1] += "/"
-                self.blocks[i].stationBeacon[1] += str(self.blocks[i].underground)
-                self.blocks[i].stationBeacon[1] += "/"
-                self.blocks[i].stationBeacon[1] += str(self.blocks[i].limit)
-                self.blocks[i].stationBeacon[1] += "; "
-                for j in range(i+1,len(self.blocks)):
-                    if self.blocks[j].stationBeacon[0] or self.blocks[j].switchBeacon[0]:
-                        break
-                    self.blocks[i].stationBeacon[1] += self.blocks[j].name
-                    self.blocks[i].stationBeacon[1] += "/"
-                    self.blocks[i].stationBeacon[1] += str(self.blocks[j].length)
-                    self.blocks[i].stationBeacon[1] += "/"
-                    self.blocks[i].stationBeacon[1] += str(self.blocks[j].underground)
-                    self.blocks[i].stationBeacon[1] += "/"
-                    self.blocks[i].stationBeacon[1] += str(self.blocks[j].limit)
-                    self.blocks[i].stationBeacon[1] += "; "
-                # print(self.blocks[i].stationBeacon[1])
-  
     def loadPolarity(self):
         for blk in list(self.network.nodes):
             for neighbor in self.network.adj[blk]:
                 if((blk.polarity == neighbor.polarity) and (not neighbor.polaritySetted)):
                     neighbor.polarity = not blk.polarity
                     neighbor.polaritySetted = True
+
+        # test = [blk.polarity for blk in self.blocks]
+        # print(test)
 
     def loadBlockConnections(self):
         self.network = nx.Graph()
@@ -195,11 +198,94 @@ class Line():
         
         if (self.name == "Green Line"):
             self.network.remove_edge(self.getBlock("Q100"), self.getBlock("R101"))
-        #debug
-        # nodeList = [node.name for node in list(self.network.nodes)]
-        # print(nodeList)
-        # for (e1, e2) in self.network.edges:
-        #     print((e1.name,e2.name))
+
+        if (self.name == "Red Line"):
+            self.network.remove_edge(self.getBlock("Q71"),self.getBlock("R72"))
+            self.network.remove_edge(self.getBlock("N66"),self.getBlock("O67"))
+
+        if(self.name == "Blue Line"):
+            self.network.remove_edge(self.getBlock("B10"), self.getBlock("C11"))
+            self.network.add_edge(self.getBlock("C14"), self.getBlock("C15"))
+
+    #Check beacons in an order: approaching, station, switch
+
+    #if train going in block order: 
+    # (switch or station) beacon  --> (switch or station) beacon 
+    #basically, ignore approaching beacons,(you should still read in the station name and side from them)
+
+    # if train going in opposite block order: 
+    # (switch or approaching) beacon --> (switch or approaching) beacon
+    #basically ignore station beacons
+
+    # note that your order can change through the route
+    def loadBeacons(self):
+        #create a working copy of the network
+        workingGraph = self.network.copy()
+
+        #Create splits in the graph to seperate sections that are capped on both ends by beacons
+        for edge in list(workingGraph.edges):
+            blkOne,blkTwo = edge
+
+            adjacentSwitchBeaconBlocks = blkOne.switchBeacon[0] and blkTwo.switchBeacon[0]
+            stationThenApproaching = blkOne.stationBeacon[0] and blkTwo.approachingBeacon[0]
+            approachingThenStation = blkOne.approachingBeacon[0] and blkTwo.stationBeacon[0]
+
+            if adjacentSwitchBeaconBlocks or stationThenApproaching or approachingThenStation:
+                workingGraph.remove_edge(blkOne,blkTwo)
+
+        #Add station name and side to the approachingBeacons
+        for i in range(len(self.blocks)):
+            if self.blocks[i].approachingBeacon[0]:
+                self.blocks[i].approachingBeacon[1] = str(self.blocks[i+1].station[1]) + "/" + str(self.blocks[i+1].station[3]) + "; "
+            if self.blocks[i].stationBeacon[0]:
+                self.blocks[i].stationBeacon[1] = str(self.blocks[i].station[1]) + "/" + str(self.blocks[i].station[3]) + "; "
+
+        #Iterate through each connected segment of the track
+        for connectedSet in nx.connected_components(workingGraph):
+            sortedBlocks = list(sorted(connectedSet, key=self.sortBlocks))
+            test = [blk.name for blk in sortedBlocks]
+            print(test)
+
+            #Iterate from the top of the segment and add data to the head beacon
+            if sortedBlocks[0].approachingBeacon[0]:
+                for blk in sortedBlocks:
+                    sortedBlocks[0].approachingBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+            elif sortedBlocks[0].stationBeacon[0]:
+                for blk in sortedBlocks:
+                    sortedBlocks[0].stationBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+            elif sortedBlocks[0].switchBeacon[0]:
+                for blk in sortedBlocks:
+                    sortedBlocks[0].switchBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+
+            #check for singletons in connected sets and don't double add
+            if len(sortedBlocks) == 1:
+                continue
+
+            #Iterate from the bottom of the segment and add the data to the tail beacon
+            if sortedBlocks[-1].approachingBeacon[0]:
+                for blk in reversed(sortedBlocks):
+                    sortedBlocks[-1].approachingBeacon[1] += str(blk.name) + "/" + str(blk.length) + "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+            elif sortedBlocks[-1].stationBeacon[0]:
+                for blk in reversed(sortedBlocks):
+                    sortedBlocks[-1].stationBeacon[1] += str(blk.name) + "/" + str(blk.length) + "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+            elif sortedBlocks[-1].switchBeacon[0]:
+                for blk in reversed(sortedBlocks):
+                    sortedBlocks[-1].switchBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+            
+    #sorting function only    
+    def sortBlocks(self,element):
+        return int(element.name[1:])
+    
+    def testBeacons(self):
+        for blk in self.blocks:
+            if(blk.approachingBeacon[0]):
+                print(blk.name + ":Approaching:" + blk.approachingBeacon[1])
+            elif(blk.stationBeacon[0]):
+                print(blk.name + ":Station:" + blk.stationBeacon[1])
+            elif(blk.switchBeacon[0]):
+                print(blk.name + ":Switch:" + blk.switchBeacon[1])
+            else:
+                print(blk.name)
 
     #Track Model --> Track Controller
     def getBlockOccupancyList(self):
@@ -221,7 +307,6 @@ class Line():
                 #Signal Updating
                 if(self.blocks[i].signal[1] != controlSignals[2][i]):
                     self.blocks[i].toggleSignal()
-
 
     def initializeTrackControllerData(self):
         hasSwitch = [blk.switch[0] for blk in self.blocks]
@@ -246,8 +331,7 @@ class Block():
     def __init__(self,attributes):
         name, occupied, length, grade, limit, elevation = attributes
 
-        # underground, station, switch, crossroad, signal
-
+        #Basic Attributes
         self.name = name #string with name ex: "A2"
         self.occupied = occupied #bool with occupancy
         self.length = length #double with block length
@@ -255,17 +339,27 @@ class Block():
         self.limit = limit # double with speed limit
         self.elevation = elevation # double with elevation
         self.underground = False # bool with underground status
+        
+        #Infrastructure Attributes
         self.station = [False, "", -1, ""] # list with if the station exists, station name, tickets sold, and station side ex
                                 # [True, "SHADYSIDE", 86, "Left/Right"]
         self.switch = [False, "", "",False] # list with if the switch exists, block name pointing towards, block name pointing away
                             # [True, "16", "1"]
         self.crossroad = [False, True]
-        self.signal = [False, True] #need to implement red or green
+        self.signal = [False, True] 
         self.switchBeacon = [False, ""]
         self.approachingBeacon = [False, ""]
         self.stationBeacon = [False, ""]
+        self.trackHeater = False
+
+        #Polarity Attributes
         self.polarity = True
         self.polaritySetted = False
+
+        #Failure Attributes
+        self.brokenRail = False
+        self.trackCircuitFailure = False
+        self.powerFailure = False
 
     def setOccupied(self):
         self.occupied = True
@@ -349,26 +443,14 @@ class Block():
 
 class TrackModel(QObject):
 
-    trackControllerOccupancy = pyqtSignal(list)
-    trackControllerInitializeLine = pyqtSignal(list)
-
-    trainModelSuggestedSpeed = pyqtSignal(list)
-    trainModelAuthority = pyqtSignal(int)
-    trainModelSwitchBeacon = pyqtSignal(str)
-    trainModelApproachingBeacon = pyqtSignal(str)
-    trainModelStationBeacon = pyqtSignal(str)
-    trainModelGrade = pyqtSignal(list)
-    trainModelCreation = pyqtSignal()
-    trainModelPolarity = pyqtSignal(list)
-
-    CTCticketSales = pyqtSignal(int)
-
-
     def __init__(self):
         super().__init__()
         self.lines = []
-        authority = 0
+        self.occupancyList =[]
 
+    #--------------------
+    #Internal Functions
+    #--------------------
     def addLine(self, path):
         if not os.path.exists(path):
             print("File not selected!")
@@ -387,57 +469,118 @@ class TrackModel(QObject):
     def getLine(self, lineName):
         return self.lines[self.getLineNames().index(lineName)]
     
+    #--------------------
+    #Transmitting Signal Functions
+    #--------------------
+    trainModelSuggestedSpeed = pyqtSignal(list)
+    trainModelAuthority = pyqtSignal(int)
+    trainModelCreation = pyqtSignal()
+    
     #Emit track occupancy
+    trackControllerOccupancy = pyqtSignal(list)
     def emitOccupancy(self):
         for line in self.lines:
             self.trackControllerOccupancy.emit(line.getBlockOccupancyList())
 
+    #Initialize the track to the other modules
+    trackControllerInitializeLine = pyqtSignal(list)
+    def initTrack(self):
+        for line in self.lines:
+            self.trackControllerInitializeLine.emit(line.initializeTrackControllerData())
+
+    #Emit Station Beacon
+    trainModelStationBeacon = pyqtSignal(str)
     def emitStationBeacon(self):
-        for line in self.lines:
-            occupiedList = line.getOccupiedBlocks()
-            for blk in occupiedList:
-                if blk.stationBeacon[0]:
-                    self.trainModelBeacon.emit(blk.stationBeacon[1])
+        for blk in self.occupancyList:
+            if blk.stationBeacon[0]:
+                self.trainModelStationBeacon.emit(blk.stationBeacon[1])
 
+    #Emit Switch Beacons
+    trainModelSwitchBeacon = pyqtSignal(str)
     def emitSwitchBeacon(self):
-        for line in self.lines:
-            occupiedList = line.getOccupiedBlocks()
-            for blk in occupiedList:
-                if blk.switchBeacon[0]:
-                    self.trainModelBeacon.emit(blk.switchBeacon[1])
+        for blk in self.occupancyList:
+            print(blk.switchBeacon[0])
+            if blk.switchBeacon[0]:
+                print("found")
+                self.trainModelSwitchBeacon.emit(blk.switchBeacon[1])
 
+    #Emit Approaching Beacons
+    trainModelApproachingBeacon = pyqtSignal(str)
     def emitApproachingBeacon(self):
-        for line in self.lines:
-            occupiedList = line.getOccupiedBlocks()
-            for blk in occupiedList:
-                if blk.approachingBeacon[0]:
-                    self.trainModelBeacon.emit(blk.approachingBeacon[1])
+        for blk in self.occupancyList:
+            if blk.approachingBeacon[0]:
+                self.trainModelApproachingBeacon.emit(blk.approachingBeacon[1])
 
+    #Emit grade of occupied blocks
+    trainModelGrade = pyqtSignal(list)
     def grade(self):
-        for line in self.lines:
-            gradeList = [blk.grade for blk in line.blocks if blk.occupied]
-            self.trainModelGrade.emit(gradeList)
+        gradeList = [blk.grade for blk in self.occupancyList if blk.occupied]
+        self.trainModelGrade.emit(gradeList)
 
+    #Emit polarity of occupied blocks
+    trainModelPolarity = pyqtSignal(list)
     def polarity(self):
+        polarityList = [blk.polarity for blk in self.occupancyList if blk.occupied]
+        self.trainModelPolarity.emit(polarityList)
+
+    #pass through track model
+    def suggestedSpeed(self, SS):
+        self.trainModelSuggestedSpeed.emit(SS)
+
+    def createTrain(self):
+        self.trainModelCreation.emit()
+
+    #convert block authority to feet authority
+    def authority(self, authorityInBlocks):
+        # for line in self.lines:
+        #     occupiedList = line.getOccupiedBlockNames()
+        #     for blkname in occupiedList:
+        #         authorityInM = 0
+        #         for i in range(self.trainRoute.index(blkname)+1,self.trainRoute.index(blkname)+1+authorityInBlocks):
+        #             if (i == self.trainRoute.index(blkname)+authorityInBlocks):
+        #                 authorityInM += line.getBlock(self.trainRoute[i].length/2)
+        #             else:
+        #                 authorityInM += line.getBlock(self.trainRoute[i]).length
+                
+        
+        # self.trainModelAuthority.emit(authorityInM)
+        return
+
+    #Send ticket sales of occupied stations
+    CTCticketSales = pyqtSignal(list)
+    def getTicketsSales(self):
         for line in self.lines:
-            polarityList = [blk.polarity for blk in line.blocks if blk.occupied]
-            self.trainModelPolarity.emit(polarityList)
+            tickets = [blk.station[2] for blk in line.getOccupiedBlocks() if blk.station[0]]
+
+        if len(tickets) != 0:
+            self.CTCticketSales.emit(tickets)
+     
+    #------------------
+    #Receiving Signals
+    #------------------
 
     def controlModel(self,controlSignals):
         for line in self.lines:
             line.updateLineStatus(controlSignals)
 
     #Train Model --> Track Model
+    #Need to talk about how multiple lines worth of occupancy will be sent
     def updateOccupancy(self,occupancyList):
+        if len(self.lines) == 0:
+            return
+        
+
+        test = [self.lines[0].getBlock(name) for name in occupancyList]
+        self.occupancyList = test
+
         #Clear occupancy
         for line in self.lines:
             for block in line.blocks:
                 block.clearOccupied()
 
-        if len(self.lines) == 0:
-            return
-        
-        for blk_name in range(len(occupancyList)):
+
+        print("Update Occupancy")
+        for blk_name in occupancyList:
             self.lines[self.lines.index(self.lines[0])].getBlock(blk_name).setOccupied()
 
     #Track Model --> Train Model
@@ -451,60 +594,31 @@ class TrackModel(QObject):
 
         return blocksAndLengths
 
-    #pass through track model
-    def suggestedSpeed(self, SS):
-        #create a train
-        self.trainModelCreation.emit()
-
-        self.trainModelSuggestedSpeed.emit(SS)
-
+    #----------------
+    #Pass through Signals
+    #----------------
     def route(self, r):
         self.trainRoute = r
 
-    #convert block authority to feet authority
-    def authority(self, authorityInBlocks):
-        pass
-        # for line in self.lines:
-        #     occupiedList = line.getOccupiedBlockNames()
-        #     for blkname in occupiedList:
-        #         authorityInM = 0
-        #         for i in range(self.trainRoute.index(blkname)+1,self.trainRoute.index(blkname)+1+authorityInBlocks):
-        #             if (i == self.trainRoute.index(blkname)+authorityInBlocks):
-        #                 authorityInM += line.getBlock(self.trainRoute[i].length/2)
-        #             else:
-        #                 authorityInM += line.getBlock(self.trainRoute[i]).length
-                
-        
-        #self.trainModelAuthority.emit(authorityInM)
-          
-    def initTrack(self):
-        for line in self.lines:
-            self.trackControllerInitializeLine.emit(line.initializeTrackControllerData())
-
-    def getTicketsSales(self):
-        for line in self.lines:
-            tickets = [blk.station[2] for blk in line.getOccupiedBlocks() if blk.station[0]]
-
-        if len(tickets) != 0:
-            self.CTCticketSales.emit(tickets[0])
-        
 class functionalUI(Ui_Form):
     def __init__(self) -> None:
         super().__init__()
         self.trackModel = TrackModel()
 
     def connect(self):
-        self.comboBox_3.currentIndexChanged.connect(self.lineChange)
-        self.comboBox_4.currentIndexChanged.connect(self.blockChange)
-        self.comboBox_4.currentIndexChanged.connect(self.updateMap)
-        self.pushButton_2.clicked.connect(self.buttonPress)
+        self.comboBox_3.textActivated.connect(self.lineChange)
+        self.comboBox_4.textActivated.connect(self.blockChange)
+        # self.comboBox_4.textActivated.connect(self.updateMap)
+
+        self.pushButton.clicked.connect(self.toggleBrokenRail)
+        self.pushButton_2.clicked.connect(self.uploadTrack)
+        self.pushButton_3.clicked.connect(self.toggleTrackCircuitFailure)
+        self.pushButton_4.clicked.connect(self.togglePowerFailure)
+
         self.lineEdit.returnPressed.connect(self.tbChange)
         self.lineEdit.returnPressed.connect(self.updateMap)
-        self.listWidget_2.itemActivated.connect(self.updateMap)
 
     def tbChange(self):
-        
-        self.listWidget_2.clear()
         tbInfo = self.lineEdit.displayText().split(',')
 
         line = self.trackModel.getLine(tbInfo[0])
@@ -516,22 +630,27 @@ class functionalUI(Ui_Form):
         for blk in tbInfo:
             line.getBlock(blk).occupied = True
 
-        test = [blk.name for blk in line.blocks if blk.occupied]
-        self.listWidget_2.addItems(test)
+        self.listWidgetChange()
+
+    def listWidgetChange(self):
+        self.listWidget_2.clear()
+        currentLineName = self.comboBox_3.currentText()
+
+        if (currentLineName != ''):
+            line = self.trackModel.getLine(currentLineName)
+            self.listWidget_2.addItems(line.getOccupiedBlockNames())
 
     def lineChange(self):
         #Clear the Blocks
         self.comboBox_4.clear()
-        #Clear the Occupancy
-        self.listWidget_2.clear()
 
 
         # Add the blocks associated with that line
         currentLineName = self.comboBox_3.currentText()
-
         line = self.trackModel.getLine(currentLineName)
         self.comboBox_4.addItems(line.getBlockNames())
-        self.listWidget_2.addItems(line.getOccupiedBlockNames())
+
+        self.listWidgetChange()
 
     def blockChange(self):
         currentBlockName = self.comboBox_4.currentText()
@@ -602,18 +721,117 @@ class functionalUI(Ui_Form):
             self.tableWidget_6.item(0,0).setText("")
             self.tableWidget_6.item(1,0).setText("")
 
-    def buttonPress(self):
+        #Signal
+        if(b.signal[0]):
+            self.tableWidget_3.item(10,0).setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self.tableWidget_3.item(10,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+        #Track Heater
+        if(b.trackHeater):
+            self.tableWidget_3.item(11,0).setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self.tableWidget_3.item(11,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+        #Broken Rail
+        if(b.brokenRail):
+            self.tableWidget_3.item(12,0).setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self.tableWidget_3.item(12,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+        #Track Circuit Failure
+        if(b.trackCircuitFailure):
+            self.tableWidget_3.item(13,0).setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self.tableWidget_3.item(13,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+        #Power Failure
+        if(b.powerFailure):
+            self.tableWidget_3.item(14,0).setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self.tableWidget_3.item(14,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
+
+
+        self.updateMap()
+        self.listWidgetChange()
+
+    def uploadTrack(self):
         fd = QFileDialog()
         path, _ = fd.getOpenFileName(None, 'Select a file:')
         self.trackModel.addLine(path)
+
         self.comboBox_3.clear()
         self.comboBox_3.addItems(self.trackModel.getLineNames())
+
         self.trackModel.initTrack()
         self.updateMap()
       
+    def toggleBrokenRail(self):
+        currentBlockName = self.comboBox_4.currentText()
+        currentLineName = self.comboBox_3.currentText()
+
+        if (currentBlockName == '') or (currentLineName == ''):
+            return
+
+        blk = self.trackModel.getLine(currentLineName).getBlock(currentBlockName)
+
+        if(blk.trackCircuitFailure or blk.powerFailure):
+            return
+        
+        if(blk.brokenRail):
+            blk.clearOccupied()
+        else:
+            blk.setOccupied()
+
+        blk.brokenRail = not blk.brokenRail
+        
+        self.blockChange()
+
+    def toggleTrackCircuitFailure(self):
+        currentBlockName = self.comboBox_4.currentText()
+        currentLineName = self.comboBox_3.currentText()
+
+        if(currentBlockName == '') or (currentLineName == ''):
+            return
+
+        blk = self.trackModel.getLine(currentLineName).getBlock(currentBlockName)
+
+        if(blk.brokenRail or blk.powerFailure):
+            return
+        
+        if(blk.trackCircuitFailure):
+            blk.clearOccupied()
+        else:
+            blk.setOccupied()
+            
+        blk.trackCircuitFailure = not blk.trackCircuitFailure
+
+        self.blockChange()
+
+    def togglePowerFailure(self):
+        currentBlockName = self.comboBox_4.currentText()
+        currentLineName = self.comboBox_3.currentText()
+
+        if(currentBlockName == '') or (currentLineName == ''):
+            return
+
+        blk = self.trackModel.getLine(currentLineName).getBlock(currentBlockName)
+
+        if(blk.brokenRail or blk.trackCircuitFailure):
+            return
+        
+        if(blk.powerFailure):
+            blk.clearOccupied()
+        else:
+            blk.setOccupied()
+            
+        blk.powerFailure = not blk.powerFailure
+
+        self.blockChange()
+    
     def updateMap(self):
-        for line in self.trackModel.lines:
-            line.designMap(self.comboBox_4.currentText())
+        for i in range(len(self.trackModel.lines)):
+            self.trackModel.lines[i].designMap(self.comboBox_4.currentText(), i+1)
 
     def update_time(self):
         self.trackModel.emitOccupancy()
@@ -621,8 +839,8 @@ class functionalUI(Ui_Form):
         self.trackModel.emitStationBeacon()
         self.trackModel.emitSwitchBeacon()
         self.trackModel.emitApproachingBeacon()
-        self.trackModel.authority()
-        self.trackModel.getTicketsSales()
+        # self.trackModel.authority()
+        # self.trackModel.getTicketsSales()
         self.trackModel.polarity()
         self.trackModel.grade()
 
@@ -639,6 +857,6 @@ if __name__ == '__main__':
     ui.setupUi(MainWindow)
     ui.connect()
     MainWindow.show()
-   
-# # Start the event loop.
+
+    # Start the event loop.
     app.exec()

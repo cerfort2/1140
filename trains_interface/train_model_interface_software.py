@@ -2,13 +2,14 @@
 
 from trains_interface.train_model_software import *
 
-class train_model_interface_software():
+class train_model_interface_software(QObject):
 
     #create signal
     track_model_occupancy_list = pyqtSignal(list)
 
     #constructor, create list to house trains
     def __init__(self):
+        super().__init__()
         self.UI_flag = False
         self.trains = []
     

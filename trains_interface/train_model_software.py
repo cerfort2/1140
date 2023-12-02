@@ -9,7 +9,7 @@ class train_model_software():
     def __init__(self) -> None:
 
         #set local vars to test vals
-        self.authority = 1000.0
+        self.authority = 0.0
         self.speed = 0.0
         self.passengers = 0
         self.power = 0.0
@@ -300,8 +300,23 @@ class train_model_software():
         self.open_side = temp
 
     #switch beacon
-    def set_switch_data(self) -> None:
-        None
+    def set_switch_data(self, beacon_val: str) -> None:
+
+        blockList = beacon_val.split("; ")
+        blockList = blockList[:len(blockList) - 1]
+        print(blockList)
+
+        for block in blockList:
+            infoList = block.split("/")
+            print(infoList)
+            self.beacon_list.append(infoList[0])
+            #self.length_list.append(infoList[1])
+            self.underground_list.append(infoList[2])
+            self.speed_list.append(infoList[3])
+
+        self.occupancy = self.beacon_list[0]
+
+        print("In switch set")
     
     #occupancy updater
     def update_occupancy(self, occupancy: bool) -> None:
