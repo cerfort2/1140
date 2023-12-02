@@ -250,8 +250,10 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     def redLinePLCLogic(self, occu):
         return
 
-    #Anything below this shouldn't need to be touched or edited
 
+
+
+    #Anything below this shouldn't need to be touched or edited
     #Functions used in Whole UI
     def openArduinoFile(self): #Functionality for PLC File Opening
         dialog = QFileDialog()
