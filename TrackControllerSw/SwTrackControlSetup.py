@@ -31,9 +31,6 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
 
     def __init__(self):
         super().__init__()
-        ##
-        #self.init_ui()
-        ##
         #Creates Track On initilization
         self.line:Track = Track()
 
