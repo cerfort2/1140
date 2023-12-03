@@ -75,6 +75,7 @@ class train_model_software():
         travel = self.calculate_travel(self.speed, 1)
         self.authority -= travel
         self.currentMove += travel
+        self.update_occupancy()
         if self.authority < 0:
             self.authority = 0
         self.controller.authority=self.authority
@@ -290,18 +291,40 @@ class train_model_software():
         
     #setting station data
     def set_station_data(self, beacon_val: str) -> None:
+        print(beacon_val)
+        #Split by ;
+        splitPackets = beacon_val.split("; ")
 
-        temp = ""
+        #Split first packet by /
+        firstPacket = splitPackets[0].split("/")
 
-        for i in range(0, len(beacon_val)):
-            if beacon_val[i] != "/":
-                temp += beacon_val[i]
-            else:
-                self.current_station = temp
-                self.announcement = "Arriving at " + self.current_station
-                temp = ""
+        #Station Name
+        self.current_station = firstPacket[0]
+        self.announcement = "Arriving at: " + self.current_station
 
-        self.open_side = temp
+        #Station Side
+        if(len(firstPacket) == 3):
+            self.open_side = "Left/Right"
+        else:
+            self.open_side = firstPacket[1]
+
+        #Pop the station info
+        blockList = splitPackets[1:]
+        blockList = blockList[:len(blockList) - 1]
+        print(blockList)
+        for block in blockList:
+            infoList = block.split("/")
+            print(infoList)
+            self.beacon_list.append(infoList[0])
+            self.authority += float(infoList[1])
+            self.authority_list.append(infoList[1])
+            self.underground_list.append(infoList[2])
+            self.speed_list.append(infoList[3])
+
+        self.currentMove = 0
+        print(self.authority_list)
+        # self.occupancy = self.beacon_list[0]
+
 
     #switch beacon
     def set_switch_data(self, beacon_val: str) -> None:
@@ -326,11 +349,12 @@ class train_model_software():
     #occupancy updater
     def update_occupancy(self) -> None:
 
-        
+        print(self.currentMove)
+        print(self.authority_list)
         if self.currentMove > float(self.authority_list[0]):
 
             self.current_polarity = not self.current_polarity
-            self.currentMove = 0
+            self.currentMove -= float(self.authority_list[0])
 
             self.occupancy = self.beacon_list[1] if len(self.beacon_list) > 1 else self.beacon_list[0]
             if len(self.beacon_list) > 1:

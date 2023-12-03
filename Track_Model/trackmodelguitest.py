@@ -591,8 +591,8 @@ class TrackModel(QObject):
 
         
         self.emitApproachingBeacon()
-        self.emitStationBeacon()
         self.emitSwitchBeacon()
+        self.emitStationBeacon()
 
     #Track Model --> Train Model
     def routeToBlockLengths(self, route):
