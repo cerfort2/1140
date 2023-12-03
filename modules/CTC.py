@@ -397,9 +397,6 @@ class CTC(Ui_Form, QWidget):
             # Update the schedule with the new data
             self.update_schedule(train_ids, destinations, dep_times, arr_times, stops)
 
-            # Provide some feedback or update the UI to reflect the changes
-            # self.label.setText(f'Schedule imported successfully from {filePath}')
-            # ... other UI updates ...
         return
 
 
@@ -435,7 +432,7 @@ class CTC(Ui_Form, QWidget):
                 next_stop = station_list[0]
             else:
                 next_stop = station_list[1]
-            authority = self.green_line.get_authority(next_stop)
+            authority = self.green_line.get_authority(station_list)
 
         trainID = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
         train = Train(trainID, destination, departure_time, arrival_time, self.stops)
@@ -520,7 +517,7 @@ class CTC(Ui_Form, QWidget):
         else:
             next_stop = station_list[1]
 
-        authority = self.green_line.get_authority(next_stop)
+        authority = self.green_line.get_authority(station_list)
         self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
         self.suggested_speed_tb.setText(str(speeds))
         self.authority_tb.setText(str(authority))
