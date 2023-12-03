@@ -15,11 +15,22 @@ class train_model_interface_software(QObject):
     
     #add a new train to the list of trains
     def new_train(self) -> None:
-        self.trains.append(train_model_software())
+        newTrain = train_model_software
+        self.trains.append(newTrain)
 
     #access a single train object in the list
     def access_train(self, train_num: int) -> train_model_software:
         return self.trains[train_num - 1]
+
+    def stationBeacon(self,beacon_vals):
+        for i in range(len(self.trains)):
+            if(beacon_vals[i] != ""):
+                self.trains[i].readStationBeacon()
+    
+    def switchBeacon(self,beacon_vals):
+        for i in range(len(self.trains)):
+            if(beacon_vals[i] != ""):
+                self.trains[i].readSwitchBeacon()
 
     #update all trains
     def update_trains(self) -> None:

@@ -489,25 +489,34 @@ class TrackModel(QObject):
             self.trackControllerInitializeLine.emit(line.initializeTrackControllerData())
 
     #Emit Station Beacon
-    trainModelStationBeacon = pyqtSignal(str)
+    trainModelStationBeacon = pyqtSignal(list)
     def emitStationBeacon(self):
+        emittedBeacons = []
         for blk in self.occupancyList:
             if blk.stationBeacon[0]:
-                self.trainModelBeacon.emit(blk.stationBeacon[1])
+                emittedBeacons.append(blk.stationBeacon[1])
+
+        self.trainModelStationBeacon.emit(emittedBeacons)
 
     #Emit Switch Beacons
-    trainModelSwitchBeacon = pyqtSignal(str)
+    trainModelSwitchBeacon = pyqtSignal(list)
     def emitSwitchBeacon(self):
+        emittedBeacons = []
         for blk in self.occupancyList:
             if blk.switchBeacon[0]:
-                self.trainModelBeacon.emit(blk.switchBeacon[1])
+                emittedBeacons.append(blk.switchBeacon[1])
+
+        self.trainModelSwitchBeacons.emit(emittedBeacons)
 
     #Emit Approaching Beacons
-    trainModelApproachingBeacon = pyqtSignal(str)
+    trainModelApproachingBeacon = pyqtSignal(list)
     def emitApproachingBeacon(self):
+        emittedBeacons = []
         for blk in self.occupancyList:
             if blk.approachingBeacon[0]:
-                self.trainModelBeacon.emit(blk.approachingBeacon[1])
+                emittedBeacons.append(blk.approachingBeacon[1])
+
+        self.trainModelApproachingBeacon.emit(emittedBeacons)
 
     #Emit grade of occupied blocks
     trainModelGrade = pyqtSignal(list)
@@ -575,8 +584,6 @@ class TrackModel(QObject):
             for block in line.blocks:
                 block.clearOccupied()
 
-
-        
         for blk_name in range(len(occupancyList)):
             self.lines[self.lines.index(self.lines[0])].getBlock(blk_name).setOccupied()
 

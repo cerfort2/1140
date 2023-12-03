@@ -7,6 +7,7 @@ from trackmodelguitest import *
 from SoftwareTrainControllerGUI import *
 from SwTrackControlSetup import *
 from train_model_interface_software import *
+# from train_model_software import *
 
 ##ALL FUNCTIONAL OBJECTS NEED TO DO THE FOLLOWING
 
@@ -81,16 +82,20 @@ class God(QMainWindow):
         self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerSW.setOccupancy)
         self.trackModel.trackModel.trainModelCreation.connect(self.train.new_train)
         self.trackModel.trackModel.createTrain()
-        self.trackModel.trackModel.trainModelGrade.connect(self.train.set_slopes)
-        self.trackModel.trackModel.trainModelPolarity.connect(self.train.set_polarities)
+        # self.trackModel.trackModel.trainModelGrade.connect(self.train.set_slopes)
+        # self.trackModel.trackModel.trainModelPolarity.connect(self.train.set_polarities)
         self.train.track_model_occupancy_list.connect(self.trackModel.trackModel.updateOccupancy)
+
+        self.trackModel.trackModel.trainModelApproachingBeacon.connect(self.train.stationBeacon)
+        self.trackModel.trackModel.trainModelStationBeacon.connect(self.train.stationBeacon)
+        self.trackModel.trackModel.trainModelSwitchBeacon.connect(self.train.switchBeacon)
 
         # self.trackModel.trackModel.trainModelSuggestedSpeed.connect(self.trainModel.access_train(len(self.trainModel.trains)).set_suggested_speeds)
         # self.trackModel.trackModel.trainModelAuthority.connect(self.trainModel.access_train(1).new_authority)
         # self.trackModel.trackModel.trainModelGrade.connect(self.trainModel.set_slopes)
-        self.trackModel.trackModel.trainModelApproachingBeacon.connect(self.train.access_train(1).read_station_beacon)
-        self.trackModel.trackModel.trainModelStationBeacon.connect(self.train.access_train(1).read_station_beacon)
-        self.trackModel.trackModel.trainModelSwitchBeacon.connect(self.train.access_train(1).read_switch_beacon)
+        # self.trackModel.trackModel.trainModelApproachingBeacon.connect(self.train.access_train(1).read_station_beacon)
+        # self.trackModel.trackModel.trainModelStationBeacon.connect(self.train.access_train(1).read_station_beacon)
+        # self.trackModel.trackModel.trainModelSwitchBeacon.connect(self.train.access_train(1).read_switch_beacon)
         # self.trackModel.trackModel.trainModelCreation.connect(self.trainModel.new_train)
         # self.trackModel.trackModel.trainModelPolarity.connect(self.trainModel.set_polarities)
 

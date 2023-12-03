@@ -7,9 +7,9 @@ class train_model_software():
 
     #new train constructor
     def __init__(self) -> None:
-
+    
         #set local vars to test vals
-        self.authority = 1000.0
+        self.authority = 0
         self.speed = 0.0
         self.passengers = 0
         self.power = 0.0
@@ -43,8 +43,6 @@ class train_model_software():
 
         #create ui item
         self.ui = train_model_GUI()
-    
-
 
     #
     #GETTERS AND SETTERS
@@ -208,7 +206,7 @@ class train_model_software():
         self.occupancy = occupancy
     
     #occupancy getter
-    def get_occupancy(self) -> str:
+    def get_occupancy(self):
         return self.occupancy
 
     #suggested speed getter
@@ -402,6 +400,7 @@ class train_model_software():
             self.controller.update_time()
         if UI_flag:
             self.update_ui()
+
 
     #update train ui
     def update_ui(self) -> None:
