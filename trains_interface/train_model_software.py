@@ -37,7 +37,9 @@ class train_model_software():
         self.open_side = "Right"
         self.current_station = ""
         self.suggested_speed_list =[]
-
+        self.routeList = []
+        self.authority_list = []
+        self.currentMove = 0
         #create instance of train controller
         self.controller = SoftwareTrainController()
 
@@ -70,7 +72,9 @@ class train_model_software():
 
     #authority setter
     def set_authority(self) -> None:
-        self.authority -= self.calculate_travel(self.speed, 1)
+        travel = self.calculate_travel(self.speed, 1)
+        self.authority -= travel
+        self.currentMove += travel
         if self.authority < 0:
             self.authority = 0
         self.controller.authority=self.authority
@@ -278,7 +282,7 @@ class train_model_software():
                     temp = ""
                     iterator = 0
         
-        self.occupancy = self.beacon_list[0]
+        #self.occupancy = self.beacon_list[0]
 
     #get suggest speed list from CTC
     def set_suggested_speeds(self, speed_list: list) -> None:
@@ -310,23 +314,28 @@ class train_model_software():
             infoList = block.split("/")
             print(infoList)
             self.beacon_list.append(infoList[0])
-            #self.length_list.append(infoList[1])
+            self.authority += float(infoList[1])
+            self.authority_list.append(infoList[1])
             self.underground_list.append(infoList[2])
             self.speed_list.append(infoList[3])
 
-        self.occupancy = self.beacon_list[0]
-
+        #self.occupancy = self.beacon_list[0]
+        self.currentMove = 0
         print("In switch set")
     
     #occupancy updater
-    def update_occupancy(self, occupancy: bool) -> None:
-        if occupancy != self.current_polarity:
+    def update_occupancy(self) -> None:
 
-            self.current_polarity = occupancy
+        
+        if self.currentMove > float(self.authority_list[0]):
+
+            self.current_polarity = not self.current_polarity
+            self.currentMove = 0
 
             self.occupancy = self.beacon_list[1] if len(self.beacon_list) > 1 else self.beacon_list[0]
             if len(self.beacon_list) > 1:
                 self.beacon_list = self.beacon_list[1:]
+                self.authority_list = self.authority_list[1:]
 
             self.underground_val = self.underground_list[1] if len(self.underground_list) > 1 else self.underground_list[0]
             if len(self.underground_list) > 1:
@@ -338,6 +347,15 @@ class train_model_software():
                 
             if len(self.suggested_speed_list) > 1:
                 self.suggested_speed_list = self.suggested_speed_list[1:]
+        
+        if self.authority == 0 and len(self.beacon_list) < 2:
+            self.increment_route()
+            
+
+    #increment on route WILL NEED TO CHANGE
+    def increment_route(self) -> None:
+        if self.authority == 0 and self.routeList.index(self.occupancy) != len(self.routeList) - 1:
+            self.occupancy = self.routeList[self.routeList.index(self.occupancy) + 1]
 
     #function to open train GUI on current train
     def open_GUI(self) -> None:
@@ -365,6 +383,7 @@ class train_model_software():
         self.set_right_door(self.controller.getRightDoor())
         self.set_left_door(self.controller.getLeftDoor())
         self.set_announcement(self.controller.getAnnouncement())
+        self.increment_route()
         if UI_flag:
             self.controller.update_time()
         if UI_flag:

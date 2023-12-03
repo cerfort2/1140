@@ -447,6 +447,7 @@ class TrackModel(QObject):
         super().__init__()
         self.lines = []
         self.occupancyList =[]
+        self.occupancyListStrings = []
 
     #--------------------
     #Internal Functions
@@ -518,10 +519,10 @@ class TrackModel(QObject):
         self.trainModelGrade.emit(gradeList)
 
     #Emit polarity of occupied blocks
-    trainModelPolarity = pyqtSignal(list)
+    trainModelPolarity = pyqtSignal()
     def polarity(self):
-        polarityList = [blk.polarity for blk in self.occupancyList if blk.occupied]
-        self.trainModelPolarity.emit(polarityList)
+        # polarityList = [blk.polarity for blk in self.occupancyList if blk.occupied]
+        self.trainModelPolarity.emit()
 
     #pass through track model
     def suggestedSpeed(self, SS):
@@ -569,19 +570,29 @@ class TrackModel(QObject):
         if len(self.lines) == 0:
             return
         
+        if (self.occupancyListStrings == occupancyList):
+            return
+        
+        self.occupancyListStrings = occupancyList
 
         test = [self.lines[0].getBlock(name) for name in occupancyList]
         self.occupancyList = test
+
+
 
         #Clear occupancy
         for line in self.lines:
             for block in line.blocks:
                 block.clearOccupied()
 
-
         print("Update Occupancy")
         for blk_name in occupancyList:
             self.lines[self.lines.index(self.lines[0])].getBlock(blk_name).setOccupied()
+
+        
+        self.emitApproachingBeacon()
+        self.emitStationBeacon()
+        self.emitSwitchBeacon()
 
     #Track Model --> Train Model
     def routeToBlockLengths(self, route):
@@ -597,8 +608,9 @@ class TrackModel(QObject):
     #----------------
     #Pass through Signals
     #----------------
+    trainModelRouteNames = pyqtSignal(list)
     def route(self, r):
-        self.trainRoute = r
+        self.trainModelRouteNames.emit(r)
 
 class functionalUI(Ui_Form):
     def __init__(self) -> None:
@@ -836,9 +848,9 @@ class functionalUI(Ui_Form):
     def update_time(self):
         self.trackModel.emitOccupancy()
         self.updateMap()
-        self.trackModel.emitStationBeacon()
-        self.trackModel.emitSwitchBeacon()
-        self.trackModel.emitApproachingBeacon()
+        # self.trackModel.emitStationBeacon()
+        # self.trackModel.emitSwitchBeacon()
+        # self.trackModel.emitApproachingBeacon()
         # self.trackModel.authority()
         # self.trackModel.getTicketsSales()
         self.trackModel.polarity()

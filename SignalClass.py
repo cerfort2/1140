@@ -115,9 +115,12 @@ class God(Home, QMainWindow):
         # self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
         
 
+        
+
     def init_train(self):
         self.trainInterface.new_train()
         self.trainInterface.show_GUI(1)
+        self.trackModel.trackModel.trainModelRouteNames.connect(self.trainInterface.set_route)
         self.trackModel.trackModel.trainModelSuggestedSpeed.connect(self.trainInterface.access_train(len(self.trainInterface.trains)).set_suggested_speeds)
         #self.trackModel.trackModel.trainModelAuthority.connect(self.trainInterface.access_train(1).new_authoriy)
         self.trackModel.trackModel.trainModelGrade.connect(self.trainInterface.set_slopes)
@@ -125,19 +128,22 @@ class God(Home, QMainWindow):
         self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.access_train(1).set_beacon_list_out_station)
         self.trackModel.trackModel.trainModelSwitchBeacon.connect(self.trainInterface.access_train(1).set_switch_data)
         self.trackModel.trackModel.trainModelPolarity.connect(self.trainInterface.set_polarities)
-        self.trainInterface.trains[0].occupancy = "Z151"
+        self.trainInterface.access_train(1).occupancy = "Z151"
+        self.trackModel.trackModel.route(["Z151", "J62","K63", "K64", "K65"])
 
     #on timeout emissions
     def onTimeoutFunctions(self):
         self.trackModel.trackModel.initTrack()
         #self.trackController.sendSpeed()
         #self.trackModel.trackModel.emitOccupancy()
-        self.trackModel.trackModel.emitStationBeacon()
-        self.trackModel.trackModel.emitSwitchBeacon()
-        self.trackModel.trackModel.emitApproachingBeacon()
+        # self.trackModel.trackModel.emitStationBeacon()
+        # self.trackModel.trackModel.emitSwitchBeacon()
+        # self.trackModel.trackModel.emitApproachingBeacon()
         self.trainInterface.get_occupancies()
+        self.trackModel.updateMap()
         if self.trainInterface.trains != []:
             self.trainInterface.update_trains()
+            self.trackModel.trackModel.polarity()
     
     def create_modules(self):
         #setup track model
