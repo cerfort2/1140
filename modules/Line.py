@@ -168,7 +168,8 @@ class Line():
                 cur_block_index +=1
                 if station_check == stop:
                     break
-                authority_sum += block.get_length()
+                authority_sum += 1
+                #block.get_length()
             authorities.append(authority_sum)
     
         return authority_sum

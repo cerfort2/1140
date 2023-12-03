@@ -95,9 +95,9 @@ class CTC(Ui_Form, QWidget):
         self.trains_dispatched = []
         self.speed_factor = 1
 
-        #self.initialize_connections()
-        #self.start_threads()
-        #self.initialize_ui()
+        self.initialize_connections()
+        self.start_threads()
+        self.initialize_ui()
 
 
 #outputs
@@ -122,7 +122,6 @@ class CTC(Ui_Form, QWidget):
         ticket_sales = tickets
         self.record_ticket_sales(ticket_sales)
         
-
 
     def start_threads(self):
         Thread(target=self.update_occupancy_ui).start()
@@ -410,7 +409,8 @@ class CTC(Ui_Form, QWidget):
         self.stop_box_list.removeItem(index)
         
     def dispatch_train(self, destination = None, stops = [], arrival_time = None, departure_time = None, dispatched_line = None):
-        self.stops = stops
+        if stops != []:
+            self.stops = stops
         if not destination:
             destination = self.manual_dispatch_destination.currentText()
         station_list = [destination]
@@ -418,7 +418,7 @@ class CTC(Ui_Form, QWidget):
             station_list.append(stop)
         if not arrival_time:
             arrival_time = QDateTime.fromString(self.arrival_time_dis.text(), "HH:mm:ss").time()
-        if not arrival_time:
+        if not departure_time:
             departure_time = self.cur_sys_time
 
         #get line from ui
@@ -428,10 +428,6 @@ class CTC(Ui_Form, QWidget):
         if dispatched_line == "Green Line":
             route = self.green_line.get_route(station_list)
             speeds = self.green_line.get_velocities(route[0], departure_time, arrival_time, num_stops)
-            if len(station_list) == 1:
-                next_stop = station_list[0]
-            else:
-                next_stop = station_list[1]
             authority = self.green_line.get_authority(station_list)
 
         trainID = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
