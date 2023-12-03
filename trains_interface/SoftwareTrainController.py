@@ -294,6 +294,9 @@ class SoftwareTrainController():
             if not self.manualmode:
                 self.dwelling=True
 
+    def toggleDwelling(self):
+        self.dwelling=False
+        self.dwellTime=60
 
     def computeManualSpeed(self) ->int:
         if self.serviceBrake==True:
