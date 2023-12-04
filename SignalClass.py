@@ -70,7 +70,7 @@ class God(Home, QMainWindow):
         #GOD UI main page
         self.ctc_btn.clicked.connect(self.openCTCGUI)
         self.track_model_btn.clicked.connect(self.openTrackModelGUI)
-        self.track_controller_hw_btn.clicked.connect(self.openTrackControllerHWGUI)
+        self.track_controller_btn.clicked.connect(self.openTrackControllerHWGUI)
         #self.track_controller_sw_btn.clicked.connect(self.openTrackControllerSW)
         
         
