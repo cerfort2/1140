@@ -1,11 +1,9 @@
-from Hardware_Track_Controller.WaysideClass import Wayside
-from Hardware_Track_Controller.AuthorityClass import AuthorityClass
+from WaysideClass import Wayside
+#from AuthorityClass import AuthorityClass
 
 class GreenLine():
 
     Waysides = [Wayside(), Wayside(), Wayside(), Wayside()] #All The waysides going in order of 1,2,3,4 for Green Line
-    trainAuthority = None
-    trackList = []
 
     def setTracks(self, tracks): #Creates the track on start up of program from Track Model
         switch = []
@@ -38,27 +36,22 @@ class GreenLine():
                 self.Waysides[3].createTrack(switch[i], crossroad[i], light[i], trackName[i], left[i], right[i])
         self.Waysides[0].createTrack(switch[149], crossroad[149], light[149], trackName[149], left[149], right[149])
         self.Waysides[1].createTrack(switch[150], crossroad[150], light[150], trackName[150], left[150], right[150])
-        self.arrayOfTracks()
-        self.trainAuthority = AuthorityClass(self.arrayOfTracks)
-    def totalTracks(self): #Gets total amount of tracks
-        amount = 0
-        for i in range(len(Wayside)):
-            amount = amount + Wayside[i].amountOfTracks()
-        return amount
-    def arrayOfTracks(self): #Creates a array of tracks for authority logic
-        for i in range(32): #A1-G32
-            self.trackList.append(self.Waysides[0].getTrack(i))
-        #All for Wayside 2
-        for i in range(41): #H33-L73
-            self.trackList.append(self.Waysides[1].getTrack(i))
-        #All for Wayside 3
-        for i in range(28): #M74-R101
-            self.trackList.append(self.Waysides[2].getTrack(i))
-        #All for Wayside 4
-        for i in range(48): #S102-Y149
-            self.trackList.append(self.Waysides[3].getTrack(i))
-        self.trackList.append(self.Waysides[0].getTrack(32)) #Z150
-        self.trackList.append(self.Waysides[1].getTrack(41)) #Z151/YARD
+    
+    
+    # def arrayOfTracks(self): #Creates a array of tracks for authority logic
+    #     for i in range(32): #A1-G32
+    #         self.trackList.append(self.Waysides[0].getTrack(i))
+    #     #All for Wayside 2
+    #     for i in range(41): #H33-L73
+    #         self.trackList.append(self.Waysides[1].getTrack(i))
+    #     #All for Wayside 3
+    #     for i in range(28): #M74-R101
+    #         self.trackList.append(self.Waysides[2].getTrack(i))
+    #     #All for Wayside 4
+    #     for i in range(48): #S102-Y149
+    #         self.trackList.append(self.Waysides[3].getTrack(i))
+    #     self.trackList.append(self.Waysides[0].getTrack(32)) #Z150
+    #     self.trackList.append(self.Waysides[1].getTrack(41)) #Z151/YARD
     
     
     #Configuration of all tracks in Green Line Waysides - THIS IS FOR TESTING PERSONALLY ONLY
