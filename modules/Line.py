@@ -191,9 +191,8 @@ class Line():
                     print(authority_sum)
                     break
                 
-                authority_sum += 1  # Assuming each block contributes '1' to the authority
+                authority_sum += block.get_length()  # Assuming each block contributes '1' to the authority
                 cur_block_index += 1
-        print(authorities)
         return authorities
 
     #returns the route from yard given a list of input stations
