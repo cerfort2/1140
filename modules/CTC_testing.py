@@ -1,6 +1,6 @@
 import unittest
 import sys
-from CTC import CTC  # Import your CTC class from the module it's in
+from modules.CTC import CTC  # Import your CTC class from the module it's in
 from PyQt6.QtCore import QDateTime
 from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QTableWidgetItem, QLabel, QLineEdit, QHeaderView
 
