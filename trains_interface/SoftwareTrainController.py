@@ -70,7 +70,7 @@ class SoftwareTrainController():
         self.engineFailure=False
         self.signalFailure=False
         self.power=0     
-        self.interval=.05
+        self.interval=1
         self.dwelling=False
         self.dwellTime=60
         self.serviceBrake=False
@@ -150,7 +150,7 @@ class SoftwareTrainController():
         self.setAnnouncement()
         
     def computeServiceBrake(self):
-        if not self.manualmode and self.currentSpeed>0:
+        if not self.manualmode:
             
             self.brakedistance = self.currentSpeed**2/(1.2)
 
@@ -240,8 +240,12 @@ class SoftwareTrainController():
         if self.power>120000:
             self.power=120000
 
+        print(self.brakeFailure)
+        print(self.eBrake)
+        print(self.serviceBrake)
         if self.brakeFailure or self.signalFailure or self.engineFailure or self.eBrake or self.power < 0 or self.serviceBrake==True:
             self.power=0
+        
     
             
     def getLeftDoor(self):
@@ -290,6 +294,9 @@ class SoftwareTrainController():
             if not self.manualmode:
                 self.dwelling=True
 
+    def toggleDwelling(self):
+        self.dwelling=False
+        self.dwellTime=60
 
     def computeManualSpeed(self) ->int:
         if self.serviceBrake==True:
