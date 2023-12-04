@@ -20,6 +20,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     trackModelSuggestedSpeedHW = pyqtSignal(list)
     trackModelTrackDataHW = pyqtSignal(list)
     trackModelAuthorityHW = pyqtSignal(int)
+    trackModelStoppedTrains = pyqtSignal(list)
 
     #Global Variables
     greenLine = GreenLine()
@@ -122,7 +123,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
 
     def __init__(self): #Initalizer
         super().__init__()
-
     
     #Getting data functions
     def getOccupancy(self, occupancy:[]): #Current Occupancy from Track Model
@@ -148,7 +148,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                 check = True
 
         #Runs the functions accordingly after recieving new occupancies
-        self.collisionLogicGreen(occupancy) #run collision logic each new list we get
         if(self.tabWidget.currentIndex() == 0):
             if(check == True):
                 newStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
@@ -156,15 +155,16 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             self.setListsOccupancyAutomatic()
             self.setListsOccupancyManual()
         elif(self.tabWidget.currentIndex() == 1):
-            self.sendAuthority()
             self.setListsOccupancyAutomatic()
             self.setListsOccupancyManual()
+        self.collisionLogicGreen(occupancy) #run collision logic each new list we get
+        self.sendStop(occupancy) #Runs the light stop logic each time new occupancy given
         self.oldOccupancy = occupancy
-    def createNewTrainData(self, traveling:[], Auth:[], speed:[]): #Called once by Track Model
+    def createNewTrainData(self, traveling:[], Auth:[], speed:[]): #Created by CTC
         self.trackModelSendRouteHW.emit(traveling)
         self.trackModelAuthorityHW.emit(Auth)
         self.trackModelSuggestedSpeedHW.emit(speed)
-   
+
     #Sending out functions
     def sendData(self): #Data of track to be sent to CTC and Track Model
         data = [[],[],[]]
@@ -203,11 +203,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                 failures.append(self.greenLine.Waysides[i].getTrack(j).getFailure())
         self.CTCTrackFailuresHW.emit(failures)
 
-    #Authority functions
-    def sendAuthority(self):
-        self.trackModelAuthorityHW.emit()
-
-    #Functions for setting data after PLC Logic
+    #Functions for setting data/PLC Logic
     def setNewDataGreenLine(self, states):
         self.greenLine.Waysides[1].getTrack(29).setSwitch(states[0][0])
         self.greenLine.Waysides[2].getTrack(3).setSwitch(states[0][1])
@@ -229,13 +225,14 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         #self.greenLine.Waysides[1].getTrack(25).setLight(states[1][10])
 
         #Do switch 6 logic here
+
         
         #Crossroad logic
         if(self.greenLine.Waysides[0].getTrack(16).getOccupancy() or self.greenLine.Waysides[0].getTrack(17).getOccupancy() or self.greenLine.Waysides[0].getTrack(18).getOccupancy() or self.greenLine.Waysides[0].getTrack(19).getOccupancy() or self.greenLine.Waysides[0].getTrack(20).getOccupancy()):
             self.greenLine.Waysides[0].getTrack(18).setCrossroad(True)
         else:
             self.greenLine.Waysides[0].getTrack(18).setCrossroad(False)
-    def collisionLogicGreen(self, blocks):
+    def collisionLogicGreen(self, blocks): #Collusion logic on green line
         #G30 -> M75
         for i in range(29, 75):
             if(blocks[i] == True):
@@ -247,8 +244,67 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             if(blocks[i] == True):
                 if(blocks[i+2] == True):
                     pass
-    def redLinePLCLogic(self, occu):
+    def redLinePLCLogic(self, occu): #Red line logic
         return
+    def sendStop(self, occu):
+        blocksStop = []
+        #Green Line
+        if(self.greenLine.Waysides[1].getTrack(32).getLight()):
+            blocksStop.append("Z151")
+        if(self.greenLine.Waysides[1].getTrack(28).getLight()):
+            if(occu[59]):
+                blocksStop.append("J60")
+            elif(occu[60]):
+                blocksStop.append("J61")
+        if(self.greenLine.Waysides[2].getTrack(2).getLight()):
+            if(occu[74]):
+                blocksStop.append("M75")
+            elif(occu[75]):
+                blocksStop.append("M76")
+        if(self.greenLine.Waysides[2].getTrack(3).getLight()):
+            if(occu[77]):
+                blocksStop.append("N78")
+            elif(occu[78]):
+                blocksStop.append("N79")
+        if(self.greenLine.Waysides[2].getTrack(11).getLight()):
+            if(occu[82]):
+                blocksStop.append("N83")
+            elif(occu[83]):
+                blocksStop.append("N84")
+        if(self.greenLine.Waysides[2].getTrack(26).getLight()):
+            if(occu[98]):
+                blocksStop.append("Q99")
+            elif(occu[99]):
+                blocksStop.append("Q100")
+        if(self.greenLine.Waysides[0].getTrack(32).getLight()):
+            if(occu[148]):
+                blocksStop.append("Y149")
+            elif(occu[149]):
+                blocksStop.append("Z150")
+        if(self.greenLine.Waysides[0].getTrack(28).getLight()):
+            if(occu[26]):
+                blocksStop.append("F27")
+            elif(occu[27]):
+                blocksStop.append("F28")
+        if(self.greenLine.Waysides[0].getTrack(12).getLight()):
+            if(occu[13]):
+                blocksStop.append("D14")
+            elif(occu[14]):
+                blocksStop.append("D15")
+        if(self.greenLine.Waysides[0].getTrack(0).getLight()):
+            if(occu[0]):
+                blocksStop.append("A1")
+            elif(occu[1]):
+                blocksStop.append("A2")
+        if(self.greenLine.Waysides[1].getTrack(25).getLight()):
+            if(occu[55]):
+                blocksStop.append("I56")
+            elif(occu[56]):
+                blocksStop.append("I57")
+        #Send the data out to the Track model here
+        self.trackModelStoppedTrains.emit()
+        
+
 
 
 
