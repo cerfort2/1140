@@ -409,13 +409,15 @@ class CTC(Ui_Form, QWidget):
         self.stop_box_list.removeItem(index)
         
     def dispatch_train(self, destination = None, stops = [], arrival_time = None, departure_time = None, dispatched_line = None):
+        station_list = []
         if stops != []:
             self.stops = stops
         if not destination:
             destination = self.manual_dispatch_destination.currentText()
-        station_list = [destination]
         for stop in self.stops:
             station_list.append(stop)
+        station_list.append(destination)
+        
         if not arrival_time:
             arrival_time = QDateTime.fromString(self.arrival_time_dis.text(), "HH:mm:ss").time()
         if not departure_time:
@@ -448,9 +450,10 @@ class CTC(Ui_Form, QWidget):
     #get departure time, arrival time, destination station, stops
     def schedule_train(self):
         destination = self.manual_dispatch_destination.currentText()
-        station_list = [destination]
+        station_list = []
         for stop in self.stops:
             station_list.append(stop)
+        station_list.append(destination)
         arrival_time = QDateTime.fromString(self.arrival_time.text(), "HH:mm:ss").time()
         departure_time = QDateTime.fromString(self.departure_time.text(), "HH:mm:ss").time()
 
@@ -501,9 +504,10 @@ class CTC(Ui_Form, QWidget):
         trainID = train.trainID
         destination = train.destination
         stops = train.stops
-        station_list = [destination]
+        station_list = []
         for stop in self.stops:
             station_list.append(stop)
+        station_list.append(destination)
         route = self.green_line.get_route(station_list)
         num_stops = len(self.stops)
 
