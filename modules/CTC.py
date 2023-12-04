@@ -15,8 +15,8 @@ from typing import List, Optional
 from PyQt6.QtCore import pyqtSignal, QEvent, Qt, QDateTime, QTimer, QObject
 from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QTableWidgetItem, QLabel, QLineEdit, QHeaderView
 
-from Line import Line
-from CTC_new import Ui_Form
+from modules.Line import Line
+from modules.CTC_new import Ui_Form
 
 
 class Train:
