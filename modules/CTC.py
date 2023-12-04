@@ -15,8 +15,8 @@ from typing import List, Optional
 from PyQt6.QtCore import pyqtSignal, QEvent, Qt, QDateTime, QTimer, QObject
 from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QTableWidgetItem, QLabel, QLineEdit, QHeaderView
 
-from modules.Line import Line
-from modules.CTC_new import Ui_Form
+from Line import Line
+from CTC_new import Ui_Form
 
 
 class Train:
@@ -122,7 +122,6 @@ class CTC(Ui_Form, QWidget):
         ticket_sales = tickets
         self.record_ticket_sales(ticket_sales)
         
-
 
     def start_threads(self):
         Thread(target=self.update_occupancy_ui).start()
@@ -397,9 +396,6 @@ class CTC(Ui_Form, QWidget):
             # Update the schedule with the new data
             self.update_schedule(train_ids, destinations, dep_times, arr_times, stops)
 
-            # Provide some feedback or update the UI to reflect the changes
-            # self.label.setText(f'Schedule imported successfully from {filePath}')
-            # ... other UI updates ...
         return
 
 
@@ -412,50 +408,52 @@ class CTC(Ui_Form, QWidget):
         index = self.stop_box_list.findText(stop)
         self.stop_box_list.removeItem(index)
         
-    def dispatch_train(self):
-        destination = self.manual_dispatch_destination.currentText()
-        station_list = [destination]
+    def dispatch_train(self, destination = None, stops = [], arrival_time = None, departure_time = None, dispatched_line = None):
+        station_list = []
+        if stops != []:
+            self.stops = stops
+        if not destination:
+            destination = self.manual_dispatch_destination.currentText()
         for stop in self.stops:
             station_list.append(stop)
-        arrival_time = QDateTime.fromString(self.arrival_time_dis.text(), "HH:mm:ss").time()
-        departure_time = self.cur_sys_time
+        station_list.append(destination)
+        
+        if not arrival_time:
+            arrival_time = QDateTime.fromString(self.arrival_time_dis.text(), "HH:mm:ss").time()
+        if not departure_time:
+            departure_time = self.cur_sys_time
 
         #get line from ui
-        dispatched_line = self.manual_dispatch_line.currentText()
+        if not dispatched_line:
+            dispatched_line = self.manual_dispatch_line.currentText()
         num_stops = len(self.stops)
         if dispatched_line == "Green Line":
             route = self.green_line.get_route(station_list)
             speeds = self.green_line.get_velocities(route[0], departure_time, arrival_time, num_stops)
-            if len(station_list) == 1:
-                next_stop = station_list[0]
-            else:
-                next_stop = station_list[1]
-            authority = self.green_line.get_authority(next_stop)
+            authority = self.green_line.get_authority(station_list)
 
         trainID = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
         train = Train(trainID, destination, departure_time, arrival_time, self.stops)
         self.trains_dispatched.append(train)
-        self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
+        #self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
 
-        self.suggested_speed_tb.setText(str(speeds))
-        self.authority_tb.setText(str(authority))
-        self.route_tb.setText(str(route[0]))
-        
-        print(speeds)
-        print(authority)
-        print(route)
+        #self.suggested_speed_tb.setText(str(speeds))
+        #self.authority_tb.setText(str(authority))
+        #self.route_tb.setText(str(route[0]))
 
         #setting route, authority, suggested speed
         self.train_dispatch(route, authority, speeds)
         self.stops = []
-        self.arrival_time_dis.clear()
+        #self.arrival_time_dis.clear()
+        return route, authority, speeds
 
     #get departure time, arrival time, destination station, stops
     def schedule_train(self):
         destination = self.manual_dispatch_destination.currentText()
-        station_list = [destination]
+        station_list = []
         for stop in self.stops:
             station_list.append(stop)
+        station_list.append(destination)
         arrival_time = QDateTime.fromString(self.arrival_time.text(), "HH:mm:ss").time()
         departure_time = QDateTime.fromString(self.departure_time.text(), "HH:mm:ss").time()
 
@@ -506,9 +504,10 @@ class CTC(Ui_Form, QWidget):
         trainID = train.trainID
         destination = train.destination
         stops = train.stops
-        station_list = [destination]
+        station_list = []
         for stop in self.stops:
             station_list.append(stop)
+        station_list.append(destination)
         route = self.green_line.get_route(station_list)
         num_stops = len(self.stops)
 
@@ -518,7 +517,7 @@ class CTC(Ui_Form, QWidget):
         else:
             next_stop = station_list[1]
 
-        authority = self.green_line.get_authority(next_stop)
+        authority = self.green_line.get_authority(station_list)
         self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
         self.suggested_speed_tb.setText(str(speeds))
         self.authority_tb.setText(str(authority))

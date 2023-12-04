@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'ui_files/Home.ui'
+# Form implementation generated from reading ui file './ui_files/Home.ui'
 #
 # Created by: PyQt6 UI code generator 6.5.2
 #
@@ -27,21 +27,15 @@ class Ui_Form(object):
         self.track_model_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
         self.track_model_btn.setObjectName("track_model_btn")
         self.verticalLayout.addWidget(self.track_model_btn)
-        self.track_controller_sw_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
-        self.track_controller_sw_btn.setObjectName("track_controller_sw_btn")
-        self.verticalLayout.addWidget(self.track_controller_sw_btn)
-        self.track_controller_hw_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
-        self.track_controller_hw_btn.setObjectName("track_controller_hw_btn")
-        self.verticalLayout.addWidget(self.track_controller_hw_btn)
+        self.track_controller_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
+        self.track_controller_btn.setObjectName("track_controller_btn")
+        self.verticalLayout.addWidget(self.track_controller_btn)
         self.train_model_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
         self.train_model_btn.setObjectName("train_model_btn")
         self.verticalLayout.addWidget(self.train_model_btn)
-        self.train_controller_sw_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
-        self.train_controller_sw_btn.setObjectName("train_controller_sw_btn")
-        self.verticalLayout.addWidget(self.train_controller_sw_btn)
-        self.train_controller_hw_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
-        self.train_controller_hw_btn.setObjectName("train_controller_hw_btn")
-        self.verticalLayout.addWidget(self.train_controller_hw_btn)
+        self.train_controller_btn = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
+        self.train_controller_btn.setObjectName("train_controller_btn")
+        self.verticalLayout.addWidget(self.train_controller_btn)
         self.label = QtWidgets.QLabel(parent=Form)
         self.label.setGeometry(QtCore.QRect(170, 70, 81, 16))
         self.label.setObjectName("label")
@@ -54,11 +48,9 @@ class Ui_Form(object):
         Form.setWindowTitle(_translate("Form", "Form"))
         self.ctc_btn.setText(_translate("Form", "CTC"))
         self.track_model_btn.setText(_translate("Form", "Track Model"))
-        self.track_controller_sw_btn.setText(_translate("Form", "Track Controller (Software)"))
-        self.track_controller_hw_btn.setText(_translate("Form", "Track Controller (Hardware)"))
+        self.track_controller_btn.setText(_translate("Form", "Track Controller (Software)"))
         self.train_model_btn.setText(_translate("Form", "Train Model"))
-        self.train_controller_sw_btn.setText(_translate("Form", "Train Controller (Software)"))
-        self.train_controller_hw_btn.setText(_translate("Form", "Train Controller (Hardware)"))
+        self.train_controller_btn.setText(_translate("Form", "Train Controller (Software)"))
         self.label.setText(_translate("Form", "Select Module"))
 
 
