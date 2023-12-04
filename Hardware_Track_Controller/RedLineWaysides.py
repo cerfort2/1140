@@ -1,4 +1,4 @@
-from WaysideClass import Wayside
+from Hardware_Track_Controller.WaysideClass import Wayside
 
 class RedLine():
 

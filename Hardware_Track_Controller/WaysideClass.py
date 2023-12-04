@@ -1,4 +1,4 @@
-from TrackClass import Track
+from Hardware_Track_Controller.TrackClass import Track
 
 class Wayside():
     def __init__(self):
