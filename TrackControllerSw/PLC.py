@@ -43,6 +43,7 @@ class PLC():
         if(self.blocks[27].getOccupancy()):
             self.blocks[28].setSwitch(False)
         elif(self.blocks[149].getOccupancy()):
+        elif(self.blocks[149].getOccupancy()):
             self.blocks[28].setSwitch(True)
         #Signal G29
         if(self.blocks[28].getOccupancy() and (self.blocks[29].getOccupancy() or self.blocks[30].getOccupancy())):
@@ -55,13 +56,19 @@ class PLC():
         if(self.blocks[149].getOccupancy() and loop1):
             stoppage.append(self.blocks[149].getName)
         if(self.blocks[149].getOccupancy() and not loop1):
+        if(self.blocks[149].getOccupancy() and loop1):
+            stoppage.append(self.blocks[149].getName)
+        if(self.blocks[149].getOccupancy() and not loop1):
             self.blocks[149].setSignal(True)
         else:
             self.blocks[149].setSignal(False)
         
+        
         #G30 -> M75
         for i in range(29, 75):
             if(self.blocks[i].getOccupancy()):
+                if(self.blocks[i+1].getOccupancy() or self.blocks[i+2].getOccupancy()):
+                    stoppage.append(self.blocks[i].getName())
                 if(self.blocks[i+1].getOccupancy() or self.blocks[i+2].getOccupancy()):
                     stoppage.append(self.blocks[i].getName())
 
@@ -81,6 +88,10 @@ class PLC():
         #Switch J62 - J61 , J62 - Yard
         if(self.blocks[150].getOccupancy()):
             self.blocks[61].setSwitch(True)
+        elif(self.blocks[60].getOccupancy()):
+            self.blocks[61].setSwitch(False)
+        
+
         elif(self.blocks[60].getOccupancy()):
             self.blocks[61].setSwitch(False)
         
