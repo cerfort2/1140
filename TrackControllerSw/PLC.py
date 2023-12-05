@@ -151,5 +151,8 @@ class PLC():
 
         return stoppage
 
+        def redLogic(self):
+            pass
+
 
 
