@@ -156,16 +156,44 @@ class Line():
 
         return suggested_speeds
     #returns the authority from the yard given an input station  
-    def get_authority(self, first_stop):
-        authority_sum = 0
-        for block in self.blocks:
-            station_check = str(block.get_section())+str(block.get_number())+": " +str(block.get_station())
-
-            if station_check == first_stop:
-                break
-            authority_sum += 1
-    
-        return authority_sum
+    # def get_authority(self, stop_list):
+    #     authorities = []
+    #     cur_block_index = 0
+    #     total_blocks = len(self.blocks)
+    #     for stop in stop_list:
+    #         authority_sum = 0
+    #         while cur_block_index < total_blocks:
+    #             block = self.blocks[cur_block_index]
+    #             station_check = str(block.get_section())+str(block.get_number())+": " +str(block.get_station())
+                
+    #             if station_check == stop:
+    #                 authorities.append(authority_sum)
+    #                 break
+    #             authority_sum += 1
+    #             cur_block_index +=1
+    #             #block.get_length()
+    #     print(authorities)
+    #     return authorities
+    def get_authority(self, stop_list):
+        authorities = []
+        cur_block_index = 0
+        for stop in stop_list:
+            print(stop)
+            authority_sum = 0
+            total_blocks = len(self.blocks)
+            
+            while cur_block_index < total_blocks:
+                block = self.blocks[cur_block_index]
+                station_check = str(block.get_section())+str(block.get_number())+": " +str(block.get_station())
+                
+                if station_check == stop:
+                    authorities.append(authority_sum)
+                    print(authority_sum)
+                    break
+                
+                authority_sum += block.get_length()  # Assuming each block contributes '1' to the authority
+                cur_block_index += 1
+        return authorities
 
     #returns the route from yard given a list of input stations
     def get_routes(self, station_list_list):
