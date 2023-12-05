@@ -1,8 +1,8 @@
-import Wayside
-from Wayside import *
-import Block
-from Block import *
-from SwTrackControlSetup import *
+import Software_Track_Controller.Wayside
+from Software_Track_Controller.Wayside import *
+import Software_Track_Controller.Block
+from Software_Track_Controller.Block import *
+from Software_Track_Controller.SwTrackControlSetup import *
 class Track():
 
     def __init__(self):

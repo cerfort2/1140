@@ -1,5 +1,5 @@
-import Block
-from Block import *
+import Software_Track_Controller.Block
+from Software_Track_Controller.Block import *
 class PLC():
     auth = 0
     def __init__(self, blo:Block = []):

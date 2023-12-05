@@ -5,16 +5,16 @@ from PyQt6.QtCore import QTimer, pyqtSignal, QObject
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QTableWidgetItem
-from TrackController import Ui_Form
+from Software_Track_Controller.TrackController import Ui_Form
 
-import Track
-from Track import *
-import Wayside
-from Wayside import *
-import Block
-from Block import *
-import PLC
-from PLC import *
+import Software_Track_Controller.Track
+from Software_Track_Controller.Track import *
+import Software_Track_Controller.Wayside
+from Software_Track_Controller.Wayside import *
+import Software_Track_Controller.Block
+from Software_Track_Controller.Block import *
+import Software_Track_Controller.PLC
+from Software_Track_Controller.PLC import *
 
 
 class SoftwareTrackControllerGUI(Ui_Form, QObject):
