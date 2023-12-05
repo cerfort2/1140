@@ -136,7 +136,7 @@ class God(Home, QMainWindow):
     def onTimeoutFunctions(self):
         self.trackModel.trackModel.initTrack()
         #self.trackController.sendSpeed()
-        #self.trackModel.trackModel.emitOccupancy()
+        self.trackModel.trackModel.emitOccupancy()
         # self.trackModel.trackModel.emitStationBeacon()
         # self.trackModel.trackModel.emitSwitchBeacon()
         # self.trackModel.trackModel.emitApproachingBeacon()

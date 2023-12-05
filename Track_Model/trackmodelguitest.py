@@ -151,7 +151,7 @@ class Line():
             "add", lambda sel: sel.annotation.set_text(annotations[sel.index]))
         
         plt.draw()
-        plt.show()
+        # plt.show()
 
     def getBlockNames(self):
         if len(self.blocks) == 0:
@@ -777,6 +777,7 @@ class functionalUI(Ui_Form):
 
         self.trackModel.initTrack()
         self.updateMap()
+        plt.show()
       
     def toggleBrokenRail(self):
         currentBlockName = self.comboBox_4.currentText()

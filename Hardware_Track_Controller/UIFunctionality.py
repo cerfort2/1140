@@ -5,11 +5,11 @@ from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6 import QtCore, QtGui, QtWidgets
 from Hardware_Track_Controller.HWTrackUI import Ui_Form
 from Hardware_Track_Controller.TrackClass import Track
-from Hardware_Track_Controller.UI_Breadboard_Class import Operations
+# from Hardware_Track_Controller.UI_Breadboard_Class import Operations
 from Hardware_Track_Controller.GreenLineWaysides import GreenLine
 from Hardware_Track_Controller.RedLineWaysides import RedLine
 
-operate = Operations() #Class to perform operations on the breadboard
+# operate = Operations() #Class to perform operations on the breadboard
 
 class HWTrackControllerGUI(Ui_Form, QObject):
     
@@ -152,7 +152,9 @@ class HWTrackControllerGUI(Ui_Form, QObject):
 
             #Runs the functions accordingly after recieving new occupancies
             if(self.tabWidget.currentIndex() == 0):
-                if(check == True):
+                print("Track Controller Occupancy:")
+                print(occupancy)
+                if(check):
                     newStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
                     self.setNewDataGreenLine(newStates)
                 self.setListsOccupancyAutomatic()
@@ -348,7 +350,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             elif(occu[56]):
                 blocksStop.append("I57")
         #Send the data out to the Track model here
-        self.trackModelStoppedTrains.emit()
+        # self.trackModelStoppedTrains.emit()
         
 
 
@@ -447,6 +449,8 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         waysideNumber = self.comboBox.currentIndex()-1 #Gets the current wayside selected
         self.listWidget_7.clear()
         value = self.listWidget_3.currentItem()
+        if self.listWidget_3.currentItem() is None:
+            return
         if(value.text() == "Green Line"):
             for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
                 if self.greenLine.Waysides[waysideNumber].getTrack(j).getOccupancy() == True:
@@ -459,6 +463,8 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         waysideNumber = self.comboBox.currentIndex()-1 #Gets the current wayside selected
         self.listWidget_8.clear()
         value = self.listWidget_3.currentItem()
+        if self.listWidget_3.currentItem() is None:
+            return
         if(value.text() == "Green Line"):
             for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
                 if self.greenLine.Waysides[waysideNumber].getTrack(j).getFailure() == True:
@@ -637,6 +643,8 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         waysideNumber = self.comboBox_12.currentIndex()-1 #Gets the current wayside selected
         self.listWidget_5.clear()
         value = self.listWidget.currentItem()
+        if self.listWidget.currentItem() is None:
+            return
         if(value.text() == "Green Line"):
             for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
                 if self.greenLine.Waysides[waysideNumber].getTrack(j).getOccupancy() == True:
@@ -649,6 +657,8 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         waysideNumber = self.comboBox_12.currentIndex()-1 #Gets the current wayside selected
         self.listWidget_6.clear()
         value = self.listWidget.currentItem()
+        if self.listWidget.currentItem() is None:
+            return
         if(value.text() == "Green Line"):
             for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
                 if self.greenLine.Waysides[waysideNumber].getTrack(j).getFailure() == True:
