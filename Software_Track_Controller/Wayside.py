@@ -1,5 +1,5 @@
-import Software_Track_Controller.Block
-from Software_Track_Controller.Block import *
+import Block
+from Block import *
 class Wayside():
     #Class Variables
     
@@ -23,3 +23,6 @@ class Wayside():
     
     def getBlock(self, index:int):
         return self.blocks[index]
+
+    def getBlocks(self):
+        return self.blocks

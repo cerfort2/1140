@@ -1,5 +1,5 @@
-import Software_Track_Controller.Block
-from Software_Track_Controller.Block import *
+import Block
+from Block import *
 class Authority():
     route = []
 
