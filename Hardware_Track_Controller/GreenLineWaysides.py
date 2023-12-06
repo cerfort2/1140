@@ -24,7 +24,7 @@ class GreenLine():
             left.append(tracks[4][i])
         for i in range(len(tracks[5])):
             right.append(tracks[5][i])
-            
+
         for i in range(len(tracks[0])):
             if(i <= 31): #Creates A1-G32
                 self.Waysides[0].createTrack(switch[i], crossroad[i], light[i], trackName[i], left[i], right[i])
@@ -36,6 +36,8 @@ class GreenLine():
                 self.Waysides[3].createTrack(switch[i], crossroad[i], light[i], trackName[i], left[i], right[i])
         self.Waysides[0].createTrack(switch[149], crossroad[149], light[149], trackName[149], left[149], right[149])
         self.Waysides[1].createTrack(switch[150], crossroad[150], light[150], trackName[150], left[150], right[150])
+
+
     
     
     # def arrayOfTracks(self): #Creates a array of tracks for authority logic

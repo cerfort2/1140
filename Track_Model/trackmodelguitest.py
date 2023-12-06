@@ -99,7 +99,7 @@ class Line():
         self.loadBlockConnections()
         self.loadBeacons()
         self.loadPolarity()
-        self.testBeacons()
+        # self.testBeacons()
           
     def designMap(self, blockSelected, figureNumber):
         
@@ -151,7 +151,7 @@ class Line():
             "add", lambda sel: sel.annotation.set_text(annotations[sel.index]))
         
         plt.draw()
-        plt.show()
+        # plt.show()
 
     def getBlockNames(self):
         if len(self.blocks) == 0:
@@ -307,6 +307,9 @@ class Line():
                 #Signal Updating
                 if(self.blocks[i].signal[1] != controlSignals[2][i]):
                     self.blocks[i].toggleSignal()
+                    if(self.blocks[i].name == "J62"):
+                        print("J61 Light Status")
+                        print(self.blocks[i].signal[1])
 
     def initializeTrackControllerData(self):
         hasSwitch = [blk.switch[0] for blk in self.blocks]
@@ -610,7 +613,9 @@ class TrackModel(QObject):
     #----------------
     trainModelRouteNames = pyqtSignal(list)
     def route(self, r):
-        self.trainModelRouteNames.emit(r)
+        print("Track Model Route")
+        print(r[0])
+        self.trainModelRouteNames.emit(r[0])
 
 class functionalUI(Ui_Form):
     def __init__(self) -> None:
@@ -777,6 +782,7 @@ class functionalUI(Ui_Form):
 
         self.trackModel.initTrack()
         self.updateMap()
+        plt.show()
       
     def toggleBrokenRail(self):
         currentBlockName = self.comboBox_4.currentText()

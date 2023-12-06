@@ -27,6 +27,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     redLine = RedLine()
     pureOccupancy = []
     oldOccupancy = []
+    firstRun = True
 
     #Testing for Switch 1
     #greenLine.Waysides[1].getTrack(41).setOccupancy(True) #Z151
@@ -127,39 +128,64 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     #Getting data functions
     def getOccupancy(self, occupancy:[]): #Current Occupancy from Track Model
         self.pureOccupancy = occupancy
-        #All for Wayside 1
-        for i in range(32): #A1-G32
-            self.greenLine.Waysides[0].getTrack(i).setOccupancy(occupancy[i])
-        self.greenLine.Waysides[0].getTrack(32).setOccupancy(occupancy[len(occupancy)-2]) #Z150
-        #All for Wayside 2
-        for i in range(41): #H33-L73
-            self.greenLine.Waysides[1].getTrack(i).setOccupancy(occupancy[i+32])
-        self.greenLine.Waysides[1].getTrack(41).setOccupancy(occupancy[len(occupancy)-1]) #Z151/YARD
-        #All for Wayside 3
-        for i in range(28): #M74-R101
-            self.greenLine.Waysides[2].getTrack(i).setOccupancy(occupancy[i+73])
-        #All for Wayside 4
-        for i in range(48): #S102-Y149
-            self.greenLine.Waysides[3].getTrack(i).setOccupancy(occupancy[i+101])
+        if(len(occupancy) == 151):
+            #All for Wayside 1
+            for i in range(32): #A1-G32
+                self.greenLine.Waysides[0].getTrack(i).setOccupancy(occupancy[i])
+            self.greenLine.Waysides[0].getTrack(32).setOccupancy(occupancy[len(occupancy)-2]) #Z150
+            #All for Wayside 2
+            for i in range(41): #H33-L73
+                self.greenLine.Waysides[1].getTrack(i).setOccupancy(occupancy[i+32])
+            self.greenLine.Waysides[1].getTrack(41).setOccupancy(occupancy[len(occupancy)-1]) #Z151/YARD
+            #All for Wayside 3
+            for i in range(28): #M74-R101
+                self.greenLine.Waysides[2].getTrack(i).setOccupancy(occupancy[i+73])
+            #All for Wayside 4
+            for i in range(48): #S102-Y149
+                self.greenLine.Waysides[3].getTrack(i).setOccupancy(occupancy[i+101])
+            
+            check = False #Checking if the new input has changed occupancy or not
+            if(self.firstRun == False):
+                for i in range(len(occupancy)):
+                    if(self.pureOccupancy[i] != self.oldOccupancy[i]):
+                        check = True
 
-        check = False #Checking if the new input has changed occupancy or not
-        for i in range(len(occupancy)):
-            if(self.pureOccupancy[i] != self.oldOccupancy[i]):
-                check = True
+            #Runs the functions accordingly after recieving new occupancies
+            if(self.tabWidget.currentIndex() == 0):
+                if(check):
+                    newStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
+                    self.setNewDataGreenLine(newStates)
+                self.setListsOccupancyAutomatic()
+                self.setListsOccupancyManual()
+            elif(self.tabWidget.currentIndex() == 1):
+                self.setListsOccupancyAutomatic()
+                self.setListsOccupancyManual()
 
-        #Runs the functions accordingly after recieving new occupancies
-        if(self.tabWidget.currentIndex() == 0):
-            if(check == True):
-                newStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
-                self.setNewDataGreenLine(newStates)
-            self.setListsOccupancyAutomatic()
-            self.setListsOccupancyManual()
-        elif(self.tabWidget.currentIndex() == 1):
-            self.setListsOccupancyAutomatic()
-            self.setListsOccupancyManual()
-        self.collisionLogicGreen(occupancy) #run collision logic each new list we get
-        self.sendStop(occupancy) #Runs the light stop logic each time new occupancy given
-        self.oldOccupancy = occupancy
+            self.collisionLogicGreen(occupancy) #run collision logic each new list we get
+            self.sendStop(occupancy) #Runs the light stop logic each time new occupancy given
+            self.oldOccupancy = occupancy
+            self.firstRun = False
+        else:
+            for i in range(len(occupancy)):
+                if(i <= 34): #Create all tracks for Wayside 1 and YARD
+                    self.redLine.Waysides[0].getTrack(i).setOccupancy(occupancy[i])
+                if(34 < i <= 70): #Creates all tracks for Wayside 2
+                    self.redLine.Waysides[1].getTrack(i).setOccupancy(occupancy[i])
+                if(70 < i <= 76):
+                    self.redLine.Waysides[0].getTrack(i-36).setOccupancy(occupancy[i])
+
+            #Runs the functions accordingly after recieving new occupancies
+            if(self.tabWidget.currentIndex() == 0):
+                self.redLinePLCLogic(occupancy)
+                self.setListsOccupancyAutomatic()
+                self.setListsOccupancyManual()
+            elif(self.tabWidget.currentIndex() == 1):
+                self.setListsOccupancyAutomatic()
+                self.setListsOccupancyManual()
+            #self.collisionLogicGreen(occupancy) #run collision logic each new list we get
+            #self.sendStop(occupancy) #Runs the light stop logic each time new occupancy given
+            self.oldOccupancy = occupancy
+            self.firstRun = False
     def createNewTrainData(self, traveling:[], Auth:[], speed:[]): #Created by CTC
         self.trackModelSendRouteHW.emit(traveling)
         self.trackModelAuthorityHW.emit(Auth)
@@ -168,9 +194,10 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     #Sending out functions
     def sendData(self): #Data of track to be sent to CTC and Track Model
         data = [[],[],[]]
-        blocks:Track = []
+        #if(len(self.pureOccupancy) == 151):
+        blocks = []
         for i in range (len(self.greenLine.Waysides)):
-            for j in range (len(self.greenLine.Waysides[i].tracks)):
+            for j in range (self.greenLine.Waysides[i].amountOfTracks()):
                 blocks.append(self.greenLine.Waysides[i].tracks[j])
 
         for i in range (len(blocks)):
@@ -193,6 +220,25 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                 data[2].append(blocks[i].getLight())
             else:
                 data[2].append(False) 
+        # else:
+        #     blocks:Track = []
+        #     for i in range (len(self.redLine.Waysides)):
+        #         for j in range (len(self.redLine.Waysides[i].tracks)):
+        #             blocks.append(self.redLine.Waysides[i].tracks[j])
+            
+        #     for i in range (len(blocks)):
+        #         if(blocks[i].getIsSwitch()):
+        #             data[0].append(blocks[i].getSwitch())
+        #         else:
+        #             data[0].append(False)
+        #         if(blocks[i].getIsCrossroad()):
+        #             data[1].append(blocks[i].getCrossroad())
+        #         else:
+        #             data[1].append(False)
+        #         if(blocks[i].getIsLight()):
+        #             data[2].append(blocks[i].getLight())
+        #         else:
+        #             data[2].append(False) 
         self.trackModelTrackDataHW.emit(data)
     def sendOccupancy(self): #Occupancy sent to CTC
         self.CTCOccupancyHW.emit(self.pureOccupancy)
@@ -302,7 +348,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             elif(occu[56]):
                 blocksStop.append("I57")
         #Send the data out to the Track model here
-        self.trackModelStoppedTrains.emit()
+        # self.trackModelStoppedTrains.emit()
         
 
 
@@ -401,6 +447,8 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         waysideNumber = self.comboBox.currentIndex()-1 #Gets the current wayside selected
         self.listWidget_7.clear()
         value = self.listWidget_3.currentItem()
+        if self.listWidget_3.currentItem() is None:
+            return
         if(value.text() == "Green Line"):
             for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
                 if self.greenLine.Waysides[waysideNumber].getTrack(j).getOccupancy() == True:
@@ -413,6 +461,8 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         waysideNumber = self.comboBox.currentIndex()-1 #Gets the current wayside selected
         self.listWidget_8.clear()
         value = self.listWidget_3.currentItem()
+        if self.listWidget_3.currentItem() is None:
+            return
         if(value.text() == "Green Line"):
             for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
                 if self.greenLine.Waysides[waysideNumber].getTrack(j).getFailure() == True:
@@ -591,6 +641,8 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         waysideNumber = self.comboBox_12.currentIndex()-1 #Gets the current wayside selected
         self.listWidget_5.clear()
         value = self.listWidget.currentItem()
+        if self.listWidget.currentItem() is None:
+            return
         if(value.text() == "Green Line"):
             for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
                 if self.greenLine.Waysides[waysideNumber].getTrack(j).getOccupancy() == True:
@@ -603,6 +655,8 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         waysideNumber = self.comboBox_12.currentIndex()-1 #Gets the current wayside selected
         self.listWidget_6.clear()
         value = self.listWidget.currentItem()
+        if self.listWidget.currentItem() is None:
+            return
         if(value.text() == "Green Line"):
             for j in range(self.greenLine.Waysides[waysideNumber].amountOfTracks()):
                 if self.greenLine.Waysides[waysideNumber].getTrack(j).getFailure() == True:

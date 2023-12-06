@@ -56,7 +56,7 @@ class God(Home, QMainWindow):
         self.setupUi(self)
         
         self.MainTimer = QTimer()
-        self.timeStep = 300
+        self.timeStep = 200
 
         self.ctc = CTC()
         self.trackControllerHW = HWTrackControllerGUI()
@@ -70,7 +70,7 @@ class God(Home, QMainWindow):
         #GOD UI main page
         self.ctc_btn.clicked.connect(self.openCTCGUI)
         self.track_model_btn.clicked.connect(self.openTrackModelGUI)
-        self.track_controller_hw_btn.clicked.connect(self.openTrackControllerHWGUI)
+        self.track_controller_btn.clicked.connect(self.openTrackControllerHWGUI)
         #self.track_controller_sw_btn.clicked.connect(self.openTrackControllerSW)
         
         
@@ -100,6 +100,7 @@ class God(Home, QMainWindow):
         self.trackControllerHW.trackModelAuthorityHW.connect(self.trackModel.trackModel.authority)
         self.trackControllerHW.trackModelSendRouteHW.connect(self.trackModel.trackModel.route)
         self.trackControllerHW.trackModelTrackDataHW.connect(self.trackModel.trackModel.controlModel)
+        
 
         
         #Software
@@ -109,6 +110,8 @@ class God(Home, QMainWindow):
         # self.trackControllerSW.trackModelRoute.connect(self.trackModel.trackModel.route)
         # self.trackControllerSW.trackModelSpeed.connect(self.trackModel.trackModel.suggestedSpeed)
         # self.trackControllerSW.trackModelAuthority.connect(self.trackModel.trackModel.authority)
+        
+        ##
 
         #Once calls for both
         self.trackModel.trackModel.initTrack()
@@ -130,13 +133,15 @@ class God(Home, QMainWindow):
         self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.access_train(1).set_station_data)
         self.trackModel.trackModel.trainModelPolarity.connect(self.trainInterface.set_polarities)
         self.trainInterface.access_train(1).occupancy = "Z151"
-        self.trackModel.trackModel.route(["Z151", "J62","K63", "K64", "K65", "K66", "K67", "K68", "L69", "L70", "L71", "L72"])
+        self.trackModel.trackModel.trainModelRouteNames.connect(self.trainInterface.set_route)
+        # self.trackModel.trackModel.route(["Z151", "J62","K63", "K64", "K65", "K66", "K67", "K68", "L69", "L70", "L71", "L72", "L73"])
 
     #on timeout emissions
     def onTimeoutFunctions(self):
-        self.trackModel.trackModel.initTrack()
+        # self.trackModel.trackModel.initTrack()
         #self.trackController.sendSpeed()
-        #self.trackModel.trackModel.emitOccupancy()
+        self.trackModel.trackModel.emitOccupancy()
+        self.trackControllerHW.sendData()
         # self.trackModel.trackModel.emitStationBeacon()
         # self.trackModel.trackModel.emitSwitchBeacon()
         # self.trackModel.trackModel.emitApproachingBeacon()

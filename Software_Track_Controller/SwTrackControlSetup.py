@@ -15,8 +15,7 @@ import Software_Track_Controller.Block
 from Software_Track_Controller.Block import *
 import Software_Track_Controller.PLC
 from Software_Track_Controller.PLC import *
-import Software_Track_Controller.Authority
-from Software_Track_Controller.Authority import *
+
 
 class SoftwareTrackControllerGUI(Ui_Form, QObject):
 
@@ -32,58 +31,66 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
 
     def __init__(self):
         super().__init__()
-        # self.init_ui()
+        #Creates Track On initilization
         self.line:Track = Track()
 
     def sendFailures(self): #Sends failures to CTC
+        #Senses failures using PLC and
         fail:str = []
         self.ctcFailures.emit(fail)
         
 
     def setOccupancy(self, data): #Receives occupancy from Track Model
+        #Gets occupancy and sets occupancy
         self.line.setOccupancy(data)
+        #Sets new states in automatic
         self.mode_handler()
+        #Sets occupied list
         self.setOccupied()
-        #self.ctcOccupancy.emit(self.line.getOccupancy())
+        #sends occupancy to ctc
+        self.ctcOccupancy.emit(self.line.getOccupancy())
 
-    def sendTrainDetails(self, route, auth, speed): #Receives train dispatch data from CTC
-        self.trainAuth.newRoute(auth)
+    def sendTrainDetails(self, route, speed, auth): 
+        #Receives train dispatch data from CTC and sends to Track Model
         self.trackModelRoute.emit(route)
         self.trackModelSpeed.emit(speed)
         self.trackModelAuthority.emit(auth)
 
-    def getAuth(self): #sends auth to track model
+    def getAuth(self): 
+        #Sends only auth to track model
         self.trackModelAuthority.emit(self.trainAuth.getAuth(0))
 
-    def getData(self): #Sends track data to Track Model
+    def getData(self): 
+        #Sends track states to track Model
         self.trackModelData.emit(self.line.getData())
         
-    def setDisplay(self, data): #Inililizes waysides from Track Model
+    def setDisplay(self, data): 
+        #Inililizes waysides from Track Model
         self.side:Wayside = self.line.create(data)
-        self.trainAuth:Authority = Authority(self.line.getBlocks())
+        #Clears lists
+        self.block.clear()
+        self.wayside.clear()
+        #Sets the list of waysides
         for i in range(len(self.side)):
             self.wayside.addItem(self.side[i].getName())
             self.waysideTB.addItem(self.side[i].getName())
-        for i in range(len(self.side[0].blocks)):
+        #Sets the lists of block for the first wayside
+        for i in range(len(self.side[0].getBlocks())):
             self.block.addItem(self.side[0].getBlock(i).getName())
-        for i in range(len(self.side[0].blocks)):
-            self.blockTB.addItem(self.side[0].getBlock(i).name)
-        self.waysideData.setText(self.side[0].getName())
-        self.blockData.setText(self.side[0].getBlock(0).getName())
+            self.blockTB.addItem(self.side[0].getBlock(i).getName())
+        
 
 
     def connectFunctions(self):
         #Required pixmaps created after application
-        self.waysideLabel.show()
         self.left = QPixmap("left.jpg")
         self.right = QPixmap("light.jpg")
         self.open = QPixmap("crosso.jpg")
         self.closed = QPixmap("crossc.jpg")
-        #Set default text
-        self.failureData.setText("No failure")
-        self.switchFrame.hide()
-        self.crossroadFrame.hide()
-        self.setOccupied()
+        #Hide frames by default
+        # self.switchFrame.hide()
+        # self.crossroadFrame.hide()
+        # self.signalFrame.hide()
         #Switch Toggle Signal
         self.toggleDirection.clicked.connect(self.toggle_direction_handler)
         #Crossroad Toggle Signal
@@ -101,7 +108,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         #Mode
         self.modeButton.toggled.connect(self.mode_handler)
         #TB
-        #self.occupationTB.stateChanged.connect(self.TB_o_handler)
+        # self.occupationTB.stateChanged.connect(self.TB_o_handler)
         # self.waysideTB.currentIndexChanged.connect(self.TB_w_handler)
         # self.blockTB.currentIndexChanged.connect(self.TB_b_handler)
 
@@ -114,7 +121,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
     #     way = self.waysideTB.currentIndex()
     #     blo = 0
     #     self.blockTB.clear()
-    #     for i in range(len(self.side[way].blocks)):
+    #     for i in range(len(self.side[way].getBlocks())):
     #         self.blockTB.addItem(self.side[way].getBlock(i).name)
     #     self.occupationTB.setChecked(self.side[way].getBlock(blo).getOccupied())
     
@@ -169,16 +176,13 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
 
     def new_wayside(self):
-        #Get current wayside and block index is zero
+        #Get current wayside and set block index zero
         way = self.wayside.currentIndex()
         blo = 0
         #Create new block list
         self.block.clear()
-        for i in range(len(self.side[way].blocks)):
+        for i in range(len(self.side[way].getBlocks)):
             self.block.addItem(self.side[way].getBlock(i).name)
-        #Set the lables of block wayside and occupation
-        self.waysideData.setText(self.side[way].name)
-        self.blockData.setText(self.side[way].getBlock(blo).name)
         #Switch Update
         if(self.side[way].getBlock(blo).getHasSwitch()):
             #If there is a switch set data and show frame
@@ -201,6 +205,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             self.crossroadFrame.show()
         else:
             self.crossroadFrame.hide()
+        #Signal Update
         if(self.side[way].getBlock(blo).getHasSignal()):
             #If there is a signal set color and show frame
             if(self.side[way].getBlock(blo).getSignal()):
@@ -217,9 +222,6 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         #Get current wayside and block index
         way = self.wayside.currentIndex()
         blo = self.block.currentIndex()
-        #Set data lables
-        self.waysideData.setText(self.side[way].name)
-        self.blockData.setText(self.side[way].getBlock(blo).name)
         #Switch Update
         if(self.side[way].getBlock(blo).getHasSwitch()):
             #If there is a switch set data and show frame
@@ -242,6 +244,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             self.crossroadFrame.show()
         else:
             self.crossroadFrame.hide()
+        #Signal Update
         if(self.side[way].getBlock(blo).getHasSignal()):
             #If there is a signal set color and show frame
             if(self.side[way].getBlock(blo).getSignal()):
@@ -256,12 +259,8 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         way = self.wayside.currentIndex()
         blo = self.block.currentIndex()
         if(self.modeButton.isChecked()):
-            self.toggleDirection.hide()
-            self.toggleCrossroad.hide()
-            self.greenButton.hide()
-            self.redButton.hide()
-            create = PLC(self.line.getBlocks())
-            create.logic(0)
+            create = PLC(self.side.getBlocks())
+            create.logic()
             if(self.side[way].getBlock(blo).getHasSwitch()):
                 #If there is a switch set data and show frame
                 if(self.side[way].getBlock(blo).getSwitch()):
@@ -292,17 +291,12 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
                 self.signalFrame.show()
             else:
                 self.signalFrame.hide()
-        else:
-            self.toggleDirection.show()
-            self.toggleCrossroad.show()
-            self.greenButton.show()
-            self.redButton.show()
 
     def setOccupied(self):
         self.occupationData.clear()
         names = self.line.getOccupied()
-        for i in range (len(names)):
-            self.occupationData.addItem(names[i])
+        for i in names:
+            self.occupationData.addItem(i)
 
     def init_ui(self):
         self = Ui_Form()
@@ -316,3 +310,5 @@ if __name__ == "__main__":
     MainWindow = SoftwareTrackControllerGUI()
     MainWindow.show()
     sys.exit(app.exec())
+
+
