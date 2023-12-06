@@ -88,8 +88,6 @@ class Line():
                 stop_or_dest.append(True)
             else:
                 stop_or_dest.append(False)
-        route_blocks.append("Z151")
-        stop_or_dest.append(False)
         return route_blocks, stop_or_dest
     """
     def travel_time_objective(speeds, block_lengths, total_time):
