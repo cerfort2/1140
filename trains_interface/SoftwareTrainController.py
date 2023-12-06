@@ -72,7 +72,7 @@ class SoftwareTrainController():
         self.power=0     
         self.interval=1
         self.dwelling=False
-        self.dwellTime=60
+        self.dwellTime=5
         self.serviceBrake=False
         self.brakeAuthority=0
         self.beaconInfo=''
@@ -159,6 +159,12 @@ class SoftwareTrainController():
                 print('engaged')
             else:
                 self.serviceBrake=False
+
+            
+            if self.dwelling:
+                self.serviceBrake = False
+
+            
 
     def setAnnouncement(self):
         if self.manualmode:

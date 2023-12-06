@@ -46,6 +46,9 @@ class train_model_interface_software(QObject):
             train.update_occupancy()
 
     def set_route(self, names: list) -> None:
+        if(self.trains == []):
+            return
+        print(names)
         self.trains[0].routeList = names
 
     #show GUIs
