@@ -76,7 +76,12 @@ class Line():
         stop_or_dest = []
         
         for block in self.blocks:
-            route_blocks.append(str(block.get_section())+str(block.get_number()))
+            this_block = str(block.get_section())+str(block.get_number())
+            if this_block == "J58":
+                route_blocks.append("Z151")
+                stop_or_dest.append(False)
+                break
+            route_blocks.append(this_block)
             station_check = str(block.get_section())+str(block.get_number()) + ": " + str(block.get_station())
             
             if station_check in station_list:
