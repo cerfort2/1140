@@ -81,6 +81,7 @@ class Ui_Form(object):
         self.rightBlock.setObjectName("rightBlock")
         self.modeButton = QtWidgets.QRadioButton(parent=self.frame)
         self.modeButton.setGeometry(QtCore.QRect(650, 20, 121, 20))
+        self.modeButton.setChecked(True)
         self.modeButton.setObjectName("modeButton")
         self.wayside = QtWidgets.QComboBox(parent=self.frame)
         self.wayside.setGeometry(QtCore.QRect(10, 20, 101, 22))

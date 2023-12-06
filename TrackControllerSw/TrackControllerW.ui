@@ -238,6 +238,9 @@
       <property name="text">
        <string>Automatic Mode</string>
       </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
      </widget>
      <widget class="QComboBox" name="wayside">
       <property name="geometry">
