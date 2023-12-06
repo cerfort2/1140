@@ -200,7 +200,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             for j in range (self.greenLine.Waysides[i].amountOfTracks()):
                 blocks.append(self.greenLine.Waysides[i].tracks[j])
 
-
         for i in range (len(blocks)):
             for j in range (i, len(blocks)):
                 if(blocks[i].getName() > blocks[j].getName()):
@@ -221,8 +220,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                 data[2].append(blocks[i].getLight())
             else:
                 data[2].append(False) 
-        print("this is lights:")
-        print(data[2])
         # else:
         #     blocks:Track = []
         #     for i in range (len(self.redLine.Waysides)):
