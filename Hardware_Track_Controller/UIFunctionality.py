@@ -5,11 +5,11 @@ from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6 import QtCore, QtGui, QtWidgets
 from Hardware_Track_Controller.HWTrackUI import Ui_Form
 from Hardware_Track_Controller.TrackClass import Track
-# from Hardware_Track_Controller.UI_Breadboard_Class import Operations
+from Hardware_Track_Controller.UI_Breadboard_Class import Operations
 from Hardware_Track_Controller.GreenLineWaysides import GreenLine
 from Hardware_Track_Controller.RedLineWaysides import RedLine
 
-# operate = Operations() #Class to perform operations on the breadboard
+operate = Operations() #Class to perform operations on the breadboard
 
 class HWTrackControllerGUI(Ui_Form, QObject):
     
@@ -152,8 +152,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
 
             #Runs the functions accordingly after recieving new occupancies
             if(self.tabWidget.currentIndex() == 0):
-                print("Track Controller Occupancy:")
-                print(occupancy)
                 if(check):
                     newStates = operate.plcCode(occupancy) #Everytime get new occupancy run plc logic in arduino
                     self.setNewDataGreenLine(newStates)
@@ -196,51 +194,54 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     #Sending out functions
     def sendData(self): #Data of track to be sent to CTC and Track Model
         data = [[],[],[]]
-        if(len(self.pureOccupancy) == 151):
-            blocks:Track = []
-            for i in range (len(self.greenLine.Waysides)):
-                for j in range (len(self.greenLine.Waysides[i].tracks)):
-                    blocks.append(self.greenLine.Waysides[i].tracks[j])
+        #if(len(self.pureOccupancy) == 151):
+        blocks = []
+        for i in range (len(self.greenLine.Waysides)):
+            for j in range (self.greenLine.Waysides[i].amountOfTracks()):
+                blocks.append(self.greenLine.Waysides[i].tracks[j])
 
-            for i in range (len(blocks)):
-                for j in range (i, len(blocks)):
-                    if(blocks[i].getName() > blocks[j].getName()):
-                        hold = blocks[i]
-                        blocks[i] = blocks[j]
-                        blocks[j] = hold
 
-            for i in range (len(blocks)):
-                if(blocks[i].getIsSwitch()):
-                    data[0].append(blocks[i].getSwitch())
-                else:
-                    data[0].append(False)
-                if(blocks[i].getIsCrossroad()):
-                    data[1].append(blocks[i].getCrossroad())
-                else:
-                    data[1].append(False)
-                if(blocks[i].getIsLight()):
-                    data[2].append(blocks[i].getLight())
-                else:
-                    data[2].append(False) 
-        else:
-            blocks:Track = []
-            for i in range (len(self.redLine.Waysides)):
-                for j in range (len(self.redLine.Waysides[i].tracks)):
-                    blocks.append(self.redLine.Waysides[i].tracks[j])
+        for i in range (len(blocks)):
+            for j in range (i, len(blocks)):
+                if(blocks[i].getName() > blocks[j].getName()):
+                    hold = blocks[i]
+                    blocks[i] = blocks[j]
+                    blocks[j] = hold
+
+        for i in range (len(blocks)):
+            if(blocks[i].getIsSwitch()):
+                data[0].append(blocks[i].getSwitch())
+            else:
+                data[0].append(False)
+            if(blocks[i].getIsCrossroad()):
+                data[1].append(blocks[i].getCrossroad())
+            else:
+                data[1].append(False)
+            if(blocks[i].getIsLight()):
+                data[2].append(blocks[i].getLight())
+            else:
+                data[2].append(False) 
+        print("this is lights:")
+        print(data[2])
+        # else:
+        #     blocks:Track = []
+        #     for i in range (len(self.redLine.Waysides)):
+        #         for j in range (len(self.redLine.Waysides[i].tracks)):
+        #             blocks.append(self.redLine.Waysides[i].tracks[j])
             
-            for i in range (len(blocks)):
-                if(blocks[i].getIsSwitch()):
-                    data[0].append(blocks[i].getSwitch())
-                else:
-                    data[0].append(False)
-                if(blocks[i].getIsCrossroad()):
-                    data[1].append(blocks[i].getCrossroad())
-                else:
-                    data[1].append(False)
-                if(blocks[i].getIsLight()):
-                    data[2].append(blocks[i].getLight())
-                else:
-                    data[2].append(False) 
+        #     for i in range (len(blocks)):
+        #         if(blocks[i].getIsSwitch()):
+        #             data[0].append(blocks[i].getSwitch())
+        #         else:
+        #             data[0].append(False)
+        #         if(blocks[i].getIsCrossroad()):
+        #             data[1].append(blocks[i].getCrossroad())
+        #         else:
+        #             data[1].append(False)
+        #         if(blocks[i].getIsLight()):
+        #             data[2].append(blocks[i].getLight())
+        #         else:
+        #             data[2].append(False) 
         self.trackModelTrackDataHW.emit(data)
     def sendOccupancy(self): #Occupancy sent to CTC
         self.CTCOccupancyHW.emit(self.pureOccupancy)

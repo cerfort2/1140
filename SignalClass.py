@@ -100,6 +100,7 @@ class God(Home, QMainWindow):
         self.trackControllerHW.trackModelAuthorityHW.connect(self.trackModel.trackModel.authority)
         self.trackControllerHW.trackModelSendRouteHW.connect(self.trackModel.trackModel.route)
         self.trackControllerHW.trackModelTrackDataHW.connect(self.trackModel.trackModel.controlModel)
+        
 
         
         #Software
@@ -134,9 +135,10 @@ class God(Home, QMainWindow):
 
     #on timeout emissions
     def onTimeoutFunctions(self):
-        self.trackModel.trackModel.initTrack()
+        # self.trackModel.trackModel.initTrack()
         #self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
+        self.trackControllerHW.sendData()
         # self.trackModel.trackModel.emitStationBeacon()
         # self.trackModel.trackModel.emitSwitchBeacon()
         # self.trackModel.trackModel.emitApproachingBeacon()
