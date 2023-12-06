@@ -13,7 +13,7 @@ class Block():
         self.crossroadStatus:bool = False #False if crossroad open True if crossroad closed
 
         self.hasSignal:bool = signal #Has signal only when has switch
-        self.signalStatus:bool = False #False if red True if green
+        self.signalStatus:bool = True #True if red False if green
 
         self.occupancy:bool = False #If block is occupied
 

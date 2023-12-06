@@ -162,8 +162,8 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         way = self.wayside.currentIndex()
         blo = self.block.currentIndex()
         #If red change green
-        if(not self.side[way].getBlock(blo).getSignal()):
-            self.side[way].getBlock(blo).setSignal(True)
+        if(self.side[way].getBlock(blo).getSignal()):
+            self.side[way].getBlock(blo).setSignal(False)
             self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
 
     def red_handler(self):
@@ -171,8 +171,8 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         way = self.wayside.currentIndex()
         blo = self.block.currentIndex()
         #If Green change red
-        if(self.side[way].getBlock(blo).getSignal()):
-            self.side[way].getBlock(blo).setSignal(False)
+        if(not self.side[way].getBlock(blo).getSignal()):
+            self.side[way].getBlock(blo).setSignal(True)
             self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
 
     def new_wayside(self):
@@ -208,7 +208,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         #Signal Update
         if(self.side[way].getBlock(blo).getHasSignal()):
             #If there is a signal set color and show frame
-            if(self.side[way].getBlock(blo).getSignal()):
+            if(not self.side[way].getBlock(blo).getSignal()):
                 self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
             else:
                 self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
@@ -247,7 +247,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         #Signal Update
         if(self.side[way].getBlock(blo).getHasSignal()):
             #If there is a signal set color and show frame
-            if(self.side[way].getBlock(blo).getSignal()):
+            if(not self.side[way].getBlock(blo).getSignal()):
                 self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
             else:
                 self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
@@ -284,7 +284,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
                 self.crossroadFrame.hide()
             if(self.side[way].getBlock(blo).getHasSignal()):
                 #If there is a signal set color and show frame
-                if(self.side[way].getBlock(blo).getSignal()):
+                if(not self.side[way].getBlock(blo).getSignal()):
                     self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
                 else:
                     self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
