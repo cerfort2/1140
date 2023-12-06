@@ -613,6 +613,8 @@ class TrackModel(QObject):
     #----------------
     trainModelRouteNames = pyqtSignal(list)
     def route(self, r):
+        print("Track Model Route")
+        print(r[0])
         self.trainModelRouteNames.emit(r[0])
 
 class functionalUI(Ui_Form):
