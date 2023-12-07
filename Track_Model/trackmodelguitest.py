@@ -131,11 +131,11 @@ class Line():
             annotations.append(dataToAnnotate)
 
             if self.blocks[i].occupied:
-                colors.append('blue')
+                colors.append('#FFA500') #Orange
             elif self.blocks[i].station[0]:
                 colors.append("#40E0D0")
             elif self.blocks[i].crossroad[0]:
-                colors.append('#FFA500') # Orange
+                colors.append('blue') 
             elif self.blocks[i].underground:
                 colors.append('#964B00') #brown
             else:
@@ -447,11 +447,11 @@ class TrackModel(QObject):
     def __init__(self):
         super().__init__()
         self.lines = []
-        self.occupancyList =[]
+        self.occupancyList = []
         self.occupancyListStrings = []
-        self.r = []
-        self.ss = []
-        self.a = []
+        self.route_passthrough = []
+        self.suggestedSpeed_passthrough= []
+        self.authority_passthrough = []
 
     #--------------------
     #Internal Functions
@@ -477,9 +477,6 @@ class TrackModel(QObject):
     #--------------------
     #Transmitting Signal Functions
     #--------------------
-    trainModelSuggestedSpeed = pyqtSignal(list)
-    trainModelAuthority = pyqtSignal(int)
-    trainModelCreation = pyqtSignal()
     
     #Emit track occupancy
     trackControllerOccupancy = pyqtSignal(list)
@@ -528,26 +525,6 @@ class TrackModel(QObject):
         # polarityList = [blk.polarity for blk in self.occupancyList if blk.occupied]
         self.trainModelPolarity.emit()
 
-    #pass through track model
-    # def suggestedSpeed(self, SS):
-    #     self.trainModelSuggestedSpeed.emit(SS)
-
-    def createTrain(self):
-        self.trainModelCreation.emit()
-
-    trainModelAuthority = pyqtSignal(list)
-    #convert block authority to feet authority
-    def authority(self, authority):
-        print(authority)
-        self.a = authority
-        # self.trainModelBlockLengths.emit(authority)
-
-    trainModelSuggestedSpeed = pyqtSignal(list)
-    def suggestedSpeed(self,suggestedSpeed):
-        self.ss = suggestedSpeed
-        # self.trainModelStationStops.emit(suggestedSpeed)
-        # self.trainModelAuthority.emit(authorityInM
-
     #Send ticket sales of occupied stations
     CTCticketSales = pyqtSignal(list)
     def getTicketsSales(self):
@@ -560,7 +537,6 @@ class TrackModel(QObject):
     #------------------
     #Receiving Signals
     #------------------
-
     def controlModel(self,controlSignals):
         for line in self.lines:
             line.updateLineStatus(controlSignals)
@@ -574,12 +550,8 @@ class TrackModel(QObject):
         if (self.occupancyListStrings == occupancyList):
             return
         
-        self.occupancyListStrings = occupancyList
-
-        test = [self.lines[0].getBlock(name) for name in occupancyList]
-        self.occupancyList = test
-
-
+        self.occupancyListStrings = occupancyList #List of strings
+        self.occupancyList = [self.lines[0].getBlock(name) for name in occupancyList] #List of Blocks in the correct order
 
         #Clear occupancy
         for line in self.lines:
@@ -595,24 +567,29 @@ class TrackModel(QObject):
         self.emitSwitchBeacon()
         self.emitStationBeacon()
 
-    #Track Model --> Train Model
-    def routeToBlockLengths(self, route):
-
-        for line in self.lines:
-            blocksAndLengths = []
-
-            for i in range(1, len(route)):
-                blocksAndLengths.append((route[i], line.getBlock(route[i]).length))
-
-        return blocksAndLengths
-
     #----------------
     #Pass through Signals
     #----------------
+    trainModelCreation = pyqtSignal()
+    def createTrain(self):
+        self.trainModelCreation.emit()
+
     trainModelRouteNames = pyqtSignal(list)
     def route(self, r):
-        self.r = [r, self.ss, self.a]
-        self.trainModelRouteNames.emit(self.r)
+        self.route_passthrough = [r, self.suggestedSpeed_passthrough, self.authority_passthrough]
+        self.trainModelRouteNames.emit(self.route_passthrough)
+
+    trainModelAuthority = pyqtSignal(list)
+    def authority(self, authority):
+        print(authority)
+        self.authority_passthrough = authority
+        # self.trainModelBlockLengths.emit(authority)
+
+    trainModelSuggestedSpeed = pyqtSignal(list)
+    def suggestedSpeed(self,suggestedSpeed):
+        self.suggestedSpeed_passthrough = suggestedSpeed
+        # self.trainModelStationStops.emit(suggestedSpeed)
+        # self.trainModelAuthority.emit(authorityInM
 
 class functionalUI(Ui_Form):
     def __init__(self) -> None:
