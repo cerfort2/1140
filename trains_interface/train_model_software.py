@@ -29,7 +29,7 @@ class train_model_software():
         self.announcement = ""
         self.beacon_list = []
         self.current_polarity = True
-        self.occupancy = ""
+        self.occupancy = "Z151"
         self.underground_list = []
         self.underground_val = False
         self.speed_list = []
@@ -347,6 +347,9 @@ class train_model_software():
         if self.authority == 0 and len(self.stationAuthorities) > 1:
             self.stationAuthorities = self.stationAuthorities[1:]
             self.authority = self.stationAuthorities[0]
+
+        #if self.authority == 0:
+           # 1 == 1
 
         if self.currentMove > float(self.authority_list[0]):
 

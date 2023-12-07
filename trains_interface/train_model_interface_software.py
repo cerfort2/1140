@@ -23,7 +23,10 @@ class train_model_interface_software(QObject):
 
     #update all trains
     def update_trains(self) -> None:
+        i=1
         for train in self.trains:
+            print("train" + str(i))
+            i += 1
             train.update_train(self.UI_flag)
 
     #get occupancy list
@@ -48,7 +51,7 @@ class train_model_interface_software(QObject):
     def set_route(self, names: list) -> None:
         if(self.trains == []):
             return
-        self.access_train(len(self.trains) - 1).unpack_route(names)
+        self.access_train(len(self.trains)).unpack_route(names)
 
     #show GUIs
     def show_GUI(self, train_num: int) -> None:
