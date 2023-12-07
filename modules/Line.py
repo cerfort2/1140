@@ -74,6 +74,7 @@ class Line():
     def get_route(self, station_list):
         route_blocks = []
         stop_or_dest = []
+        route_feet = []
         
         for block in self.blocks:
             this_block = str(block.get_section())+str(block.get_number())
@@ -83,12 +84,13 @@ class Line():
                 break
             route_blocks.append(this_block)
             station_check = str(block.get_section())+str(block.get_number()) + ": " + str(block.get_station())
+            route_feet.append(block.get_length())
             
             if station_check in station_list:
                 stop_or_dest.append(True)
             else:
                 stop_or_dest.append(False)
-        return route_blocks, stop_or_dest
+        return route_blocks, stop_or_dest, route_feet
     """
     def travel_time_objective(speeds, block_lengths, total_time):
         # Objective function to minimize: sum of squared differences in speeds + penalty for total time deviation
@@ -182,10 +184,11 @@ class Line():
     def get_authority(self, stop_list):
         authorities = []
         cur_block_index = 0
+        total_blocks = len(self.blocks)
+        
         for stop in stop_list:
             print(stop)
             authority_sum = 0
-            total_blocks = len(self.blocks)
             
             while cur_block_index < total_blocks:
                 block = self.blocks[cur_block_index]
@@ -193,11 +196,19 @@ class Line():
                 
                 if station_check == stop:
                     authorities.append(authority_sum)
-                    print(authority_sum)
                     break
                 
                 authority_sum += block.get_length()  # Assuming each block contributes '1' to the authority
                 cur_block_index += 1
+                
+        authority_sum = 0
+        while cur_block_index < total_blocks:
+            block = self.blocks[cur_block_index]
+            if str(block.get_section())+str(block.get_number()) == "Z151":
+                authorities.append(authority_sum)
+            authority_sum+=self.blocks[cur_block_index].get_length()
+            
+            cur_block_index +=1
         return authorities
 
     #returns the route from yard given a list of input stations
