@@ -56,7 +56,7 @@ class God(Home, QMainWindow):
         self.setupUi(self)
         
         self.MainTimer = QTimer()
-        self.timeStep = 200
+        self.timeStep = 50
 
         self.ctc = CTC()
         self.trackControllerHW = HWTrackControllerGUI()

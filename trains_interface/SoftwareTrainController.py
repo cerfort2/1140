@@ -46,12 +46,12 @@ class SoftwareTrainController():
         self.uiopen=False
         self.manualmode=False
         self.simulationSpeed=1
-        self.ctcSpeed=10                #speed to go in automatic mode when in the middle of a route in m/s
+        self.ctcSpeed=50                #speed to go in automatic mode when in the middle of a route in m/s
         self.manualcommandedspeed=0      #the value of the slide bar. commandedspeed=manualcommandedspeed if manualMode=True 
         self.nextstop="A Stop"
         self.currentSpeed=0      #current speed in manual or auto (max speed is 70km/hr)
         self.speedLimit=43
-        self.authority=1000         #authority in automatic mode
+        self.authority=0        #authority in automatic mode
         self.temperature=70       #temp in degrees fahrenheit
         self.exlights=False     #true=on
         self.intlights=True      #true=on

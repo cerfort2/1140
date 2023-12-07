@@ -250,117 +250,115 @@ class train_model_software():
     #CALCULATING BEACONS AND OCCUPANCY
     #
 
-    #beacon getter for beacon strings
-    def set_beacon_list_out_station(self, beacon_val: str) -> None:
+    # #beacon getter for beacon strings
+    # def set_beacon_list_out_station(self, beacon_val: str) -> None:
 
-        self.beacon_list = []
-        self.authority = 0
-        self.underground_list = []
-        self.speed_list = []
-        iterator = 0
+    #     self.beacon_list = []
+    #     self.authority = 0
+    #     self.underground_list = []
+    #     self.speed_list = []
+    #     iterator = 0
 
-        temp = ""
+    #     temp = ""
 
-        for i in range(0, len(beacon_val)):
+    #     for i in range(0, len(beacon_val)):
 
-            if beacon_val[i] == " ":
-                continue
-            elif beacon_val[i] != "/" and beacon_val[i] != ";":
-                temp += beacon_val[i]
-            else:
-                if iterator == 0:
-                    self.beacon_list.append(temp)
-                    temp = ""
-                    iterator += 1
-                elif iterator == 1:
-                    #self.authority += float(temp)
-                    temp = ""
-                    iterator += 1
-                elif iterator == 2:
-                    self.underground_list.append(bool(temp))
-                    temp = ""
-                    iterator += 1
-                else:
-                    self.speed_list.append(temp)
-                    temp = ""
-                    iterator = 0
+    #         if beacon_val[i] == " ":
+    #             continue
+    #         elif beacon_val[i] != "/" and beacon_val[i] != ";":
+    #             temp += beacon_val[i]
+    #         else:
+    #             if iterator == 0:
+    #                 self.beacon_list.append(temp)
+    #                 temp = ""
+    #                 iterator += 1
+    #             elif iterator == 1:
+    #                 #self.authority += float(temp)
+    #                 temp = ""
+    #                 iterator += 1
+    #             elif iterator == 2:
+    #                 self.underground_list.append(bool(temp))
+    #                 temp = ""
+    #                 iterator += 1
+    #             else:
+    #                 self.speed_list.append(temp)
+    #                 temp = ""
+    #                 iterator = 0
         
-        #self.occupancy = self.beacon_list[0]
+    #     #self.occupancy = self.beacon_list[0]
 
-    #get suggest speed list from CTC
-    def set_suggested_speeds(self, speed_list: list) -> None:
-        self.suggested_speed_list = speed_list
+    # #get suggest speed list from CTC
+    # def set_suggested_speeds(self, speed_list: list) -> None:
+    #     self.suggested_speed_list = speed_list
         
-    #setting station data
-    def set_station_data(self, beacon_val: str) -> None:
-        #Split by ;
-        splitPackets = beacon_val.split("; ")
+    # #setting station data
+    # def set_station_data(self, beacon_val: str) -> None:
+    #     #Split by ;
+    #     splitPackets = beacon_val.split("; ")
 
-        #Split first packet by /
-        firstPacket = splitPackets[0].split("/")
+    #     #Split first packet by /
+    #     firstPacket = splitPackets[0].split("/")
 
-        #Station Name
-        self.current_station = firstPacket[0]
-        self.announcement = "Arriving at: " + self.current_station
+    #     #Station Name
+    #     self.current_station = firstPacket[0]
+    #     self.announcement = "Arriving at: " + self.current_station
 
-        #Station Side
-        if(len(firstPacket) == 3):
-            self.open_side = "Left/Right"
-        else:
-            self.open_side = firstPacket[1]
+    #     #Station Side
+    #     if(len(firstPacket) == 3):
+    #         self.open_side = "Left/Right"
+    #     else:
+    #         self.open_side = firstPacket[1]
 
-        #Pop the station info
-        blockList = splitPackets[1:]
-        blockList = blockList[:len(blockList) - 1]
-        for block in blockList:
-            infoList = block.split("/")
-            self.beacon_list.append(infoList[0])
-            self.authority += float(infoList[1])
-            self.authority_list.append(infoList[1])
-            self.underground_list.append(infoList[2])
-            self.speed_list.append(infoList[3])
+    #     #Pop the station info
+    #     blockList = splitPackets[1:]
+    #     blockList = blockList[:len(blockList) - 1]
+    #     for block in blockList:
+    #         infoList = block.split("/")
+    #         self.beacon_list.append(infoList[0])
+    #         self.authority += float(infoList[1])
+    #         self.authority_list.append(infoList[1])
+    #         self.underground_list.append(infoList[2])
+    #         self.speed_list.append(infoList[3])
 
-        self.currentMove = 0
-        # self.occupancy = self.beacon_list[0]
+    #     self.currentMove = 0
+    #     # self.occupancy = self.beacon_list[0]
 
 
-    #switch beacon
-    def set_switch_data(self, beacon_val: str) -> None:
+    # #switch beacon
+    # def set_switch_data(self, beacon_val: str) -> None:
 
-        blockList = beacon_val.split("; ")
-        blockList = blockList[:len(blockList) - 1]
+    #     blockList = beacon_val.split("; ")
+    #     blockList = blockList[:len(blockList) - 1]
 
-        for block in blockList:
-            infoList = block.split("/")
-            self.beacon_list.append(infoList[0])
-            self.authority += float(infoList[1])
-            self.authority_list.append(infoList[1])
-            self.underground_list.append(infoList[2])
-            self.speed_list.append(infoList[3])
+    #     for block in blockList:
+    #         infoList = block.split("/")
+    #         self.beacon_list.append(infoList[0])
+    #         self.authority += float(infoList[1])
+    #         self.authority_list.append(infoList[1])
+    #         self.underground_list.append(infoList[2])
+    #         self.speed_list.append(infoList[3])
 
-        #self.occupancy = self.beacon_list[0]
-        self.currentMove = 0
+    #     #self.occupancy = self.beacon_list[0]
+    #     self.currentMove = 0
     
     #occupancy updater
     def update_occupancy(self) -> None:
+
+        if self.authority == 0 and len(self.stationAuthorities) > 1:
+            self.stationAuthorities = self.stationAuthorities[1:]
+            self.authority = self.stationAuthorities[0]
 
         if self.currentMove > float(self.authority_list[0]):
 
             self.current_polarity = not self.current_polarity
             self.currentMove -= float(self.authority_list[0])
-
-            self.occupancy = self.beacon_list[1] if len(self.beacon_list) > 1 else self.beacon_list[0]
-            if len(self.beacon_list) > 1:
-                self.beacon_list = self.beacon_list[1:]
+            
+            if len(self.authority_list) > 1:
                 self.authority_list = self.authority_list[1:]
 
-            self.underground_val = self.underground_list[1] if len(self.underground_list) > 1 else self.underground_list[0]
-            if len(self.underground_list) > 1:
-                self.underground_list = self.underground_list[1:]
-                
-            self.speed_limit = self.speed_list[1] if len(self.speed_list) > 1 else self.speed_list[0]
-            if len(self.speed_list) > 1:
-                self.speed_list = self.speed_list[1:]
+            if len(self.routeList) > 1:
+                self.routeList = self.routeList[1:]
+                self.occupancy = self.routeList[0]
                 
             if len(self.suggested_speed_list) > 1:
                 self.suggested_speed_list = self.suggested_speed_list[1:]
@@ -378,6 +376,8 @@ class train_model_software():
         print(self.suggested_speed_list)
         print(monsters_data[2])
         print(self.stationAuthorities)
+
+        self.authority = self.stationAuthorities[0]
         
 
 
