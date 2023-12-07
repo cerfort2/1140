@@ -591,6 +591,10 @@ class TrackModel(QObject):
         # self.trainModelStationStops.emit(suggestedSpeed)
         # self.trainModelAuthority.emit(authorityInM
 
+    trainModelStopAtBlocks = pyqtSignal(list)
+    def stopAtBlocks(self,stopBlocks):
+        self.trainModelStopAtBlocks.emit(stopBlocks)
+        
 class functionalUI(Ui_Form):
     def __init__(self) -> None:
         super().__init__()
