@@ -84,13 +84,13 @@ class God(Home, QMainWindow):
         self.trackControllerHW.CTCOccupancyHW.connect(self.ctc.get_block_occupancies)
         #Software
         #self.trackControllerSW.ctcOccupancy.connect(self.ctc.get_block_occupancies)
+
+        #CTC to initialize train on dispatch
         self.ctc.train_dispatched.connect(self.init_train)
 
         #Sent from CTC to Track Controller
         self.ctc.train_dispatched.connect(self.trackControllerHW.createNewTrainData)
         #self.ctc.train_dispatched.connect(self.trackControllerSW.sendTrainDetails)
-
-        #CTC to initialize train on dispatch
 
         #Timer functions between Track Model and Track Controller
         #Hardware
@@ -100,9 +100,6 @@ class God(Home, QMainWindow):
         self.trackControllerHW.trackModelAuthorityHW.connect(self.trackModel.trackModel.authority)
         self.trackControllerHW.trackModelSendRouteHW.connect(self.trackModel.trackModel.route)
         self.trackControllerHW.trackModelTrackDataHW.connect(self.trackModel.trackModel.controlModel)
-        
-
-        
         #Software
         # self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerSW.setDisplay)
         # self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerSW.setOccupancy)
@@ -111,7 +108,7 @@ class God(Home, QMainWindow):
         # self.trackControllerSW.trackModelSpeed.connect(self.trackModel.trackModel.suggestedSpeed)
         # self.trackControllerSW.trackModelAuthority.connect(self.trackModel.trackModel.authority)
         
-        ##
+        #Between Train model and Track model
         self.trackModel.trackModel.trainModelRouteNames.connect(self.trainInterface.set_route)
 
 
@@ -146,19 +143,22 @@ class God(Home, QMainWindow):
             self.trackModel.trackModel.polarity()
     
     def create_modules(self):
-        #setup track model
+        #Track Model
         self.widget = QWidget()
         self.trackModel.setupUi(self.widget)
         self.trackModel.connect()
         
+        #HW Track Controller
         self.widget2 = QWidget()
         self.trackControllerHW.setupUi(self.widget2)
         self.trackControllerHW.connectFunctions()
         
+        #CTC
         self.widget3 = QWidget()
         self.ctc.setupUi(self.widget3)
         self.ctc.initialize_ctc()
 
+        #SW Track Controller
         self.widget4 = QWidget()
         # self.trackControllerSW.setupUi(self.widget4)
         # self.trackControllerSW.connectFunctions()
