@@ -88,7 +88,7 @@ class SoftwareTrainController():
          self.ui.notify.clicked.connect(self.setAnnouncement)
          self.ui.serviceBrake.clicked.connect(self.serviceBrakePressed)
          self.ui.ebrake.clicked.connect(self.eBrakePressed)
-         self.getVals()    
+         self.getVals()
 
     def getVals(self):
         self.ki=self.ui.ki.value()
@@ -245,7 +245,7 @@ class SoftwareTrainController():
         if self.power>120000:
             self.power=120000
 
-        if self.brakeFailure or self.signalFailure or self.engineFailure or self.eBrake or self.power < 0 or self.serviceBrake==True:
+        if self.brakeFailure or self.signalFailure or self.engineFailure or self.eBrake or self.power < 0 or self.serviceBrake==True or self.dwelling == True:
             self.power=0
         
     
@@ -283,13 +283,15 @@ class SoftwareTrainController():
 
     def computeDwellTime(self):
         if self.dwelling and not self.manualmode:
-            self.ctcSpeed=0
             if self.dwellTime-self.interval>0:   #subtract the time that it takes the timer to time out
                 self.dwellTime-=self.interval
             else:
+                print("done dwelling")
                 self.dwelling=False
                 self.dwellTime=60     
-                self.authority+=10   
+                self.authority+=10
+                self.serviceBrake = False
+                self.eBrake = False
     def computeAuthority(self):
         if self.authority<=0 and self.currentSpeed==0:
             if not self.manualmode:

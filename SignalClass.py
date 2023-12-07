@@ -125,7 +125,6 @@ class God(Home, QMainWindow):
     def init_train(self):
         self.trainInterface.new_train()
         self.trainInterface.show_GUI(len(self.trainInterface.trains))
-        # self.trackModel.trackModel.route(["Z151", "J62","K63", "K64", "K65", "K66", "K67", "K68", "L69", "L70", "L71", "L72", "L73"])
 
     #on timeout emissions
     def onTimeoutFunctions(self):

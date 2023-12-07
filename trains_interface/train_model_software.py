@@ -21,7 +21,7 @@ class train_model_software():
         self.engine_failure = False
         self.brake_failure = False
         self.signal_failure = False
-        self.inside_lights = False
+        self.inside_lights = True
         self.outside_lights = False
         self.right_door = False
         self.left_door = False
@@ -292,36 +292,22 @@ class train_model_software():
     #     self.suggested_speed_list = speed_list
         
     # #setting station data
-    # def set_station_data(self, beacon_val: str) -> None:
-    #     #Split by ;
-    #     splitPackets = beacon_val.split("; ")
+    def set_station_data(self, beacon_val: str) -> None:
+        #Split by ;
+        splitPackets = beacon_val.split("; ")
 
-    #     #Split first packet by /
-    #     firstPacket = splitPackets[0].split("/")
+        #Split first packet by /
+        firstPacket = splitPackets[0].split("/")
 
-    #     #Station Name
-    #     self.current_station = firstPacket[0]
-    #     self.announcement = "Arriving at: " + self.current_station
+        #Station Name
+        self.current_station = firstPacket[0]
+        self.announcement = "Arriving at: " + self.current_station
 
-    #     #Station Side
-    #     if(len(firstPacket) == 3):
-    #         self.open_side = "Left/Right"
-    #     else:
-    #         self.open_side = firstPacket[1]
-
-    #     #Pop the station info
-    #     blockList = splitPackets[1:]
-    #     blockList = blockList[:len(blockList) - 1]
-    #     for block in blockList:
-    #         infoList = block.split("/")
-    #         self.beacon_list.append(infoList[0])
-    #         self.authority += float(infoList[1])
-    #         self.authority_list.append(infoList[1])
-    #         self.underground_list.append(infoList[2])
-    #         self.speed_list.append(infoList[3])
-
-    #     self.currentMove = 0
-    #     # self.occupancy = self.beacon_list[0]
+        #Station Side
+        if(len(firstPacket) == 3):
+            self.open_side = "Left/Right"
+        else:
+            self.open_side = firstPacket[1]
 
 
     # #switch beacon
@@ -347,6 +333,8 @@ class train_model_software():
         if self.authority == 0 and len(self.stationAuthorities) > 1:
             self.stationAuthorities = self.stationAuthorities[1:]
             self.authority = self.stationAuthorities[0]
+            self.controller.dwelling = True
+            self.controller.dwellTime = 60
 
         #if self.authority == 0:
            # 1 == 1
