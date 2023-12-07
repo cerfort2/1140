@@ -84,13 +84,13 @@ class God(Home, QMainWindow):
         self.trackControllerHW.CTCOccupancyHW.connect(self.ctc.get_block_occupancies)
         #Software
         #self.trackControllerSW.ctcOccupancy.connect(self.ctc.get_block_occupancies)
+        self.ctc.train_dispatched.connect(self.init_train)
 
         #Sent from CTC to Track Controller
         self.ctc.train_dispatched.connect(self.trackControllerHW.createNewTrainData)
         #self.ctc.train_dispatched.connect(self.trackControllerSW.sendTrainDetails)
 
         #CTC to initialize train on dispatch
-        self.ctc.train_dispatched.connect(self.init_train)
 
         #Timer functions between Track Model and Track Controller
         #Hardware
@@ -112,6 +112,10 @@ class God(Home, QMainWindow):
         # self.trackControllerSW.trackModelAuthority.connect(self.trackModel.trackModel.authority)
         
         ##
+        self.trackModel.trackModel.trainModelRouteNames.connect(self.trainInterface.set_route)
+
+
+
 
         #Once calls for both
         self.trackModel.trackModel.initTrack()
@@ -124,7 +128,7 @@ class God(Home, QMainWindow):
     def init_train(self):
         self.trainInterface.new_train()
         self.trainInterface.show_GUI(1)
-        self.trackModel.trackModel.trainModelRouteNames.connect(self.trainInterface.set_route)
+        # self.trackModel.trackModel.trainModelRouteNames.connect(self.trainInterface.set_route)
         self.trackModel.trackModel.trainModelSuggestedSpeed.connect(self.trainInterface.access_train(len(self.trainInterface.trains)).set_suggested_speeds)
         #self.trackModel.trackModel.trainModelAuthority.connect(self.trainInterface.access_train(1).new_authoriy)
         self.trackModel.trackModel.trainModelGrade.connect(self.trainInterface.set_slopes)
@@ -133,7 +137,6 @@ class God(Home, QMainWindow):
         self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.access_train(1).set_station_data)
         self.trackModel.trackModel.trainModelPolarity.connect(self.trainInterface.set_polarities)
         self.trainInterface.access_train(1).occupancy = "Z151"
-        self.trackModel.trackModel.trainModelRouteNames.connect(self.trainInterface.set_route)
         # self.trackModel.trackModel.route(["Z151", "J62","K63", "K64", "K65", "K66", "K67", "K68", "L69", "L70", "L71", "L72", "L73"])
 
     #on timeout emissions
