@@ -156,7 +156,6 @@ class SoftwareTrainController():
 
             if self.brakedistance>=self.authority:
                 self.serviceBrake=True
-                print('engaged')
             else:
                 self.serviceBrake=False
 
@@ -246,9 +245,6 @@ class SoftwareTrainController():
         if self.power>120000:
             self.power=120000
 
-        print(self.brakeFailure)
-        print(self.eBrake)
-        print(self.serviceBrake)
         if self.brakeFailure or self.signalFailure or self.engineFailure or self.eBrake or self.power < 0 or self.serviceBrake==True:
             self.power=0
         
@@ -287,7 +283,6 @@ class SoftwareTrainController():
 
     def computeDwellTime(self):
         if self.dwelling and not self.manualmode:
-            print(self.dwellTime)
             self.ctcSpeed=0
             if self.dwellTime-self.interval>0:   #subtract the time that it takes the timer to time out
                 self.dwellTime-=self.interval

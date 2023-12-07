@@ -128,14 +128,14 @@ class God(Home, QMainWindow):
     def init_train(self):
         self.trainInterface.new_train()
         self.trainInterface.show_GUI(1)
-        # self.trackModel.trackModel.trainModelRouteNames.connect(self.trainInterface.set_route)
-        self.trackModel.trackModel.trainModelSuggestedSpeed.connect(self.trainInterface.access_train(len(self.trainInterface.trains)).set_suggested_speeds)
+        #self.trackModel.trackModel.trainModelSuggestedSpeed.connect(self.trainInterface.access_train(len(self.trainInterface.trains)).set_suggested_speeds)
         #self.trackModel.trackModel.trainModelAuthority.connect(self.trainInterface.access_train(1).new_authoriy)
-        self.trackModel.trackModel.trainModelGrade.connect(self.trainInterface.set_slopes)
+        #self.trackModel.trackModel.trainModelGrade.connect(self.trainInterface.set_slopes)
         # self.trackModel.trackModel.trainModelApproachingBeacon.connect(self.trainInterface.access_train(1).set_station_data)
-        self.trackModel.trackModel.trainModelSwitchBeacon.connect(self.trainInterface.access_train(1).set_switch_data)
-        self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.access_train(1).set_station_data)
+        #self.trackModel.trackModel.trainModelSwitchBeacon.connect(self.trainInterface.access_train(1).set_switch_data)
+        #self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.access_train(1).set_station_data)
         self.trackModel.trackModel.trainModelPolarity.connect(self.trainInterface.set_polarities)
+
         self.trainInterface.access_train(1).occupancy = "Z151"
         # self.trackModel.trackModel.route(["Z151", "J62","K63", "K64", "K65", "K66", "K67", "K68", "L69", "L70", "L71", "L72", "L73"])
 

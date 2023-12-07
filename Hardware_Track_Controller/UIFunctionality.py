@@ -19,7 +19,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     trackModelSendRouteHW = pyqtSignal(list)
     trackModelSuggestedSpeedHW = pyqtSignal(list)
     trackModelTrackDataHW = pyqtSignal(list)
-    trackModelAuthorityHW = pyqtSignal(int)
+    trackModelAuthorityHW = pyqtSignal(list)
     trackModelStoppedTrains = pyqtSignal(list)
 
     #Global Variables
@@ -186,10 +186,12 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             #self.sendStop(occupancy) #Runs the light stop logic each time new occupancy given
             self.oldOccupancy = occupancy
             self.firstRun = False
-    def createNewTrainData(self, traveling:[], Auth:[], speed:[]): #Created by CTC
-        self.trackModelSendRouteHW.emit(traveling)
+    def createNewTrainData(self, traveling, Auth, speed): #Created by CTC
+        print(Auth)
         self.trackModelAuthorityHW.emit(Auth)
         self.trackModelSuggestedSpeedHW.emit(speed)
+        self.trackModelSendRouteHW.emit(traveling)
+
 
     #Sending out functions
     def sendData(self): #Data of track to be sent to CTC and Track Model

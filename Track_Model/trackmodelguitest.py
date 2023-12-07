@@ -244,7 +244,6 @@ class Line():
         for connectedSet in nx.connected_components(workingGraph):
             sortedBlocks = list(sorted(connectedSet, key=self.sortBlocks))
             test = [blk.name for blk in sortedBlocks]
-            print(test)
 
             #Iterate from the top of the segment and add data to the head beacon
             if sortedBlocks[0].approachingBeacon[0]:
@@ -308,8 +307,7 @@ class Line():
                 if(self.blocks[i].signal[1] != controlSignals[2][i]):
                     self.blocks[i].toggleSignal()
                     if(self.blocks[i].name == "J62"):
-                        print("J61 Light Status")
-                        print(self.blocks[i].signal[1])
+                        return
 
     def initializeTrackControllerData(self):
         hasSwitch = [blk.switch[0] for blk in self.blocks]
@@ -451,6 +449,9 @@ class TrackModel(QObject):
         self.lines = []
         self.occupancyList =[]
         self.occupancyListStrings = []
+        self.r = []
+        self.ss = []
+        self.a = []
 
     #--------------------
     #Internal Functions
@@ -528,27 +529,24 @@ class TrackModel(QObject):
         self.trainModelPolarity.emit()
 
     #pass through track model
-    def suggestedSpeed(self, SS):
-        self.trainModelSuggestedSpeed.emit(SS)
+    # def suggestedSpeed(self, SS):
+    #     self.trainModelSuggestedSpeed.emit(SS)
 
     def createTrain(self):
         self.trainModelCreation.emit()
 
+    trainModelAuthority = pyqtSignal(list)
     #convert block authority to feet authority
-    def authority(self, authorityInBlocks):
-        # for line in self.lines:
-        #     occupiedList = line.getOccupiedBlockNames()
-        #     for blkname in occupiedList:
-        #         authorityInM = 0
-        #         for i in range(self.trainRoute.index(blkname)+1,self.trainRoute.index(blkname)+1+authorityInBlocks):
-        #             if (i == self.trainRoute.index(blkname)+authorityInBlocks):
-        #                 authorityInM += line.getBlock(self.trainRoute[i].length/2)
-        #             else:
-        #                 authorityInM += line.getBlock(self.trainRoute[i]).length
-                
-        
-        # self.trainModelAuthority.emit(authorityInM)
-        return
+    def authority(self, authority):
+        print(authority)
+        self.a = authority
+        # self.trainModelBlockLengths.emit(authority)
+
+    trainModelSuggestedSpeed = pyqtSignal(list)
+    def suggestedSpeed(self,suggestedSpeed):
+        self.ss = suggestedSpeed
+        # self.trainModelStationStops.emit(suggestedSpeed)
+        # self.trainModelAuthority.emit(authorityInM
 
     #Send ticket sales of occupied stations
     CTCticketSales = pyqtSignal(list)
@@ -613,7 +611,8 @@ class TrackModel(QObject):
     #----------------
     trainModelRouteNames = pyqtSignal(list)
     def route(self, r):
-        self.trainModelRouteNames.emit(r[0])
+        self.r = [r, self.ss, self.a]
+        self.trainModelRouteNames.emit(self.r)
 
 class functionalUI(Ui_Form):
     def __init__(self) -> None:

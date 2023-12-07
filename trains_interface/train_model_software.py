@@ -38,7 +38,9 @@ class train_model_software():
         self.current_station = ""
         self.suggested_speed_list =[]
         self.routeList = []
+        self.stationAuthorities = []
         self.authority_list = []
+        self.station_bools = []
         self.currentMove = 0
         #create instance of train controller
         self.controller = SoftwareTrainController()
@@ -291,7 +293,6 @@ class train_model_software():
         
     #setting station data
     def set_station_data(self, beacon_val: str) -> None:
-        print(beacon_val)
         #Split by ;
         splitPackets = beacon_val.split("; ")
 
@@ -311,10 +312,8 @@ class train_model_software():
         #Pop the station info
         blockList = splitPackets[1:]
         blockList = blockList[:len(blockList) - 1]
-        print(blockList)
         for block in blockList:
             infoList = block.split("/")
-            print(infoList)
             self.beacon_list.append(infoList[0])
             self.authority += float(infoList[1])
             self.authority_list.append(infoList[1])
@@ -322,7 +321,6 @@ class train_model_software():
             self.speed_list.append(infoList[3])
 
         self.currentMove = 0
-        print(self.authority_list)
         # self.occupancy = self.beacon_list[0]
 
 
@@ -331,11 +329,9 @@ class train_model_software():
 
         blockList = beacon_val.split("; ")
         blockList = blockList[:len(blockList) - 1]
-        print(blockList)
 
         for block in blockList:
             infoList = block.split("/")
-            print(infoList)
             self.beacon_list.append(infoList[0])
             self.authority += float(infoList[1])
             self.authority_list.append(infoList[1])
@@ -344,13 +340,10 @@ class train_model_software():
 
         #self.occupancy = self.beacon_list[0]
         self.currentMove = 0
-        print("In switch set")
     
     #occupancy updater
     def update_occupancy(self) -> None:
 
-        print(self.currentMove)
-        print(self.authority_list)
         if self.currentMove > float(self.authority_list[0]):
 
             self.current_polarity = not self.current_polarity
@@ -371,15 +364,23 @@ class train_model_software():
                 
             if len(self.suggested_speed_list) > 1:
                 self.suggested_speed_list = self.suggested_speed_list[1:]
-        
-        if self.authority == 0 and len(self.beacon_list) < 2:
-            self.increment_route()
             
+    def unpack_route(self, monsters_data) -> None:
+        self.suggested_speed_list = monsters_data[1]
+        self.stationAuthorities = monsters_data[2]
+        self.routeList = monsters_data[0][0]
+        self.station_bools = monsters_data[0][1]
+        self.authority_list = monsters_data[0][2]
 
-    #increment on route WILL NEED TO CHANGE
-    def increment_route(self) -> None:
-        if self.authority == 0 and self.routeList.index(self.occupancy) != len(self.routeList) - 1:
-            self.occupancy = self.routeList[self.routeList.index(self.occupancy) + 1]
+        print(self.routeList)
+        print(self.station_bools)
+        print(self.authority_list)
+        print(self.suggested_speed_list)
+        print(monsters_data[2])
+        print(self.stationAuthorities)
+        
+
+
 
     #function to open train GUI on current train
     def open_GUI(self) -> None:
@@ -407,7 +408,6 @@ class train_model_software():
         self.set_right_door(self.controller.getRightDoor())
         self.set_left_door(self.controller.getLeftDoor())
         self.set_announcement(self.controller.getAnnouncement())
-        self.increment_route()
         if UI_flag:
             self.controller.update_time()
         if UI_flag:

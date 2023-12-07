@@ -48,8 +48,7 @@ class train_model_interface_software(QObject):
     def set_route(self, names: list) -> None:
         if(self.trains == []):
             return
-        print(names)
-        self.trains[0].routeList = names
+        self.access_train(len(self.trains) - 1).unpack_route(names)
 
     #show GUIs
     def show_GUI(self, train_num: int) -> None:
