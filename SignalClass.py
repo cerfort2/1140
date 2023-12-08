@@ -59,8 +59,13 @@ class God(Home, QMainWindow):
         self.timeStep = 50
 
         self.ctc = CTC()
-        self.trackControllerHW = HWTrackControllerGUI()
-        #self.trackControllerSW = SoftwareTrackControllerGUI()
+
+        #HW Track Controller
+        # self.trackControllerHW = HWTrackControllerGUI()
+
+        #SW Track Controller
+        self.trackControllerHW = SoftwareTrackControllerGUI()
+
         self.trackModel = functionalUI()
         self.trainInterface = train_model_interface_software()
         self.setupConnections()
@@ -93,14 +98,22 @@ class God(Home, QMainWindow):
         #self.ctc.train_dispatched.connect(self.trackControllerSW.sendTrainDetails)
 
         #Timer functions between Track Model and Track Controller
-        #Hardware
         self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerHW.getOccupancy)
-        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerHW.greenLine.setTracks)
         self.trackControllerHW.trackModelSuggestedSpeedHW.connect(self.trackModel.trackModel.suggestedSpeed)
         self.trackControllerHW.trackModelAuthorityHW.connect(self.trackModel.trackModel.authority)
         self.trackControllerHW.trackModelSendRouteHW.connect(self.trackModel.trackModel.route)
         self.trackControllerHW.trackModelTrackDataHW.connect(self.trackModel.trackModel.controlModel)
-        #Software
+
+        #Only have one of these lines commented out:
+        #HW Track Controller
+        # self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerHW.greenLine.setTracks)
+
+        #SW Track Controller
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerHW.setDisplay)
+
+
+
+
         # self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerSW.setDisplay)
         # self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerSW.setOccupancy)
         # self.trackControllerSW.trackModelData.connect(self.trackModel.trackModel.controlModel)
