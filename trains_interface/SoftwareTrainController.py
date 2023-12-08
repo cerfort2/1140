@@ -234,13 +234,13 @@ class SoftwareTrainController():
         if self.manualmode==True:
             self.ekprev=self.ek
             self.ek=(self.manualcommandedspeed/2.2369362921-self.currentSpeed)
-            self.uk+=(self.interval/2)*(self.ek-self.ekprev)
-            self.power=(self.ek*self.kp-self.ki*self.uk)
+            self.uk+=(self.interval/2)*(self.ek+self.ekprev)
+            self.power=(self.ek*self.kp+self.ki*self.uk)
         else:
             self.ekprev=self.ek
             self.ek=(self.ctcSpeed-self.currentSpeed)
-            self.uk+=(self.interval/2)*(self.ek-self.ekprev)
-            self.power=(self.ek*self.kp-self.ki*self.uk)
+            self.uk+=(self.interval/2)*(self.ek+self.ekprev)
+            self.power=(self.ek*self.kp+self.ki*self.uk)
 
         if self.power>120000:
             self.power=120000
@@ -285,8 +285,8 @@ class SoftwareTrainController():
         if self.dwelling and not self.manualmode:
             if self.dwellTime-self.interval>0:   #subtract the time that it takes the timer to time out
                 self.dwellTime-=self.interval
+                print(self.dwellTime)
             else:
-                print("done dwelling")
                 self.dwelling=False
                 self.dwellTime=60     
                 self.authority+=10
