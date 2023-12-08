@@ -104,7 +104,6 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         #Change Block
         self.block.currentIndexChanged.connect(self.new_block)
         #Set occupied
-        self.tab.currentChanged.connect(self.setOccupied)
         #Mode
         self.modeButton.toggled.connect(self.mode_handler)
         #TB
