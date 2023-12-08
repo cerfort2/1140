@@ -75,11 +75,11 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         #Sets the list of waysides
         for i in range(len(self.side)):
             self.wayside.addItem(self.side[i].getName())
-            self.waysideTB.addItem(self.side[i].getName())
+            # self.waysideTB.addItem(self.side[i].getName())
         #Sets the lists of block for the first wayside
         for i in range(len(self.side[0].getBlocks())):
             self.block.addItem(self.side[0].getBlock(i).getName())
-            self.blockTB.addItem(self.side[0].getBlock(i).getName())
+            # self.blockTB.addItem(self.side[0].getBlock(i).getName())
         
 
 
@@ -105,8 +105,6 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         self.wayside.currentIndexChanged.connect(self.new_wayside)
         #Change Block
         self.block.currentIndexChanged.connect(self.new_block)
-        #Set occupied
-        self.tab.currentChanged.connect(self.setOccupied)
         #Mode
         self.modeButton.toggled.connect(self.mode_handler)
         #TB
