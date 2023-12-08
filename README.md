@@ -4,13 +4,6 @@
 
 ## Installation guide:
 
-#### This installation guide assumes you are using a vanilla ubuntu virtual machine.
-
-#### If you do not have the github CLI, you must install it with the following command:
-```bash
-apt install git -y
-```
-
 
 #### Clone the repository with the following command:
 ```bash
