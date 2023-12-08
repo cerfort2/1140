@@ -1,8 +1,8 @@
 from PyQt6.QtWidgets import *
-from HWTrainControllerGUI import HWTrainControllerGUI
+from HWTrainControllerGUI import *
 import serial
 import time
-arduinoData = serial.Serial('/dev/cu.usbmodem1101',115200)
+#arduinoData = serial.Serial('/dev/cu.usbmodem11101',115200)
 
 
 
@@ -27,7 +27,7 @@ class HardwareTrainController():
 
     
     def __init__(self):
-        self.servicebrake_clicked = 0
+        self.service_clicked = 0
         self.beaconInfo = []
         self.nextstop = ""
         self.annoucement = ""
@@ -43,7 +43,7 @@ class HardwareTrainController():
         self.manualcommandedspeed = 0
         self.temperature = 0
         self.power = 0
-        self.ctcSpeed = 10
+        self.ctcSpeed = 5
         self.currentSpeed = 0
         self.speedLimit = 43
         self.dwelling = False
@@ -54,40 +54,89 @@ class HardwareTrainController():
         self.brakeSpeed = 0
         self.serviceBrake= False
         self.eBrake = False
-        self.dwellTime = 0
+        self.dwellTime = 10
         self.e_k = 0
         self.e_k_prev = 0
         self.u_k = 0
         self.u_k_prev = 0
         self.kp = 400
         self.ki = 20
+        self.service_button = False
+        self.brakedistance = 0
+        self.interval = 1
+
 
         self.ui = HWTrainControllerGUI()
 
+    
+    def configure_service(self):
+        self.ui.service_brake.setCheckable(True)
+        self.ui.service_brake.clicked.connect(self.getServiceBrake)
+    
+    def configure_ebrake(self):
+        self.ui.ebrake.setCheckable(True)
+        self.ui.ebrake.clicked.connect(self.getEbrake)
+
+    def getServiceBrake(self):
+        #self.service_clicked = self.service_clicked + 1
+        self.serviceBrake = not self.serviceBrake
+
+    def getEbrake(self):
+        self.eBrake = not self.eBrake
+
+
+    
+    
+
+    
+
+
+
+
     def train_communications(self):
 
+        self.configure_service()
+        self.configure_ebrake()
         #self.ui.service_brake.pressed.connect(self.manual_service)
-
         #retreive values
         self.ki=self.ui.integral_gain.value()
         self.kp=self.ui.proportional_gain.value()
-        self.setManualMode(self.ui.mode.currentText())
+
+        if(self.ui.mode.currentText() == "Manual"):
+            self.setManualMode(True)
+            self.ui.commanded_speed.display(self.manualcommandedspeed*2.2369362)
+        else:
+            self.setManualMode(False)
+            self.ui.commanded_speed.display(self.ctcSpeed*2.2369362)
+
+
         self.manualcommandedspeed = self.ui.manual_speed.value()
+
+        
+        
+        #Switching
 
         #calculate
         #use self.calcPower() if manual does not work.
         self.calcPower()
         #self.update_power()
-        self.computeManualSpeed()
         self.computeAuthority()
         self.computeDwellTime()
         self.computeServiceBrake()
+        
+        
+        #if(not self.manualmode):
+           # self.computeServiceBrake()
+        
+      
+        #self.eBrakePressed()
+
 
 
         #update values
         self.ui.power.display(self.power)
         self.ui.current_speed.display(self.currentSpeed*2.2369362921)
-        self.ui.commanded_speed.display(self.manualcommandedspeed*2.2369362921)
+        #self.ui.commanded_speed.display(self.manualcommandedspeed*2.2369362921)
         self.ui.speed_limit.display(self.speedLimit)
         self.ui.authority.display(self.authority)
         #arduino
@@ -136,8 +185,6 @@ class HardwareTrainController():
     def getManualMode(self):
         return self.manualmode
      
-    def getEbrake(self):
-        return self.eBrake
     
     def eBrakePressed(self): 
         if self.currentSpeed==0 and self.eBrake==True:    #ebrake already pressed
@@ -205,26 +252,6 @@ class HardwareTrainController():
         self.manualcommandedspeed = x
     
 
-    def computeDwellTime(self):
-        if self.dwelling and not self.manualmode:
-           # print(self.dwellTime)
-            if self.dwellTime-.2>0:   #subtract the time that it takes the timer to time out
-                self.dwellTime-=.2
-            else:
-                self.dwelling=False
-                self.dwellTime=60        
-    
-
-    def computeManualSpeed(self) ->int:
-        if self.serviceBrake == 1:
-            self.manualcommandedspeed=self.currentSpeed #make sure this is good, assume connor sends this back
-
-        if not self.manualmode:
-            self.manualcommandedspeed=self.ctcSpeed
-        else:
-            if self.manualcommandedspeed>=self.speedLimit:
-                self.manualcommandedspeed=self.speedLimit        #convert to m/s
-
     def calcPower(self):
         
         # pmax = 10
@@ -253,19 +280,23 @@ class HardwareTrainController():
         if self.manualmode==True:
             self.ek_prev=self.e_k
             self.e_k=(self.manualcommandedspeed-self.currentSpeed)
-            self.u_k+=(.2/2)*(self.e_k-self.ek_prev)
+            self.u_k=(.05/2)*(self.e_k+self.ek_prev)
             self.power=(self.e_k*self.kp-self.ki*self.u_k)
         else:
             self.ek_prev=self.e_k
             self.e_k=(self.ctcSpeed-self.currentSpeed)
-            self.u_k+=(.2/2)*(self.e_k-self.ek_prev)
+            self.u_k=(.05/2)*(self.e_k+self.ek_prev)
             self.power=(self.e_k*self.kp-self.ki*self.u_k)
+            print("power is calculated")
+            print(self.power)
 
         if self.power>120000:
             self.power=120000
 
-        if self.brakeFailure or self.signalFailure or self.engineFailure or self.eBrake or self.power < 0 or self.serviceBrake==True:
+        if self.brakeFailure or self.signalFailure or self.engineFailure or self.eBrake or self.power < 0 or self.serviceBrake or self.authority <= 0: #must change, this does not support failures
             self.power=0
+            print(self.authority)
+            print("power is set to 0")
 
 
         # arduinoData.write(values.encode())
@@ -292,15 +323,38 @@ class HardwareTrainController():
         return self.authority
     
     def computeServiceBrake(self):
-        if not self.manualmode and self.currentSpeed>0:
+        if not self.manualmode:
             
             self.brakedistance = self.currentSpeed**2/(1.2)
 
-            if self.brakedistance>=self.authority:
-                self.serviceBrake=True
-                print('engaged')
+            if self.brakedistance >= self.authority:
+                
+                self.serviceBrake=True 
+
+
             else:
                 self.serviceBrake=False
+
+            if self.dwelling:
+                self.serviceBrake = False
+
+            if self.serviceBrake==True:
+                self.manualcommandedspeed=self.currentSpeed
+
+    def computeDwellTime(self):
+        if self.dwelling and not self.manualmode:
+            if (self.dwellTime-self.interval)>=0:   #subtract the time that it takes the timer to time out
+                self.dwellTime-=self.interval
+                print(self.dwellTime)
+        else:
+            self.dwelling=False
+            self.serviceBrake = False
+            self.eBrake = False
+            self.brakedistance = 0
+            self.authority = 100
+
+
+
 
 
 
@@ -308,27 +362,19 @@ class HardwareTrainController():
         return self.manualcommandedspeed
     
     def setManualMode(self,status):
-        if status == "Manual":
-            self.manualmode = True
-        else:
-            self.manualmode = False
-
+        self.manualmode = status
+    
     def computeAuthority(self):
         if self.authority<=0 and self.currentSpeed==0:
             if not self.manualmode:
                 self.dwelling=True
     
     
-    def manual_service(self):
-
-        if(self.manualmode):
-            self.brakedistance = self.currentSpeed**2/(1.2)
-    
-    def engine_status(self):
-        if(self.engineFailure == True):
-            arduinoData.write("True/end".encode())
-        elif(self.engineFailure == False):
-            arduinoData.write("False/end".encode())
+    # def engine_status(self):
+    #     if(self.engineFailure == True):
+    #         arduinoData.write("True/end".encode())
+    #     elif(self.engineFailure == False):
+    #         arduinoData.write("False/end".encode())
 
     # def signal_status(self):
     #     if(self.signalFailure == True):
@@ -340,13 +386,13 @@ class HardwareTrainController():
     
     # def brake_status(self):
 
-    def update_power(self):
-        values = f"{self.manualmode},{self.currentSpeed},{self.manualcommandedspeed},{self.ctcSpeed},{self.kp},{self.ki}\n"
-        arduinoData.write(values.encode())
+    # def update_power(self):
+    #     values = f"{self.manualmode},{self.currentSpeed},{self.manualcommandedspeed},{self.ctcSpeed},{self.kp},{self.ki}\n"
+    #     arduinoData.write(values.encode())
 
-        arduino_data = arduinoData.readline().decode().strip()
-        self.power = float(arduino_data)
-        print(self.power)
+    #     arduino_data = arduinoData.readline().decode().strip()
+    #     self.power = float(arduino_data)
+    #     print(self.power)
 
 
     def open_GUI(self):

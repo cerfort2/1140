@@ -12,7 +12,6 @@ ki = 20
 while True:
     values = f"{manualmode},{currentSpeed},{manualcommandedspeed},{ctcSpeed},{kp},{ki}\n"
     arduinoData.write(values.encode())
-    time.sleep(1)
 
 
     arduino_data = arduinoData.readline().decode('utf-8', 'ignore').strip()

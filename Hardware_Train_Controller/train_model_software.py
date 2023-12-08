@@ -9,7 +9,7 @@ class train_model_software():
     def __init__(self) -> None:
 
         #set local vars to test vals
-        self.authority = 500.0
+        self.authority = 100.0
         self.speed = 0.0
         self.passengers = 0
         self.power = 0.0
