@@ -37,7 +37,7 @@ pip install pyqt6
 - #### A User Interface with options to select CTC, Track Controller, Track Model, Train Model, Train Controller will appear
 - #### Do not close out of this interface
 - #### Select the *Track Model* and click *Upload Track Layout*
-- #### After uploading, click the *CTC* module and click the *Dispatch Train* button after entering a time
+- #### After uploading, click the *CTC* module and click the *Dispatch Train* button after entering a time (HH:MM:SS)
 - #### Open the Track Model again and the train will appear on the map
 - #### You may monitor the speed using the *Train Controller* module
 
