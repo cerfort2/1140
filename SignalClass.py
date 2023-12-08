@@ -88,7 +88,7 @@ class God(Home, QMainWindow):
         #Hardware
         self.trackControllerHW.CTCOccupancyHW.connect(self.ctc.get_block_occupancies)
         #Software
-        #self.trackControllerSW.ctcOccupancy.connect(self.ctc.get_block_occupancies)
+        #self.trackControllerSW.CTCOccupancyHW.connect(self.ctc.get_block_occupancies)
 
         #CTC to initialize train on dispatch
         self.ctc.train_dispatched.connect(self.init_train)
@@ -103,6 +103,7 @@ class God(Home, QMainWindow):
         self.trackControllerHW.trackModelAuthorityHW.connect(self.trackModel.trackModel.authority)
         self.trackControllerHW.trackModelSendRouteHW.connect(self.trackModel.trackModel.route)
         self.trackControllerHW.trackModelTrackDataHW.connect(self.trackModel.trackModel.controlModel)
+        self.trackControllerHW.trackModelStoppedTrains.connect(self.trackModel.trackModel.stopAtBlocks)
 
 
 

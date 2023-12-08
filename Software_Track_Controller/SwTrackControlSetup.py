@@ -23,6 +23,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
     trackModelSendRouteHW = pyqtSignal(list)
     trackModelSuggestedSpeedHW = pyqtSignal(list)
     trackModelAuthorityHW = pyqtSignal(list)
+    trackModelStoppedTrains = pyqtSignal(list)
 
     CTCOccupancyHW = pyqtSignal(list)
     CTCTrackFailuresHW = pyqtSignal(list)
@@ -81,6 +82,9 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             self.block.addItem(self.side[0].getBlock(i).getName())
             # self.blockTB.addItem(self.side[0].getBlock(i).getName())
         
+    def sendStop(self, occu):
+        self.trackModelStoppedTrains.emit(self.create.collision())
+        
 
 
     def connectFunctions(self):
@@ -111,6 +115,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         # self.occupationTB.stateChanged.connect(self.TB_o_handler)
         # self.waysideTB.currentIndexChanged.connect(self.TB_w_handler)
         # self.blockTB.currentIndexChanged.connect(self.TB_b_handler)
+
 
     # def TB_o_handler(self):
     #     way = self.waysideTB.currentIndex()
