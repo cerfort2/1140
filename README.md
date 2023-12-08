@@ -24,9 +24,6 @@ pip install pandas
 ```bash
 pip install pyqt6
 ```
-```bash
-pip install pyserial
-```
 
 ### To run the system:
 - #### Run SignalClass.py
