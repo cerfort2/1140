@@ -556,7 +556,8 @@ class TrackModel(QObject):
         #Clear occupancy
         for line in self.lines:
             for block in line.blocks:
-                block.clearOccupied()
+                if not (block.brokenRail or block.trackCircuitFailure or block.powerFailure):
+                    block.clearOccupied()
 
         print("Update Occupancy")
         for blk_name in occupancyList:
