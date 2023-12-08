@@ -2,7 +2,7 @@
 # Authors: Chris Erfort, Myles Fernau, Zach Baldwin, Anuj Lele, Victor Chiang, Krishna Patel, Connor Paladino
 
 
-## Instalation guide:
+## Instalation guide MASSIVE BALLS:
 
 ### This installation guide assumes you are using a vanilla ubuntu virtual machine.
 
