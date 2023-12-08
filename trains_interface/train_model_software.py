@@ -1,6 +1,7 @@
 #Train Model object class, all objects are created in the train model interface
 import math, time
 from trains_interface.SoftwareTrainController import *
+from Hardware_Train_Controller.HardwareTrainController import *
 from trains_interface.train_model_GUI import *
 
 class train_model_software():
@@ -43,7 +44,8 @@ class train_model_software():
         self.station_bools = []
         self.currentMove = 0
         #create instance of train controller
-        self.controller = SoftwareTrainController()
+        # self.controller = SoftwareTrainController()
+        self.controller = HardwareTrainController()
 
         #create ui item
         self.ui = train_model_GUI()
