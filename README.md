@@ -24,6 +24,9 @@ pip install pandas
 ```bash
 pip install pyqt6
 ```
+```bash
+pip install pyserial
+```
 
 ### To run the system:
 - #### Run SignalClass.py
@@ -37,8 +40,19 @@ pip install pyqt6
 ## Installing the Hardware Train Controller
 
 ## Installing the Hardware Track Controller
+- #### Obtain a Arduino Mega Board, A Serial Communication Cord, DFRobot LCD2004 Screen, A breadboard with a red and light lcd, 2 150+ ohm resistors, and wire connectors
+- #### Connect 4 wires to the Arduino one in 29, one in 39, and other 2 for GND and 5V
+- #### Connect the GND and 5V accordingly to the breadboard. Then connect wire in 29 to the positive end of the terminal of the RED Light and 39 to postive end of GREEN Light
+- #### On the back of DFRobot LCD conect wires to the connections accordingly into Arduino Board for 5V, GND, SCL, SDA
+- #### Plug Arduino into PC/Laptop and open Trains.ino and Update Board and COM port being used
+- #### Click "Upload Code" button and installation is complete
 
 ## Using the CTC module
 - #### To dispatch a train, enter an arrival time into the corresponding line edit in (HH:MM:SS) format. Select the destination station, and add as many stops as you would like. Once you are done, click the "Dispatch Train" button, and a train will be dispatched onto the selected line.
 - #### To import a schedule file, enter automatic mode by selecting the labeled radio button. Select the Import Schedule Flie button. A file explorer window will open, allowing you to select a .xlsx or .csv file to import a schedule for the trains. This file must have four headers in this order: departure time, arrival time, arrival station, and a list of stops, separated by commas. The stations should be in the following format block_#: station_name (e.g. C9: EDGEBROOK).
 - #### To schedule a train, enter an arrival time, departure time, destination station, and input as many stops as you like. Click the "Schedule Train" button, and a train will be added to the schedule for the selected line.
+
+###Using HW Track Controller
+- #### Select "Track Controller" tab in the God Module to access the Track Controller UI
+- #### In Manual mode PLC Logic will still be executed, but selection of Lights, Switches, and Crossroads can be manually changed. Select a certain line you would like to control and select A wayside you would like to select. On wayside selection the current blocks and failures that are occupied are displayed on the right hand side. Selection of each in that certain wayside will be populated where you can select the signal you would like to change and change statuses
+- #### In Automatic mode PLC logic will be executed, changing statuses are not allowed. Selection of Light, Wayside, and other statuses are allowed to be viewed by selection on hardware, but not edited
