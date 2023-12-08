@@ -21,7 +21,6 @@ git clone https://github.com/cerfort2/1140
 
 #### You now must install the necessary libraries to run the program.
 #### Run the following commands:
-##### If prompted, answer "y"
 
 ```bash
 pip install pyserial
