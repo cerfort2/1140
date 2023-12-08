@@ -29,49 +29,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     oldOccupancy = []
     firstRun = True
 
-    #Testing for Switch 1
-    #greenLine.Waysides[1].getTrack(41).setOccupancy(True) #Z151
-    #greenLine.Waysides[1].getTrack(30).setOccupancy(True) #K63
-    #greenLine.Waysides[1].getTrack(27).setOccupancy(True) #J60
-
-    #Testing for Switch 2
-    #greenLine.Waysides[2].getTrack(1).setOccupancy(True) #M75
-    #greenLine.Waysides[2].getTrack(4).setOccupancy(True) #N78
-
-    #Testing for Switch 3
-    #greenLine.Waysides[2].getTrack(10).setOccupancy(True) #N84
-    #greenLine.Waysides[2].getTrack(25).setOccupancy(True) #Q99
-
-    #Testing for Switch 4
-    #greenLine.Waysides[0].getTrack(32).setOccupancy(True) #Z150
-    #greenLine.Waysides[0].getTrack(26).setOccupancy(True) #F27
-
-    #Testing for Switch 5
-    #greenLine.Waysides[0].getTrack(1).setOccupancy(True) #A2
-    #greenLine.Waysides[0].getTrack(13).setOccupancy(True) #D14
-
-    #Testing for Switch 6
-    #greenLine.Waysides[1].getTrack(24).setOccupancy(True) #I57
-
-    #Testing Crossroad
-    #greenLine.Waysides[0].getTrack(16).setOccupancy(True) #E17
-    #greenLine.Waysides[0].getTrack(19).setOccupancy(True) #E20
-
-    # for i in range(32): #A1-G32
-    #     pureOccupancy.append(greenLine.Waysides[0].getTrack(i).getOccupancy())
-    # #All for Wayside 2
-    # for i in range(41): #H33-L73
-    #     pureOccupancy.append(greenLine.Waysides[1].getTrack(i).getOccupancy())
-    # #All for Wayside 3
-    # for i in range(28): #M74-R101
-    #     pureOccupancy.append(greenLine.Waysides[2].getTrack(i).getOccupancy())
-    # #All for Wayside 4
-    # for i in range(48): #S102-Y149
-    #     pureOccupancy.append(greenLine.Waysides[3].getTrack(i).getOccupancy())
-    # pureOccupancy.append(greenLine.Waysides[0].getTrack(32).getOccupancy()) #Z150
-    # pureOccupancy.append(greenLine.Waysides[1].getTrack(41).getOccupancy()) #Z151/YARD
-
-
     def connectFunctions(self):
         #Buttons/Setup for Automatic Mode
         self.listWidget_3.itemClicked.connect(self.checkListAutomatic)
@@ -187,7 +144,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             self.oldOccupancy = occupancy
             self.firstRun = False
     def createNewTrainData(self, traveling, Auth, speed): #Created by CTC
-        print(Auth)
         self.trackModelAuthorityHW.emit(Auth)
         self.trackModelSuggestedSpeedHW.emit(speed)
         self.trackModelSendRouteHW.emit(traveling)
