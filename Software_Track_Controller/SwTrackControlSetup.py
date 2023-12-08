@@ -259,42 +259,43 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         way = self.wayside.currentIndex()
         blo = self.block.currentIndex()
         colides = self.create.collision()
+        self.create.logic()
+        if(self.side[way].getBlock(blo).getHasSwitch()):
+            #If there is a switch set data and show frame
+            if(self.side[way].getBlock(blo).getSwitch()):
+                self.switchDirection.setPixmap(self.right)
+            else:
+                self.switchDirection.setPixmap(self.left)
+            self.leftBlock.setText(self.side[way].getBlock(blo).getLeft())
+            self.rightBlock.setText(self.side[way].getBlock(blo).getRight())
+            self.switchFrame.show()
+        else:
+            self.switchFrame.hide()
+        #Crossroad Update
+        if(self.side[way].getBlock(blo).getHasCrossroad()):
+            #If there is a crossroad set image and show frame
+            if(self.side[way].getBlock(blo).getCrossroad()):
+                self.crossroadStatus.setPixmap(self.closed)
+            else:
+                self.crossroadStatus.setPixmap(self.open)
+            self.crossroadFrame.show()
+        else:
+            self.crossroadFrame.hide()
+        if(self.side[way].getBlock(blo).getHasSignal()):
+            #If there is a signal set color and show frame
+            if(not self.side[way].getBlock(blo).getSignal()):
+                self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
+            else:
+                self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
+            self.signalFrame.show()
+        else:
+            self.signalFrame.hide()
+        #Mode button show/hide
         if(self.modeButton.isChecked()):
             self.toggleDirection.hide()
             self.toggleCrossroad.hide()
             self.redButton.hide()
             self.greenButton.hide()
-            self.create.logic()
-            if(self.side[way].getBlock(blo).getHasSwitch()):
-                #If there is a switch set data and show frame
-                if(self.side[way].getBlock(blo).getSwitch()):
-                    self.switchDirection.setPixmap(self.right)
-                else:
-                    self.switchDirection.setPixmap(self.left)
-                self.leftBlock.setText(self.side[way].getBlock(blo).getLeft())
-                self.rightBlock.setText(self.side[way].getBlock(blo).getRight())
-                self.switchFrame.show()
-            else:
-                self.switchFrame.hide()
-            #Crossroad Update
-            if(self.side[way].getBlock(blo).getHasCrossroad()):
-                #If there is a crossroad set image and show frame
-                if(self.side[way].getBlock(blo).getCrossroad()):
-                    self.crossroadStatus.setPixmap(self.closed)
-                else:
-                    self.crossroadStatus.setPixmap(self.open)
-                self.crossroadFrame.show()
-            else:
-                self.crossroadFrame.hide()
-            if(self.side[way].getBlock(blo).getHasSignal()):
-                #If there is a signal set color and show frame
-                if(not self.side[way].getBlock(blo).getSignal()):
-                    self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
-                else:
-                    self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
-                self.signalFrame.show()
-            else:
-                self.signalFrame.hide()
         else:
             self.toggleDirection.show()
             self.toggleCrossroad.show()
