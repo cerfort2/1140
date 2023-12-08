@@ -52,7 +52,7 @@ pip install pyserial
 - #### To import a schedule file, enter automatic mode by selecting the labeled radio button. Select the Import Schedule Flie button. A file explorer window will open, allowing you to select a .xlsx or .csv file to import a schedule for the trains. This file must have four headers in this order: departure time, arrival time, arrival station, and a list of stops, separated by commas. The stations should be in the following format block_#: station_name (e.g. C9: EDGEBROOK).
 - #### To schedule a train, enter an arrival time, departure time, destination station, and input as many stops as you like. Click the "Schedule Train" button, and a train will be added to the schedule for the selected line.
 
-###Using HW Track Controller
+## Using HW Track Controller
 - #### Select "Track Controller" tab in the God Module to access the Track Controller UI
 - #### In Manual mode PLC Logic will still be executed, but selection of Lights, Switches, and Crossroads can be manually changed. Select a certain line you would like to control and select A wayside you would like to select. On wayside selection the current blocks and failures that are occupied are displayed on the right hand side. Selection of each in that certain wayside will be populated where you can select the signal you would like to change and change statuses
 - #### In Automatic mode PLC logic will be executed, changing statuses are not allowed. Selection of Light, Wayside, and other statuses are allowed to be viewed by selection on hardware, but not edited
