@@ -260,6 +260,10 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         blo = self.block.currentIndex()
         colides = self.create.collision()
         if(self.modeButton.isChecked()):
+            self.toggleDirection.hide()
+            self.toggleCrossroad.hide()
+            self.redButton.hide()
+            self.greenButton.hide()
             self.create.logic()
             if(self.side[way].getBlock(blo).getHasSwitch()):
                 #If there is a switch set data and show frame
@@ -291,6 +295,11 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
                 self.signalFrame.show()
             else:
                 self.signalFrame.hide()
+        else:
+            self.toggleDirection.show()
+            self.toggleCrossroad.show()
+            self.redButton.show()
+            self.greenButton.show()
 
     def setOccupied(self):
         self.occupationData.clear()
