@@ -79,12 +79,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             # self.blockTB.addItem(self.side[0].getBlock(i).getName())
         
     def sendStop(self, occu):
-        if(self.line.getName() == "Green"):
-            self.trackModelStoppedTrains.emit(self.create.greenCollision())
-        elif(self.line.getName() == "Red"):
-            self.trackModelStoppedTrains.emit(self.create.redCollision())
-        else:
-            print("No PLC Found")
+        self.create.collision(self.line.getName())
         
 
 
@@ -264,12 +259,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
     def mode_handler(self):
         way = self.wayside.currentIndex()
         blo = self.block.currentIndex()
-        if(self.line.getName() == "Green"):
-            self.create.greenLogic()
-        elif(self.line.getName() == "Red"):
-            self.create.redLogic()
-        else:
-            print("No PLC Found")
+        self.create.logic(self.line.getName())
         
         if(self.side[way].getBlock(blo).getHasSwitch()):
             #If there is a switch set data and show frame
