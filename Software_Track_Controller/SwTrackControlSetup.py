@@ -19,13 +19,14 @@ from Software_Track_Controller.PLC import *
 
 class SoftwareTrackControllerGUI(Ui_Form, QObject):
 
-    trackModelData = pyqtSignal(list)
-    trackModelRoute = pyqtSignal(list)
-    trackModelSpeed = pyqtSignal(list)
-    trackModelAuthority = pyqtSignal(int)
+    trackModelTrackDataHW = pyqtSignal(list)
+    trackModelSendRouteHW = pyqtSignal(list)
+    trackModelSuggestedSpeedHW = pyqtSignal(list)
+    trackModelAuthorityHW = pyqtSignal(list)
+    trackModelStoppedTrains = pyqtSignal(list)
 
-    ctcOccupancy = pyqtSignal(list)
-    ctcFailures = pyqtSignal(list)
+    CTCOccupancyHW = pyqtSignal(list)
+    CTCTrackFailuresHW = pyqtSignal(list)
 
 
 
@@ -37,10 +38,10 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
     def sendFailures(self): #Sends failures to CTC
         #Senses failures using PLC and
         fail:str = []
-        self.ctcFailures.emit(fail)
+        self.CTCTrackFailuresHW.emit(fail)
         
 
-    def setOccupancy(self, data): #Receives occupancy from Track Model
+    def getOccupancy(self, data): #Receives occupancy from Track Model
         #Gets occupancy and sets occupancy
         self.line.setOccupancy(data)
         #Sets new states in automatic
@@ -48,36 +49,41 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         #Sets occupied list
         self.setOccupied()
         #sends occupancy to ctc
-        self.ctcOccupancy.emit(self.line.getOccupancy())
+        self.CTCOccupancyHW.emit(self.line.getOccupancy())
 
-    def sendTrainDetails(self, route, speed, auth): 
+    def createNewTrainData(self, route, auth, speed): 
         #Receives train dispatch data from CTC and sends to Track Model
-        self.trackModelRoute.emit(route)
-        self.trackModelSpeed.emit(speed)
-        self.trackModelAuthority.emit(auth)
+        self.trackModelAuthorityHW.emit(auth)
+        self.trackModelSuggestedSpeedHW.emit(speed)
+        self.trackModelSendRouteHW.emit(route)
 
-    def getAuth(self): 
-        #Sends only auth to track model
-        self.trackModelAuthority.emit(self.trainAuth.getAuth(0))
+    # def getAuth(self): 
+    #     #Sends only auth to track model
+    #     self.trackModelAuthority.emit(self.trainAuth.getAuth(0))
 
-    def getData(self): 
+    def sendData(self): 
         #Sends track states to track Model
-        self.trackModelData.emit(self.line.getData())
+        self.trackModelTrackDataHW.emit(self.line.getData())
         
     def setDisplay(self, data): 
         #Inililizes waysides from Track Model
         self.side:Wayside = self.line.create(data)
+        #Create logic class
+        self.create = PLC(self.line.getBlocks())
         #Clears lists
         self.block.clear()
         self.wayside.clear()
         #Sets the list of waysides
         for i in range(len(self.side)):
             self.wayside.addItem(self.side[i].getName())
-            self.waysideTB.addItem(self.side[i].getName())
+            # self.waysideTB.addItem(self.side[i].getName())
         #Sets the lists of block for the first wayside
         for i in range(len(self.side[0].getBlocks())):
             self.block.addItem(self.side[0].getBlock(i).getName())
-            self.blockTB.addItem(self.side[0].getBlock(i).getName())
+            # self.blockTB.addItem(self.side[0].getBlock(i).getName())
+        
+    def sendStop(self, occu):
+        self.trackModelStoppedTrains.emit(self.create.collision())
         
 
 
@@ -103,14 +109,13 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         self.wayside.currentIndexChanged.connect(self.new_wayside)
         #Change Block
         self.block.currentIndexChanged.connect(self.new_block)
-        #Set occupied
-        self.tab.currentChanged.connect(self.setOccupied)
         #Mode
         self.modeButton.toggled.connect(self.mode_handler)
         #TB
         # self.occupationTB.stateChanged.connect(self.TB_o_handler)
         # self.waysideTB.currentIndexChanged.connect(self.TB_w_handler)
         # self.blockTB.currentIndexChanged.connect(self.TB_b_handler)
+
 
     # def TB_o_handler(self):
     #     way = self.waysideTB.currentIndex()
@@ -162,8 +167,8 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         way = self.wayside.currentIndex()
         blo = self.block.currentIndex()
         #If red change green
-        if(not self.side[way].getBlock(blo).getSignal()):
-            self.side[way].getBlock(blo).setSignal(True)
+        if(self.side[way].getBlock(blo).getSignal()):
+            self.side[way].getBlock(blo).setSignal(False)
             self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
 
     def red_handler(self):
@@ -171,8 +176,8 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         way = self.wayside.currentIndex()
         blo = self.block.currentIndex()
         #If Green change red
-        if(self.side[way].getBlock(blo).getSignal()):
-            self.side[way].getBlock(blo).setSignal(False)
+        if(not self.side[way].getBlock(blo).getSignal()):
+            self.side[way].getBlock(blo).setSignal(True)
             self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
 
     def new_wayside(self):
@@ -181,7 +186,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         blo = 0
         #Create new block list
         self.block.clear()
-        for i in range(len(self.side[way].getBlocks)):
+        for i in range(len(self.side[way].getBlocks())):
             self.block.addItem(self.side[way].getBlock(i).name)
         #Switch Update
         if(self.side[way].getBlock(blo).getHasSwitch()):
@@ -208,7 +213,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         #Signal Update
         if(self.side[way].getBlock(blo).getHasSignal()):
             #If there is a signal set color and show frame
-            if(self.side[way].getBlock(blo).getSignal()):
+            if(not self.side[way].getBlock(blo).getSignal()):
                 self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
             else:
                 self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
@@ -247,7 +252,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         #Signal Update
         if(self.side[way].getBlock(blo).getHasSignal()):
             #If there is a signal set color and show frame
-            if(self.side[way].getBlock(blo).getSignal()):
+            if(not self.side[way].getBlock(blo).getSignal()):
                 self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
             else:
                 self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
@@ -258,39 +263,49 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
     def mode_handler(self):
         way = self.wayside.currentIndex()
         blo = self.block.currentIndex()
+        colides = self.create.collision()
+        self.create.logic()
+        if(self.side[way].getBlock(blo).getHasSwitch()):
+            #If there is a switch set data and show frame
+            if(self.side[way].getBlock(blo).getSwitch()):
+                self.switchDirection.setPixmap(self.right)
+            else:
+                self.switchDirection.setPixmap(self.left)
+            self.leftBlock.setText(self.side[way].getBlock(blo).getLeft())
+            self.rightBlock.setText(self.side[way].getBlock(blo).getRight())
+            self.switchFrame.show()
+        else:
+            self.switchFrame.hide()
+        #Crossroad Update
+        if(self.side[way].getBlock(blo).getHasCrossroad()):
+            #If there is a crossroad set image and show frame
+            if(self.side[way].getBlock(blo).getCrossroad()):
+                self.crossroadStatus.setPixmap(self.closed)
+            else:
+                self.crossroadStatus.setPixmap(self.open)
+            self.crossroadFrame.show()
+        else:
+            self.crossroadFrame.hide()
+        if(self.side[way].getBlock(blo).getHasSignal()):
+            #If there is a signal set color and show frame
+            if(not self.side[way].getBlock(blo).getSignal()):
+                self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
+            else:
+                self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
+            self.signalFrame.show()
+        else:
+            self.signalFrame.hide()
+        #Mode button show/hide
         if(self.modeButton.isChecked()):
-            create = PLC(self.side.getBlocks())
-            create.logic()
-            if(self.side[way].getBlock(blo).getHasSwitch()):
-                #If there is a switch set data and show frame
-                if(self.side[way].getBlock(blo).getSwitch()):
-                    self.switchDirection.setPixmap(self.right)
-                else:
-                    self.switchDirection.setPixmap(self.left)
-                self.leftBlock.setText(self.side[way].getBlock(blo).getLeft())
-                self.rightBlock.setText(self.side[way].getBlock(blo).getRight())
-                self.switchFrame.show()
-            else:
-                self.switchFrame.hide()
-            #Crossroad Update
-            if(self.side[way].getBlock(blo).getHasCrossroad()):
-                #If there is a crossroad set image and show frame
-                if(self.side[way].getBlock(blo).getCrossroad()):
-                    self.crossroadStatus.setPixmap(self.closed)
-                else:
-                    self.crossroadStatus.setPixmap(self.open)
-                self.crossroadFrame.show()
-            else:
-                self.crossroadFrame.hide()
-            if(self.side[way].getBlock(blo).getHasSignal()):
-                #If there is a signal set color and show frame
-                if(self.side[way].getBlock(blo).getSignal()):
-                    self.signalState.setStyleSheet("background-color: rgb(0, 255, 0);")
-                else:
-                    self.signalState.setStyleSheet("background-color: rgb(255, 0, 0);")
-                self.signalFrame.show()
-            else:
-                self.signalFrame.hide()
+            self.toggleDirection.hide()
+            self.toggleCrossroad.hide()
+            self.redButton.hide()
+            self.greenButton.hide()
+        else:
+            self.toggleDirection.show()
+            self.toggleCrossroad.show()
+            self.redButton.show()
+            self.greenButton.show()
 
     def setOccupied(self):
         self.occupationData.clear()

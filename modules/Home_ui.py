@@ -48,9 +48,9 @@ class Ui_Form(object):
         Form.setWindowTitle(_translate("Form", "Form"))
         self.ctc_btn.setText(_translate("Form", "CTC"))
         self.track_model_btn.setText(_translate("Form", "Track Model"))
-        self.track_controller_btn.setText(_translate("Form", "Track Controller (Software)"))
+        self.track_controller_btn.setText(_translate("Form", "Track Controller"))
         self.train_model_btn.setText(_translate("Form", "Train Model"))
-        self.train_controller_btn.setText(_translate("Form", "Train Controller (Software)"))
+        self.train_controller_btn.setText(_translate("Form", "Train Controller"))
         self.label.setText(_translate("Form", "Select Module"))
 
 

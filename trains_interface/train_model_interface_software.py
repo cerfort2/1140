@@ -48,9 +48,17 @@ class train_model_interface_software(QObject):
     def set_route(self, names: list) -> None:
         if(self.trains == []):
             return
-        print(names)
-        self.trains[0].routeList = names
-
+        self.access_train(len(self.trains)).unpack_route(names)
+    
+    #wayside stop function
+    def wayside_stops(self, stops: list) -> None:
+        current_occupancies = self.get_occupancies
+        for occupy in current_occupancies:
+            if occupy in stops:
+                self.access_train(current_occupancies.index(occupy) + 1).controller.activateWaysideStop()
+            else:
+                self.access_train(current_occupancies.index(occupy) + 1).controller.deactivateWaysideStop()
+            
     #show GUIs
     def show_GUI(self, train_num: int) -> None:
         self.UI_flag = True

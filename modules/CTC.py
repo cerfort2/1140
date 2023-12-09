@@ -33,7 +33,7 @@ class CTC(Ui_Form, QWidget):
     manual_mode = pyqtSignal()
     auto_mode = pyqtSignal()
     maint_mode = pyqtSignal()
-    train_dispatched = pyqtSignal(list, int, list)
+    train_dispatched = pyqtSignal(list, list, list)
     schedule_dispatch = pyqtSignal()
     stop_update = pyqtSignal()
     #output_speed = pyqtSignal(list)
@@ -442,6 +442,8 @@ class CTC(Ui_Form, QWidget):
         #self.route_tb.setText(str(route[0]))
 
         #setting route, authority, suggested speed
+        print("ctc authority")
+        print(authority)
         self.train_dispatch(route, authority, speeds)
         self.stops = []
         #self.arrival_time_dis.clear()

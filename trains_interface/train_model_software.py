@@ -1,6 +1,7 @@
 #Train Model object class, all objects are created in the train model interface
 import math, time
 from trains_interface.SoftwareTrainController import *
+from Hardware_Train_Controller.HardwareTrainController import *
 from trains_interface.train_model_GUI import *
 
 class train_model_software():
@@ -21,7 +22,7 @@ class train_model_software():
         self.engine_failure = False
         self.brake_failure = False
         self.signal_failure = False
-        self.inside_lights = False
+        self.inside_lights = True
         self.outside_lights = False
         self.right_door = False
         self.left_door = False
@@ -29,7 +30,7 @@ class train_model_software():
         self.announcement = ""
         self.beacon_list = []
         self.current_polarity = True
-        self.occupancy = ""
+        self.occupancy = "Z151"
         self.underground_list = []
         self.underground_val = False
         self.speed_list = []
@@ -38,10 +39,13 @@ class train_model_software():
         self.current_station = ""
         self.suggested_speed_list =[]
         self.routeList = []
+        self.stationAuthorities = []
         self.authority_list = []
+        self.station_bools = []
         self.currentMove = 0
         #create instance of train controller
         self.controller = SoftwareTrainController()
+        # self.controller = HardwareTrainController()
 
         #create ui item
         self.ui = train_model_GUI()
@@ -248,50 +252,49 @@ class train_model_software():
     #CALCULATING BEACONS AND OCCUPANCY
     #
 
-    #beacon getter for beacon strings
-    def set_beacon_list_out_station(self, beacon_val: str) -> None:
+    # #beacon getter for beacon strings
+    # def set_beacon_list_out_station(self, beacon_val: str) -> None:
 
-        self.beacon_list = []
-        self.authority = 0
-        self.underground_list = []
-        self.speed_list = []
-        iterator = 0
+    #     self.beacon_list = []
+    #     self.authority = 0
+    #     self.underground_list = []
+    #     self.speed_list = []
+    #     iterator = 0
 
-        temp = ""
+    #     temp = ""
 
-        for i in range(0, len(beacon_val)):
+    #     for i in range(0, len(beacon_val)):
 
-            if beacon_val[i] == " ":
-                continue
-            elif beacon_val[i] != "/" and beacon_val[i] != ";":
-                temp += beacon_val[i]
-            else:
-                if iterator == 0:
-                    self.beacon_list.append(temp)
-                    temp = ""
-                    iterator += 1
-                elif iterator == 1:
-                    #self.authority += float(temp)
-                    temp = ""
-                    iterator += 1
-                elif iterator == 2:
-                    self.underground_list.append(bool(temp))
-                    temp = ""
-                    iterator += 1
-                else:
-                    self.speed_list.append(temp)
-                    temp = ""
-                    iterator = 0
+    #         if beacon_val[i] == " ":
+    #             continue
+    #         elif beacon_val[i] != "/" and beacon_val[i] != ";":
+    #             temp += beacon_val[i]
+    #         else:
+    #             if iterator == 0:
+    #                 self.beacon_list.append(temp)
+    #                 temp = ""
+    #                 iterator += 1
+    #             elif iterator == 1:
+    #                 #self.authority += float(temp)
+    #                 temp = ""
+    #                 iterator += 1
+    #             elif iterator == 2:
+    #                 self.underground_list.append(bool(temp))
+    #                 temp = ""
+    #                 iterator += 1
+    #             else:
+    #                 self.speed_list.append(temp)
+    #                 temp = ""
+    #                 iterator = 0
         
-        #self.occupancy = self.beacon_list[0]
+    #     #self.occupancy = self.beacon_list[0]
 
-    #get suggest speed list from CTC
-    def set_suggested_speeds(self, speed_list: list) -> None:
-        self.suggested_speed_list = speed_list
+    # #get suggest speed list from CTC
+    # def set_suggested_speeds(self, speed_list: list) -> None:
+    #     self.suggested_speed_list = speed_list
         
-    #setting station data
+    # #setting station data
     def set_station_data(self, beacon_val: str) -> None:
-        print(beacon_val)
         #Split by ;
         splitPackets = beacon_val.split("; ")
 
@@ -308,78 +311,69 @@ class train_model_software():
         else:
             self.open_side = firstPacket[1]
 
-        #Pop the station info
-        blockList = splitPackets[1:]
-        blockList = blockList[:len(blockList) - 1]
-        print(blockList)
-        for block in blockList:
-            infoList = block.split("/")
-            print(infoList)
-            self.beacon_list.append(infoList[0])
-            self.authority += float(infoList[1])
-            self.authority_list.append(infoList[1])
-            self.underground_list.append(infoList[2])
-            self.speed_list.append(infoList[3])
 
-        self.currentMove = 0
-        print(self.authority_list)
-        # self.occupancy = self.beacon_list[0]
+    # #switch beacon
+    # def set_switch_data(self, beacon_val: str) -> None:
 
+    #     blockList = beacon_val.split("; ")
+    #     blockList = blockList[:len(blockList) - 1]
 
-    #switch beacon
-    def set_switch_data(self, beacon_val: str) -> None:
+    #     for block in blockList:
+    #         infoList = block.split("/")
+    #         self.beacon_list.append(infoList[0])
+    #         self.authority += float(infoList[1])
+    #         self.authority_list.append(infoList[1])
+    #         self.underground_list.append(infoList[2])
+    #         self.speed_list.append(infoList[3])
 
-        blockList = beacon_val.split("; ")
-        blockList = blockList[:len(blockList) - 1]
-        print(blockList)
-
-        for block in blockList:
-            infoList = block.split("/")
-            print(infoList)
-            self.beacon_list.append(infoList[0])
-            self.authority += float(infoList[1])
-            self.authority_list.append(infoList[1])
-            self.underground_list.append(infoList[2])
-            self.speed_list.append(infoList[3])
-
-        #self.occupancy = self.beacon_list[0]
-        self.currentMove = 0
-        print("In switch set")
+    #     #self.occupancy = self.beacon_list[0]
+    #     self.currentMove = 0
     
     #occupancy updater
     def update_occupancy(self) -> None:
 
-        print(self.currentMove)
-        print(self.authority_list)
+        if self.authority == 0 and len(self.stationAuthorities) > 1:
+            self.stationAuthorities = self.stationAuthorities[1:]
+            self.authority = self.stationAuthorities[0]
+            self.controller.dwelling = True
+            self.controller.dwellTime = 60
+
+        #if self.authority == 0:
+           # 1 == 1
+
         if self.currentMove > float(self.authority_list[0]):
 
             self.current_polarity = not self.current_polarity
             self.currentMove -= float(self.authority_list[0])
-
-            self.occupancy = self.beacon_list[1] if len(self.beacon_list) > 1 else self.beacon_list[0]
-            if len(self.beacon_list) > 1:
-                self.beacon_list = self.beacon_list[1:]
+            
+            if len(self.authority_list) > 1:
                 self.authority_list = self.authority_list[1:]
 
-            self.underground_val = self.underground_list[1] if len(self.underground_list) > 1 else self.underground_list[0]
-            if len(self.underground_list) > 1:
-                self.underground_list = self.underground_list[1:]
-                
-            self.speed_limit = self.speed_list[1] if len(self.speed_list) > 1 else self.speed_list[0]
-            if len(self.speed_list) > 1:
-                self.speed_list = self.speed_list[1:]
+            if len(self.routeList) > 1:
+                self.routeList = self.routeList[1:]
+                self.occupancy = self.routeList[0]
                 
             if len(self.suggested_speed_list) > 1:
                 self.suggested_speed_list = self.suggested_speed_list[1:]
-        
-        if self.authority == 0 and len(self.beacon_list) < 2:
-            self.increment_route()
             
+    def unpack_route(self, monsters_data) -> None:
+        self.suggested_speed_list = monsters_data[1]
+        self.stationAuthorities = monsters_data[2]
+        self.routeList = monsters_data[0][0]
+        self.station_bools = monsters_data[0][1]
+        self.authority_list = monsters_data[0][2]
 
-    #increment on route WILL NEED TO CHANGE
-    def increment_route(self) -> None:
-        if self.authority == 0 and self.routeList.index(self.occupancy) != len(self.routeList) - 1:
-            self.occupancy = self.routeList[self.routeList.index(self.occupancy) + 1]
+        print(self.routeList)
+        print(self.station_bools)
+        print(self.authority_list)
+        print(self.suggested_speed_list)
+        print(monsters_data[2])
+        print(self.stationAuthorities)
+
+        self.authority = self.stationAuthorities[0]
+        
+
+
 
     #function to open train GUI on current train
     def open_GUI(self) -> None:
@@ -407,7 +401,6 @@ class train_model_software():
         self.set_right_door(self.controller.getRightDoor())
         self.set_left_door(self.controller.getLeftDoor())
         self.set_announcement(self.controller.getAnnouncement())
-        self.increment_route()
         if UI_flag:
             self.controller.update_time()
         if UI_flag:
