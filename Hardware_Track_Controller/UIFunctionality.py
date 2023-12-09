@@ -255,8 +255,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             if(occu[i] == True):
                 if(occu[i+2] == True):
                     blocksStop.append(blocks[i].getName())
-        print("light Z151")
-        print(self.greenLine.Waysides[1].getTrack(41).getLight())
+        
         if(self.greenLine.Waysides[1].getTrack(41).getLight()):
             blocksStop.append("Z151")
         if(self.greenLine.Waysides[1].getTrack(28).getLight()):
@@ -804,7 +803,29 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                 self.comboBox_5.addItem("Light N85")
                 self.comboBox_5.addItem("Light Q100")
         if(value.text() == "Red Line"):
-            return
+            if(currentWayside == "Wayside 1"):
+                self.comboBox_5.addItem("Light A1")
+                self.comboBox_5.addItem("Light C10")
+                self.comboBox_5.addItem("Light D11")
+                self.comboBox_5.addItem("Light E15")
+                self.comboBox_5.addItem("Light F16")
+                self.comboBox_5.addItem("Light H27")
+                self.comboBox_5.addItem("Light H28")
+                self.comboBox_5.addItem("Light H32")
+                self.comboBox_5.addItem("Light H33")
+                self.comboBox_5.addItem("Light R72")
+                self.comboBox_5.addItem("Light T76")
+                self.comboBox_5.addItem("Light T77")
+            elif(currentWayside == "Wayside 2"):
+                self.comboBox_5.addItem("Light H38")
+                self.comboBox_5.addItem("Light H39")
+                self.comboBox_5.addItem("Light H43")
+                self.comboBox_5.addItem("Light H44")
+                self.comboBox_5.addItem("Light J52")
+                self.comboBox_5.addItem("Light J53")
+                self.comboBox_5.addItem("Light N66")
+                self.comboBox_5.addItem("Light O67")
+                self.comboBox_5.addItem("Light Q71")
     def configureCrossroadsAutomaticGreen(self, currentWayside): #Sets proper crossroads for each wayside selection
         self.comboBox_6.setCurrentIndex(0)
         for i in range(self.comboBox_6.count(), 0, -1):
@@ -876,7 +897,29 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                 self.comboBox_2.addItem("Light N85")
                 self.comboBox_2.addItem("Light Q100")
         if(value.text() == "Red Line"):
-            return
+            if(currentWayside == "Wayside 1"):
+                self.comboBox_2.addItem("Light A1")
+                self.comboBox_2.addItem("Light C10")
+                self.comboBox_2.addItem("Light D11")
+                self.comboBox_2.addItem("Light E15")
+                self.comboBox_2.addItem("Light F16")
+                self.comboBox_2.addItem("Light H27")
+                self.comboBox_2.addItem("Light H28")
+                self.comboBox_2.addItem("Light H32")
+                self.comboBox_2.addItem("Light H33")
+                self.comboBox_2.addItem("Light R72")
+                self.comboBox_2.addItem("Light T76")
+                self.comboBox_2.addItem("Light T77")
+            elif(currentWayside == "Wayside 2"):
+                self.comboBox_2.addItem("Light H38")
+                self.comboBox_2.addItem("Light H39")
+                self.comboBox_2.addItem("Light H43")
+                self.comboBox_2.addItem("Light H44")
+                self.comboBox_2.addItem("Light J52")
+                self.comboBox_2.addItem("Light J53")
+                self.comboBox_2.addItem("Light N66")
+                self.comboBox_2.addItem("Light O67")
+                self.comboBox_2.addItem("Light Q71")
     def configureCrossroadsManualGreen(self, currentWayside): #Sets proper crossroads for each wayside selection
         self.comboBox_3.setCurrentIndex(0)
         for i in range(self.comboBox_3.count(), 0, -1):
