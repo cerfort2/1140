@@ -14,12 +14,12 @@ from Hardware_Track_Controller.RedLineWaysides import RedLine
 class HWTrackControllerGUI(Ui_Form, QObject):
     
     #Signals sent out
-    CTCOccupancyHW = pyqtSignal(list)
+    CTCOccupancy = pyqtSignal(list)
     CTCTrackFailuresHW = pyqtSignal(list)
-    trackModelSendRouteHW = pyqtSignal(list)
-    trackModelSuggestedSpeedHW = pyqtSignal(list)
-    trackModelTrackDataHW = pyqtSignal(list)
-    trackModelAuthorityHW = pyqtSignal(list)
+    trackModelSendRoute = pyqtSignal(list)
+    trackModelSuggestedSpeed = pyqtSignal(list)
+    trackModelTrackData = pyqtSignal(list)
+    trackModelAuthority = pyqtSignal(list)
     trackModelStoppedTrains = pyqtSignal(list)
 
     #Global Variables
@@ -143,9 +143,9 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             self.oldOccupancy = occupancy
             self.firstRun = False
     def createNewTrainData(self, traveling, Auth, speed): #Created by CTC
-        self.trackModelAuthorityHW.emit(Auth)
-        self.trackModelSuggestedSpeedHW.emit(speed)
-        self.trackModelSendRouteHW.emit(traveling)
+        self.trackModelAuthority.emit(Auth)
+        self.trackModelSuggestedSpeed.emit(speed)
+        self.trackModelSendRoute.emit(traveling)
 
 
     #Sending out functions
@@ -196,9 +196,9 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                     data[2].append(blocks[i].getLight())
                 else:
                     data[2].append(False) 
-        self.trackModelTrackDataHW.emit(data)
+        self.trackModelTrackData.emit(data)
     def sendOccupancy(self): #Occupancy sent to CTC
-        self.CTCOccupancyHW.emit(self.pureOccupancy)
+        self.CTCOccupancy.emit(self.pureOccupancy)
     def sendFailures(self): #Failures sent to CTC
         failures = []
         for i in range(len(self.greenLine.Waysides)):

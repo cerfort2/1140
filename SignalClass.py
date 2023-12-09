@@ -61,10 +61,10 @@ class God(Home, QMainWindow):
         self.ctc = CTC()
 
         #HW Track Controller
-        # self.trackControllerHW = HWTrackControllerGUI()
+        # self.trackController = HWTrackControllerGUI()
 
         #SW Track Controller
-        self.trackControllerHW = SoftwareTrackControllerGUI()
+        self.trackController = SoftwareTrackControllerGUI()
 
         self.trackModel = functionalUI()
         self.trainInterface = train_model_interface_software()
@@ -75,7 +75,7 @@ class God(Home, QMainWindow):
         #GOD UI main page
         self.ctc_btn.clicked.connect(self.openCTCGUI)
         self.track_model_btn.clicked.connect(self.openTrackModelGUI)
-        self.track_controller_btn.clicked.connect(self.openTrackControllerHWGUI)
+        self.track_controller_btn.clicked.connect(self.opentrackControllerGUI)
         #self.track_controller_sw_btn.clicked.connect(self.openTrackControllerSW)
         
         
@@ -86,32 +86,32 @@ class God(Home, QMainWindow):
 
         #Timer functions between CTC and Track Controller
         #Hardware
-        self.trackControllerHW.CTCOccupancyHW.connect(self.ctc.get_block_occupancies)
+        self.trackController.CTCOccupancy.connect(self.ctc.get_block_occupancies)
         #Software
-        #self.trackControllerSW.CTCOccupancyHW.connect(self.ctc.get_block_occupancies)
+        #self.trackControllerSW.CTCOccupancy.connect(self.ctc.get_block_occupancies)
 
         #CTC to initialize train on dispatch
         self.ctc.train_dispatched.connect(self.init_train)
 
         #Sent from CTC to Track Controller
-        self.ctc.train_dispatched.connect(self.trackControllerHW.createNewTrainData)
+        self.ctc.train_dispatched.connect(self.trackController.createNewTrainData)
         #self.ctc.train_dispatched.connect(self.trackControllerSW.sendTrainDetails)
 
         #Timer functions between Track Model and Track Controller
-        self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerHW.getOccupancy)
-        self.trackControllerHW.trackModelSuggestedSpeedHW.connect(self.trackModel.trackModel.suggestedSpeed)
-        self.trackControllerHW.trackModelAuthorityHW.connect(self.trackModel.trackModel.authority)
-        self.trackControllerHW.trackModelSendRouteHW.connect(self.trackModel.trackModel.route)
-        self.trackControllerHW.trackModelTrackDataHW.connect(self.trackModel.trackModel.controlModel)
-        self.trackControllerHW.trackModelStoppedTrains.connect(self.trackModel.trackModel.stopAtBlocks)
+        self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackController.getOccupancy)
+        self.trackController.trackModelSuggestedSpeed.connect(self.trackModel.trackModel.suggestedSpeed)
+        self.trackController.trackModelAuthority.connect(self.trackModel.trackModel.authority)
+        self.trackController.trackModelSendRoute.connect(self.trackModel.trackModel.route)
+        self.trackController.trackModelTrackData.connect(self.trackModel.trackModel.controlModel)
+        self.trackController.trackModelStoppedTrains.connect(self.trackModel.trackModel.stopAtBlocks)
 
 
 
         #Only have one of these lines commented out:
         #HW Track Controller
-        # self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerHW.greenLine.setTracks)
+        # self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
         #SW Track Controller
-        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerHW.setDisplay)
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.setDisplay)
 
 
 
@@ -147,7 +147,7 @@ class God(Home, QMainWindow):
         # self.trackModel.trackModel.initTrack()
         #self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
-        self.trackControllerHW.sendData()
+        self.trackController.sendData()
         # self.trackModel.trackModel.emitStationBeacon()
         # self.trackModel.trackModel.emitSwitchBeacon()
         # self.trackModel.trackModel.emitApproachingBeacon()
@@ -165,8 +165,8 @@ class God(Home, QMainWindow):
         
         #HW Track Controller
         self.widget2 = QWidget()
-        self.trackControllerHW.setupUi(self.widget2)
-        self.trackControllerHW.connectFunctions()
+        self.trackController.setupUi(self.widget2)
+        self.trackController.connectFunctions()
         
         #CTC
         self.widget3 = QWidget()
@@ -181,7 +181,7 @@ class God(Home, QMainWindow):
     def openTrackModelGUI(self):
         self.widget.show()
 
-    def openTrackControllerHWGUI(self):
+    def opentrackControllerGUI(self):
         self.widget2.show()
     
     def openCTCGUI(self):

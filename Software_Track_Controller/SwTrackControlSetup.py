@@ -19,13 +19,13 @@ from Software_Track_Controller.PLC import *
 
 class SoftwareTrackControllerGUI(Ui_Form, QObject):
 
-    trackModelTrackDataHW = pyqtSignal(list)
-    trackModelSendRouteHW = pyqtSignal(list)
-    trackModelSuggestedSpeedHW = pyqtSignal(list)
-    trackModelAuthorityHW = pyqtSignal(list)
+    trackModelTrackData = pyqtSignal(list)
+    trackModelSendRoute = pyqtSignal(list)
+    trackModelSuggestedSpeed = pyqtSignal(list)
+    trackModelAuthority = pyqtSignal(list)
     trackModelStoppedTrains = pyqtSignal(list)
 
-    CTCOccupancyHW = pyqtSignal(list)
+    CTCOccupancy = pyqtSignal(list)
     CTCTrackFailuresHW = pyqtSignal(list)
 
 
@@ -49,21 +49,17 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         #Sets occupied list
         self.setOccupied()
         #sends occupancy to ctc
-        self.CTCOccupancyHW.emit(self.line.getOccupancy())
+        self.CTCOccupancy.emit(self.line.getOccupancy())
 
     def createNewTrainData(self, route, auth, speed): 
         #Receives train dispatch data from CTC and sends to Track Model
-        self.trackModelAuthorityHW.emit(auth)
-        self.trackModelSuggestedSpeedHW.emit(speed)
-        self.trackModelSendRouteHW.emit(route)
-
-    # def getAuth(self): 
-    #     #Sends only auth to track model
-    #     self.trackModelAuthority.emit(self.trainAuth.getAuth(0))
+        self.trackModelAuthority.emit(auth)
+        self.trackModelSuggestedSpeed.emit(speed)
+        self.trackModelSendRoute.emit(route)
 
     def sendData(self): 
         #Sends track states to track Model
-        self.trackModelTrackDataHW.emit(self.line.getData())
+        self.trackModelTrackData.emit(self.line.getData())
         
     def setDisplay(self, data): 
         #Inililizes waysides from Track Model
@@ -83,7 +79,12 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             # self.blockTB.addItem(self.side[0].getBlock(i).getName())
         
     def sendStop(self, occu):
-        self.trackModelStoppedTrains.emit(self.create.collision())
+        if(self.line.getName() == "Green"):
+            self.trackModelStoppedTrains.emit(self.create.greenCollision())
+        elif(self.line.getName() == "Red"):
+            self.trackModelStoppedTrains.emit(self.create.redCollision())
+        else:
+            print("No PLC Found")
         
 
 
@@ -263,8 +264,13 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
     def mode_handler(self):
         way = self.wayside.currentIndex()
         blo = self.block.currentIndex()
-        colides = self.create.collision()
-        self.create.logic()
+        if(self.line.getName() == "Green"):
+            self.create.greenLogic()
+        elif(self.line.getName() == "Red"):
+            self.create.redLogic()
+        else:
+            print("No PLC Found")
+        
         if(self.side[way].getBlock(blo).getHasSwitch()):
             #If there is a switch set data and show frame
             if(self.side[way].getBlock(blo).getSwitch()):

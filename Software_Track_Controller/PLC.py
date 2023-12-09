@@ -8,7 +8,7 @@ class PLC():
     def setAuth(self, authin:int):
         self.auth = authin
 
-    def logic(self):
+    def greenLogic(self):
         loop1 = False
         loop2 = False
         for i in range(0, 29):
@@ -33,7 +33,7 @@ class PLC():
             self.blocks[12].setSignal(True)
 
         #Crossroad E19
-        if(self.blocks[16].getOccupancy or self.blocks[17].getOccupancy() or self.blocks[18].getOccupancy() or self.blocks[19].getOccupancy() or self.blocks[20].getOccupancy()):
+        if(self.blocks[16].getOccupancy() or self.blocks[17].getOccupancy() or self.blocks[18].getOccupancy() or self.blocks[19].getOccupancy() or self.blocks[20].getOccupancy()):
             self.blocks[18].setCrossroad(True)
         else:
             self.blocks[18].setCrossroad(False)
@@ -125,7 +125,7 @@ class PLC():
         
 
         
-    def collision(self):
+    def greenCollision(self):
         stoppage = []
         loop1 = False
         loop2 = False
@@ -165,6 +165,8 @@ class PLC():
                 if(self.blocks[i+1].getOccupancy() or self.blocks[i+2].getOccupancy()):
                     stoppage.append(self.blocks[i].getName())
         return stoppage
+    def redCollision(self):
+        pass
 
     def redLogic(self):
         pass

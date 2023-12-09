@@ -8,7 +8,7 @@ class Track():
     def __init__(self):
         #Create a list of track blocks from data given
         self.blocks:Block = []
-    
+        self.trackName = "Wayside"
 
     def create(self,data):
 
@@ -20,7 +20,8 @@ class Track():
         
         #Seperate Blocks into designated wayside
         if(len(self.blocks) == 151):
-            self.waysides:Wayside = [Wayside("Green1"), Wayside("Green2"), Wayside("Green3"), Wayside("Green4")]
+            self.trackName = "Green"
+            self.waysides:Wayside = [Wayside(self.trackName + "1"), Wayside(self.trackName + "2"), Wayside(self.trackName + "3"), Wayside(self.trackName + "4")]
             for i in range (len(self.blocks)):
                 if(i <= 31 or i == 149):
                     self.waysides[0].add(self.blocks[i])
@@ -30,14 +31,23 @@ class Track():
                     self.waysides[2].add(self.blocks[i])
                 else:
                     self.waysides[3].add(self.blocks[i])
-        else:
-            self.waysides:Wayside = [Wayside("Red1"), Wayside("Red2")]
+        elif(len(self.blocks) == 77):
+            self.trackName = "Red"
+            self.waysides:Wayside = [Wayside(self.trackName + "1"), Wayside(self.trackName + "2")]
             for i in range (len(self.blocks)):
                 if(i < 35 or i >= 71):
                     self.waysides[0].add(self.blocks[i])
                 else:
                     self.waysides[1].add(self.blocks[i])
+        else:
+            self.waysides:Wayside = [Wayside(self.trackName + "1")]
+            for i in range (len(self.blocks)):
+                self.waysides[0].add(self.blocks[i])
+                
         return self.waysides
+    
+    def getName(self):
+        return self.trackName
 
     def getBlocks(self):
         return self.blocks
