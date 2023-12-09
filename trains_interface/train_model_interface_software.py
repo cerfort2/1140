@@ -52,12 +52,14 @@ class train_model_interface_software(QObject):
     
     #wayside stop function
     def wayside_stops(self, stops: list) -> None:
-        current_occupancies = self.get_occupancies
-        for occupy in current_occupancies:
-            if occupy in stops:
-                self.access_train(current_occupancies.index(occupy) + 1).controller.activateWaysideStop()
-            else:
-                self.access_train(current_occupancies.index(occupy) + 1).controller.deactivateWaysideStop()
+        current_occupancies = self.get_occupancies()
+        print(current_occupancies)
+        if current_occupancies:
+            for occupy in current_occupancies:
+                if occupy in stops:
+                    self.access_train(current_occupancies.index(occupy) + 1).controller.activateWaysideStop()
+                else:
+                    self.access_train(current_occupancies.index(occupy) + 1).controller.deactivateWaysideStop()
             
     #show GUIs
     def show_GUI(self, train_num: int) -> None:

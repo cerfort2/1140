@@ -56,7 +56,7 @@ class God(Home, QMainWindow):
         self.setupUi(self)
         
         self.MainTimer = QTimer()
-        self.timeStep = 50
+        self.timeStep = 500
 
         self.ctc = CTC()
 
@@ -125,6 +125,7 @@ class God(Home, QMainWindow):
         
         #Between Train model and Track model
         self.trackModel.trackModel.trainModelRouteNames.connect(self.trainInterface.set_route)
+        self.trackModel.trackModel.trainModelStopAtBlocks.connect(self.trainInterface.wayside_stops)
 
 
 
