@@ -239,20 +239,25 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         return
     def sendStop(self, occu):
         blocksStop = []
+        blocks = []
+        for i in range (len(self.greenLine.Waysides)):
+                for j in range (self.greenLine.Waysides[i].amountOfTracks()):
+                    blocks.append(self.greenLine.Waysides[i].tracks[j])
         #Green Line
         #G30 -> M75
         for i in range(29, 75):
             if(occu[i] == True):
                 if(occu[i+2] == True):
-                    pass
+                    blocksStop.append(blocks[i].getName())
         #Collision Logic
         #R101 -> Y148
         for i in range(100, 148):
             if(occu[i] == True):
                 if(occu[i+2] == True):
-                    pass
-
-        if(self.greenLine.Waysides[1].getTrack(32).getLight()):
+                    blocksStop.append(blocks[i].getName())
+        print("light Z151")
+        print(self.greenLine.Waysides[1].getTrack(41).getLight())
+        if(self.greenLine.Waysides[1].getTrack(41).getLight()):
             blocksStop.append("Z151")
         if(self.greenLine.Waysides[1].getTrack(28).getLight()):
             if(occu[59]):
@@ -305,7 +310,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             elif(occu[56]):
                 blocksStop.append("I57")
         #Send the data out to the Track model here
-        # self.trackModelStoppedTrains.emit()
+        self.trackModelStoppedTrains.emit(blocksStop)
         
 
 

@@ -499,9 +499,7 @@ class TrackModel(QObject):
     trainModelSwitchBeacon = pyqtSignal(str)
     def emitSwitchBeacon(self):
         for blk in self.occupancyList:
-            print(blk.switchBeacon[0])
             if blk.switchBeacon[0]:
-                print("found")
                 self.trainModelSwitchBeacon.emit(blk.switchBeacon[1])
 
     #Emit Approaching Beacons
@@ -557,7 +555,6 @@ class TrackModel(QObject):
                 if not (block.brokenRail or block.trackCircuitFailure or block.powerFailure):
                     block.clearOccupied()
 
-        print("Update Occupancy")
         for blk_name in occupancyList:
             self.lines[self.lines.index(self.lines[0])].getBlock(blk_name).setOccupied()
 
@@ -580,7 +577,7 @@ class TrackModel(QObject):
 
     trainModelAuthority = pyqtSignal(list)
     def authority(self, authority):
-        print(authority)
+        # print(authority)
         self.authority_passthrough = authority
         # self.trainModelBlockLengths.emit(authority)
 
