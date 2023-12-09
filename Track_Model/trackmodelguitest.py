@@ -145,7 +145,7 @@ class Line():
         
         for edge in self.network.edges:
             blk1, blk2 = edge
-            if((blk1.switch[0] and blk1.switch[2] == blk2.name) or (blk2.switch[0] and blk2.switch[2] == blk2.name)):
+            if((blk1.switch[0] and blk1.switch[2] == blk2.name) or (blk2.switch[0] and blk2.switch[2] == blk1.name)):
                 edgeColors.append('white')
             else:
                 edgeColors.append('black')
