@@ -306,8 +306,6 @@ class Line():
                 #Signal Updating
                 if(self.blocks[i].signal[1] != controlSignals[2][i]):
                     self.blocks[i].toggleSignal()
-                    if(self.blocks[i].name == "J62"):
-                        return
 
     def initializeTrackControllerData(self):
         hasSwitch = [blk.switch[0] for blk in self.blocks]

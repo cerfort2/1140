@@ -64,7 +64,7 @@ class God(Home, QMainWindow):
         self.trackControllerHW = HWTrackControllerGUI()
 
         #SW Track Controller
-        # self.trackControllerHW = SoftwareTrackControllerGUI()
+        #self.trackControllerHW = SoftwareTrackControllerGUI()
 
         self.trackModel = functionalUI()
         self.trainInterface = train_model_interface_software()

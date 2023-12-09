@@ -118,7 +118,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                 self.setListsOccupancyAutomatic()
                 self.setListsOccupancyManual()
 
-            self.collisionLogicGreen(occupancy) #run collision logic each new list we get
             self.sendStop(occupancy) #Runs the light stop logic each time new occupancy given
             self.oldOccupancy = occupancy
             self.firstRun = False
