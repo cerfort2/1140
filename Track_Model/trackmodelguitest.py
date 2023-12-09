@@ -111,6 +111,7 @@ class Line():
         colors = []
         labels = {}
         annotations = []
+        edgeColors = []
 
         for i in range(len(self.blocks)):
             if(self.blocks[i].occupied) or (self.blocks[i].name == blockSelected):
@@ -126,6 +127,7 @@ class Line():
             # labels[self.blocks[i]] = self.blocks[i].polarity
 
             dataToAnnotate = self.blocks[i].name
+
             if self.blocks[i].station[0]:
                 dataToAnnotate += "\n" + str(self.blocks[i].station[1]) + "\n" + "Tickets Sold:" + str(self.blocks[i].station[2])
             annotations.append(dataToAnnotate)
@@ -140,12 +142,23 @@ class Line():
                 colors.append('#964B00') #brown
             else:
                 colors.append(self.name.split()[0])
+        
+        for edge in self.network.edges:
+            blk1, blk2 = edge
+            if((blk1.switch[0] and blk1.switch[2] == blk2.name) or (blk2.switch[0] and blk2.switch[2] == blk2.name)):
+                edgeColors.append('white')
+            else:
+                edgeColors.append('black')
+
+
 
 
         nx.draw_networkx(self.network, pos,node_size = 50,
                     labels = labels, with_labels=True,
                     font_size = 12, node_color = colors, node_shape = 's')# so^>v<dph8.
         # nx.draw_networkx_labels(self.network,pos,labels, horizontalalignment='right',verticalalignment='top')
+        nx.draw_networkx_edges(self.network,pos, edge_color=edgeColors)
+
 
         mplcursors.cursor(hover = 2).connect(
             "add", lambda sel: sel.annotation.set_text(annotations[sel.index]))
