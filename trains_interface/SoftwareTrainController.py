@@ -141,8 +141,11 @@ class SoftwareTrainController():
             if self.waysideStop:
                 self.serviceBrake=True
 
-    def setWaysideStop(self,b):
-        self.waysideStop=b        
+    def activateWaysideStop(self):
+        self.waysideStop=True    
+
+    def deactivateWaysideStop(self):
+        self.waysideStop=False   
 
     def setAnnouncement(self):
         if self.manualmode:
