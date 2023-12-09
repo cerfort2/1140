@@ -61,10 +61,10 @@ class God(Home, QMainWindow):
         self.ctc = CTC()
 
         #HW Track Controller
-        self.trackControllerHW = HWTrackControllerGUI()
+        # self.trackControllerHW = HWTrackControllerGUI()
 
         #SW Track Controller
-        #self.trackControllerHW = SoftwareTrackControllerGUI()
+        self.trackControllerHW = SoftwareTrackControllerGUI()
 
         self.trackModel = functionalUI()
         self.trainInterface = train_model_interface_software()
@@ -109,9 +109,9 @@ class God(Home, QMainWindow):
 
         #Only have one of these lines commented out:
         #HW Track Controller
-        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerHW.greenLine.setTracks)
+        # self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerHW.greenLine.setTracks)
         #SW Track Controller
-        #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerHW.setDisplay)
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerHW.setDisplay)
 
 
 
