@@ -130,8 +130,6 @@ class God(Home, QMainWindow):
 
 
 
-        #Once calls for both
-        self.trackModel.trackModel.initTrack()
         self.trainInterface.track_model_occupancy_list.connect(self.trackModel.trackModel.updateOccupancy)
         #self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
         
@@ -144,7 +142,6 @@ class God(Home, QMainWindow):
 
     #on timeout emissions
     def onTimeoutFunctions(self):
-        # self.trackModel.trackModel.initTrack()
         #self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
         self.trackController.sendData()
@@ -152,7 +149,6 @@ class God(Home, QMainWindow):
         # self.trackModel.trackModel.emitSwitchBeacon()
         # self.trackModel.trackModel.emitApproachingBeacon()
         self.trainInterface.get_occupancies()
-        self.trackModel.updateMap()
         if self.trainInterface.trains != []:
             self.trainInterface.update_trains()
             self.trackModel.trackModel.polarity()
