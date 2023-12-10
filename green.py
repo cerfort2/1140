@@ -3,7 +3,7 @@ from Software_Track_Controller.Block import *
 def plc(blocks:Block = []):
     loop1 = False
     loop2 = False
-    for i in range(0, 29):
+    for i in range(0, 30):
         loop1 = loop1 or blocks[i].getOccupancy()
     for i in range(76, 100):
         loop2 = loop2 or blocks[i].getOccupancy()
