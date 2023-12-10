@@ -79,9 +79,9 @@ class God(Home, QMainWindow):
         self.track_controller_sw_btn.clicked.connect(self.opentrackControllerGUI)
         #self.track_controller_sw_btn.clicked.connect(self.openTrackControllerSW)
 
-        #Simulation speed and Pause (DOESN'T WORK YET DON'T UNCOMMENT)
-        # self.verticalSlider.valueChanged.connect(self.simulationSpeedCalculation)
-        # self.checkBox.stateChanged.connect(self.simulationSpeedCalculation)
+        #Simulation speed and Pause
+        self.verticalSlider.valueChanged.connect(self.simulationSpeedCalculation)
+        self.checkBox.stateChanged.connect(self.simulationSpeedCalculation)
         
         
         #timer
@@ -162,7 +162,8 @@ class God(Home, QMainWindow):
         if self.checkBox.isChecked():
             self.timeStep = 9999999 #large time step to simulate pause
         else:
-            self.timeStep = self.timeStep/self.verticalSlider.value()
+            print(self.verticalSlider.value())
+            self.timeStep = 1000/self.verticalSlider.value()
 
         self.MainTimer.start(int(self.timeStep))
 
