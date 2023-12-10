@@ -28,8 +28,6 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
     CTCOccupancy = pyqtSignal(list)
     CTCTrackFailuresHW = pyqtSignal(list)
 
-
-
     def __init__(self):
         super().__init__()
         #Creates Track On initilization
@@ -79,7 +77,8 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             # self.blockTB.addItem(self.side[0].getBlock(i).getName())
         
     def sendStop(self, occu):
-        self.create.collision(self.line.getName())
+        self.trackModelStoppedTrains.emit(self.create.collision(self.line.getName()))
+
         
 
 
