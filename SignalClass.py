@@ -56,7 +56,7 @@ class God(Home, QMainWindow):
         self.setupUi(self)
         
         self.MainTimer = QTimer()
-        self.timeStep = 500
+        self.timeStep = 1000
 
         self.ctc = CTC()
 
@@ -71,12 +71,17 @@ class God(Home, QMainWindow):
         self.setupConnections()
         self.create_modules()
 
+
     def setupConnections(self):
         #GOD UI main page
         self.ctc_btn.clicked.connect(self.openCTCGUI)
         self.track_model_btn.clicked.connect(self.openTrackModelGUI)
-        self.track_controller_btn.clicked.connect(self.opentrackControllerGUI)
+        self.track_controller_sw_btn.clicked.connect(self.opentrackControllerGUI)
         #self.track_controller_sw_btn.clicked.connect(self.openTrackControllerSW)
+
+        #Simulation speed and Pause (DOESN'T WORK YET DON'T UNCOMMENT)
+        # self.verticalSlider.valueChanged.connect(self.simulationSpeedCalculation)
+        # self.checkBox.stateChanged.connect(self.simulationSpeedCalculation)
         
         
         #timer
@@ -153,6 +158,14 @@ class God(Home, QMainWindow):
             self.trainInterface.update_trains()
             self.trackModel.trackModel.polarity()
     
+    def simulationSpeedCalculation(self):
+        if self.checkBox.isChecked():
+            self.timeStep = 9999999 #large time step to simulate pause
+        else:
+            self.timeStep = self.timeStep/self.verticalSlider.value()
+
+        self.MainTimer.start(int(self.timeStep))
+
     def create_modules(self):
         #Track Model
         self.widget = QWidget()
