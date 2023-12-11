@@ -218,13 +218,13 @@ class SoftwareTrainController():
         if self.manualmode==True:
             self.ekprev=self.ek
             self.ek=(self.manualcommandedspeed/2.2369362921-self.currentSpeed)
-            self.uk+=(self.interval/2)*(self.ek+self.ekprev)
-            self.power=(self.ek*self.kp+self.ki*self.uk)
+            self.uk+=(self.interval/2)*(self.ek-self.ekprev)
+            self.power=(self.ek*self.kp-self.ki*self.uk)
         else:
             self.ekprev=self.ek
             self.ek=(self.ctcSpeed-self.currentSpeed)
-            self.uk+=(self.interval/2)*(self.ek+self.ekprev)
-            self.power=(self.ek*self.kp+self.ki*self.uk)
+            self.uk+=(self.interval/2)*(self.ek-self.ekprev)
+            self.power=(self.ek*self.kp-self.ki*self.uk)
 
         #max power
         if self.power>120000:
