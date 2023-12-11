@@ -14,10 +14,7 @@ class SoftwareTrainController():
         self.manualcommandedspeed=0      #the value of the slide bar. commandedspeed=manualcommandedspeed if manualMode=True 
         self.nextstop="A Stop"
         self.currentSpeed=0      #current speed in manual or auto (max speed is 70km/hr)
-<<<<<<< HEAD
         self.speedLimit=19.22272
-=======
->>>>>>> dfd134f35f2b82301f069cbff0134f40e85498e4
         self.speedLimit=43 / 2.2369362921
         self.authority=0        #authority in automatic mode
         self.temperature=70       #temp in degrees fahrenheit
