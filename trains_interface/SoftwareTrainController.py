@@ -14,7 +14,7 @@ class SoftwareTrainController():
         self.manualcommandedspeed=0      #the value of the slide bar. commandedspeed=manualcommandedspeed if manualMode=True 
         self.nextstop="A Stop"
         self.currentSpeed=0      #current speed in manual or auto (max speed is 70km/hr)
-        self.speedLimit=43
+        self.speedLimit=19.22272
         self.authority=0        #authority in automatic mode
         self.temperature=70       #temp in degrees fahrenheit
         self.exlights=False     #true=on
@@ -101,7 +101,7 @@ class SoftwareTrainController():
         
         self.ui.externallight.setChecked(self.computeExtLights())
 
-        self.ui.speedlimit.display(int(self.getSpeedLimit()))
+        self.ui.speedlimit.display(int(self.getSpeedLimit()*2.2369362921))
         self.ui.authority.display(int(self.getAuthority()*3.280839895013123))
 
 
@@ -113,9 +113,9 @@ class SoftwareTrainController():
     
     #if speed limit > max train speed, then speedlimit=max train speed
     def setSpeedLimit(self,s):
-        self.speedLimit=s*2.2369362921
-        if self.speedLimit>43:
-            self.speedLimit=43
+        self.speedLimit=s
+        if self.speedLimit>19.22272:
+            self.speedLimit=19.22272
         
     #set announcent after a next stop is received
     def setNextStop(self,stop):

@@ -255,39 +255,55 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                     blocksStop.append(blocks[i].getName())
         print("Light M76")
         print(self.greenLine.Waysides[2].getTrack(2).getLight())
+        print("Light N85")
+        print(self.greenLine.Waysides[2].getTrack(11).getLight())
         if(self.greenLine.Waysides[1].getTrack(41).getLight()):
             if(occu[150]):
                 blocksStop.append("Z151")
-        if(self.greenLine.Waysides[1].getTrack(28).getLight()):
+        if(self.greenLine.Waysides[1].getTrack(28).getLight()): #Check 3 Out
             if(occu[59]):
                 blocksStop.append("J60")
             elif(occu[60]):
                 blocksStop.append("J61")
-        if(self.greenLine.Waysides[2].getTrack(2).getLight()):
+            elif(occu[60]):
+                blocksStop.append("J62")
+        if(self.greenLine.Waysides[2].getTrack(2).getLight()): #Check 3 out
             if(occu[74]):
                 blocksStop.append("M75")
+            elif(occu[73]):
+                blocksStop.append("M74")
             elif(occu[75]):
                 blocksStop.append("M76")
-        if(self.greenLine.Waysides[2].getTrack(3).getLight()):
+        if(self.greenLine.Waysides[2].getTrack(3).getLight()): #Check 3 out
             if(occu[77]):
                 blocksStop.append("N78")
             elif(occu[78]):
                 blocksStop.append("N79")
-        if(self.greenLine.Waysides[2].getTrack(11).getLight()):
+            elif(occu[79]):
+                blocksStop.append("N80")
+        if(self.greenLine.Waysides[2].getTrack(11).getLight()): #Check 3 out
             if(occu[82]):
                 blocksStop.append("N83")
             elif(occu[83]):
                 blocksStop.append("N84")
-        if(self.greenLine.Waysides[2].getTrack(26).getLight()):
+            elif(occu[81]):
+                blocksStop.append("N82")
+        if(self.greenLine.Waysides[2].getTrack(26).getLight()): #Check 4 out
             if(occu[98]):
                 blocksStop.append("Q99")
             elif(occu[99]):
                 blocksStop.append("Q100")
-        if(self.greenLine.Waysides[0].getTrack(32).getLight()):
+            elif(occu[97]):
+                blocksStop.append("Q98")
+            elif(occu[96]):
+                blocksStop.append("P97")
+        if(self.greenLine.Waysides[0].getTrack(32).getLight()): #Check 3 out
             if(occu[148]):
                 blocksStop.append("Y149")
             elif(occu[149]):
                 blocksStop.append("Z150")
+            elif(occu[147]):
+                blocksStop.append("Y148")
         if(self.greenLine.Waysides[0].getTrack(28).getLight()):
             if(occu[26]):
                 blocksStop.append("F27")
