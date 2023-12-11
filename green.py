@@ -126,13 +126,18 @@ def plcc(blocks:Block = []):
     if(blocks[28].getOccupancy() and (blocks[29].getOccupancy() or blocks[30].getOccupancy())):
         stoppage.append(blocks[28].getName)
     #G30 -> M75
-    for i in range(29, 75):
+    for i in range(29, 74):
         if(blocks[i].getOccupancy()):
-            if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy()):
+            if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy() or blocks[i+3].getOccupancy()):
                 stoppage.append(blocks[i].getName())
     #Signal Z150
+    if(blocks[147].getOccupancy() and loop1):
+        stoppage.append(blocks[149].getName)
+    if(blocks[148].getOccupancy() and loop1):
+        stoppage.append(blocks[149].getName)
     if(blocks[149].getOccupancy() and loop1):
         stoppage.append(blocks[149].getName)
+
     #Signal J58
     if(blocks[57].getOccupancy() and (blocks[58].getOccupancy() or blocks[59].getOccupancy())):
         stoppage.append(blocks[57].getName())
@@ -143,14 +148,18 @@ def plcc(blocks:Block = []):
     if(blocks[60].getOccupancy() and (blocks[61].getOccupancy() or blocks[62].getOccupancy() or blocks[150].getOccupancy())):
         stoppage.append(blocks[60].getName())
     #Signal M76
+    if(blocks[73].getOccupancy() and loop2):
+        stoppage.append(blocks[73].getName())
+    if(blocks[74].getOccupancy() and loop2):
+        stoppage.append(blocks[74].getName())
     if(blocks[75].getOccupancy() and loop2):
         stoppage.append(blocks[75].getName())
     #N77
     if(blocks[76].getOccupancy() and (blocks[100].getOccupancy() or blocks[101].getOccupancy())):
         stoppage.append(blocks[76].getName())
     #R101 -> Y148
-    for i in range(100, 148):
+    for i in range(100, 147):
         if(blocks[i].getOccupancy()):
-            if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy()):
+            if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy() or blocks[i+3].getOccupancy()):
                 stoppage.append(blocks[i].getName())
     return stoppage
