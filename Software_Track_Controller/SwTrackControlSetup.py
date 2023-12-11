@@ -47,6 +47,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         #Sets occupied list
         self.setOccupied()
         #sends occupancy to ctc
+        self.trackModelStoppedTrains.emit(self.create.collision(self.line.getName()))
         self.CTCOccupancy.emit(self.line.getOccupancy())
 
     def createNewTrainData(self, route, auth, speed): 
@@ -76,8 +77,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             self.block.addItem(self.side[0].getBlock(i).getName())
             # self.blockTB.addItem(self.side[0].getBlock(i).getName())
         
-    def sendStop(self, occu):
-        self.trackModelStoppedTrains.emit(self.create.collision(self.line.getName()))
+        
 
         
 
