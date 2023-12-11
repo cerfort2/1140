@@ -139,7 +139,11 @@ class SoftwareTrainController():
                 self.serviceBrake = False
             #service brake is on if wayside sends a red signal
             if self.waysideStop:
-                self.serviceBrake=True
+                self.eBrake=True
+            else:
+                self.eBrake=False
+            print('ebrake is:')
+            print(self.eBrake)
 
     def activateWaysideStop(self):
         self.waysideStop=True    
@@ -293,7 +297,7 @@ class SoftwareTrainController():
 
     def toggleDwelling(self):
         self.dwelling=False
-        self.dwellTime=60
+        self.dwellTime=5
 
     def computeManualSpeed(self) ->int:
         #in automatic, manual=ctcspeed

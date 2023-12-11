@@ -253,9 +253,11 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             if(blocks[i].getOccupancy()):
                 if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy()):
                     blocksStop.append(blocks[i].getName())
-        
+        print("Light M76")
+        print(self.greenLine.Waysides[2].getTrack(2).getLight())
         if(self.greenLine.Waysides[1].getTrack(41).getLight()):
-            blocksStop.append("Z151")
+            if(occu[150]):
+                blocksStop.append("Z151")
         if(self.greenLine.Waysides[1].getTrack(28).getLight()):
             if(occu[59]):
                 blocksStop.append("J60")
