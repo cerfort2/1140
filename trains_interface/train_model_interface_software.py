@@ -57,13 +57,12 @@ class train_model_interface_software(QObject):
         for train in self.trains:
             current_occupancies.append(train.get_occupancy())
 
-        print(current_occupancies)
-        
+        print("Occupancies\n" + current_occupancies +"\nBlocks to stop\n" + stops)
+
         if current_occupancies:
             for occupy in current_occupancies:
                 if occupy in stops:
                     self.access_train(current_occupancies.index(occupy) + 1).controller.activateWaysideStop()
-                    print("activating stop")
                 else:
                     self.access_train(current_occupancies.index(occupy) + 1).controller.deactivateWaysideStop()
             
