@@ -3,7 +3,7 @@ from PyQt6.QtCore import QObject, pyqtSignal, QTimer
 from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow, QFileDialog
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from Hardware_Track_Controller.UIFunctionality import *
+#from Hardware_Track_Controller.UIFunctionality import *
 from Track_Model.trackmodelguitest import *
 from Software_Track_Controller.SwTrackControlSetup import *
 from modules.CTC import *
@@ -155,6 +155,7 @@ class God(Home, QMainWindow):
         # self.trackModel.trackModel.emitApproachingBeacon()
         self.trainInterface.get_occupancies()
         if self.trainInterface.trains != []:
+            self.trackController.sendStop([])
             self.trainInterface.update_trains()
             self.trackModel.trackModel.polarity()
     
