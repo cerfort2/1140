@@ -262,7 +262,8 @@ class Line():
                     sortedBlocks[0].approachingBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
             elif sortedBlocks[0].stationBeacon[0]:
                 for blk in sortedBlocks:
-                    sortedBlocks[0].stationBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+                    pass
+                    # sortedBlocks[0].stationBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
             elif sortedBlocks[0].switchBeacon[0]:
                 for blk in sortedBlocks:
                     sortedBlocks[0].switchBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
@@ -277,7 +278,8 @@ class Line():
                     sortedBlocks[-1].approachingBeacon[1] += str(blk.name) + "/" + str(blk.length) + "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
             elif sortedBlocks[-1].stationBeacon[0]:
                 for blk in reversed(sortedBlocks):
-                    sortedBlocks[-1].stationBeacon[1] += str(blk.name) + "/" + str(blk.length) + "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+                    pass
+                    # sortedBlocks[-1].stationBeacon[1] += str(blk.name) + "/" + str(blk.length) + "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
             elif sortedBlocks[-1].switchBeacon[0]:
                 for blk in reversed(sortedBlocks):
                     sortedBlocks[-1].switchBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
@@ -503,9 +505,14 @@ class TrackModel(QObject):
     #Emit Station Beacon
     trainModelStationBeacon = pyqtSignal(str)
     def emitStationBeacon(self):
+        stationInfo = []
         for blk in self.occupancyList:
             if blk.stationBeacon[0]:
-                self.trainModelStationBeacon.emit(blk.stationBeacon[1])
+                stationInfo.append(blk.stationBeacon[1])
+            else:
+                stationInfo.append("")
+
+        self.trainModelStationBeacon.emit(stationInfo)
 
     #Emit Switch Beacons
     trainModelSwitchBeacon = pyqtSignal(str)
