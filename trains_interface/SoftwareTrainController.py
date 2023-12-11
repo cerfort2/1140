@@ -107,7 +107,7 @@ class SoftwareTrainController():
 
     
     def setCommandedSpeed(self,s):
-        self.ctcSpeed=s
+        self.ctcSpeed=min(s, self.speedLimit)
     def setCurrentSpeed(self,s):
         self.currentSpeed=s*self.simulationSpeed
     

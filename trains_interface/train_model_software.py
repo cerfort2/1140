@@ -401,7 +401,7 @@ class train_model_software():
         self.set_right_door(self.controller.getRightDoor())
         self.set_left_door(self.controller.getLeftDoor())
         self.set_announcement(self.controller.getAnnouncement())
-        self.controller.ctcSpeed = self.get_suggested_speed()
+        self.controller.setCommandedSpeed(self.get_suggested_speed())
         if UI_flag:
             self.controller.update_time()
         if UI_flag:
