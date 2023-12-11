@@ -283,7 +283,7 @@ class SoftwareTrainController():
                 print("done dwelling")
 
                 self.dwelling=False
-                self.dwellTime=60     
+                self.dwellTime=5  
 
     def computeAuthority(self):
         #if at station, then dwell
