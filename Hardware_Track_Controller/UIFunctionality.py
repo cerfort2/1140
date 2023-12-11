@@ -5,11 +5,11 @@ from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6 import QtCore, QtGui, QtWidgets
 from Hardware_Track_Controller.HWTrackUI import Ui_Form
 from Hardware_Track_Controller.TrackClass import Track
-# from Hardware_Track_Controller.UI_Breadboard_Class import Operations
+from Hardware_Track_Controller.UI_Breadboard_Class import Operations
 from Hardware_Track_Controller.GreenLineWaysides import GreenLine
 from Hardware_Track_Controller.RedLineWaysides import RedLine
 
-# operate = Operations() #Class to perform operations on the breadboard
+operate = Operations() #Class to perform operations on the breadboard
 
 class HWTrackControllerGUI(Ui_Form, QObject):
     
@@ -138,8 +138,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             elif(self.tabWidget.currentIndex() == 1):
                 self.setListsOccupancyAutomatic()
                 self.setListsOccupancyManual()
-            #self.collisionLogicGreen(occupancy) #run collision logic each new list we get
-            #self.sendStop(occupancy) #Runs the light stop logic each time new occupancy given
             self.oldOccupancy = occupancy
             self.firstRun = False
     def createNewTrainData(self, traveling, Auth, speed): #Created by CTC
@@ -240,20 +238,21 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     def sendStop(self, occu):
         blocksStop = []
         blocks = []
+        print(occu)
         for i in range (len(self.greenLine.Waysides)):
                 for j in range (self.greenLine.Waysides[i].amountOfTracks()):
                     blocks.append(self.greenLine.Waysides[i].tracks[j])
         #Green Line
         #G30 -> M75
         for i in range(29, 75):
-            if(occu[i] == True):
-                if(occu[i+2] == True):
+            if(blocks[i].getOccupancy()):
+                if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy()):
                     blocksStop.append(blocks[i].getName())
         #Collision Logic
         #R101 -> Y148
         for i in range(100, 148):
-            if(occu[i] == True):
-                if(occu[i+2] == True):
+            if(blocks[i].getOccupancy()):
+                if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy()):
                     blocksStop.append(blocks[i].getName())
         
         if(self.greenLine.Waysides[1].getTrack(41).getLight()):

@@ -3,7 +3,7 @@ from PyQt6.QtCore import QObject, pyqtSignal, QTimer
 from PyQt6.QtWidgets import QApplication, QComboBox, QMainWindow, QFileDialog
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-#from Hardware_Track_Controller.UIFunctionality import *
+from Hardware_Track_Controller.UIFunctionality import *
 from Track_Model.trackmodelguitest import *
 from Software_Track_Controller.SwTrackControlSetup import *
 from modules.CTC import *
@@ -61,10 +61,10 @@ class God(Home, QMainWindow):
         self.ctc = CTC()
 
         #HW Track Controller
-        # self.trackController = HWTrackControllerGUI()
+        self.trackController = HWTrackControllerGUI()
 
         #SW Track Controller
-        self.trackController = SoftwareTrackControllerGUI()
+        #self.trackController = SoftwareTrackControllerGUI()
 
         self.trackModel = functionalUI()
         self.trainInterface = train_model_interface_software()
@@ -114,28 +114,17 @@ class God(Home, QMainWindow):
 
         #Only have one of these lines commented out:
         #HW Track Controller
-        # self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
         #SW Track Controller
-        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.setDisplay)
+        #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.setDisplay)
 
-
-
-
-        # self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerSW.setDisplay)
-        # self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerSW.setOccupancy)
-        # self.trackControllerSW.trackModelData.connect(self.trackModel.trackModel.controlModel)
-        # self.trackControllerSW.trackModelRoute.connect(self.trackModel.trackModel.route)
-        # self.trackControllerSW.trackModelSpeed.connect(self.trackModel.trackModel.suggestedSpeed)
-        # self.trackControllerSW.trackModelAuthority.connect(self.trackModel.trackModel.authority)
         
         #Between Train model and Track model
         self.trackModel.trackModel.trainModelRouteNames.connect(self.trainInterface.set_route)
         self.trackModel.trackModel.trainModelStopAtBlocks.connect(self.trainInterface.wayside_stops)
-
-
-
-
         self.trainInterface.track_model_occupancy_list.connect(self.trackModel.trackModel.updateOccupancy)
+
+        
         #self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
         
 
