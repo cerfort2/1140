@@ -238,7 +238,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     def sendStop(self, occu):
         blocksStop = []
         blocks = []
-        print(occu)
         for i in range (len(self.greenLine.Waysides)):
                 for j in range (self.greenLine.Waysides[i].amountOfTracks()):
                     blocks.append(self.greenLine.Waysides[i].tracks[j])
