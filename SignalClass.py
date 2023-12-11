@@ -150,12 +150,11 @@ class God(Home, QMainWindow):
         #self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
         self.trackController.sendData()
-        # self.trackModel.trackModel.emitStationBeacon()
+        # self.trackModel.trackModel.emitStaationBeacon()
         # self.trackModel.trackModel.emitSwitchBeacon()
         # self.trackModel.trackModel.emitApproachingBeacon()
         self.trainInterface.get_occupancies()
         if self.trainInterface.trains != []:
-            self.trackController.sendStop([])
             self.trainInterface.update_trains()
             self.trackModel.trackModel.polarity()
     
