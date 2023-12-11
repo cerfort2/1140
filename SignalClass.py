@@ -92,12 +92,15 @@ class God(Home, QMainWindow):
         #Timer functions between CTC and Track Controller
         #Hardware
         self.trackController.CTCOccupancy.connect(self.ctc.get_block_occupancies)
+        #Software
+        #self.trackControllerSW.CTCOccupancy.connect(self.ctc.get_block_occupancies)
 
         #CTC to initialize train on dispatch
         self.ctc.train_dispatched.connect(self.init_train)
 
         #Sent from CTC to Track Controller
         self.ctc.train_dispatched.connect(self.trackController.createNewTrainData)
+        #self.ctc.train_dispatched.connect(self.trackControllerSW.sendTrainDetails)
 
         #Timer functions between Track Model and Track Controller
         self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackController.getOccupancy)
@@ -111,15 +114,18 @@ class God(Home, QMainWindow):
 
         #Only have one of these lines commented out:
         #HW Track Controller
-        #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
         #SW Track Controller
-        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.setDisplay)
+        #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.setDisplay)
 
         
         #Between Train model and Track model
         self.trackModel.trackModel.trainModelRouteNames.connect(self.trainInterface.set_route)
         self.trackModel.trackModel.trainModelStopAtBlocks.connect(self.trainInterface.wayside_stops)
         self.trainInterface.track_model_occupancy_list.connect(self.trackModel.trackModel.updateOccupancy)
+        self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.unpack_beacons)
+        #must add this connection
+        # self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.?)
 
         
         #self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
@@ -136,11 +142,11 @@ class God(Home, QMainWindow):
         #self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
         self.trackController.sendData()
-        # self.trackModel.trackModel.emitStaationBeacon()
         # self.trackModel.trackModel.emitSwitchBeacon()
         # self.trackModel.trackModel.emitApproachingBeacon()
         self.trainInterface.get_occupancies()
         if self.trainInterface.trains != []:
+            self.trackModel.trackModel.emitStationBeacon()
             self.trainInterface.update_trains()
             self.trackModel.trackModel.polarity()
     
@@ -169,6 +175,11 @@ class God(Home, QMainWindow):
         self.ctc.setupUi(self.widget3)
         self.ctc.initialize_ctc()
 
+        #SW Track Controller
+        self.widget4 = QWidget()
+        # self.trackControllerSW.setupUi(self.widget4)
+        # self.trackControllerSW.connectFunctions()
+
     def openTrackModelGUI(self):
         self.widget.show()
 
@@ -177,6 +188,9 @@ class God(Home, QMainWindow):
     
     def openCTCGUI(self):
         self.widget3.show()
+    
+    # def openTrackControllerSW(self):
+    #     self.widget4.show()
 
 
 

@@ -66,7 +66,13 @@ class train_model_interface_software(QObject):
                     self.access_train(current_occupancies.index(occupy) + 1).controller.activateWaysideStop()
                 else:
                     self.access_train(current_occupancies.index(occupy) + 1).controller.deactivateWaysideStop()
-            
+                    
+    #function to unpack beacons
+    def unpack_beacons(self, beacons: list) -> None:
+        for i in range(len(beacons)):
+            if beacons[i] != "":
+                self.access_train(i + 1).set_station_data(beacons[i])
+                
     #show GUIs
     def show_GUI(self, train_num: int) -> None:
         self.UI_flag = True
