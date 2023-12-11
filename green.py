@@ -14,21 +14,24 @@ def plc(blocks:Block = []):
     if(blocks[0].getOccupancy()):
         blocks[12].setSwitch(True)
     #Signal A1
-    if(blocks[0].getOccupancy()):
-        blocks[0].setSignal(False)
-    else:
-        blocks[0].setSignal(True)
+    if(blocks[0].getOccupancy() or blocks[1].getOccupancy() or blocks[2].getOccupancy() or blocks[12].getOccupancy() or blocks[13].getOccupancy()):
+        if(blocks[0].getOccupancy()):
+            blocks[0].setSignal(False)
+        else:
+            blocks[0].setSignal(True)
     #Signal D13
-    if(blocks[13].getOccupancy()):
-        blocks[12].setSignal(False)
-    else:
-        blocks[12].setSignal(True)
+    if(blocks[10].getOccupancy() or blocks[11].getOccupancy() or blocks[12].getOccupancy() or blocks[13].getOccupancy() or blocks[14].getOccupancy()):
+        if(blocks[13].getOccupancy()):
+            blocks[12].setSignal(False)
+        else:
+            blocks[12].setSignal(True)
 
     #Crossroad E19
     if(blocks[16].getOccupancy() or blocks[17].getOccupancy() or blocks[18].getOccupancy() or blocks[19].getOccupancy() or blocks[20].getOccupancy()):
-        blocks[18].setCrossroad(True)
-    else:
-        blocks[18].setCrossroad(False)
+        if(blocks[17].getOccupancy() or blocks[18].getOccupancy() or blocks[19].getOccupancy()):
+            blocks[18].setCrossroad(True)
+        else:
+            blocks[18].setCrossroad(False)
 
     #Switch G29 - G30 , G29 - Z150
     if(blocks[27].getOccupancy()):
@@ -36,15 +39,17 @@ def plc(blocks:Block = []):
     elif(blocks[149].getOccupancy()):
         blocks[28].setSwitch(True)
     #Signal G29
-    if(blocks[28].getOccupancy() and not (blocks[29].getOccupancy() or blocks[30].getOccupancy())):
-        blocks[28].setSignal(False)
-    else:
-        blocks[28].setSignal(True)
+    if(blocks[26].getOccupancy() or blocks[27].getOccupancy() or blocks[28].getOccupancy() or blocks[29].getOccupancy() or blocks[30].getOccupancy()):
+        if(blocks[28].getOccupancy() and not (blocks[29].getOccupancy() or blocks[30].getOccupancy())):
+            blocks[28].setSignal(False)
+        else:
+            blocks[28].setSignal(True)
     #Signal Z150
-    if(blocks[149].getOccupancy() and not loop1):
-        blocks[149].setSignal(False)
-    else:
-        blocks[149].setSignal(True)
+    if(blocks[27].getOccupancy() or blocks[28].getOccupancy() or blocks[147].getOccupancy() or blocks[148].getOccupancy() or blocks[149].getOccupancy()):
+        if(blocks[149].getOccupancy() and not loop1):
+            blocks[149].setSignal(False)
+        else:
+            blocks[149].setSignal(True)
     
 
     #Switch J58 - Yard , J58 - J59
@@ -53,10 +58,11 @@ def plc(blocks:Block = []):
     else:
         blocks[57].setSwitch(True)
     #Signal J58
-    if(blocks[57].getOccupancy() and not (blocks[58].getOccupancy() or blocks[59].getOccupancy())):
-        blocks[57].setSignal(False)
-    else:
-        blocks[57].setSignal(True)
+    if(blocks[55].getOccupancy() or blocks[56].getOccupancy() or blocks[57].getOccupancy() or blocks[58].getOccupancy() or blocks[59].getOccupancy() or blocks[150].getOccupancy()):
+        if(blocks[57].getOccupancy() and not (blocks[58].getOccupancy() or blocks[59].getOccupancy())):
+            blocks[57].setSignal(False)
+        else:
+            blocks[57].setSignal(True)
 
     #Switch J62 - J61 , J62 - Yard
     if(blocks[150].getOccupancy()):
@@ -65,20 +71,18 @@ def plc(blocks:Block = []):
         blocks[61].setSwitch(False)
     
 
-    elif(blocks[60].getOccupancy()):
-        blocks[61].setSwitch(False)
-    
-
     #Signal yard
-    if(blocks[150].getOccupancy() and not(blocks[61].getOccupancy() or blocks[62].getOccupancy())):
-        blocks[150].setSignal(False)
-    else:
-        blocks[150].setSignal(True)
-    #signal J61
-    if(blocks[60].getOccupancy() and not(blocks[61].getOccupancy() or blocks[62].getOccupancy() or blocks[150].getOccupancy())):
-        blocks[60].setSignal(False)
-    else:
-        blocks[60].setSignal(True)
+    if(blocks[150].getOccupancy() or blocks[61].getOccupancy() or blocks[62].getOccupancy()):
+        if(blocks[150].getOccupancy() and not(blocks[61].getOccupancy() or blocks[62].getOccupancy())):
+            blocks[150].setSignal(False)
+        else:
+            blocks[150].setSignal(True)
+    #Signal J61
+    if(blocks[58].getOccupancy() or blocks[59].getOccupancy() or blocks[60].getOccupancy() or blocks[61].getOccupancy() or blocks[62].getOccupancy() or blocks[150].getOccupancy()):
+        if(blocks[60].getOccupancy() and not(blocks[61].getOccupancy() or blocks[62].getOccupancy() or blocks[150].getOccupancy())):
+            blocks[60].setSignal(False)
+        else:
+            blocks[60].setSignal(True)
 
         
     #Switch N77 - R101 , N77 - M76
@@ -88,15 +92,16 @@ def plc(blocks:Block = []):
         blocks[76].setSwitch(True)
     
     #Signal M76
-    if(blocks[75].getOccupancy() and not loop2):
-        blocks[75].setSignal(False)
-    else:
-        blocks[75].setSignal(True)
-    #signal N77
-    if(blocks[76].getOccupancy() and not (blocks[100].getOccupancy() or blocks[101].getOccupancy())):
-        blocks[76].setSignal(False)
-    else:
-        blocks[76].setSignal(True)
+    if(blocks[73].getOccupancy() or blocks[74].getOccupancy() or blocks[75].getOccupancy() or blocks[76].getOccupancy() or blocks[77].getOccupancy()):
+        if(blocks[75].getOccupancy() and not loop2):
+            blocks[75].setSignal(False)
+        else:
+            blocks[75].setSignal(True)
+    if(blocks[76].getOccupancy() or blocks[77].getOccupancy() or blocks[78].getOccupancy() or blocks[100].getOccupancy() or blocks[101].getOccupancy()):
+        if(blocks[76].getOccupancy() and not (blocks[100].getOccupancy() or blocks[101].getOccupancy())):
+            blocks[76].setSignal(False)
+        else:
+            blocks[76].setSignal(True)
 
     #Switch N85 - O86 , N85 - Q100
     if(blocks[83].getOccupancy()):
@@ -104,15 +109,17 @@ def plc(blocks:Block = []):
     if(blocks[99].getOccupancy()):
         blocks[84].setSwitch(True)
     #Signal N85
-    if(blocks[84].getOccupancy()):
-        blocks[84].setSignal(False)
-    else:
-        blocks[84].setSignal(True)
+    if(blocks[82].getOccupancy() or blocks[83].getOccupancy() or blocks[84].getOccupancy() or blocks[85].getOccupancy() or blocks[86].getOccupancy()):
+        if(blocks[84].getOccupancy()):
+            blocks[84].setSignal(False)
+        else:
+            blocks[84].setSignal(True)
     #Signal Q100
-    if(blocks[99].getOccupancy()):
-        blocks[99].setSignal(False)
-    else:
-        blocks[99].setSignal(True)
+    if(blocks[97].getOccupancy() or blocks[98].getOccupancy() or blocks[99].getOccupancy() or blocks[84].getOccupancy() or blocks[83].getOccupancy()):
+        if(blocks[99].getOccupancy()):
+            blocks[99].setSignal(False)
+        else:
+            blocks[99].setSignal(True)
 
 def plcc(blocks:Block = []):
     stoppage = []
