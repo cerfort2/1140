@@ -503,7 +503,7 @@ class TrackModel(QObject):
             self.trackControllerInitializeLine.emit(line.initializeTrackControllerData())
 
     #Emit Station Beacon
-    trainModelStationBeacon = pyqtSignal(str)
+    trainModelStationBeacon = pyqtSignal(list)
     def emitStationBeacon(self):
         stationInfo = []
         for blk in self.occupancyList:
