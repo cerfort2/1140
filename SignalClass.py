@@ -92,15 +92,12 @@ class God(Home, QMainWindow):
         #Timer functions between CTC and Track Controller
         #Hardware
         self.trackController.CTCOccupancy.connect(self.ctc.get_block_occupancies)
-        #Software
-        #self.trackControllerSW.CTCOccupancy.connect(self.ctc.get_block_occupancies)
 
         #CTC to initialize train on dispatch
         self.ctc.train_dispatched.connect(self.init_train)
 
         #Sent from CTC to Track Controller
         self.ctc.train_dispatched.connect(self.trackController.createNewTrainData)
-        #self.ctc.train_dispatched.connect(self.trackControllerSW.sendTrainDetails)
 
         #Timer functions between Track Model and Track Controller
         self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackController.getOccupancy)
@@ -114,9 +111,9 @@ class God(Home, QMainWindow):
 
         #Only have one of these lines commented out:
         #HW Track Controller
-        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
+        #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
         #SW Track Controller
-        #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.setDisplay)
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.setDisplay)
 
         
         #Between Train model and Track model
@@ -173,10 +170,6 @@ class God(Home, QMainWindow):
         self.ctc.setupUi(self.widget3)
         self.ctc.initialize_ctc()
 
-        #SW Track Controller
-        self.widget4 = QWidget()
-        # self.trackControllerSW.setupUi(self.widget4)
-        # self.trackControllerSW.connectFunctions()
 
     def openTrackModelGUI(self):
         self.widget.show()
@@ -187,8 +180,6 @@ class God(Home, QMainWindow):
     def openCTCGUI(self):
         self.widget3.show()
     
-    # def openTrackControllerSW(self):
-    #     self.widget4.show()
 
 
 
