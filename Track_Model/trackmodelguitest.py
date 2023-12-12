@@ -549,6 +549,18 @@ class TrackModel(QObject):
         if len(tickets) != 0:
             self.CTCticketSales.emit(tickets)
      
+    trainModelBlockInfo = pyqtSignal(list)
+    def getOccupiedBlockInfo(self):
+        blkInfoList = []
+        for blk in self.occupancyList:
+            blkInfo = [blk.limit,blk.grade,blk.underground]
+            blkInfoList.append(blkInfo)
+
+        
+        self.trainModelBlockInfo.emit(blkInfoList)
+
+
+
     #------------------
     #Receiving Signals
     #------------------

@@ -131,8 +131,6 @@ class God(Home, QMainWindow):
         #self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
         
 
-        
-
     def init_train(self):
         self.trainInterface.new_train()
         self.trainInterface.show_GUI(len(self.trainInterface.trains))
