@@ -11,7 +11,7 @@ class Track():
         self.trackName = "Wayside"
 
     def create(self,data):
-
+        #From the track models info create blocks
         for i in range (len(data[0])):
             self.blocks.append(Block(data[0][i], data[1][i], data[2][i], data[3][i])) #hasSwitch, hasCrossroad, hasSignal, name
             if(data[0][i]):
@@ -43,15 +43,19 @@ class Track():
             self.waysides:Wayside = [Wayside(self.trackName + "1")]
             for i in range (len(self.blocks)):
                 self.waysides[0].add(self.blocks[i])
-                
+
+        #Return list of waysides     
         return self.waysides
     
+    #Returns track name
     def getName(self):
         return self.trackName
 
+    #Returns list of track blocks
     def getBlocks(self):
         return self.blocks
 
+    #Returns current track data in bool matrix
     def getData(self):
         #Created lists
         data = [[],[],[]]
@@ -73,7 +77,7 @@ class Track():
         #Return data
         return data
 
-    
+    #Returns names of occupied blocks
     def getOccupied(self):
         #Created lists
         data = []
@@ -84,6 +88,7 @@ class Track():
         #Return data
         return data
 
+    #Returns index's of occupied blocks
     def getOccupancy(self):
         #Created lists
         data = []
@@ -92,6 +97,7 @@ class Track():
                 data.append(self.blocks[i].getOccupancy())
         return data
 
+    #Sets occupancy of all blocks
     def setOccupancy(self, data:bool = []):
         for i in range (len(data)):
             self.blocks[i].setOccupancy(data[i])

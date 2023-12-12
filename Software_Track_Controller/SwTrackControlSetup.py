@@ -19,12 +19,14 @@ from Software_Track_Controller.PLC import *
 
 class SoftwareTrackControllerGUI(Ui_Form, QObject):
 
+    #Signals sent to track model
     trackModelTrackData = pyqtSignal(list)
     trackModelSendRoute = pyqtSignal(list)
     trackModelSuggestedSpeed = pyqtSignal(list)
     trackModelAuthority = pyqtSignal(list)
     trackModelStoppedTrains = pyqtSignal(list)
 
+    #Signals sent to CTC
     CTCOccupancy = pyqtSignal(list)
     CTCTrackFailuresHW = pyqtSignal(list)
 
@@ -34,7 +36,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         self.line:Track = Track()
 
     def sendFailures(self): #Sends failures to CTC
-        #Senses failures using PLC and
+        #Gets known failures
         fail:str = []
         self.CTCTrackFailuresHW.emit(fail)
         
@@ -42,12 +44,13 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
     def getOccupancy(self, data): #Receives occupancy from Track Model
         #Gets occupancy and sets occupancy
         self.line.setOccupancy(data)
-        #Sets new states in automatic
+        #Sets new states if needed
         self.mode_handler()
         #Sets occupied list
         self.setOccupied()
-        #sends occupancy to ctc
+        #Sends trains that need to be stopped to track model
         self.trackModelStoppedTrains.emit(self.create.collision(self.line.getName()))
+        #Sends occupancy to ctc
         self.CTCOccupancy.emit(self.line.getOccupancy())
 
     def createNewTrainData(self, route, auth, speed): 
@@ -83,10 +86,6 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         self.right = QPixmap("light.jpg")
         self.open = QPixmap("crosso.jpg")
         self.closed = QPixmap("crossc.jpg")
-        #Hide frames by default
-        # self.switchFrame.hide()
-        # self.crossroadFrame.hide()
-        # self.signalFrame.hide()
         #Switch Toggle Signal
         self.toggleDirection.clicked.connect(self.toggle_direction_handler)
         #Crossroad Toggle Signal
@@ -101,30 +100,6 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         self.block.currentIndexChanged.connect(self.new_block)
         #Mode
         self.modeButton.toggled.connect(self.mode_handler)
-        #TB
-        # self.occupationTB.stateChanged.connect(self.TB_o_handler)
-        # self.waysideTB.currentIndexChanged.connect(self.TB_w_handler)
-        # self.blockTB.currentIndexChanged.connect(self.TB_b_handler)
-
-
-    # def TB_o_handler(self):
-    #     way = self.waysideTB.currentIndex()
-    #     blo = self.blockTB.currentIndex()
-    #     self.side[way].getBlock(blo).setOccupancy(self.occupationTB.isChecked())
-
-    # def TB_w_handler(self):
-    #     way = self.waysideTB.currentIndex()
-    #     blo = 0
-    #     self.blockTB.clear()
-    #     for i in range(len(self.side[way].getBlocks())):
-    #         self.blockTB.addItem(self.side[way].getBlock(i).name)
-    #     self.occupationTB.setChecked(self.side[way].getBlock(blo).getOccupied())
-    
-    # def TB_b_handler(self):
-    #     way = self.waysideTB.currentIndex()
-    #     blo = self.blockTB.currentIndex()
-    #     self.occupationTB.setChecked(self.side[way].getBlock(blo).getOccupied())
-
     
 
     def toggle_direction_handler(self):
@@ -251,8 +226,10 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             self.signalFrame.hide()
 
     def mode_handler(self):
+        #Gets the currnt block and wayside index
         way = self.wayside.currentIndex()
         blo = self.block.currentIndex()
+        #Runs PLC logic
         self.create.logic(self.line.getName())
         
         if(self.side[way].getBlock(blo).getHasSwitch()):
@@ -285,7 +262,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             self.signalFrame.show()
         else:
             self.signalFrame.hide()
-        #Mode button show/hide
+        #Mode button show/hide controls
         if(self.modeButton.isChecked()):
             self.toggleDirection.hide()
             self.toggleCrossroad.hide()
@@ -298,6 +275,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             self.greenButton.show()
 
     def setOccupied(self):
+        #Sets the names of occupied blocks on display
         self.occupationData.clear()
         names = self.line.getOccupied()
         for i in names:
