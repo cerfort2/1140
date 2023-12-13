@@ -563,7 +563,7 @@ class TrackModel(QObject):
             blkInfoList.append(blkInfo)
 
         
-        self.trainModelBlockInfo.emit(blk)
+        self.trainModelBlockInfo.emit(blkInfoList)
 
 
 
