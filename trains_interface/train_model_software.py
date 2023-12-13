@@ -398,6 +398,7 @@ class train_model_software():
         self.set_right_door(self.controller.getRightDoor())
         self.set_left_door(self.controller.getLeftDoor())
         self.set_announcement(self.controller.getAnnouncement())
+        self.controller.
         self.controller.nextstop = self.current_station
         if self.controller.dwelling == True:
             self.controller.leftDoor = self.left_door
@@ -411,7 +412,7 @@ class train_model_software():
 
     #update train ui
     def update_ui(self) -> None:
-        self.ui.slope.setText(str(round(self.slope, 2)) + " Degrees")
+        self.ui.slope.setText(str(self.slope) + " Degrees")
         self.ui.elevation.setText(str(round(self.elevation, 2)) + " Feet")
         self.ui.environment.setText(str(self.environment))
         self.ui.passenger_count.setText(str(round(self.passengers, 2)) + " People")
