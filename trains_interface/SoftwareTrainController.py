@@ -143,8 +143,6 @@ class SoftwareTrainController():
                 self.eBrake=True
             else:
                 self.eBrake=False
-            print('ebrake is:')
-            print(self.eBrake)
 
     def activateWaysideStop(self):
         self.waysideStop=True    
@@ -289,6 +287,8 @@ class SoftwareTrainController():
 
                 self.dwelling=False
                 self.dwellTime=5  
+                self.leftDoor = False
+                self.rightDoor = False
 
     def computeAuthority(self):
         #if at station, then dwell

@@ -19,12 +19,15 @@ class Block():
 
         self.name:str = tag #Block name
 
+    #Returns if block has a switch
     def getHasSwitch(self):
         return self.hasSwitch
     
+    #Returns if block has a crossroad
     def getHasCrossroad(self):
         return self.hasCrossroad
     
+    #Returns if block has a signal
     def getHasSignal(self):
         return self.hasSignal
     
