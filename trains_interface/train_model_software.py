@@ -398,7 +398,6 @@ class train_model_software():
         self.set_right_door(self.controller.getRightDoor())
         self.set_left_door(self.controller.getLeftDoor())
         self.set_announcement(self.controller.getAnnouncement())
-        self.controller.
         self.controller.nextstop = self.current_station
         if self.controller.dwelling == True:
             self.controller.leftDoor = self.left_door
