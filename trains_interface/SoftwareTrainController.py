@@ -143,8 +143,6 @@ class SoftwareTrainController():
                 self.eBrake=True
             else:
                 self.eBrake=False
-            print('ebrake is:')
-            print(self.eBrake)
 
     def activateWaysideStop(self):
         self.waysideStop=True    

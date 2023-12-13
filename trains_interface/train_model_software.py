@@ -363,13 +363,6 @@ class train_model_software():
         self.station_bools = monsters_data[0][1]
         self.authority_list = monsters_data[0][2]
 
-        print(self.routeList)
-        print(self.station_bools)
-        print(self.authority_list)
-        print(self.suggested_speed_list)
-        print(monsters_data[2])
-        print(self.stationAuthorities)
-
         self.authority = self.stationAuthorities[0]
         
 

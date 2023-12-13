@@ -57,9 +57,6 @@ class train_model_interface_software(QObject):
         for train in self.trains:
             current_occupancies.append(train.get_occupancy())
 
-        print("Stop blocks")
-        print(stops)
-
         if current_occupancies:
             for occupy in current_occupancies:
                 if occupy in stops:
