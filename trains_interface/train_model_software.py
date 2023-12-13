@@ -304,12 +304,17 @@ class train_model_software():
         #Station Name
         self.current_station = firstPacket[0]
         self.announcement = "Arriving at: " + self.current_station
+        print(self.current_station)
 
         #Station Side
         if(len(firstPacket) == 3):
-            self.open_side = "Left/Right"
+            self.right_door = True
+            self.left_door = True
         else:
-            self.open_side = firstPacket[1]
+            if firstPacket[1] == True:
+                self.right_door = True
+            else:
+                self.left_door = True
 
 
     # #switch beacon
@@ -394,6 +399,12 @@ class train_model_software():
         self.set_right_door(self.controller.getRightDoor())
         self.set_left_door(self.controller.getLeftDoor())
         self.set_announcement(self.controller.getAnnouncement())
+        print(self.controller.nextstop)
+        self.controller.nextstop = self.current_station
+        if self.controller.dwelling == True:
+            self.controller.leftDoor = self.left_door
+            self.controller.rightDoor = self.right_door
+        
         self.controller.setCommandedSpeed(self.get_suggested_speed())
         if UI_flag:
             self.controller.update_time()
@@ -439,3 +450,4 @@ class train_model_software():
             self.controller.signalFailure = True
         else:
             self.controller.signalFailure = False
+

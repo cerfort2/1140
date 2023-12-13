@@ -287,6 +287,8 @@ class SoftwareTrainController():
 
                 self.dwelling=False
                 self.dwellTime=5  
+                self.leftDoor = False
+                self.rightDoor = False
 
     def computeAuthority(self):
         #if at station, then dwell
