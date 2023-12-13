@@ -111,6 +111,9 @@ class Line():
         labels = {}
         annotations = []
         edgesToBeDrawn = []
+        signalXPos = []
+        signalYPos = []
+        signalColor = []
 
         for i in range(len(self.blocks)):
             if(self.blocks[i].occupied) or (self.blocks[i].name == blockSelected):
@@ -141,6 +144,14 @@ class Line():
                 colors.append('#964B00') #brown
             else:
                 colors.append(self.name.split()[0])
+
+            if self.blocks[i].signal[0]:
+                signalXPos.append(pos[self.blocks[i]][0]+0.02)
+                signalYPos.append(pos[self.blocks[i]][1])
+                if self.blocks[i].signal[1]:
+                    signalColor.append('red')
+                else:
+                    signalColor.append('green')
         
         for edge in self.network.edges:
             blk1, blk2 = edge
@@ -151,13 +162,14 @@ class Line():
 
 
 
+
+
         nx.draw_networkx(self.network, pos,node_size = 5,
                     labels = labels, with_labels=True,
                     font_size = 12, node_color = colors, node_shape = 's', edgelist = edgesToBeDrawn)# so^>v<dph8.
         # nx.draw_networkx_labels(self.network,pos,labels, horizontalalignment='right',verticalalignment='top')
         # nx.draw_networkx_edges(self.network,pos, edgelist=edgesToBeDrawn)
-
-
+        plt.scatter(signalXPos,signalYPos, c=signalColor)
         mplcursors.cursor(hover = 2).connect(
             "add", lambda sel: sel.annotation.set_text(annotations[sel.index]))
         
@@ -528,12 +540,6 @@ class TrackModel(QObject):
             if blk.approachingBeacon[0]:
                 self.trainModelApproachingBeacon.emit(blk.approachingBeacon[1])
 
-    #Emit grade of occupied blocks
-    trainModelGrade = pyqtSignal(list)
-    def grade(self):
-        gradeList = [blk.grade for blk in self.occupancyList if blk.occupied]
-        self.trainModelGrade.emit(gradeList)
-
     #Emit polarity of occupied blocks
     trainModelPolarity = pyqtSignal()
     def polarity(self):
@@ -557,7 +563,7 @@ class TrackModel(QObject):
             blkInfoList.append(blkInfo)
 
         
-        self.trainModelBlockInfo.emit(blkInfoList)
+        self.trainModelBlockInfo.emit(blk)
 
 
 
