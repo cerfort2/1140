@@ -138,10 +138,12 @@ def plcc(blocks:Block = []):
             if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy() or blocks[i+3].getOccupancy()):
                 stoppage.append(blocks[i].getName())
     #Signal Z150
+    if(blocks[146].getOccupancy() and loop1):
+        stoppage.append(blocks[146].getName)
     if(blocks[147].getOccupancy() and loop1):
-        stoppage.append(blocks[149].getName)
+        stoppage.append(blocks[147].getName)
     if(blocks[148].getOccupancy() and loop1):
-        stoppage.append(blocks[149].getName)
+        stoppage.append(blocks[148].getName)
     if(blocks[149].getOccupancy() and loop1):
         stoppage.append(blocks[149].getName)
 
