@@ -69,6 +69,15 @@ class train_model_interface_software(QObject):
         for i in range(len(beacons)):
             if beacons[i] != "":
                 self.access_train(i + 1).set_station_data(beacons[i])
+    
+    #function to unpack block infos
+    def unpack_blocks(self, blocks: list) -> None:
+        for i in range(len(blocks)):
+            print(blocks[i])
+            self.access_train(i + 1).speed_limit = blocks[i][0]
+            self.access_train(i + 1).slope = blocks[i][1]
+            self.access_train(i + 1).underground_val = blocks[i][2]
+
                 
     #show GUIs
     def show_GUI(self, train_num: int) -> None:

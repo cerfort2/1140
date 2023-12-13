@@ -121,6 +121,7 @@ class God(Home, QMainWindow):
         self.trackModel.trackModel.trainModelStopAtBlocks.connect(self.trainInterface.wayside_stops)
         self.trainInterface.track_model_occupancy_list.connect(self.trackModel.trackModel.updateOccupancy)
         self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.unpack_beacons)
+        self.trackModel.trackModel.trainModelBlockInfo.connect(self.trainInterface.unpack_blocks)
         #must add this connection
         # self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.?)
 
@@ -144,6 +145,7 @@ class God(Home, QMainWindow):
             self.trackModel.trackModel.emitStationBeacon()
             self.trainInterface.update_trains()
             self.trackModel.trackModel.polarity()
+            self.trackModel.trackModel.getOccupiedBlockInfo()
     
     def simulationSpeedCalculation(self):
         if self.checkBox.isChecked():

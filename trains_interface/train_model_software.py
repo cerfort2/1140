@@ -304,7 +304,6 @@ class train_model_software():
         #Station Name
         self.current_station = firstPacket[0]
         self.announcement = "Arriving at: " + self.current_station
-        print(self.current_station)
 
         #Station Side
         if(len(firstPacket) == 3):
@@ -399,7 +398,6 @@ class train_model_software():
         self.set_right_door(self.controller.getRightDoor())
         self.set_left_door(self.controller.getLeftDoor())
         self.set_announcement(self.controller.getAnnouncement())
-        print(self.controller.nextstop)
         self.controller.nextstop = self.current_station
         if self.controller.dwelling == True:
             self.controller.leftDoor = self.left_door
