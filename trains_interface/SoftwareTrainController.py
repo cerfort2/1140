@@ -70,8 +70,9 @@ class SoftwareTrainController():
         self.setManualMode(self.ui.mode.currentText())
         self.temperature=self.ui.temp.value()
         self.manualcommandedspeed=self.ui.manualcommandedspeed.value()
-        self.externallight=self.ui.externallight.isChecked()
-        self.internallight=self.ui.internallight.isChecked()
+        if self.manualmode:
+            self.externallight=self.ui.externallight.isChecked()
+            self.internallight=self.ui.internallight.isChecked()
         self.leftDoor=self.ui.leftdoor.isChecked()
         self.rightDoor=self.ui.rightdoor.isChecked()
         self.computeVals()
@@ -109,7 +110,8 @@ class SoftwareTrainController():
         self.ui.enginefailure.setChecked(self.engineFailure)
         self.ui.dwelltime.display(self.dwellTime)
         self.ui.trainnumber.setText(str(self.trainnumber))
-        self.ui.announcement.setText(self.announcement)
+        if self.dwelling:
+            self.ui.announcement.setText(self.announcement)
         self.ui.externallight.setChecked(self.computeExtLights())
 
         self.ui.speedlimit.display(int(self.getSpeedLimit()*2.2369362921))

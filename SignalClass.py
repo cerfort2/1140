@@ -91,7 +91,7 @@ class God(Home, QMainWindow):
 
         #Timer functions between CTC and Track Controller
         #Hardware
-        self.trackController.CTCOccupancy.connect(self.ctc.get_block_occupancies)
+        
 
         #CTC to initialize train on dispatch
         self.ctc.train_dispatched.connect(self.init_train)
@@ -148,7 +148,7 @@ class God(Home, QMainWindow):
     def onTimeoutFunctions(self):
         self.ctc.get_speed(self.timeStep)
         self.trackModel.trackModel.updateTemp(self.spinBox.value())
-        
+        self.trackController.CTCOccupancy.connect(self.ctc.get_block_occupancies)
         #self.trackController.sendSpeed()
         self.trackModel.trackModel.getTicketsSales()
         self.trackModel.trackModel.emitOccupancy()

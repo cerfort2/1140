@@ -190,6 +190,8 @@ class CTC(Ui_Form, QWidget):
                 # Set the background color for the block
                 if color == Qt.GlobalColor.white and occupancy_item.background().color() == Qt.GlobalColor.yellow:
                     pass
+                elif occupancy_item.background().color() == Qt.GlobalColor.green:
+                    pass
                 else:
                     occupancy_item.setBackground(color)
                     status_item.setText(status)
@@ -213,6 +215,8 @@ class CTC(Ui_Form, QWidget):
 
                 # Set the background color for the block
                 if color == Qt.GlobalColor.white and occupancy_item.background().color() == Qt.GlobalColor.yellow:
+                    pass
+                elif occupancy_item.background().color() == Qt.GlobalColor.green:
                     pass
                 else:
                     occupancy_item.setBackground(color)
@@ -960,18 +964,19 @@ class CTC(Ui_Form, QWidget):
                 # Determine the color based on occupancy
                 color = Qt.GlobalColor.green if is_occupied else Qt.GlobalColor.white
                 status = "Occupied" if is_occupied else "Open"
-
                 # Assuming the "Occupancy" column is the first column (0-indexed)
                 occupancy_item = self.block_occupancy_green.item(index, 0)
                 if not occupancy_item:  # If the item doesn't exist, create it
                     occupancy_item = QTableWidgetItem()
                     self.block_occupancy_green.setItem(index, 0, occupancy_item)
-
+                
                 # Update the "Block Status" in the third column
                 status_item = self.block_occupancy_green.item(index, 2)  # Assuming the "Block Status" column is the third column
                 if not status_item:
                     status_item = QTableWidgetItem()
                     self.block_occupancy_green.setItem(index, 2, status_item)
+                    
+
                 if color == Qt.GlobalColor.white and occupancy_item.background().color() == Qt.GlobalColor.yellow:
                     pass
                 elif (occupancy_item.background().color() == Qt.GlobalColor.red):

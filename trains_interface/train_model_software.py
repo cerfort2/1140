@@ -404,14 +404,15 @@ class train_model_software():
         self.set_brake_failure(self.controller.brakeFailure)
         self.set_signal_failure(self.controller.signalFailure)
         self.set_inside_lights(self.controller.getIntLights())
-        self.set_outside_lights(self.controller.getExteriorLights())
         self.set_right_door(self.controller.getRightDoor())
         self.set_left_door(self.controller.getLeftDoor())
         self.set_announcement(self.controller.getAnnouncement())
         self.controller.nextstop = self.current_station
+        self.controller.externallight = self.outside_lights
         if self.controller.dwelling == True:
             self.controller.leftDoor = self.left_door
             self.controller.rightDoor = self.right_door
+        
         
         self.controller.setCommandedSpeed(self.get_suggested_speed())
         if UI_flag:
@@ -435,8 +436,10 @@ class train_model_software():
         self.ui.elevation.setText(str(round(self.elevation, 2)) + " Feet")
         if self.underground_val == True:
             self.ui.environment.setText("In a Tunnel")
+            self.outside_lights = True
         else:
             self.ui.environment.setText("Outside")
+            self.outside_lights = False
         self.ui.passenger_count.setText(str(round(self.passengers, 2)) + " People")
         self.ui.power.setText(str(round(self.power, 2)) + " Watts")
         self.ui.current_velocity.setText(str(round(self.speed * 2.23694, 2)) + " MPH")
@@ -457,9 +460,9 @@ class train_model_software():
         self.ui.crew_count.setText("2 People")
         self.ui.mass.setText(str(round(self.mass / 2.2, 2)) + " lbs")
 
-        self.ui.length.setText(str(round(32.2 * 3.28084, 2)) + " feet")
-        self.ui.length.setText(str(round(3.42 * 3.28084, 2)) + " feet")
-        self.ui.length.setText(str(round(2.65 * 3.28084, 2)) + " feet")
+        self.ui.length.setText("105.6 feet")
+        self.ui.length.setText("11.2 feet")
+        self.ui.length.setText("8.7 feet")
 
         self.ui.announcement.setText(self.announcement)
     
