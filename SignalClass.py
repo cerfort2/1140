@@ -122,8 +122,8 @@ class God(Home, QMainWindow):
 
         #Only have one of these lines commented out:
         #HW Track Controller
-        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
-        #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.redLine.setTracks)
+        #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.redLine.setTracks)
         #SW Track Controller
         #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.setDisplay)
 
