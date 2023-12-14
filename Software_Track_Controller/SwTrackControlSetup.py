@@ -40,7 +40,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         self.failuresData.clear()
         names = self.line.getFailed(fails)
         for i in names:
-            self.failuresData.add(i)
+            self.failuresData.addItem(i)
         self.CTCTrackFailures.emit(fails)
     
     trackModelFixes = pyqtSignal(str)
