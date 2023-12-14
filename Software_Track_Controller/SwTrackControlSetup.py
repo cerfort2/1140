@@ -25,10 +25,13 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
     trackModelSuggestedSpeed = pyqtSignal(list)
     trackModelAuthority = pyqtSignal(list)
     trackModelStoppedTrains = pyqtSignal(list)
+    trackModelFixes = pyqtSignal(str)
+    trackModelClose = pyqtSignal(str)
 
     #Signals sent to CTC
     CTCOccupancy = pyqtSignal(list)
     CTCTrackFailures = pyqtSignal(list)
+   
 
     def __init__(self):
         super().__init__()
@@ -43,9 +46,15 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             self.failuresData.addItem(i)
         self.CTCTrackFailures.emit(fails)
     
-    trackModelFixes = pyqtSignal(str)
-    def fix(self, blockToFix):
+    
+    def fix(self, blockToFix): #sends blocks to fix
         self.trackModelFixes.emit(blockToFix)
+
+    def close(self, blockToClose): #sends blocks to close
+        self.trackModelClose.emit(blockToClose)
+
+    def changeSwitch(self, name, value): #Change switch from CTC
+        self.line.changeSwitch(name, value)
         
         
 

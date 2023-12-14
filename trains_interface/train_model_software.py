@@ -43,6 +43,7 @@ class train_model_software():
         self.authority_list = []
         self.station_bools = []
         self.currentMove = 0
+        self.train_number = 0
         #create instance of train controller
         self.controller = SoftwareTrainController()
         # self.controller = HardwareTrainController()
@@ -295,6 +296,8 @@ class train_model_software():
         
     # #setting station data
     def set_station_data(self, beacon_val: str) -> None:
+        if self.signal_failure:
+            return
         #Split by ;
         splitPackets = beacon_val.split("; ")
 
@@ -310,7 +313,7 @@ class train_model_software():
             self.right_door = True
             self.left_door = True
         else:
-            if firstPacket[1] == True:
+            if firstPacket[1] == 'Right':
                 self.right_door = True
             else:
                 self.left_door = True
@@ -344,6 +347,9 @@ class train_model_software():
 
         #if self.authority == 0:
            # 1 == 1
+
+        if self.occupancy == "Z151" and self.routeList == ["Z151"]:
+            self.widget2.close()
 
         if self.currentMove > float(self.authority_list[0]):
 
@@ -426,9 +432,13 @@ class train_model_software():
         self.ui.left_door.setChecked(self.left_door)
         self.ui.right_door.setChecked(self.right_door)
 
-        self.ui.engine_button.setChecked(self.engine_failure)
-        self.ui.brake_button.setChecked(self.brake_failure)
-        self.ui.signal_button.setChecked(self.signal_failure)
+        self.ui.engine_failure.setChecked(self.engine_failure)
+        self.ui.brake_failure.setChecked(self.brake_failure)
+        self.ui.signal_failure.setChecked(self.signal_failure)
+
+        self.ui.train_number_value.setText(str(self.train_number))
+        self.ui.crew_count.setText("2 People")
+        self.ui.mass.setText(str(round(self.mass / 2.2, 2)) + " lbs")
 
         self.ui.announcement.setText(self.announcement)
     
@@ -436,15 +446,15 @@ class train_model_software():
     def scrape_ui(self) -> None:
         self.ui.emergency_brake.clicked.connect(self.controller.eBrakePressed)
 
-        if self.ui.engine_button.isChecked():
+        if self.ui.engine_failure.isChecked():
             self.controller.engineFailure = True
         else:
             self.controller.engineFailure = False
-        if self.ui.brake_button.isChecked():
+        if self.ui.brake_failure.isChecked():
             self.controller.brakeFailure = True
         else:
             self.controller.brakeFailure = False
-        if self.ui.signal_button.isChecked():
+        if self.ui.signal_failure.isChecked():
             self.controller.signalFailure = True
         else:
             self.controller.signalFailure = False

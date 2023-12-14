@@ -61,10 +61,10 @@ class God(Home, QMainWindow):
         self.ctc = CTC()
 
         #HW Track Controller
-        #self.trackController = HWTrackControllerGUI()
+        self.trackController = HWTrackControllerGUI()
 
         #SW Track Controller
-        self.trackController = SoftwareTrackControllerGUI()
+        #self.trackController = SoftwareTrackControllerGUI()
 
         self.trackModel = functionalUI()
         self.trainInterface = train_model_interface_software()
@@ -108,10 +108,14 @@ class God(Home, QMainWindow):
         self.trackController.trackModelSendRoute.connect(self.trackModel.trackModel.route)
         self.trackController.trackModelTrackData.connect(self.trackModel.trackModel.controlModel)
         self.trackController.trackModelStoppedTrains.connect(self.trackModel.trackModel.stopAtBlocks)
+        self.trackController.trackModelClose.connect(self.trackModel.trackModel.closeBlock)
+        self.trackController.trackModelFixes.connect(self.trackModel.trackModel.openBlock)
 
         self.trackModel.trackModel.trackControllerFailureBlocks.connect(self.trackController.getFailure)
-        # self.trackController.CTCTrackFailures.connect("myles function")
-        # self.CTC.signalName.connect(self.trackController.fix)
+        self.trackController.CTCTrackFailures.connect(self.ctc.get_failures)
+        self.ctc.track_opened.connect(self.trackController.fix)
+        self.ctc.track_closed.connect(self.trackController.close)
+        self.ctc.toggle_switch.connect(self.trackController.changeSwitch)
         self.trackController.trackModelFixes.connect(self.trackModel.trackModel.fixFailures)
 
 
@@ -132,9 +136,8 @@ class God(Home, QMainWindow):
         self.trackModel.trackModel.trainModelBlockInfo.connect(self.trainInterface.unpack_blocks)
         #must add this connection
         # self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.?)
-
         
-        #self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
+        self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
         
 
     def init_train(self):
@@ -143,6 +146,9 @@ class God(Home, QMainWindow):
 
     #on timeout emissions
     def onTimeoutFunctions(self):
+        self.ctc.get_speed(self.verticalSlider.value())
+        # self.trackModel.trackModel.(self.spinBox.value())
+        
         #self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
         self.trackController.sendData()
@@ -155,14 +161,12 @@ class God(Home, QMainWindow):
             self.trainInterface.update_trains()
             self.trackModel.trackModel.polarity()
             self.trackModel.trackModel.getOccupiedBlockInfo()
-        
-        #self.ctc.get_speed(self.timeStep)
+    
     
     def simulationSpeedCalculation(self):
         if self.checkBox.isChecked():
             self.timeStep = 9999999 #large time step to simulate pause
         else:
-            print(self.verticalSlider.value())
             self.timeStep = 1000/self.verticalSlider.value()
 
         self.MainTimer.start(int(self.timeStep))

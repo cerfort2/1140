@@ -25,8 +25,6 @@ metersToFeet = 3.28084
 kmhrTomihr = 0.621371
 
 #UI changes
-#Label the first block of each section (A1,B4,C12,D17)
-#displaying signals on track
 
 #Functional Changes
 #Split the trouble blocks for polarity purposes (might need to hard code this)
@@ -119,7 +117,7 @@ class Line():
         nodeSize = []
 
         for i in range(len(self.blocks)):
-            if(self.blocks[i].occupied) or (self.blocks[i].name == blockSelected):
+            if(self.blocks[i].occupied and (self.blocks[i].name != "Z151" or self.blocks[i].name != "T77")) or (self.blocks[i].name == blockSelected):
                 labels[self.blocks[i]] = self.blocks[i].name
             else:
                 labels[self.blocks[i]] = ""
@@ -137,7 +135,7 @@ class Line():
                 dataToAnnotate += "\n" + str(self.blocks[i].station[1]) + "\n" + "Tickets Sold:" + str(self.blocks[i].station[2])
             annotations.append(dataToAnnotate)
 
-            if self.blocks[i].occupied:
+            if (self.blocks[i].occupied and (self.blocks[i].name != "Z151" or self.blocks[i].name != "T77")) :
                 colors.append('#FFA500') #Orange
             elif self.blocks[i].station[0]:
                 colors.append("#40E0D0")
@@ -158,7 +156,7 @@ class Line():
                     signalColor.append('green')
 
 
-            if(self.blocks[i].occupied):
+            if(self.blocks[i].occupied and (self.blocks[i].name != "Z151" or self.blocks[i].name != "T77")):
                 nodeSize.append(25)
             else:
                 nodeSize.append(5)
@@ -498,6 +496,7 @@ class TrackModel(QObject):
         self.route_passthrough = []
         self.suggestedSpeed_passthrough= []
         self.authority_passthrough = []
+        self.temperature = 50
 
     #--------------------
     #Internal Functions
@@ -594,10 +593,11 @@ class TrackModel(QObject):
             self.trackControllerFailureBlocks.emit(failedBlocks)
 
 
+    trackModelUpdates = pyqtSignal() # Signal for if the map should update along with all other UI
     #------------------
     #Receiving Signals
     #------------------
-    trackModelUpdates = pyqtSignal() # Signal for if the map should update along with all other UI
+    
     def controlModel(self,controlSignals):
         if self.controlSignalsHolder != controlSignals:
             for line in self.lines:
@@ -625,14 +625,14 @@ class TrackModel(QObject):
                     block.clearOccupied()
 
         for blk_name in occupancyList:
-            self.lines[self.lines.index(self.lines[0])].getBlock(blk_name).setOccupied()
+                self.lines[self.lines.index(self.lines[0])].getBlock(blk_name).setOccupied()
 
         self.trackModelUpdates.emit()
         self.emitApproachingBeacon()
         self.emitSwitchBeacon()
         self.emitStationBeacon()
 
-
+    #Track Model --> Track Controller
     def fixFailures(self, blockToFix):
         for line in self.lines:
 
@@ -649,8 +649,26 @@ class TrackModel(QObject):
         
         self.trackModelUpdates.emit()
 
+    #Track Controller --> Track Model
+    def closeBlock(self, blockToClose):
+        for line in self.lines:
+            line.getBlock(blockToClose).setOccupied()
+
+    #Track Controller --> Track Model
+    def openBlock(self, blockToOpen):
+        for line in self.lines:
+            line.getBlock(blockToOpen).clearOccupied()
                 
-                
+
+    def updateTemp(self,temp):
+        self.temperature = temp
+        for line in self.lines:
+            for block in line.blocks:
+                if self.temperature > 32:
+                    block.trackHeater = True
+                else:
+                    block.trackHeater = False
+
 
 
     #----------------
@@ -681,6 +699,8 @@ class TrackModel(QObject):
     def stopAtBlocks(self,stopBlocks):
         self.trainModelStopAtBlocks.emit(stopBlocks)
         
+
+
 class functionalUI(Ui_Form):
     def __init__(self) -> None:
         super().__init__()

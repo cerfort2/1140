@@ -866,7 +866,7 @@ class Ui_Form(object):
         self.groupBox_12.setTitle(_translate("Form", "H"))
         self._43_44.setText(_translate("Form", "43-44"))
         self._43_67.setText(_translate("Form", "43-67"))
-        self.groupBox_13.setTitle(_translate("Form", "C"))
+        self.groupBox_13.setTitle(_translate("Form", "J"))
         self._52_53.setText(_translate("Form", "52-53"))
         self._52_66.setText(_translate("Form", "52-66"))
         self.label_23.setText(_translate("Form", "Green Line"))

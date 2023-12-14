@@ -136,7 +136,7 @@ class SoftwareTrainController():
             #determine the min distance to brake comfortably and get to the station
             self.brakedistance = self.currentSpeed**2/(1.2)
 
-            if self.brakedistance>=self.authority:
+            if self.brakedistance>=self.authority or self.currentSpeed > self.ctcSpeed:
                 self.serviceBrake=True
             else:
                 self.serviceBrake=False
@@ -314,7 +314,7 @@ class SoftwareTrainController():
                 self.dwellTime-=self.interval
                 print(self.dwellTime)
             else:
-
+                
                 #done dwelling
                 print("done dwelling")
 
