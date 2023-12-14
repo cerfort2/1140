@@ -281,7 +281,7 @@ class SoftwareTrainController():
                 self.dwellTime-=self.interval
                 print(self.dwellTime)
             else:
-
+                
                 #done dwelling
                 print("done dwelling")
 
