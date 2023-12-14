@@ -307,9 +307,13 @@ class train_model_software():
 
         #Station Side
         if(len(firstPacket) == 3):
-            self.open_side = "Left/Right"
+            self.right_door = True
+            self.left_door = True
         else:
-            self.open_side = firstPacket[1]
+            if firstPacket[1] == True:
+                self.right_door = True
+            else:
+                self.left_door = True
 
 
     # #switch beacon
@@ -363,13 +367,6 @@ class train_model_software():
         self.station_bools = monsters_data[0][1]
         self.authority_list = monsters_data[0][2]
 
-        print(self.routeList)
-        print(self.station_bools)
-        print(self.authority_list)
-        print(self.suggested_speed_list)
-        print(monsters_data[2])
-        print(self.stationAuthorities)
-
         self.authority = self.stationAuthorities[0]
         
 
@@ -401,6 +398,12 @@ class train_model_software():
         self.set_right_door(self.controller.getRightDoor())
         self.set_left_door(self.controller.getLeftDoor())
         self.set_announcement(self.controller.getAnnouncement())
+        self.controller.nextstop = self.current_station
+        if self.controller.dwelling == True:
+            self.controller.leftDoor = self.left_door
+            self.controller.rightDoor = self.right_door
+        
+        self.controller.setCommandedSpeed(self.get_suggested_speed())
         if UI_flag:
             self.controller.update_time()
         if UI_flag:
@@ -408,7 +411,7 @@ class train_model_software():
 
     #update train ui
     def update_ui(self) -> None:
-        self.ui.slope.setText(str(round(self.slope, 2)) + " Degrees")
+        self.ui.slope.setText(str(self.slope) + " Degrees")
         self.ui.elevation.setText(str(round(self.elevation, 2)) + " Feet")
         self.ui.environment.setText(str(self.environment))
         self.ui.passenger_count.setText(str(round(self.passengers, 2)) + " People")
@@ -445,3 +448,4 @@ class train_model_software():
             self.controller.signalFailure = True
         else:
             self.controller.signalFailure = False
+

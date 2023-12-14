@@ -56,27 +56,32 @@ class God(Home, QMainWindow):
         self.setupUi(self)
         
         self.MainTimer = QTimer()
-        self.timeStep = 50
+        self.timeStep = 1000
 
         self.ctc = CTC()
 
         #HW Track Controller
-        self.trackControllerHW = HWTrackControllerGUI()
+        #self.trackController = HWTrackControllerGUI()
 
         #SW Track Controller
-        # self.trackControllerHW = SoftwareTrackControllerGUI()
+        self.trackController = SoftwareTrackControllerGUI()
 
         self.trackModel = functionalUI()
         self.trainInterface = train_model_interface_software()
         self.setupConnections()
         self.create_modules()
 
+
     def setupConnections(self):
         #GOD UI main page
         self.ctc_btn.clicked.connect(self.openCTCGUI)
         self.track_model_btn.clicked.connect(self.openTrackModelGUI)
-        self.track_controller_btn.clicked.connect(self.openTrackControllerHWGUI)
+        self.track_controller_sw_btn.clicked.connect(self.opentrackControllerGUI)
         #self.track_controller_sw_btn.clicked.connect(self.openTrackControllerSW)
+
+        #Simulation speed and Pause
+        self.verticalSlider.valueChanged.connect(self.simulationSpeedCalculation)
+        self.checkBox.stateChanged.connect(self.simulationSpeedCalculation)
         
         
         #timer
@@ -86,55 +91,42 @@ class God(Home, QMainWindow):
 
         #Timer functions between CTC and Track Controller
         #Hardware
-        self.trackControllerHW.CTCOccupancyHW.connect(self.ctc.get_block_occupancies)
-        #Software
-        #self.trackControllerSW.CTCOccupancyHW.connect(self.ctc.get_block_occupancies)
+        self.trackController.CTCOccupancy.connect(self.ctc.get_block_occupancies)
 
         #CTC to initialize train on dispatch
         self.ctc.train_dispatched.connect(self.init_train)
 
         #Sent from CTC to Track Controller
-        self.ctc.train_dispatched.connect(self.trackControllerHW.createNewTrainData)
-        #self.ctc.train_dispatched.connect(self.trackControllerSW.sendTrainDetails)
+        self.ctc.train_dispatched.connect(self.trackController.createNewTrainData)
 
         #Timer functions between Track Model and Track Controller
-        self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerHW.getOccupancy)
-        self.trackControllerHW.trackModelSuggestedSpeedHW.connect(self.trackModel.trackModel.suggestedSpeed)
-        self.trackControllerHW.trackModelAuthorityHW.connect(self.trackModel.trackModel.authority)
-        self.trackControllerHW.trackModelSendRouteHW.connect(self.trackModel.trackModel.route)
-        self.trackControllerHW.trackModelTrackDataHW.connect(self.trackModel.trackModel.controlModel)
-        self.trackControllerHW.trackModelStoppedTrains.connect(self.trackModel.trackModel.stopAtBlocks)
+        self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackController.getOccupancy)
+        self.trackController.trackModelSuggestedSpeed.connect(self.trackModel.trackModel.suggestedSpeed)
+        self.trackController.trackModelAuthority.connect(self.trackModel.trackModel.authority)
+        self.trackController.trackModelSendRoute.connect(self.trackModel.trackModel.route)
+        self.trackController.trackModelTrackData.connect(self.trackModel.trackModel.controlModel)
+        self.trackController.trackModelStoppedTrains.connect(self.trackModel.trackModel.stopAtBlocks)
 
 
 
         #Only have one of these lines commented out:
         #HW Track Controller
-        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerHW.greenLine.setTracks)
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
         #SW Track Controller
-        #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerHW.setDisplay)
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.setDisplay)
 
-
-
-
-        # self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackControllerSW.setDisplay)
-        # self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackControllerSW.setOccupancy)
-        # self.trackControllerSW.trackModelData.connect(self.trackModel.trackModel.controlModel)
-        # self.trackControllerSW.trackModelRoute.connect(self.trackModel.trackModel.route)
-        # self.trackControllerSW.trackModelSpeed.connect(self.trackModel.trackModel.suggestedSpeed)
-        # self.trackControllerSW.trackModelAuthority.connect(self.trackModel.trackModel.authority)
         
         #Between Train model and Track model
         self.trackModel.trackModel.trainModelRouteNames.connect(self.trainInterface.set_route)
-
-
-
-
-        #Once calls for both
-        self.trackModel.trackModel.initTrack()
+        self.trackModel.trackModel.trainModelStopAtBlocks.connect(self.trainInterface.wayside_stops)
         self.trainInterface.track_model_occupancy_list.connect(self.trackModel.trackModel.updateOccupancy)
-        #self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
-        
+        self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.unpack_beacons)
+        self.trackModel.trackModel.trainModelBlockInfo.connect(self.trainInterface.unpack_blocks)
+        #must add this connection
+        # self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.?)
 
+        
+        #self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
         
 
     def init_train(self):
@@ -143,19 +135,27 @@ class God(Home, QMainWindow):
 
     #on timeout emissions
     def onTimeoutFunctions(self):
-        # self.trackModel.trackModel.initTrack()
         #self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
-        self.trackControllerHW.sendData()
-        # self.trackModel.trackModel.emitStationBeacon()
+        self.trackController.sendData()
         # self.trackModel.trackModel.emitSwitchBeacon()
         # self.trackModel.trackModel.emitApproachingBeacon()
         self.trainInterface.get_occupancies()
-        self.trackModel.updateMap()
         if self.trainInterface.trains != []:
+            self.trackModel.trackModel.emitStationBeacon()
             self.trainInterface.update_trains()
             self.trackModel.trackModel.polarity()
+            self.trackModel.trackModel.getOccupiedBlockInfo()
     
+    def simulationSpeedCalculation(self):
+        if self.checkBox.isChecked():
+            self.timeStep = 9999999 #large time step to simulate pause
+        else:
+            print(self.verticalSlider.value())
+            self.timeStep = 1000/self.verticalSlider.value()
+
+        self.MainTimer.start(int(self.timeStep))
+
     def create_modules(self):
         #Track Model
         self.widget = QWidget()
@@ -164,30 +164,24 @@ class God(Home, QMainWindow):
         
         #HW Track Controller
         self.widget2 = QWidget()
-        self.trackControllerHW.setupUi(self.widget2)
-        self.trackControllerHW.connectFunctions()
+        self.trackController.setupUi(self.widget2)
+        self.trackController.connectFunctions()
         
         #CTC
         self.widget3 = QWidget()
         self.ctc.setupUi(self.widget3)
         self.ctc.initialize_ctc()
 
-        #SW Track Controller
-        self.widget4 = QWidget()
-        # self.trackControllerSW.setupUi(self.widget4)
-        # self.trackControllerSW.connectFunctions()
 
     def openTrackModelGUI(self):
         self.widget.show()
 
-    def openTrackControllerHWGUI(self):
+    def opentrackControllerGUI(self):
         self.widget2.show()
     
     def openCTCGUI(self):
         self.widget3.show()
     
-    # def openTrackControllerSW(self):
-    #     self.widget4.show()
 
 
 

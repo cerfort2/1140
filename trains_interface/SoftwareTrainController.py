@@ -14,7 +14,8 @@ class SoftwareTrainController():
         self.manualcommandedspeed=0      #the value of the slide bar. commandedspeed=manualcommandedspeed if manualMode=True 
         self.nextstop="A Stop"
         self.currentSpeed=0      #current speed in manual or auto (max speed is 70km/hr)
-        self.speedLimit=43
+        self.speedLimit=19.22272
+        self.speedLimit=43 / 2.2369362921
         self.authority=0        #authority in automatic mode
         self.temperature=70       #temp in degrees fahrenheit
         self.exlights=False     #true=on
@@ -101,21 +102,21 @@ class SoftwareTrainController():
         
         self.ui.externallight.setChecked(self.computeExtLights())
 
-        self.ui.speedlimit.display(int(self.getSpeedLimit()))
+        self.ui.speedlimit.display(int(self.getSpeedLimit()*2.2369362921))
         self.ui.authority.display(int(self.getAuthority()*3.280839895013123))
 
 
     
     def setCommandedSpeed(self,s):
-        self.ctcSpeed=s
+        self.ctcSpeed=min(s, self.speedLimit)
     def setCurrentSpeed(self,s):
         self.currentSpeed=s*self.simulationSpeed
     
     #if speed limit > max train speed, then speedlimit=max train speed
     def setSpeedLimit(self,s):
-        self.speedLimit=s*2.2369362921
-        if self.speedLimit>43:
-            self.speedLimit=43
+        self.speedLimit=s
+        if self.speedLimit>19.22272:
+            self.speedLimit=19.22272
         
     #set announcent after a next stop is received
     def setNextStop(self,stop):
@@ -139,7 +140,9 @@ class SoftwareTrainController():
                 self.serviceBrake = False
             #service brake is on if wayside sends a red signal
             if self.waysideStop:
-                self.serviceBrake=True
+                self.eBrake=True
+            else:
+                self.eBrake=False
 
     def activateWaysideStop(self):
         self.waysideStop=True    
@@ -218,12 +221,12 @@ class SoftwareTrainController():
         if self.manualmode==True:
             self.ekprev=self.ek
             self.ek=(self.manualcommandedspeed/2.2369362921-self.currentSpeed)
-            self.uk+=(self.interval/2)*(self.ek+self.ekprev)
+            self.uk+=(self.interval/2)*(self.ek-self.ekprev)
             self.power=(self.ek*self.kp+self.ki*self.uk)
         else:
             self.ekprev=self.ek
             self.ek=(self.ctcSpeed-self.currentSpeed)
-            self.uk+=(self.interval/2)*(self.ek+self.ekprev)
+            self.uk+=(self.interval/2)*(self.ek-self.ekprev)
             self.power=(self.ek*self.kp+self.ki*self.uk)
 
         #max power
@@ -283,7 +286,9 @@ class SoftwareTrainController():
                 print("done dwelling")
 
                 self.dwelling=False
-                self.dwellTime=60     
+                self.dwellTime=5  
+                self.leftDoor = False
+                self.rightDoor = False
 
     def computeAuthority(self):
         #if at station, then dwell
@@ -293,7 +298,7 @@ class SoftwareTrainController():
 
     def toggleDwelling(self):
         self.dwelling=False
-        self.dwellTime=60
+        self.dwellTime=5
 
     def computeManualSpeed(self) ->int:
         #in automatic, manual=ctcspeed

@@ -52,13 +52,35 @@ class train_model_interface_software(QObject):
     
     #wayside stop function
     def wayside_stops(self, stops: list) -> None:
-        current_occupancies = self.get_occupancies
-        for occupy in current_occupancies:
-            if occupy in stops:
-                self.access_train(current_occupancies.index(occupy) + 1).controller.activateWaysideStop()
-            else:
-                self.access_train(current_occupancies.index(occupy) + 1).controller.deactivateWaysideStop()
-            
+        current_occupancies = []
+        print("stoppages:")
+        print(stops)
+
+        for train in self.trains:
+            current_occupancies.append(train.get_occupancy())
+
+        if current_occupancies:
+            for occupy in current_occupancies:
+                if occupy in stops:
+                    self.access_train(current_occupancies.index(occupy) + 1).controller.activateWaysideStop()
+                else:
+                    self.access_train(current_occupancies.index(occupy) + 1).controller.deactivateWaysideStop()
+                    
+    #function to unpack beacons
+    def unpack_beacons(self, beacons: list) -> None:
+        for i in range(len(beacons)):
+            if beacons[i] != "":
+                self.access_train(i + 1).set_station_data(beacons[i])
+    
+    #function to unpack block infos
+    def unpack_blocks(self, blocks: list) -> None:
+        for i in range(len(blocks)):
+            print(blocks[i])
+            self.access_train(i + 1).speed_limit = blocks[i][0]
+            self.access_train(i + 1).slope = blocks[i][1]
+            self.access_train(i + 1).underground_val = blocks[i][2]
+
+                
     #show GUIs
     def show_GUI(self, train_num: int) -> None:
         self.UI_flag = True

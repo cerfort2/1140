@@ -24,7 +24,6 @@ metersToFeet = 3.28084
 kmhrTomihr = 0.621371
 
 #UI changes
-#Paint unused edge in a switch white
 #Label the first block of each section (A1,B4,C12,D17)
 #displaying signals on track
 
@@ -111,6 +110,10 @@ class Line():
         colors = []
         labels = {}
         annotations = []
+        edgesToBeDrawn = []
+        signalXPos = []
+        signalYPos = []
+        signalColor = []
 
         for i in range(len(self.blocks)):
             if(self.blocks[i].occupied) or (self.blocks[i].name == blockSelected):
@@ -126,6 +129,7 @@ class Line():
             # labels[self.blocks[i]] = self.blocks[i].polarity
 
             dataToAnnotate = self.blocks[i].name
+
             if self.blocks[i].station[0]:
                 dataToAnnotate += "\n" + str(self.blocks[i].station[1]) + "\n" + "Tickets Sold:" + str(self.blocks[i].station[2])
             annotations.append(dataToAnnotate)
@@ -141,12 +145,31 @@ class Line():
             else:
                 colors.append(self.name.split()[0])
 
+            if self.blocks[i].signal[0]:
+                signalXPos.append(pos[self.blocks[i]][0]+0.02)
+                signalYPos.append(pos[self.blocks[i]][1])
+                if self.blocks[i].signal[1]:
+                    signalColor.append('red')
+                else:
+                    signalColor.append('green')
+        
+        for edge in self.network.edges:
+            blk1, blk2 = edge
+            if (not ((blk1.switch[0] and blk1.switch[2] == blk2.name) or (blk2.switch[0] and blk2.switch[2] == blk1.name))):
+                edgesToBeDrawn.append(edge)
 
-        nx.draw_networkx(self.network, pos,node_size = 50,
+
+
+
+
+
+
+        nx.draw_networkx(self.network, pos,node_size = 5,
                     labels = labels, with_labels=True,
-                    font_size = 12, node_color = colors, node_shape = 's')# so^>v<dph8.
+                    font_size = 12, node_color = colors, node_shape = 's', edgelist = edgesToBeDrawn)# so^>v<dph8.
         # nx.draw_networkx_labels(self.network,pos,labels, horizontalalignment='right',verticalalignment='top')
-
+        # nx.draw_networkx_edges(self.network,pos, edgelist=edgesToBeDrawn)
+        plt.scatter(signalXPos,signalYPos, c=signalColor)
         mplcursors.cursor(hover = 2).connect(
             "add", lambda sel: sel.annotation.set_text(annotations[sel.index]))
         
@@ -251,7 +274,8 @@ class Line():
                     sortedBlocks[0].approachingBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
             elif sortedBlocks[0].stationBeacon[0]:
                 for blk in sortedBlocks:
-                    sortedBlocks[0].stationBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+                    pass
+                    # sortedBlocks[0].stationBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
             elif sortedBlocks[0].switchBeacon[0]:
                 for blk in sortedBlocks:
                     sortedBlocks[0].switchBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
@@ -266,7 +290,8 @@ class Line():
                     sortedBlocks[-1].approachingBeacon[1] += str(blk.name) + "/" + str(blk.length) + "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
             elif sortedBlocks[-1].stationBeacon[0]:
                 for blk in reversed(sortedBlocks):
-                    sortedBlocks[-1].stationBeacon[1] += str(blk.name) + "/" + str(blk.length) + "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
+                    pass
+                    # sortedBlocks[-1].stationBeacon[1] += str(blk.name) + "/" + str(blk.length) + "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
             elif sortedBlocks[-1].switchBeacon[0]:
                 for blk in reversed(sortedBlocks):
                     sortedBlocks[-1].switchBeacon[1] += str(blk.name) + "/" + str(blk.length)+ "/" + str(blk.underground) + "/" + str(blk.limit) + "; "
@@ -306,8 +331,6 @@ class Line():
                 #Signal Updating
                 if(self.blocks[i].signal[1] != controlSignals[2][i]):
                     self.blocks[i].toggleSignal()
-                    if(self.blocks[i].name == "J62"):
-                        return
 
     def initializeTrackControllerData(self):
         hasSwitch = [blk.switch[0] for blk in self.blocks]
@@ -446,6 +469,7 @@ class TrackModel(QObject):
 
     def __init__(self):
         super().__init__()
+        self.controlSignalsHolder = [[],[],[]]
         self.lines = []
         self.occupancyList = []
         self.occupancyListStrings = []
@@ -491,19 +515,22 @@ class TrackModel(QObject):
             self.trackControllerInitializeLine.emit(line.initializeTrackControllerData())
 
     #Emit Station Beacon
-    trainModelStationBeacon = pyqtSignal(str)
+    trainModelStationBeacon = pyqtSignal(list)
     def emitStationBeacon(self):
+        stationInfo = []
         for blk in self.occupancyList:
             if blk.stationBeacon[0]:
-                self.trainModelStationBeacon.emit(blk.stationBeacon[1])
+                stationInfo.append(blk.stationBeacon[1])
+            else:
+                stationInfo.append("")
+
+        self.trainModelStationBeacon.emit(stationInfo)
 
     #Emit Switch Beacons
     trainModelSwitchBeacon = pyqtSignal(str)
     def emitSwitchBeacon(self):
         for blk in self.occupancyList:
-            print(blk.switchBeacon[0])
             if blk.switchBeacon[0]:
-                print("found")
                 self.trainModelSwitchBeacon.emit(blk.switchBeacon[1])
 
     #Emit Approaching Beacons
@@ -512,12 +539,6 @@ class TrackModel(QObject):
         for blk in self.occupancyList:
             if blk.approachingBeacon[0]:
                 self.trainModelApproachingBeacon.emit(blk.approachingBeacon[1])
-
-    #Emit grade of occupied blocks
-    trainModelGrade = pyqtSignal(list)
-    def grade(self):
-        gradeList = [blk.grade for blk in self.occupancyList if blk.occupied]
-        self.trainModelGrade.emit(gradeList)
 
     #Emit polarity of occupied blocks
     trainModelPolarity = pyqtSignal()
@@ -534,15 +555,33 @@ class TrackModel(QObject):
         if len(tickets) != 0:
             self.CTCticketSales.emit(tickets)
      
+    trainModelBlockInfo = pyqtSignal(list)
+    def getOccupiedBlockInfo(self):
+        blkInfoList = []
+        for blk in self.occupancyList:
+            blkInfo = [blk.limit,blk.grade,blk.underground]
+            blkInfoList.append(blkInfo)
+
+        
+        self.trainModelBlockInfo.emit(blkInfoList)
+
+
+
     #------------------
     #Receiving Signals
     #------------------
+    trackModelUpdates = pyqtSignal() # Signal for if the map should update along with all other UI
     def controlModel(self,controlSignals):
-        for line in self.lines:
-            line.updateLineStatus(controlSignals)
+        if self.controlSignalsHolder != controlSignals:
+            self.trackModelUpdates.emit()
+
+            for line in self.lines:
+                line.updateLineStatus(controlSignals)
+
+            self.controlSignalsHolder = controlSignals
+
 
     #Train Model --> Track Model
-    #Need to talk about how multiple lines worth of occupancy will be sent
     def updateOccupancy(self,occupancyList):
         if len(self.lines) == 0:
             return
@@ -559,14 +598,14 @@ class TrackModel(QObject):
                 if not (block.brokenRail or block.trackCircuitFailure or block.powerFailure):
                     block.clearOccupied()
 
-        print("Update Occupancy")
         for blk_name in occupancyList:
             self.lines[self.lines.index(self.lines[0])].getBlock(blk_name).setOccupied()
 
-        
+        self.trackModelUpdates.emit()
         self.emitApproachingBeacon()
         self.emitSwitchBeacon()
         self.emitStationBeacon()
+
 
     #----------------
     #Pass through Signals
@@ -582,7 +621,7 @@ class TrackModel(QObject):
 
     trainModelAuthority = pyqtSignal(list)
     def authority(self, authority):
-        print(authority)
+        # print(authority)
         self.authority_passthrough = authority
         # self.trainModelBlockLengths.emit(authority)
 
@@ -604,7 +643,7 @@ class functionalUI(Ui_Form):
     def connect(self):
         self.comboBox_3.textActivated.connect(self.lineChange)
         self.comboBox_4.textActivated.connect(self.blockChange)
-        # self.comboBox_4.textActivated.connect(self.updateMap)
+        self.comboBox_4.textActivated.connect(self.updateModel)
 
         self.pushButton.clicked.connect(self.toggleBrokenRail)
         self.pushButton_2.clicked.connect(self.uploadTrack)
@@ -613,6 +652,14 @@ class functionalUI(Ui_Form):
 
         self.lineEdit.returnPressed.connect(self.tbChange)
         self.lineEdit.returnPressed.connect(self.updateMap)
+
+        self.trackModel.trackModelUpdates.connect(self.updateModel)
+
+    def updateModel(self):
+        self.updateMap()
+        self.listWidgetChange()
+        if self.comboBox_4.count() != 0:
+            self.blockChange()
 
     def tbChange(self):
         tbInfo = self.lineEdit.displayText().split(',')
@@ -626,7 +673,7 @@ class functionalUI(Ui_Form):
         for blk in tbInfo:
             line.getBlock(blk).occupied = True
 
-        self.listWidgetChange()
+        self.updateModel()
 
     def listWidgetChange(self):
         self.listWidget_2.clear()
@@ -747,10 +794,6 @@ class functionalUI(Ui_Form):
         else:
             self.tableWidget_3.item(14,0).setCheckState(QtCore.Qt.CheckState.Unchecked)
 
-
-        self.updateMap()
-        self.listWidgetChange()
-
     def uploadTrack(self):
         fd = QFileDialog()
         path, _ = fd.getOpenFileName(None, 'Select a file:')
@@ -781,8 +824,8 @@ class functionalUI(Ui_Form):
             blk.setOccupied()
 
         blk.brokenRail = not blk.brokenRail
-        
-        self.blockChange()
+
+        self.updateModel()
 
     def toggleTrackCircuitFailure(self):
         currentBlockName = self.comboBox_4.currentText()
@@ -803,7 +846,7 @@ class functionalUI(Ui_Form):
             
         blk.trackCircuitFailure = not blk.trackCircuitFailure
 
-        self.blockChange()
+        self.updateModel()
 
     def togglePowerFailure(self):
         currentBlockName = self.comboBox_4.currentText()
@@ -824,7 +867,7 @@ class functionalUI(Ui_Form):
             
         blk.powerFailure = not blk.powerFailure
 
-        self.blockChange()
+        self.updateModel()
     
     def updateMap(self):
         for i in range(len(self.trackModel.lines)):
@@ -832,7 +875,6 @@ class functionalUI(Ui_Form):
 
     def update_time(self):
         self.trackModel.emitOccupancy()
-        self.updateMap()
         # self.trackModel.emitStationBeacon()
         # self.trackModel.emitSwitchBeacon()
         # self.trackModel.emitApproachingBeacon()

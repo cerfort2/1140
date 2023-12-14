@@ -7,22 +7,18 @@ class Wayside():
         self.blocks:Block = []
         self.name:str = tag
 
+    #Returns wayside name
     def getName(self):
         return self.name
     
+    #Adds block to wayside
     def add(self, blo:Block):
         self.blocks.append(blo)
-
-
-    def addBlock(self, sw:bool, cr:bool, si:bool, na:str, le:str = "", ri:str = ""):
-        create:Block = Block(sw, cr, si, na)
-        if(sw):
-            create.setLeft(le)
-            create.setRight(ri)
-        self.blocks.append(create)
     
+    #Returns block at given index 
     def getBlock(self, index:int):
         return self.blocks[index]
 
+    #Returns list of blocks in wayside
     def getBlocks(self):
         return self.blocks

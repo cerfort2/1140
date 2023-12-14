@@ -14,7 +14,7 @@ class Track():
     isSwitch = False
     rightDestination = ""
     leftDestination = ""
-    switchStatus = True #Default switch to right(True = Right, False = left)
+    switchStatus = False #Default switch to right(True = Right, False = left)
 
     trackName = ""
 
