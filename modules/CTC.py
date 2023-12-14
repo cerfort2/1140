@@ -15,8 +15,8 @@ from typing import List, Optional
 from PyQt6.QtCore import pyqtSignal, QEvent, Qt, QDateTime, QTimer, QObject
 from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QButtonGroup, QTableWidgetItem, QRadioButton, QLabel, QLineEdit, QHeaderView
 
-from Line import Line
-from CTC_ui import Ui_Form
+from modules.Line import Line
+from modules.CTC_ui import Ui_Form
 
 
 class Train:
@@ -114,6 +114,7 @@ class CTC(Ui_Form, QWidget):
         self.initialize_connections()
         self.start_threads()
         self.initialize_ui()
+        self.
 
 
 #outputs
