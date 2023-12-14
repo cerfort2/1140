@@ -88,7 +88,7 @@ class CTC(Ui_Form, QWidget):
         self.red_line = Line("Red", 'Red Line Info.xlsx')
         self.stops = []
         self.green_line_stations = ["K65: GLENBURY", "L73: DORMONT", "N77: MT LEBANON", "O88: POPLAR", "P96: CASTLE SHANNON", "T105: DORMONT", "U114: GLENBURY", "W123: OVERBROOK", "W132: INGLEWOOD", "W141: CENTRAL", "A2: PIONEER", "C9: EDGEBROOK", "D16: MONKEYWAY", "F22: WHITED", "G31: SOUTH BANK", "I39: CENTRAL", "I48: INGLEWOOD", "I57: OVERBROOK"]
-        
+        self.green_line_blocks = ['A1', 'A2', 'A3', 'B4', 'B5', 'B6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12', 'D13', 'D14', 'D15', 'D16', 'E17', 'E18', 'E19', 'E20', 'F21', 'F22', 'F23', 'F24', 'F25', 'F26', 'F27', 'F28', 'G29', 'G30', 'G31', 'G32', 'H33', 'H34', 'H35', 'I36', 'I37', 'I38', 'I39', 'I40', 'I41', 'I42', 'I43', 'I44', 'I45', 'I46', 'I47', 'I48', 'I49', 'I50', 'I51', 'I52', 'I53', 'I54', 'I55', 'I56', 'I57', 'J58', 'J59', 'J60', 'J61', 'J62', 'K63', 'K64', 'K65', 'K66', 'K67', 'K68', 'L69', 'L70', 'L71', 'L72', 'L73', 'M74', 'M75', 'M76', 'N77', 'N78', 'N79', 'N80', 'N81', 'N82', 'N83', 'N84', 'N85', 'O86', 'O87', 'O88', 'P89', 'P90', 'P91', 'P92', 'P93', 'P94', 'P95', 'P96', 'P97', 'Q98', 'Q99', 'Q100', 'R101', 'S102', 'S103', 'S104', 'T105', 'T106', 'T107', 'T108', 'T109', 'U110', 'U111', 'U112', 'U113', 'U114', 'U115', 'U116', 'V117', 'V118', 'V119', 'V120', 'V121', 'W122', 'W123', 'W124', 'W125', 'W126', 'W127', 'W128', 'W129', 'W130', 'W131', 'W132', 'W133', 'W134', 'W135', 'W136', 'W137', 'W138', 'W139', 'W140', 'W141', 'W142', 'W143', 'X144', 'X145', 'X146', 'Y147', 'Y148', 'Y149', 'Z150', 'Z151']
         self.ticket_sales_log = []
         self.block_occupancies = []
         self.last_ts_updated = None
@@ -112,16 +112,7 @@ class CTC(Ui_Form, QWidget):
         #update on block occupancy ui
         self.block_occupancies
         self.track_open.emit(track)
-    """
-    def set_suggested_speed(self, speeds):
-        self.output_speed.emit(speeds)
-        
-    def set_route(self, route):
-        self.output_route.emit(route)
-        
-    def set_authority(self, authority):
-        self.output_authority(authority)
-    """
+
 #inputs
     def get_block_occupancies(self, occupancies):
         self.block_occupancies = occupancies
@@ -150,7 +141,7 @@ class CTC(Ui_Form, QWidget):
         self.add_stop.clicked.connect(self.add_stops)
         self.stop_update.connect(self.update_stops)
         self.schedule_dispatch.connect(self.dispatch_scheduled_train)
-        self.open_track_btn.connect(self.open_track(self.maintenance_block_sel))
+        self.open_track_btn.clicked.connect(self.open_track(self.maintenance_block_sel.currentText()))
 
     def check_for_loop(self):
         return
@@ -158,8 +149,9 @@ class CTC(Ui_Form, QWidget):
     def initialize_ui(self):
         self.manual_mode_btn.setChecked(True)
         self.import_schedule_btn.hide()
-        station_info = ["",
-        "STATION; PIONEER",
+        for block in self.green_line_blocks:
+            self.maintenance_block_sel.addItem(block)
+        green_station_info=["STATION; PIONEER",
         "",
         "",
         "",
@@ -182,7 +174,7 @@ class CTC(Ui_Form, QWidget):
         "UNDERGROUND",
         "UNDERGROUND",
         "UNDERGROUND",
-        "STATION; CENTRAL; UNDERDROUND",
+        "STATION; CENTRAL; UNDERGROUND",
         "UNDERGROUND",
         "UNDERGROUND",
         "UNDERGROUND",
@@ -264,7 +256,7 @@ class CTC(Ui_Form, QWidget):
         "UNDERGROUND",
         "STATION; CENTRAL; UNDERDROUND"]
 
-        for row,value in enumerate(station_info):
+        for row,value in enumerate(green_station_info):
             item = QTableWidgetItem(value)
             self.block_occupancy_green.setItem(row, 1, item)
 
@@ -615,12 +607,18 @@ class CTC(Ui_Form, QWidget):
                 self.block_occupancy_green.setItem(index, 2, status_item)
             status_item.setText(status)
 
-    def record_ticket_sales(self, new_ticket_sales):
-        # Record new ticket sales with the current timestamp
-        current_time = datetime.now()
-        self.ticket_sales_log.append((current_time, new_ticket_sales))
-        # Call the throughput calculation
+    from datetime import datetime
+
+    def record_ticket_sales(self, new_ticket_sales_list):
+        # Assume new_ticket_sales_list is a list of ticket sales
+        for new_ticket_sales in new_ticket_sales_list:
+            # Record each new ticket sale with the current timestamp
+            current_time = datetime.now()
+            self.ticket_sales_log.append((current_time, new_ticket_sales))
+        
+        # Call the throughput calculation once after all sales are recorded
         self.calc_throughput()
+
 
     def calc_throughput(self):
         # Get the current time
