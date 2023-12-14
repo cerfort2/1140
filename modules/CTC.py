@@ -26,8 +26,6 @@ class Train:
         self.departure_time = departure_time
         self.arrival_time = arrival_time
         self.stops = stops
-        self.cur_stop = stops[0]
-        self.cur_position = "Z151"
         self.line = line
 
 class CTC(Ui_Form, QWidget):
@@ -844,15 +842,9 @@ class CTC(Ui_Form, QWidget):
                 stop_string += stop + ","
         train = Train(trainID, destination, departure_time, arrival_time, self.stops, dispatched_line)
         if dispatched_line == "Green Line":
-            route = self.green_line.get_route(station_list)
-            speeds = self.green_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
-            authority = self.green_line.get_authority(station_list)
             self.schedule_green.addTopLevelItem(QTreeWidgetItem([str(trainID), destination, departure_time.toString(), arrival_time.toString(), stop_string]))
             self.train_schedule_green.append(train)
         if dispatched_line == "Red Line":
-            route = self.red_line.get_route(station_list)
-            speeds = self.red_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
-            authority = self.red_line.get_authority(station_list)
             self.schedule_red.addTopLevelItem(QTreeWidgetItem([str(trainID), destination, departure_time.toString(), arrival_time.toString(), stop_string]))
             self.train_schedule_red.append(train)
         
@@ -886,7 +878,7 @@ class CTC(Ui_Form, QWidget):
         stops = train.stops
         line = train.line
         station_list = []
-        for stop in self.stops:
+        for stop in stops:
             station_list.append(stop)
         station_list.append(destination)
         num_stops = len(stops)
