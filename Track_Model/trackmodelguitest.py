@@ -595,12 +595,12 @@ class TrackModel(QObject):
     trackModelUpdates = pyqtSignal() # Signal for if the map should update along with all other UI
     def controlModel(self,controlSignals):
         if self.controlSignalsHolder != controlSignals:
-            self.trackModelUpdates.emit()
-
             for line in self.lines:
                 line.updateLineStatus(controlSignals)
 
             self.controlSignalsHolder = controlSignals
+
+            self.trackModelUpdates.emit()
 
 
     #Train Model --> Track Model
@@ -627,6 +627,26 @@ class TrackModel(QObject):
         self.emitApproachingBeacon()
         self.emitSwitchBeacon()
         self.emitStationBeacon()
+
+
+    def fixFailures(self, blockToFix):
+        for line in self.lines:
+
+            blk = line.getBlock(blockToFix)
+
+            if blk.brokenRail:
+                blk.brokenRail = not blk.brokenRail
+            elif blk.trackCircuitFailure:
+                blk.trackCircuitFailure = not blk.trackCircuitFailure
+            elif blk.powerFailure:
+                blk.powerFailure = not blk.powerFailure
+
+            blk.clearOccupied()
+        
+        self.trackModelUpdates.emit()
+
+                
+                
 
 
     #----------------
