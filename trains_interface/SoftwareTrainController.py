@@ -87,8 +87,6 @@ class SoftwareTrainController():
 
         if self.brakeFailure or self.engineFailure or self.signalFailure:
             self.eBrake=True
-
-        print(self.eBrake)
         
         self.computeManualSpeed()
         self.computeAuthority()
@@ -153,14 +151,13 @@ class SoftwareTrainController():
             #service brake is on if wayside sends a red signal
             if self.waysideStop:
                 self.eBrake=True
-            else:
-                self.eBrake=False
 
     def activateWaysideStop(self):
         self.waysideStop=True    
 
     def deactivateWaysideStop(self):
         self.waysideStop=False   
+        self.ebrake = False
 
     def setAnnouncement(self):
         if self.manualmode:
@@ -199,7 +196,7 @@ class SoftwareTrainController():
 
     def eBrakePressed(self):
         print("Made it here")
-        if self.eBrake and self.currentSpeed==0:
+        if self.eBrake and self.currentSpeed==0 and not self.engine_failure and not self.brake_failure and not self.signal_failure:
             self.eBrake=False
         else:
             print("Made it inside here")

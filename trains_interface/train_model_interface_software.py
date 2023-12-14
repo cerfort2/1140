@@ -17,6 +17,7 @@ class train_model_interface_software(QObject):
     def new_train(self) -> None:
         self.trains.append(train_model_software())
         self.access_train(len(self.trains)).train_number = len(self.trains)
+        self.access_train(len(self.trains)).controller.setTrainNumber(len(self.trains))
 
     #access a single train object in the list
     def access_train(self, train_num: int) -> train_model_software:
@@ -50,12 +51,11 @@ class train_model_interface_software(QObject):
         if(self.trains == []):
             return
         self.access_train(len(self.trains)).unpack_route(names)
+        self.access_train(len(self.trains)).occupancy = names[0][0][0]
     
     #wayside stop function
     def wayside_stops(self, stops: list) -> None:
         current_occupancies = []
-        print("stoppages:")
-        print(stops)
 
         for train in self.trains:
             current_occupancies.append(train.get_occupancy())
@@ -76,7 +76,6 @@ class train_model_interface_software(QObject):
     #function to unpack block infos
     def unpack_blocks(self, blocks: list) -> None:
         for i in range(len(blocks)):
-            print(blocks[i])
             self.access_train(i + 1).speed_limit = blocks[i][0]
             self.access_train(i + 1).slope = blocks[i][1]
             self.access_train(i + 1).underground_val = blocks[i][2]
