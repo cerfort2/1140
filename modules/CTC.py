@@ -41,9 +41,7 @@ class CTC(Ui_Form, QWidget):
     track_opened = pyqtSignal(str)
     track_closed = pyqtSignal(str)
     toggle_switch = pyqtSignal(str, bool)
-    #output_speed = pyqtSignal(list)
-    #output_route = pyqtSignal(list)
-    #output_authority = pyqtSignal(int)
+
 
     def __init__(self):
         super().__init__()
@@ -237,7 +235,7 @@ class CTC(Ui_Form, QWidget):
             
     def update_ui_with_new_train_positions(self, queue):
         for train in queue:
-            
+            pass
     
     def get_ticket_sales(self, tickets):
         ticket_sales = tickets

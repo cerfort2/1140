@@ -77,28 +77,6 @@ class Line():
                 stop_or_dest.append(False)
         return route_blocks, stop_or_dest
     #returns the route from yard given an input station
-    """
-    def get_route(self, station_list):
-        route_blocks = []
-        stop_or_dest = []
-        route_feet = []
-        
-        for block in self.blocks:
-            this_block = str(block.get_section())+str(block.get_number())
-            if this_block == "J58":
-                route_blocks.append("Z151")
-                stop_or_dest.append(False)
-                break
-            route_blocks.append(this_block)
-            station_check = str(block.get_section())+str(block.get_number()) + ": " + str(block.get_station())
-            route_feet.append(block.get_length())
-            
-            if station_check in station_list:
-                stop_or_dest.append(True)
-            else:
-                stop_or_dest.append(False)
-        return route_blocks, stop_or_dest, route_feet
-    """
 
     def get_route(self, station_list):
         route_blocks = []
@@ -259,55 +237,3 @@ class Line():
             
             cur_block_index +=1
         return authorities
-
-    #returns the route from yard given a list of input stations
-    def get_routes(self, station_list_list):
-        
-        route_blocks = []
-        stop_or_dest = []
-
-        for block in self.blocks:
-            route_blocks.append(block)
-
-            if block.station in station_list_list:
-                stop_or_dest.append(True)
-
-                if block.station == station_list_list[-1]:
-                    break
-            else:
-                stop_or_dest.append(False)
-        return route_blocks, stop_or_dest
-    
-    #returns a list of suggested velocities for each block given a list of routes
-    def get_velocities_mul(self, block_list_list):
-        velocities_list = []
-        for block_list in block_list_list:
-            velocities_list.append(self.get_velocities(block_list))
-        return velocities_list
-    #returns the authority from the yard given a list of input stations
-    def get_authorities(self, station_list):
-        authorities_list = []
-        for station in station_list:
-            authorities_list.append(self.get_authority(station))
-        return authorities_list
-    
-"""    #calculates departure time given the arrival station
-    def calculate_dep_time(self, station, time):
-        return
-    
-    #calculates departure times given the arrival station and time
-    def calculate_dep_times(self, stations, times):
-        return
-    
-    #calculates arrival time given the arrival time
-    def calculate_arrival_time(self, station, time):
-        
-        delta = timedelta(hours = hrs, minutes = mins, seconds = secs)
-        return delta
-    
-    #calculates arrival times given the arrival times and stations
-    def calculate_arrival_times(self, stations, times):
-        
-        delta = timedelta(hours = hrs, minutes = mins, seconds = secs)
-        return delta
-"""
