@@ -74,3 +74,10 @@ pip install pyqt6
 - #### To upload a PLC logic via .ino Arduino file, press "Open PLC File" button on the UI and navigate to the file to launch the .ino file. Once in Arduino IDE you can select "Upload Code" to upload the code to the connected Arduino Board
 - #### In Manual mode PLC Logic will still be executed, but selection of Lights, Switches, and Crossroads can be manually changed. Select a certain line you would like to control and select A wayside you would like to select. On wayside selection the current blocks and failures that are occupied are displayed on the right hand side. Selection of each in that certain wayside will be populated where you can select the signal you would like to change and change statuses
 - #### In Automatic mode PLC logic will be executed, changing statuses are not allowed. Selection of Light, Wayside, and other statuses are allowed to be viewed by selection on hardware, but not edited
+
+
+## Using the Track Model
+- #### Press the "Upload Track Layout .csv" button and select a valid track layout .csv
+- #### Press select the line in the dropdown and select any block within the second dropdown
+- #### Once a block is selected, toggle any failure in the bottom right
+- #### Mouse over any block in the map to view its name and station information
