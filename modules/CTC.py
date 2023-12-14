@@ -16,7 +16,7 @@ from PyQt6.QtCore import pyqtSignal, QEvent, Qt, QDateTime, QTimer, QObject
 from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QTableWidgetItem, QLabel, QLineEdit, QHeaderView
 
 from modules.Line import Line
-from modules.CTC_new import Ui_Form
+from modules.CTC_ui import Ui_Form
 
 
 class Train:
@@ -36,6 +36,8 @@ class CTC(Ui_Form, QWidget):
     train_dispatched = pyqtSignal(list, list, list)
     schedule_dispatch = pyqtSignal()
     stop_update = pyqtSignal()
+    track_open = pyqtSignal(string)
+    toggle_switch = pyqtSignal(string, bool)
     #output_speed = pyqtSignal(list)
     #output_route = pyqtSignal(list)
     #output_authority = pyqtSignal(int)
@@ -82,9 +84,9 @@ class CTC(Ui_Form, QWidget):
         self.old_station = None
         #self.red_line = Line("Red")
         self.green_line = Line("Green", 'Green Line Info_.xlsx')
-
+        self.red_line = Line("Red", 'Red Line Info.xlsx')
         self.stops = []
-        self.green_line_stations = ["K65: GLENBURY", "L73: DORMONT", "N77: MT LEBANON", "O88: POPLAR", "P96: CASTLE SHANNON", "T105: DORMONT","U114: GLENBURY", "W123: OVERBROOK", "W132: INGLEWOOD", "W141: CENTRAL", "A2: PIONEER", "C9: EDGEBROOK", "D16: MONKEYWAY", "F22: WHITED", "G31: SOUTH BANK", "I39: CENTRAL", "I48: INGLEWOOD", "I57: OVERBROOK"]
+        self.green_line_stations = ["K65: GLENBURY", "L73: DORMONT", "N77: MT LEBANON", "O88: POPLAR", "P96: CASTLE SHANNON", "T105: DORMONT", "U114: GLENBURY", "W123: OVERBROOK", "W132: INGLEWOOD", "W141: CENTRAL", "A2: PIONEER", "C9: EDGEBROOK", "D16: MONKEYWAY", "F22: WHITED", "G31: SOUTH BANK", "I39: CENTRAL", "I48: INGLEWOOD", "I57: OVERBROOK"]
         
         self.ticket_sales_log = []
         self.block_occupancies = []
@@ -103,6 +105,12 @@ class CTC(Ui_Form, QWidget):
 #outputs
     def train_dispatch(self, route, authority, speed):
         self.train_dispatched.emit(route, authority, speed)
+    
+    def open_track(self, track):
+        #output signal to track controller for closed track
+        #update on block occupancy ui
+        self.block_occupancies
+        self.track_open.emit(track)
     """
     def set_suggested_speed(self, speeds):
         self.output_speed.emit(speeds)
@@ -140,6 +148,7 @@ class CTC(Ui_Form, QWidget):
         self.add_stop.clicked.connect(self.add_stops)
         self.stop_update.connect(self.update_stops)
         self.schedule_dispatch.connect(self.dispatch_scheduled_train)
+        self.open_track_btn.connect(self.open_track(self.maintenance_block_sel))
 
     
     def initialize_ui(self):
@@ -253,7 +262,7 @@ class CTC(Ui_Form, QWidget):
 
         for row,value in enumerate(station_info):
             item = QTableWidgetItem(value)
-            self.block_occupancy.setItem(row, 1, item)
+            self.block_occupancy_green.setItem(row, 1, item)
 
 
     def update_time(self):
@@ -304,11 +313,11 @@ class CTC(Ui_Form, QWidget):
     def update_occupancy_ui(self):
         if (self.occupancy_line_box.currentText() == "Red Line"):
             self.occupancy_old_text = "Red Line"
-            self.block_occupancy.setVerticalHeaderLabels([str(i) for i in range(1, 61)])
+            self.block_occupancy_green.setVerticalHeaderLabels([str(i) for i in range(1, 61)])
         elif(self.occupancy_line_box.currentText() == "Green Line"):
             self.occupancy_old_text = "Green Line"
-            self.block_occupancy.setRowCount(141)
-            self.block_occupancy.setVerticalHeaderLabels([str(i) for i in range(1, 142)])
+            self.block_occupancy_green.setRowCount(141)
+            self.block_occupancy_green.setVerticalHeaderLabels([str(i) for i in range(1, 142)])
             # for i in range(20):
             #     item = QTableWidgetItem("")
             #     item.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
@@ -398,13 +407,16 @@ class CTC(Ui_Form, QWidget):
 
         return
 
+    def toggle_switch(self):
+        #left is 0
+        #right is 1
+        return
+
 
     def add_stops(self):
         stop = self.stop_box_list.currentText()
-        if stop in self.stops:
-            return
-        else:
-            self.stops.append(stop)
+
+        self.stops.append(stop)
         index = self.stop_box_list.findText(stop)
         self.stop_box_list.removeItem(index)
         
@@ -573,7 +585,13 @@ class CTC(Ui_Form, QWidget):
 
     def update_block_occupancy(self, occupancies):
         # Assuming 'occupancies' is a list of bools where True represents occupied and False represents open
-
+        if len(occupancies) == 151:
+            #green line
+            pass
+        elif len(occupancies == 77):
+            #red line
+            pass
+        
         for index, is_occupied in enumerate(occupancies):
             # Determine the color based on occupancy
             color = Qt.GlobalColor.green if is_occupied else Qt.GlobalColor.white
@@ -583,16 +601,16 @@ class CTC(Ui_Form, QWidget):
             occupancy_item = self.block_occupancy.item(index, 0)
             if not occupancy_item:  # If the item doesn't exist, create it
                 occupancy_item = QTableWidgetItem()
-                self.block_occupancy.setItem(index, 0, occupancy_item)
+                self.block_occupancy_green.setItem(index, 0, occupancy_item)
 
             # Set the background color for the block
             occupancy_item.setBackground(color)
 
             # Update the "Block Status" in the third column
-            status_item = self.block_occupancy.item(index, 2)  # Assuming the "Block Status" column is the third column
+            status_item = self.block_occupancy_green.item(index, 2)  # Assuming the "Block Status" column is the third column
             if not status_item:
                 status_item = QTableWidgetItem()
-                self.block_occupancy.setItem(index, 2, status_item)
+                self.block_occupancy_green.setItem(index, 2, status_item)
             status_item.setText(status)
 
     def record_ticket_sales(self, new_ticket_sales):
@@ -621,10 +639,19 @@ class CTC(Ui_Form, QWidget):
         # Return or update the UI with the total throughput
         return total_throughput
     
-    def close_tracks(self, track_list):
-        for track in track_list:
-            return
-
+    
+        
+        
+    def check_redline_dispatch(self):
+        # Check the specific indices for True (1) values
+        for i, b in enumerate(self.block_occupancies):
+            print(i)
+            print(b)
+            
+        indices_to_check = list(range(15, 26)) + [75]  # Indices 15-25 and 75
+        return all(self.block_occupancies[index] for index in indices_to_check if index < len(self.block_occupancies))
+    
+    
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
