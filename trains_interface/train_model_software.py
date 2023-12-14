@@ -43,6 +43,7 @@ class train_model_software():
         self.authority_list = []
         self.station_bools = []
         self.currentMove = 0
+        self.train_number = 0
         #create instance of train controller
         self.controller = SoftwareTrainController()
         # self.controller = HardwareTrainController()
@@ -295,6 +296,8 @@ class train_model_software():
         
     # #setting station data
     def set_station_data(self, beacon_val: str) -> None:
+        if self.signal_failure:
+            return
         #Split by ;
         splitPackets = beacon_val.split("; ")
 
@@ -310,7 +313,7 @@ class train_model_software():
             self.right_door = True
             self.left_door = True
         else:
-            if firstPacket[1] == True:
+            if firstPacket[1] == 'Right':
                 self.right_door = True
             else:
                 self.left_door = True
@@ -344,6 +347,10 @@ class train_model_software():
 
         #if self.authority == 0:
            # 1 == 1
+
+        if self.occupancy == "Z151" and self.routeList == []:
+            self.occupancy = ""
+            self.widget2.close()
 
         if self.currentMove > float(self.authority_list[0]):
 
@@ -429,6 +436,10 @@ class train_model_software():
         self.ui.engine_failure.setChecked(self.engine_failure)
         self.ui.brake_failure.setChecked(self.brake_failure)
         self.ui.signal_failure.setChecked(self.signal_failure)
+
+        self.ui.train_number.setText(str(self.train_number))
+        self.ui.crew_count.setText("2 People")
+        self.ui.mass.setText(str(self.mass / 2.2) + " lbs")
 
         self.ui.announcement.setText(self.announcement)
     

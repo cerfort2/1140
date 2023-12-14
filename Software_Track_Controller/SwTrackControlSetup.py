@@ -51,7 +51,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         self.trackModelFixes.emit(blockToFix)
 
     def close(self, blockToClose): #sends blocks to close
-        self.trackModelCloese.emit(blockToClose)
+        self.trackModelClose.emit(blockToClose)
 
     def changeSwitch(self, name, value): #Change switch from CTC
         self.line.changeSwitch(name, value)
