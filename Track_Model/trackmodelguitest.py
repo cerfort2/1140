@@ -575,14 +575,8 @@ class TrackModel(QObject):
             tickets = [blk.station[2] for blk in line.getOccupiedBlocks() if blk.station[0]]
 
             if len(tickets) != 0:
-                tickets.insert(0,line.name + " Line")
+                tickets.insert(0,line.name)
                 self.CTCticketSales.emit(tickets)
-
-            for blk in line.blocks:
-                if(blk.station[0] and blk.occupied):
-                    passengers = random.randint(0,10)
-                    if blk.station[2] > passengers:
-                        blk.station[2] = blk.station[2] - passengers
      
     trainModelBlockInfo = pyqtSignal(list)
     def getOccupiedBlockInfo(self):
