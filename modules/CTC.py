@@ -73,7 +73,8 @@ class CTC(Ui_Form, QWidget):
         
         self.switch_states = []
 
-        self.ticket_sales_log = []
+        self.ticket_sales_log_green = []
+        self.ticket_sales_log_red = []
         self.green_block_occupancies = []
         self.red_block_occupanices = []
         self.last_ts_updated = None
@@ -549,6 +550,7 @@ class CTC(Ui_Form, QWidget):
     def update_time(self):
         #updating current system time based on speed factor
         self.cur_sys_time = self.cur_sys_time.addSecs(self.speed_factor)
+        self.
         # Update the QLabel with the new timeW
         self.system_time.setText(self.cur_sys_time.toString("HH:mm:ss"))
 
@@ -1009,33 +1011,43 @@ class CTC(Ui_Form, QWidget):
 
     def record_ticket_sales(self, new_ticket_sales_list):
         # Assume new_ticket_sales_list is a list of ticket sales
-        for new_ticket_sales in new_ticket_sales_list:
+        line = new_ticket_sales_list[0]
+        for new_ticket_sales in new_ticket_sales_list[1:]:
             # Record each new ticket sale with the current timestamp
             current_time = datetime.now()
-            self.ticket_sales_log.append((current_time, new_ticket_sales))
+            if line == "Green Line":
+                self.ticket_sales_log_green.append((current_time, new_ticket_sales))
+            if line == "Red Line":
+                self.ticket_sales_log_red.append((current_time, new_ticket_sales))
         
         # Call the throughput calculation once after all sales are recorded
-        self.calc_throughput()
+        self.calc_throughput(line)
 
 
-    def calc_throughput(self):
+    def calc_throughput(self, line):
         # Get the current time
         current_time = datetime.now()
         # Calculate the cutoff time for the last hour
         one_hour_ago = current_time - timedelta(hours=1)
         
         # Filter the sales that occurred within the last hour
-        recent_sales = [sales for timestamp, sales in self.ticket_sales_log if timestamp > one_hour_ago]
+        
 
         # Calculate the total throughput for the last hour
-        total_throughput = sum(recent_sales)
+        
 
         # Optionally remove old entries outside of the 1-hour window
-        self.ticket_sales_log = [(timestamp, sales) for timestamp, sales in self.ticket_sales_log if timestamp > one_hour_ago]
-
-        self.throughput_green.display(total_throughput)
-        # Return or update the UI with the total throughput
-        return total_throughput
+        
+        if line == "Green Line":
+            recent_sales = [sales for timestamp, sales in self.ticket_sales_log_green if timestamp > one_hour_ago]
+            total_throughput = sum(recent_sales)
+            self.ticket_sales_log_green = [(timestamp, sales) for timestamp, sales in self.ticket_sales_log_green if timestamp > one_hour_ago]
+            self.throughput_green.display(total_throughput)
+        if line == "Red Line":
+            recent_sales = [sales for timestamp, sales in self.ticket_sales_log_red if timestamp > one_hour_ago]
+            total_throughput = sum(recent_sales)
+            self.ticket_sales_log_red = [(timestamp, sales) for timestamp, sales in self.ticket_sales_log_red if timestamp > one_hour_ago]
+            self.throughput_red.display(total_throughput)
     
     
 

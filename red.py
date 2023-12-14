@@ -153,9 +153,9 @@ def plc(blocks:Block = []):
 
         #Switch J52 - J53 , J52 - N66
         if(blocks[51].getOccupancy() or blocks[52].getOccupancy()):
-            blocks[43].setSwitch(False)
+            blocks[51].setSwitch(False)
         if(blocks[65].getOccupancy()):
-            blocks[65].setSwitch(True)
+            blocks[51].setSwitch(True)
         #Signal J52
         if((blocks[50].getOccupancy() or blocks[51].getOccupancy()) and not(blocks[52].getOccupancy() or blocks[53].getOccupancy())):
             blocks[51].setSignal(False)
