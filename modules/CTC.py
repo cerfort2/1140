@@ -15,8 +15,8 @@ from typing import List, Optional
 from PyQt6.QtCore import pyqtSignal, QEvent, Qt, QDateTime, QTimer, QObject
 from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QButtonGroup, QTableWidgetItem, QRadioButton, QLabel, QLineEdit, QHeaderView
 
-from modules.Line import Line
-from modules.CTC_ui import Ui_Form
+from Line import Line
+from CTC_ui import Ui_Form
 
 
 class Train:
@@ -152,14 +152,18 @@ class CTC(Ui_Form, QWidget):
         line = self.maintenance_line_sel.currentText()
         color=Qt.GlobalColor.yellow
         status = "Closed"
-
+        
         if line == "Green Line":
             occupancy_item = self.block_occupancy_green.item(number, 0)
+            if not occupancy_item:  # If the item doesn't exist, create it
+                occupancy_item = QTableWidgetItem()
             self.block_occupancy_green.setItem(number, 0, occupancy_item)
             status_item = self.block_occupancy_green.item(number, 2)
             self.block_occupancy_green.setItem(number, 2, status_item)
         if line == "Red Line":
             occupancy_item = self.block_occupancy_red.item(number, 0)
+            if not occupancy_item:  # If the item doesn't exist, create it
+                occupancy_item = QTableWidgetItem()
             self.block_occupancy_red.setItem(number, 0, occupancy_item)
             status_item = self.block_occupancy_red.item(number, 2)
             self.block_occupancy_red.setItem(number, 2, status_item)
