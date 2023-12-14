@@ -109,7 +109,7 @@ class SoftwareTrainController():
         self.ui.enginefailure.setChecked(self.engineFailure)
         self.ui.dwelltime.display(self.dwellTime)
         self.ui.trainnumber.setText(str(self.trainnumber))
-
+        self.ui.announcement.setText(self.announcement)
         self.ui.externallight.setChecked(self.computeExtLights())
 
         self.ui.speedlimit.display(int(self.getSpeedLimit()*2.2369362921))
