@@ -587,6 +587,11 @@ class TrackModel(QObject):
         
         self.trainModelBlockInfo.emit(blkInfoList)
 
+    trackControllerFailureBlocks = pyqtSignal(list)
+    def sendFailureBlocks(self):
+        for line in self.lines:
+            failedBlocks = [blk.name for blk in line.blocks if (blk.brokenRail or blk.trackCircuitFailure or blk.powerFailure)]
+            self.trackControllerFailureBlocks.emit(failedBlocks)
 
 
     #------------------
@@ -601,7 +606,6 @@ class TrackModel(QObject):
             self.controlSignalsHolder = controlSignals
 
             self.trackModelUpdates.emit()
-
 
     #Train Model --> Track Model
     def updateOccupancy(self,occupancyList):
