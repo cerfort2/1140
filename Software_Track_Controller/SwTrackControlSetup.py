@@ -41,6 +41,11 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         for i in fails:
             self.failuresData.add(i)
         self.CTCTrackFailures.emit(fails)
+    
+    trackModelFixes = pyqtSignal(str)
+    def fix(self, blockToFix):
+        self.trackModelFixes.emit(blockToFix)
+        
         
 
     def getOccupancy(self, data): #Receives occupancy from Track Model

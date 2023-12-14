@@ -108,7 +108,11 @@ class God(Home, QMainWindow):
         self.trackController.trackModelSendRoute.connect(self.trackModel.trackModel.route)
         self.trackController.trackModelTrackData.connect(self.trackModel.trackModel.controlModel)
         self.trackController.trackModelStoppedTrains.connect(self.trackModel.trackModel.stopAtBlocks)
-        #self.trackmodel.trackmodel.trackController"".connect(self.trackController.getFailure)
+
+        self.trackModel.trackModel.trackControllerFailureBlocks.connect(self.trackController.getFailure)
+        # self.trackController.CTCTrackFailures.connect("myles function")
+        # self.CTC.signalName.connect(self.trackController.fix)
+        self.trackController.trackModelFixes.connect(self.trackModel.trackModel.fixFailures)
 
 
 
