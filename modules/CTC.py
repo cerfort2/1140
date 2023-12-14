@@ -150,7 +150,7 @@ class CTC(Ui_Form, QWidget):
         self.add_stop.clicked.connect(self.add_stops)
         self.stop_update.connect(self.update_stops)
         self.schedule_dispatch.connect(self.dispatch_scheduled_train)
-        self.open_track_btn.connect(self.open_track(self.maintenance_block_sel))
+        self.open_track_btn.clicked.connect(self.open_track(self.maintenance_block_sel))
 
     def check_for_loop(self):
         return
@@ -615,12 +615,18 @@ class CTC(Ui_Form, QWidget):
                 self.block_occupancy_green.setItem(index, 2, status_item)
             status_item.setText(status)
 
-    def record_ticket_sales(self, new_ticket_sales):
-        # Record new ticket sales with the current timestamp
-        current_time = datetime.now()
-        self.ticket_sales_log.append((current_time, new_ticket_sales))
-        # Call the throughput calculation
+    from datetime import datetime
+
+    def record_ticket_sales(self, new_ticket_sales_list):
+        # Assume new_ticket_sales_list is a list of ticket sales
+        for new_ticket_sales in new_ticket_sales_list:
+            # Record each new ticket sale with the current timestamp
+            current_time = datetime.now()
+            self.ticket_sales_log.append((current_time, new_ticket_sales))
+        
+        # Call the throughput calculation once after all sales are recorded
         self.calc_throughput()
+
 
     def calc_throughput(self):
         # Get the current time
