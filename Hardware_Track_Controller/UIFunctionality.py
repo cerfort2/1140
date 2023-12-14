@@ -5,11 +5,11 @@ from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6 import QtCore, QtGui, QtWidgets
 from Hardware_Track_Controller.HWTrackUI import Ui_Form
 from Hardware_Track_Controller.TrackClass import Track
-from Hardware_Track_Controller.UI_Breadboard_Class import Operations
+#from Hardware_Track_Controller.UI_Breadboard_Class import Operations
 from Hardware_Track_Controller.GreenLineWaysides import GreenLine
 from Hardware_Track_Controller.RedLineWaysides import RedLine
 
-operate = Operations() #Class to perform operations on the breadboard
+#operate = Operations() #Class to perform operations on the breadboard
 
 class HWTrackControllerGUI(Ui_Form, QObject):
     
@@ -408,19 +408,13 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                 for j in range (self.greenLine.Waysides[i].amountOfTracks()):
                     blocks.append(self.greenLine.Waysides[i].tracks[j])
         #Green Line
-        #G30 -> M75
-        for i in range(29, 75):
-            if(blocks[i].getOccupancy()):
-                if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy()):
-                    blocksStop.append(blocks[i].getName())
         #Collision Logic
-        #R101 -> Y148
-        for i in range(100, 148):
+        for i in range(0, 148):
             if(blocks[i].getOccupancy()):
-                if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy()):
+                if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy() or blocks[i+3].getOccupancy()):
                     blocksStop.append(blocks[i].getName())
-        print("M76 Light")
-        print(self.greenLine.Waysides[2].getTrack(2).getLight())
+
+        #Light Stop
         if(self.greenLine.Waysides[1].getTrack(41).getLight()):
             if(occu[150]):
                 blocksStop.append("Z151")

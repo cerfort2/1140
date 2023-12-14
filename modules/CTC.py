@@ -13,22 +13,22 @@ from pathlib import Path
 from typing import List, Optional
 
 from PyQt6.QtCore import pyqtSignal, QEvent, Qt, QDateTime, QTimer, QObject
-from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QTableWidgetItem, QLabel, QLineEdit, QHeaderView
+from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QButtonGroup, QTableWidgetItem, QRadioButton, QLabel, QLineEdit, QHeaderView
 
-from modules.Line import Line
-from modules.CTC_ui import Ui_Form
+from Line import Line
+from CTC_ui import Ui_Form
 
 
 class Train:
-    def __init__(self, trainID, destination, departure_time, arrival_time, stops):
+    def __init__(self, trainID, destination, departure_time, arrival_time, stops, line):
         self.trainID = trainID
         self.destination = destination
         self.departure_time = departure_time
         self.arrival_time = arrival_time
         self.stops = stops
+        self.line = line
 
 class CTC(Ui_Form, QWidget):
-    occupancy_update = pyqtSignal()
     station_update = pyqtSignal()
     manual_mode = pyqtSignal()
     auto_mode = pyqtSignal()
@@ -36,8 +36,10 @@ class CTC(Ui_Form, QWidget):
     train_dispatched = pyqtSignal(list, list, list)
     schedule_dispatch = pyqtSignal()
     stop_update = pyqtSignal()
-    track_open = pyqtSignal(string)
-    toggle_switch = pyqtSignal(string, bool)
+    track_opened = pyqtSignal(str)
+    track_closed = pyqtSignal(str)
+    toggle_switch = pyqtSignal(str, bool)
+    looping = pyqtSignal(bool)
     #output_speed = pyqtSignal(list)
     #output_route = pyqtSignal(list)
     #output_authority = pyqtSignal(int)
@@ -81,20 +83,33 @@ class CTC(Ui_Form, QWidget):
         self.timer.start(1000)
         
         self.occupancy_old_text = None
-        self.old_station = None
-        #self.red_line = Line("Red")
-        self.green_line = Line("Green", 'Green Line Info_.xlsx')
-        self.red_line = Line("Red", 'Red Line Info.xlsx')
-        self.stops = []
+        self.old_line = None
+        self.old_maintenance_line = None
         self.green_line_stations = ["K65: GLENBURY", "L73: DORMONT", "N77: MT LEBANON", "O88: POPLAR", "P96: CASTLE SHANNON", "T105: DORMONT", "U114: GLENBURY", "W123: OVERBROOK", "W132: INGLEWOOD", "W141: CENTRAL", "A2: PIONEER", "C9: EDGEBROOK", "D16: MONKEYWAY", "F22: WHITED", "G31: SOUTH BANK", "I39: CENTRAL", "I48: INGLEWOOD", "I57: OVERBROOK"]
+        self.red_line_stations = ["C7: SHADYSIDE", "F16: HERRON AVE", "G21: SWISSVILLE", "H25: PENNSTATION", "H35: STEEL PLAZA","H45: FIRST AVE","I48: STATION SQUARE","L60: SOUTH HILLS JUNCTION"]
         
+        
+        self.green_line = Line("Green", 'modules/Green Line Info_.xlsx', self.green_line_stations)
+        self.red_line = Line("Red", 'modules/Red Line Info.xlsx', self.red_line_stations)
+        self.stops = []
+        
+
+        
+        self.green_line_blocks = ['A1', 'A2', 'A3', 'B4', 'B5', 'B6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12', 'D13', 'D14', 'D15', 'D16', 'E17', 'E18', 'E19', 'E20', 'F21', 'F22', 'F23', 'F24', 'F25', 'F26', 'F27', 'F28', 'G29', 'G30', 'G31', 'G32', 'H33', 'H34', 'H35', 'I36', 'I37', 'I38', 'I39', 'I40', 'I41', 'I42', 'I43', 'I44', 'I45', 'I46', 'I47', 'I48', 'I49', 'I50', 'I51', 'I52', 'I53', 'I54', 'I55', 'I56', 'I57', 'J58', 'J59', 'J60', 'J61', 'J62', 'K63', 'K64', 'K65', 'K66', 'K67', 'K68', 'L69', 'L70', 'L71', 'L72', 'L73', 'M74', 'M75', 'M76', 'N77', 'N78', 'N79', 'N80', 'N81', 'N82', 'N83', 'N84', 'N85', 'O86', 'O87', 'O88', 'P89', 'P90', 'P91', 'P92', 'P93', 'P94', 'P95', 'P96', 'P97', 'Q98', 'Q99', 'Q100', 'R101', 'S102', 'S103', 'S104', 'T105', 'T106', 'T107', 'T108', 'T109', 'U110', 'U111', 'U112', 'U113', 'U114', 'U115', 'U116', 'V117', 'V118', 'V119', 'V120', 'V121', 'W122', 'W123', 'W124', 'W125', 'W126', 'W127', 'W128', 'W129', 'W130', 'W131', 'W132', 'W133', 'W134', 'W135', 'W136', 'W137', 'W138', 'W139', 'W140', 'W141', 'W142', 'W143', 'X144', 'X145', 'X146', 'Y147', 'Y148', 'Y149', 'Z150', 'Z151']
+        self.red_line_blocks = ['A1', 'A2', 'A3', 'B4', 'B5', 'B6', 'C7', 'C8', 'C9', 'D10', 'D11', 'D12', 'E13', 'E14', 'E15', 'F16', 'F17', 'F18', 'F19', 'F20', 'G21', 'G22', 'G23', 'H24', 'H25', 'H26', 'H27', 'H28', 'H29', 'H30', 'H31', 'H32', 'H33', 'H34', 'H35', 'H36', 'H37', 'H38', 'H39', 'H40', 'H41', 'H42', 'H43', 'H44', 'H45', 'I46', 'I47', 'I48', 'J49', 'J50', 'J51', 'J52', 'J53', 'J54', 'K55', 'K56', 'K57', 'L58', 'L59', 'L60', 'M61', 'M62', 'M63', 'N64', 'N65', 'KN6', 'O67', 'P68', 'P69', 'P70', 'Q71', 'R72', 'S73', 'S74', 'S75', 'T76', 'T77']
+
+        self.switch_states = []
+
         self.ticket_sales_log = []
-        self.block_occupancies = []
+        self.green_block_occupancies = []
+        self.red_block_occupanices = []
         self.last_ts_updated = None
         self.throughput = 0
         
-        self.train_schedule = []
-        self.trains_dispatched = []
+        self.train_schedule_green = []
+        self.train_schedule_red = []
+        self.trains_dispatched_green = []
+        self.trains_dispatched_red = []
         self.speed_factor = 1
 
         self.initialize_connections()
@@ -109,22 +124,23 @@ class CTC(Ui_Form, QWidget):
     def open_track(self, track):
         #output signal to track controller for closed track
         #update on block occupancy ui
-        self.block_occupancies
-        self.track_open.emit(track)
-    """
-    def set_suggested_speed(self, speeds):
-        self.output_speed.emit(speeds)
         
-    def set_route(self, route):
-        self.output_route.emit(route)
-        
-    def set_authority(self, authority):
-        self.output_authority(authority)
-    """
+        self.track_opened.emit(track)
+
+    def close_track(self, track):
+        self.track_closed.emit(track)
+
+    def send_switch(self, block, b):
+        self.toggle_switch.emit(block, b)
+
 #inputs
     def get_block_occupancies(self, occupancies):
-        self.block_occupancies = occupancies
-        self.update_block_occupancy(self.block_occupancies)
+        if len(occupancies) == 151:
+            self.green_block_occupancies = occupancies
+        print(occupancies)
+        if len(occupancies) == 77:
+            self.red_block_occupanices = occupancies
+        self.update_block_occupancy(occupancies)
     
     def get_ticket_sales(self, tickets):
         ticket_sales = tickets
@@ -132,11 +148,12 @@ class CTC(Ui_Form, QWidget):
         
 
     def start_threads(self):
-        Thread(target=self.update_occupancy_ui).start()
+        #Thread(target=self.update_occupancy_ui).start()
         Thread(target=self.check_mode).start()
         Thread(target=self.check_stations).start()
         Thread(target=self.update_throughput).start()
         Thread(target=self.start_dispatch_check).start()
+        Thread(target=self.check_maintenance_line).start()
 
     def initialize_connections(self):
         self.dispatch_train_btn.clicked.connect(self.dispatch_train)
@@ -145,124 +162,267 @@ class CTC(Ui_Form, QWidget):
         self.schedule_train_btn.clicked.connect(self.schedule_train)
         self.manual_mode.connect(self.update_manual_mode)
         self.auto_mode.connect(self.update_auto_mode)
+        self.maint_mode.connect(self.update_maintenance_mode)
         self.add_stop.clicked.connect(self.add_stops)
         self.stop_update.connect(self.update_stops)
         self.schedule_dispatch.connect(self.dispatch_scheduled_train)
-        self.open_track_btn.connect(self.open_track(self.maintenance_block_sel))
+        self.open_track_btn.clicked.connect(lambda: self.open_track(self.maintenance_block_sel.currentText()))
+        self.close_track_btn.clicked.connect(lambda: self.close_track(self.maintenance_block_sel.currentText()))
 
     
     def initialize_ui(self):
         self.manual_mode_btn.setChecked(True)
         self.import_schedule_btn.hide()
-        station_info = ["",
-        "STATION; PIONEER",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "STATION; EDGEBROOK",
-        "SWITCH",
-        "",
-        "STATION",
-        "",
-        "",
-        "STATION; WHITED",
-        "",
-        "",
-        "",
-        "SWITCH",
-        "STATION; SOUTH BANK",
-        "",
-        "",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "STATION; CENTRAL; UNDERDROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "STATION; INGLEWOOD; UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "STATION; OVERBROOK; UNDERGROUND",
-        "SWITCH TO YARD",
-        "SWITCH FROM YARD",
-        "",
-        "",
-        "STATION; GLENBURY",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "STATION; DORMONT",
-        "SWITCH",
-        "STATION; MT LEBANON",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "SWITCH",
-        "STATION; POPLAR",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "STATION; CASTLE SHANNON",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "STATION; DORMONT",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "STATION; GLENBURY",
-        "",
-        "",
-        "",
-        "",
-        "UNDERGROUND",
-        "STATION; OVERBROOK; UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "STATION; INGLEWOOD; UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "UNDERGROUND",
-        "STATION; CENTRAL; UNDERDROUND"]
-
-        for row,value in enumerate(station_info):
+        self.maintenance_widget.hide()
+        green_station_info = ["",
+            "PIONEER STATION",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "EDGEBROOK STATION",
+            "",
+            "",
+            "SWITCH",
+            "",
+            "",
+            "",
+            "MONKEYWAY STATION",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "WHITED STATION",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "SWITCH",
+            "",
+            "STATION; SOUTH BANK",
+            "",
+            "",
+            "",
+            "",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "CENTRAL STATION; UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "INGLEWOOD STATION; UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "OVERBROOK STATION; UNDERGROUND",
+            "SWITCH TO YARD",
+            "",
+            "",
+            "",
+            "SWITCH FROM YARD",
+            "",
+            "",
+            "STATION; GLENBURY",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "DORMONT STATION",
+            "",
+            "",
+            "SWITCH",
+            "MT LEBANON STATION",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "SWITCH",
+            "",
+            "POPLAR STATION",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "CASTLE SHANNON STATION",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "DORMONT STATION",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "GLENBURY STATION",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "UNDERGROUND",
+            "STATION; OVERBROOK; UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "INGLEWOOD STATION; UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "CENTRAL STATION; UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "TO YARD"]
+        self.block_occupancy_green.setRowCount(151)
+        for row,value in enumerate(green_station_info):
             item = QTableWidgetItem(value)
             self.block_occupancy_green.setItem(row, 1, item)
+
+        self.block_occupancy_red.setRowCount(77)
+        red_station_info = ["",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "SHADYSIDE STATION",
+            "",
+            "SWITCH TO/FROM YARD",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "SWITCH",
+            "HERRON AVE STATION",
+            "",
+            "",
+            "",
+            "",
+            "SWISSVILLE STATION",
+            "",
+            "",
+            "UNDERGROUND",
+            "PENN STATION; UNDERGROUND",
+            "UNDERGROUND",
+            "SWITCH; UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "SWITCH; UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "STEEL PLAZA STATION; UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "SWITCH; UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "SWITCH; UNDERGROUND",
+            "UNDERGROUND",
+            "FIRST AVE STATION; UNDERGROUND",
+            "UNDERGROUND",
+            "",
+            "STATION SQUARE",
+            "",
+            "",
+            "",
+            "SWITCH",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "SOUTH HILLS JUNCTION",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "UNDERGROUND",
+            "TO YARD",
+        ]
+        for row,value in enumerate(red_station_info):
+            item = QTableWidgetItem(value)
+            self.block_occupancy_red.setItem(row, 1, item)
+
+
+    def update_maintenance_line_blocks(self):
+        self.maintenance_block_sel.clear()
+        if self.maintenance_line_sel.currentText() == "Green Line":
+            for row, value in enumerate(self.green_line_blocks):
+                self.maintenance_block_sel.addItem(value)
+        if self.maintenance_line_sel.currentText() == "Red Line":
+            for row, value in enumerate(self.red_line_blocks):
+                self.maintenance_block_sel.addItem(value)
+
 
 
     def update_time(self):
@@ -282,9 +442,42 @@ class CTC(Ui_Form, QWidget):
         while True:
             return
         
+    def check_maintenance_line(self):
+        while True:
+            if self.maintenance_line_sel.currentText() != self.old_maintenance_line:
+                self.old_maintenance_line = self.maintenance_line_sel.currentText()
+            time.sleep(0.5)
+
+    def initialize_button_groups(self):
+        self.buttonGroup1 = QButtonGroup(self)
+        self.buttonGroup2 = QButtonGroup(self)
+        self.buttonGroup4 = QButtonGroup(self)
+        self.buttonGroup3 = QButtonGroup(self)
+        
+        # Assuming groupBox contains radio buttons
+        for button in self.groupBox.findChildren(QRadioButton):
+            self.buttonGroup1.addButton(button)
+        
+        for button in self.groupBox_2.findChildren(QRadioButton):
+            self.buttonGroup2.addButton(button)
+        
+        for button in self.groupBox_4.findChildren(QRadioButton):
+            self.buttonGroup4.addButton(button)
+        
+        for button in self.groupBox_3.findChildren(QRadioButton):
+            self.buttonGroup3.addButton(button)
+        
+        # Connect the buttonToggled signal to the slot for each group
+        self.buttonGroup1.buttonToggled.connect(self.onButtonToggled)
+        self.buttonGroup2.buttonToggled.connect(self.onButtonToggled)
+        self.buttonGroup4.buttonToggled.connect(self.onButtonToggled)
+        self.buttonGroup3.buttonToggled.connect(self.onButtonToggled)
+
+
     def check_stations(self):
         while True:
-            if (self.manual_dispatch_destination != self.old_station):
+            if (self.manual_dispatch_line.currentText() != self.old_line):
+                self.stops = []
                 self.old_station = self.manual_dispatch_destination
                 self.station_update.emit()
                 self.stop_update.emit()
@@ -296,35 +489,25 @@ class CTC(Ui_Form, QWidget):
             for station in self.green_line_stations:
                 if station not in self.stops:
                     self.manual_dispatch_destination.addItem(station)
+        if self.manual_dispatch_line.currentText() == "Red Line":
+            for station in self.red_line_stations:
+                if station not in self.stops:
+                    self.manual_dispatch_destination.addItem(station)
 
     def update_stops(self):
         self.stop_box_list.clear()
         if self.manual_dispatch_line.currentText() == "Green Line":
-            current_destination = self.manual_dispatch_destination.currentText()
             for station in self.green_line_stations:
-                if station != current_destination and station not in self.stops:
-                    self.stop_box_list.addItem(station)
+                self.stop_box_list.addItem(station)
+        if self.manual_dispatch_line.currentText() == "Red Line":
+            for station in self.red_line_stations:
+                self.stop_box_list.addItem(station)
 
-
-    def check_occupancy(self):
-        if(self.occupancy_line_box.currentText() != self.occupancy_old_text):
-            self.occupancy_update.emit()
-
-    def update_occupancy_ui(self):
-        if (self.occupancy_line_box.currentText() == "Red Line"):
-            self.occupancy_old_text = "Red Line"
-            self.block_occupancy_green.setVerticalHeaderLabels([str(i) for i in range(1, 61)])
-        elif(self.occupancy_line_box.currentText() == "Green Line"):
-            self.occupancy_old_text = "Green Line"
-            self.block_occupancy_green.setRowCount(141)
-            self.block_occupancy_green.setVerticalHeaderLabels([str(i) for i in range(1, 142)])
-            # for i in range(20):
-            #     item = QTableWidgetItem("")
-            #     item.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
-            #     self.block_occupancy.setItem(i, 1, item)  # Column index 1 for the second column
-            
-            # self.block_occupancy.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
-
+    def check_switches(self):
+        #while True:
+            #if self.
+                #if self._12_13.
+        return
 
     def check_mode(self):
         while True:
@@ -338,12 +521,10 @@ class CTC(Ui_Form, QWidget):
 
     def update_manual_mode(self):
         self.import_schedule_btn.hide()
+        self.dispatch_train_btn.show()
         self.dispatch_train_btn.setEnabled(True)
         self.manual_widget.show()
-        # for i in range(self.manual_layout.count()):
-        #     widget = self.manual_layout.itemAt(i).widget()
-        #     if widget is not None:
-        #         widget.show()
+        self.maintenance_widget.hide()
         self.schedule_train_btn.show()
         self.departure_time.show()
         self.departure_time_label.show()
@@ -356,11 +537,36 @@ class CTC(Ui_Form, QWidget):
         self.import_schedule_btn.show()
         self.dispatch_train_btn.setEnabled(False)
         self.manual_widget.hide()
+        self.maintenance_widget.hide()
         self.add_stop.hide()
-        # for i in range(self.manual_layout.count()):
-        #     widget = self.manual_layout.itemAt(i).widget()
-        #     if widget is not None:
-        #         widget.hide()
+        self.schedule_train_btn.hide()
+        self.departure_time.hide()
+        self.departure_time_label.hide()
+        self.arrival_time.hide()
+        self.label.hide()
+
+    def update_maintenance_mode(self):
+        self.import_schedule_btn.hide()
+        self.dispatch_train_btn.hide()
+        self.dispatch_train_btn.setEnabled(False)
+        self.manual_widget.hide()
+        self.maintenance_widget.show()
+        self.add_stop.hide()
+        self._9_10.setEnabled(True)
+        self._15_16.setEnabled(True)
+        self._27_28.setEnabled(True)
+        self._32_33.setEnabled(True)
+        self._38_39.setEnabled(True)
+        self._43_44.setEnabled(True)
+        self._52_53.setEnabled(True)
+        self._12_13.setEnabled(True)
+        self._29_30.setEnabled(True)
+        self._57_yard.setEnabled(True)
+        self._62_63.setEnabled(True)
+        self._76_77.setEnabled(True)
+        self._85_86.setEnabled(True)
+
+
         self.schedule_train_btn.hide()
         self.departure_time.hide()
         self.departure_time_label.hide()
@@ -392,7 +598,11 @@ class CTC(Ui_Form, QWidget):
             dep_times = []
             arr_times = []
             stops = []
-
+            line = ""
+            if 'green' in filePath:
+                line = "Green Line"
+            elif 'red' in filePath:
+                line = "Red Line"
             for dest, d_time, a_time, stop in zip(arrival_stations, departure_times, arrival_times, stopping_at):
                 train_id = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
                 # Add each value to its respective list
@@ -403,7 +613,7 @@ class CTC(Ui_Form, QWidget):
                 stops.append([stop.strip() for stop in stop.split(',')])
 
             # Update the schedule with the new data
-            self.update_schedule(train_ids, destinations, dep_times, arr_times, stops)
+            self.update_schedule(train_ids, destinations, dep_times, arr_times, stops, line)
 
         return
 
@@ -415,10 +625,12 @@ class CTC(Ui_Form, QWidget):
 
     def add_stops(self):
         stop = self.stop_box_list.currentText()
-
-        self.stops.append(stop)
-        index = self.stop_box_list.findText(stop)
-        self.stop_box_list.removeItem(index)
+        if stop:
+            self.stops.append(stop)
+            self.update_stations()
+            self.update_stops()
+            index = self.stop_box_list.findText(stop)
+            self.stop_box_list.removeItem(index)
         
     def dispatch_train(self, destination = None, stops = [], arrival_time = None, departure_time = None, dispatched_line = None):
         station_list = []
@@ -434,19 +646,31 @@ class CTC(Ui_Form, QWidget):
             arrival_time = QDateTime.fromString(self.arrival_time_dis.text(), "HH:mm:ss").time()
         if not departure_time:
             departure_time = self.cur_sys_time
-
         #get line from ui
         if not dispatched_line:
             dispatched_line = self.manual_dispatch_line.currentText()
         num_stops = len(self.stops)
-        if dispatched_line == "Green Line":
-            route = self.green_line.get_route(station_list)
-            speeds = self.green_line.get_velocities(route[0], departure_time, arrival_time, num_stops)
-            authority = self.green_line.get_authority(station_list)
 
         trainID = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
-        train = Train(trainID, destination, departure_time, arrival_time, self.stops)
-        self.trains_dispatched.append(train)
+        train = Train(trainID, destination, departure_time, arrival_time, self.stops, dispatched_line)
+        if len(station_list) == 1:
+            next_stop = station_list[0]
+        else:
+            next_stop = station_list[1]
+        
+        if dispatched_line == "Green Line":
+            route = self.green_line.get_route(station_list)
+            speeds = self.green_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
+            authority = self.green_line.get_authority(station_list)
+            self.trains_dispatched_green.append(train)
+            self.dispatched_green.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority[0]), next_stop]))
+        if dispatched_line == "Red Line":
+            route = self.red_line.get_route(station_list)
+            speeds = self.red_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
+            authority = self.red_line.get_authority(station_list)
+            self.trains_dispatched_red.append(train)
+            self.dispatched_red.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority[0]), next_stop]))
+
         #self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
 
         #self.suggested_speed_tb.setText(str(speeds))
@@ -454,8 +678,22 @@ class CTC(Ui_Form, QWidget):
         #self.route_tb.setText(str(route[0]))
 
         #setting route, authority, suggested speed
+        print("stops")
+        print(self.stops)
+        print("destination")
+        print(destination)
         print("ctc authority")
+        print(len(authority))
         print(authority)
+        print("route")
+        print(len(route[0]))
+        print(len(route[1]))
+        print(len(route[2]))
+        print(len(route[3]))
+        print(route)
+        print("speeds")
+        print(len(speeds))
+        print(speeds)
         self.train_dispatch(route, authority, speeds)
         self.stops = []
         #self.arrival_time_dis.clear()
@@ -464,6 +702,7 @@ class CTC(Ui_Form, QWidget):
     #get departure time, arrival time, destination station, stops
     def schedule_train(self):
         destination = self.manual_dispatch_destination.currentText()
+        line = self.manual_dispatch_line.currentText()
         station_list = []
         for stop in self.stops:
             station_list.append(stop)
@@ -474,15 +713,7 @@ class CTC(Ui_Form, QWidget):
         #get line from ui
         dispatched_line = self.manual_dispatch_line.currentText()
         num_stops = len(self.stops)
-        if dispatched_line == "Green Line":
-            route = self.green_line.get_route(station_list)
-            speeds = self.green_line.get_velocities(route[0], departure_time, arrival_time, num_stops)
-            if len(station_list) == 1:
-                next_stop = station_list[0]
-            else:
-                next_stop = station_list[1]
-            authority = self.green_line.get_authority(next_stop)
-
+        
         trainID = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
         stop_string = ""
         for stop in self.stops:
@@ -490,10 +721,19 @@ class CTC(Ui_Form, QWidget):
                 stop_string += stop
             else:
                 stop_string += stop + ","
-                
-        self.schedule.addTopLevelItem(QTreeWidgetItem([str(trainID), destination, departure_time.toString(), arrival_time.toString(), stop_string]))
-        train = Train(trainID, destination, departure_time, arrival_time, self.stops)
-        self.train_schedule.append(train)
+        train = Train(trainID, destination, departure_time, arrival_time, self.stops, dispatched_line)
+        if dispatched_line == "Green Line":
+            route = self.green_line.get_route(station_list)
+            speeds = self.green_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
+            authority = self.green_line.get_authority(station_list)
+            self.schedule_green.addTopLevelItem(QTreeWidgetItem([str(trainID), destination, departure_time.toString(), arrival_time.toString(), stop_string]))
+            self.train_schedule_green.append(train)
+        if dispatched_line == "Red Line":
+            route = self.red_line.get_route(station_list)
+            speeds = self.red_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
+            authority = self.red_line.get_authority(station_list)
+            self.schedule_red.addTopLevelItem(QTreeWidgetItem([str(trainID), destination, departure_time.toString(), arrival_time.toString(), stop_string]))
+            self.train_schedule_red.append(train)
         
         #self.update_schedule(train)
         self.stops = []
@@ -502,10 +742,14 @@ class CTC(Ui_Form, QWidget):
 
     def check_for_dispatched(self):
         current_time = self.cur_sys_time
-        for train in self.train_schedule:
+        for train in self.train_schedule_green:
             if train.departure_time.toString() == self.cur_sys_time.toString():
                 self.dispatch_scheduled_train(train)
-                self.train_schedule.remove(train)
+                self.train_schedule_green.remove(train)
+        for train in self.train_schedule_red:
+            if train.departure_time.toString() == self.cur_sys_time.toString():
+                self.dispatch_scheduled_train(train)
+                self.train_schedule_red.remove(train)
     
     def start_dispatch_check(self):
         while True:
@@ -523,60 +767,53 @@ class CTC(Ui_Form, QWidget):
             station_list.append(stop)
         station_list.append(destination)
         route = self.green_line.get_route(station_list)
-        num_stops = len(self.stops)
+        num_stops = len(stops)
 
-        speeds = self.green_line.get_velocities(route[0], departure_time, arrival_time, num_stops)
+        speeds = self.green_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
         if len(station_list) == 1:
             next_stop = station_list[0]
         else:
             next_stop = station_list[1]
 
         authority = self.green_line.get_authority(station_list)
-        self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
+        self.dispatched_green.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
         self.suggested_speed_tb.setText(str(speeds))
         self.authority_tb.setText(str(authority))
         self.route_tb.setText(str(route[0]))
         
-        print(speeds)
-        print(authority)
-        print(route)
         
-        self.remove_train_from_schedule(trainID)
+        self.remove_train_from_schedule(train)
         self.train_dispatch(route, authority, speeds)
 
-    def remove_train_from_schedule(self, trainID):
-        root = self.schedule.invisibleRootItem()
+    def remove_train_from_schedule(self, train):
+        if train.line == "Green Line":
+            root = self.schedule_green.invisibleRootItem()
+        if train.line == "Red Line":
+            root = self.schedule_red.invisibleRootItem()
+        
         for i in range(root.childCount()):
             item = root.child(i)
-            if item.text(0) == trainID:  # Assuming the train ID is in the first column
+            if item.text(0) == train.trainID:  # Assuming the train ID is in the first column
                 root.removeChild(item)
                 break
             
     #updates schedule on main page
-    def update_schedule(self, train_ids="0", destination_="0", departure_time_="0", arrival_time_="0", stops_="0"):
-        if(self.manual_mode_btn.isChecked()):
-            train = self.trainID
-            self.trainID+=1
-            departure = self.manual_dispatch_departure.currentText()
-            destination = self.manual_dispatch_destination.currentText()
-            delta = self.calculate_time(departure, destination)
-            dep_time = datetime.strptime(datetime.now().strftime("%H:%M:%S"), "%H:%M:%S")
-            dep_time_str = dep_time.strftime("%H:%M:%S")
-            eta = (dep_time + delta).strftime("%H:%M:%S")
-            self.blue_line_schedule.append(QTreeWidgetItem([str(train), destination, str(dep_time_str), str(eta)]))
-            self.schedule.addTopLevelItem(QTreeWidgetItem([str(train), destination, str(dep_time_str), str(eta)]))
-        elif self.auto_mode_btn.isChecked():
+    def update_schedule(self, train_ids="0", destination_="0", departure_time_="0", arrival_time_="0", stops_="0", line="Green Line"):
             # Assuming train_ids, departure_, destination_, and departure_time_ are lists
-            for t_id, dest, dep_time, arr_time, stop in zip(train_ids, destination_, departure_time_, arrival_time_, stops_):
-                # if isinstance(dep_time, str):
-                #     dep_time_obj = datetime.strptime(dep_time, "%H:%M:%S").time()
-                # else:
-                #     dep_time_obj = dep_time
-                
-                #self.blue_line_schedule.append(QTreeWidgetItem([str(t_id), dest, str(dep_time_obj), str(eta)]))
-                train = Train(t_id, dest, dep_time, arr_time, stop)
-                self.train_schedule.append(train)
-                self.schedule.addTopLevelItem(QTreeWidgetItem([str(t_id), str(dest), str(dep_time), str(arr_time), str(stop)]))
+        for t_id, dest, dep_time, arr_time, stop in zip(train_ids, destination_, departure_time_, arrival_time_, stops_):
+            # if isinstance(dep_time, str):
+            #     dep_time_obj = datetime.strptime(dep_time, "%H:%M:%S").time()
+            # else:
+            #     dep_time_obj = dep_time
+            
+            #self.blue_line_schedule.append(QTreeWidgetItem([str(t_id), dest, str(dep_time_obj), str(eta)]))
+            train = Train(t_id, dest, dep_time, arr_time, stop, line)
+            if line =="Green Line":
+                self.train_schedule_green.append(train)
+                self.schedule_green.addTopLevelItem(QTreeWidgetItem([str(t_id), str(dest), str(dep_time), str(arr_time), str(stop)]))
+            if line =="Red Line":
+                self.train_schedule_red.append(train)
+                self.schedule_red.addTopLevelItem(QTreeWidgetItem([str(t_id), str(dest), str(dep_time), str(arr_time), str(stop)]))
         return
     
 
@@ -587,38 +824,60 @@ class CTC(Ui_Form, QWidget):
         # Assuming 'occupancies' is a list of bools where True represents occupied and False represents open
         if len(occupancies) == 151:
             #green line
-            pass
+            for index, is_occupied in enumerate(occupancies):
+                # Determine the color based on occupancy
+                color = Qt.GlobalColor.green if is_occupied else Qt.GlobalColor.white
+                status = "Occupied" if is_occupied else "Open"
+
+                # Assuming the "Occupancy" column is the first column (0-indexed)
+                occupancy_item = self.block_occupancy_green.item(index, 0)
+                if not occupancy_item:  # If the item doesn't exist, create it
+                    occupancy_item = QTableWidgetItem()
+                    self.block_occupancy_green.setItem(index, 0, occupancy_item)
+
+                # Set the background color for the block
+                occupancy_item.setBackground(color)
+
+                # Update the "Block Status" in the third column
+                status_item = self.block_occupancy_green.item(index, 2)  # Assuming the "Block Status" column is the third column
+                if not status_item:
+                    status_item = QTableWidgetItem()
+                    self.block_occupancy_green.setItem(index, 2, status_item)
+                status_item.setText(status)
         elif len(occupancies == 77):
             #red line
-            pass
+            for index, is_occupied in enumerate(occupancies):
+                # Determine the color based on occupancy
+                color = Qt.GlobalColor.green if is_occupied else Qt.GlobalColor.white
+                status = "Occupied" if is_occupied else "Open"
+
+                # Assuming the "Occupancy" column is the first column (0-indexed)
+                occupancy_item = self.block_occupancy_red.item(index, 0)
+                if not occupancy_item:  # If the item doesn't exist, create it
+                    occupancy_item = QTableWidgetItem()
+                    self.block_occupancy_red.setItem(index, 0, occupancy_item)
+
+                # Set the background color for the block
+                occupancy_item.setBackground(color)
+
+                # Update the "Block Status" in the third column
+                status_item = self.block_occupancy_red.item(index, 2)  # Assuming the "Block Status" column is the third column
+                if not status_item:
+                    status_item = QTableWidgetItem()
+                    self.block_occupancy_red.setItem(index, 2, status_item)
+                status_item.setText(status)
+
+
+    def record_ticket_sales(self, new_ticket_sales_list):
+        # Assume new_ticket_sales_list is a list of ticket sales
+        for new_ticket_sales in new_ticket_sales_list:
+            # Record each new ticket sale with the current timestamp
+            current_time = datetime.now()
+            self.ticket_sales_log.append((current_time, new_ticket_sales))
         
-        for index, is_occupied in enumerate(occupancies):
-            # Determine the color based on occupancy
-            color = Qt.GlobalColor.green if is_occupied else Qt.GlobalColor.white
-            status = "Occupied" if is_occupied else "Open"
-
-            # Assuming the "Occupancy" column is the first column (0-indexed)
-            occupancy_item = self.block_occupancy.item(index, 0)
-            if not occupancy_item:  # If the item doesn't exist, create it
-                occupancy_item = QTableWidgetItem()
-                self.block_occupancy_green.setItem(index, 0, occupancy_item)
-
-            # Set the background color for the block
-            occupancy_item.setBackground(color)
-
-            # Update the "Block Status" in the third column
-            status_item = self.block_occupancy_green.item(index, 2)  # Assuming the "Block Status" column is the third column
-            if not status_item:
-                status_item = QTableWidgetItem()
-                self.block_occupancy_green.setItem(index, 2, status_item)
-            status_item.setText(status)
-
-    def record_ticket_sales(self, new_ticket_sales):
-        # Record new ticket sales with the current timestamp
-        current_time = datetime.now()
-        self.ticket_sales_log.append((current_time, new_ticket_sales))
-        # Call the throughput calculation
+        # Call the throughput calculation once after all sales are recorded
         self.calc_throughput()
+
 
     def calc_throughput(self):
         # Get the current time
@@ -635,7 +894,7 @@ class CTC(Ui_Form, QWidget):
         # Optionally remove old entries outside of the 1-hour window
         self.ticket_sales_log = [(timestamp, sales) for timestamp, sales in self.ticket_sales_log if timestamp > one_hour_ago]
 
-        self.throughput.display(total_throughput)
+        self.throughput_green.display(total_throughput)
         # Return or update the UI with the total throughput
         return total_throughput
     
