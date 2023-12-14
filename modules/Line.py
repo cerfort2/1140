@@ -1,14 +1,15 @@
 from datetime import datetime, timedelta, date
-from modules.Block import Block
+from Block import Block
 import pandas as pd
 from scipy.optimize import minimize
 import numpy as np
 
 class Line():
-    def __init__(self, name, file):
+    def __init__(self, name, file, stations):
         super().__init__()
         self.blocks = self.read_data(file)
         self.name = name
+        self.stations = stations
         
     def read_data(self, filePath):
         df = pd.read_excel(filePath)
@@ -71,6 +72,7 @@ class Line():
                 stop_or_dest.append(False)
         return route_blocks, stop_or_dest
     #returns the route from yard given an input station
+    """
     def get_route(self, station_list):
         route_blocks = []
         stop_or_dest = []
@@ -91,6 +93,50 @@ class Line():
             else:
                 stop_or_dest.append(False)
         return route_blocks, stop_or_dest, route_feet
+    """
+
+    def get_route(self, station_list):
+        route_blocks = []
+        stop_or_dest = []
+        route_feet = []
+        looping = False
+
+        # Check for looping conditions
+        destination_station = station_list[-1]
+        for station in station_list[:-1]:  # Check every station but the last
+            if station_list.count(station) > 1 or self.stations.index(station) > self.stations.index(destination_station):
+                looping = True
+                break
+
+        index = 0
+        while index < len(self.blocks):
+            block = self.blocks[index]
+            this_block = str(block.get_section()) + str(block.get_number())
+            station_check = this_block + ": " + str(block.get_station())
+
+            # Add block to the route
+            route_blocks.append(this_block)
+            route_feet.append(block.get_length())
+
+            # Check if the current block is a station in the station list
+            if station_check in station_list:
+                stop_or_dest.append(True)
+                # If we reach the destination station and there's no need to loop, we break
+                if station_check == destination_station and not looping:
+                    break
+            else:
+                stop_or_dest.append(False)
+
+            # Increment index
+            index += 1
+
+            # If we reach the end of blocks and we need to loop, start over
+            if index == len(self.blocks) and looping:
+                index = 0  # Reset index to start to loop
+                looping = False  # Reset looping after one full iteration
+
+        return route_blocks, stop_or_dest, route_feet
+
     """
     def travel_time_objective(speeds, block_lengths, total_time):
         # Objective function to minimize: sum of squared differences in speeds + penalty for total time deviation
@@ -137,31 +183,50 @@ class Line():
             raise ValueError("Optimization failed to find a feasible solution")
 """
     #returns a suggested velocity for each block given the route
-    def get_velocities(self, block_list, departure_time, arrival_time, num_stops):
-        #calculate suggested speed for each block, should be constant value except in special cases
-        time1 = datetime.strptime(departure_time.toString(), '%H:%M:%S')
-        time2 = datetime.strptime(arrival_time.toString(), '%H:%M:%S')
-        total_dwell_time = num_stops
-        moving_time = (time2-time1).total_seconds() - total_dwell_time
-        total_length = 0
-        suggested_speeds = []
-        index = 0
-        for i in range(len(block_list[1]) - 1, -1, -1):
-                if block_list[1][i] == 1:
-                    index = i
-                    
-        for i, block in enumerate(block_list):
-            block_list_block = str(self.blocks[i].get_section()) + str(self.blocks[i].get_number())
+    def get_velocities(self, block_objects, departure_time, arrival_time):
+        # Parse the times
+        time1 = datetime.strptime(departure_time, '%H:%M:%S')
+        time2 = datetime.strptime(arrival_time, '%H:%M:%S')
+        
+        # Calculate total elapsed time in seconds
+        total_time = (time2 - time1).total_seconds()
+        
+        # Prepare the data for the optimizer
+        block_lengths = np.array([block.get_length() for block in block_objects])
+        block_speed_limits = np.array([block.get_speed_limit() for block in block_objects])
+        
+        # Objective function
+        def travel_time_objective(speeds):
+            time_diffs = np.diff(speeds) ** 2
+            travel_times = block_lengths / speeds
+            total_time_penalty = (total_time - np.sum(travel_times)) ** 2
+            return np.sum(time_diffs) + total_time_penalty
 
-            if block_list_block == block:
-                total_length += self.blocks[i].get_length()
-                
-            #suggested_speeds.append(5)
-        speed_initial = total_length/moving_time
-        for i in range(len(block_list)):
-            suggested_speeds.append(speed_initial)
+        # Speed limit constraint
+        def speed_limit_constraint(speeds):
+            return block_speed_limits - speeds
 
-        return suggested_speeds
+        # Initial guess for the speeds (set to the speed limits for simplicity)
+        initial_speeds = block_speed_limits
+        
+        # Define the constraints
+        constraints = [{'type': 'ineq', 'fun': speed_limit_constraint}]
+
+        # Run the optimization
+        result = minimize(
+            travel_time_objective,
+            initial_speeds,
+            method='SLSQP',
+            constraints=constraints,
+            bounds=[(0, limit) for limit in block_speed_limits]  # Speeds must be non-negative
+        )
+        
+        if result.success:
+            # If the optimization was successful, use the optimized speeds
+            return result.x
+        else:
+            # Handle the case where optimization failed
+            raise ValueError("Optimization failed to find a feasible solution")
 
     def get_authority(self, stop_list):
         authorities = []

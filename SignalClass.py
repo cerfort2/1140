@@ -99,6 +99,8 @@ class God(Home, QMainWindow):
         #Sent from CTC to Track Controller
         self.ctc.train_dispatched.connect(self.trackController.createNewTrainData)
 
+        #self.ctc.close
+
         #Timer functions between Track Model and Track Controller
         self.trackModel.trackModel.trackControllerOccupancy.connect(self.trackController.getOccupancy)
         self.trackController.trackModelSuggestedSpeed.connect(self.trackModel.trackModel.suggestedSpeed)
