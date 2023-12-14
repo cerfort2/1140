@@ -7,6 +7,7 @@ class SoftwareTrainController():
     def __init__(self):
         self.ui=SoftwareTrainControllerGUI()
         self.uiopen=False
+        self.trainnumber=0
         self.waysideStop=False
         self.manualmode=False
         self.simulationSpeed=1
@@ -99,7 +100,12 @@ class SoftwareTrainController():
         self.ui.manualcommandedspeed.setValue(int(self.getManualCommandedSpeed()))
         self.ui.leftdoor.setChecked(self.getLeftDoor())
         self.ui.rightdoor.setChecked(self.getRightDoor())
-        
+        self.ui.brakefailure.setChecked(self.brakeFailure)
+        self.ui.signalfailure.setChecked(self.signalFailure)
+        self.ui.enginefailure.setChecked(self.engineFailure)
+        self.ui.dwelltime.display(self.dwellTime)
+        self.ui.trainnumber.setText(self.trainnumber)
+
         self.ui.externallight.setChecked(self.computeExtLights())
 
         self.ui.speedlimit.display(int(self.getSpeedLimit()*2.2369362921))
@@ -196,6 +202,9 @@ class SoftwareTrainController():
     def getIntLights(self):
         return self.intlights
 
+    def setTrainNumber(self,n):
+        self.trainnumber=n
+
     #if in a tunnel, external lights are on
     def computeExtLights(self):
         if self.tunnel and not self.manualmode:
@@ -223,11 +232,36 @@ class SoftwareTrainController():
             self.ek=(self.manualcommandedspeed/2.2369362921-self.currentSpeed)
             self.uk+=(self.interval/2)*(self.ek-self.ekprev)
             self.power=(self.ek*self.kp+self.ki*self.uk)
+
+            self.ekprev=self.ek
+            self.ek=(self.manualcommandedspeed/2.2369362921-self.currentSpeed)
+            self.uk+=(self.interval/2)*(self.ek-self.ekprev)
+            self.power1=(self.ek*self.kp+self.ki*self.uk)
+
+            self.ekprev=self.ek
+            self.ek=(self.manualcommandedspeed/2.2369362921-self.currentSpeed)
+            self.uk+=(self.interval/2)*(self.ek-self.ekprev)
+            self.power2=(self.ek*self.kp+self.ki*self.uk)
         else:
             self.ekprev=self.ek
             self.ek=(self.ctcSpeed-self.currentSpeed)
             self.uk+=(self.interval/2)*(self.ek-self.ekprev)
             self.power=(self.ek*self.kp+self.ki*self.uk)
+
+            self.ekprev=self.ek
+            self.ek=(self.manualcommandedspeed/2.2369362921-self.currentSpeed)
+            self.uk+=(self.interval/2)*(self.ek-self.ekprev)
+            self.power1=(self.ek*self.kp+self.ki*self.uk)
+
+            self.ekprev=self.ek
+            self.ek=(self.manualcommandedspeed/2.2369362921-self.currentSpeed)
+            self.uk+=(self.interval/2)*(self.ek-self.ekprev)
+            self.power2=(self.ek*self.kp+self.ki*self.uk)
+
+            #
+        if self.power != self.power1 and self.power!=self.power2 and self.power1!=self.power2:
+            print('Power is unstable')
+            self.power=0
 
         #max power
         if self.power>120000:

@@ -35,6 +35,7 @@ class SoftwareTrainControllerGUI(Ui_Form):
         self.serviceBrake.setStyleSheet('background-color: orange')
         self.ebrake.setStyleSheet('background-color: #FF7F7F')
         self.mode.currentTextChanged.connect(self.modeVals)
+        self.trainnumber.setDisabled(True)
         #self.ebrake.clicked.connect(self.eBrakePressed)      #check for if ebrake is pushed in manual or automatic
         #self.serviceBrake.clicked.connect(self.swtrain.serviceBrakePressed)
         self.internallight.setChecked(True)
