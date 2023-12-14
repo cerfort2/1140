@@ -203,7 +203,7 @@ class SoftwareTrainController():
             self.eBrake=False
         else:
             print("Made it inside here")
-            self.eBrake=Trues
+            self.eBrake=True
 
 
     def getExteriorLights(self):
