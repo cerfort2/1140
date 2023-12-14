@@ -74,6 +74,12 @@ class Ui_Form(object):
         self.label_6 = QtWidgets.QLabel(parent=Form)
         self.label_6.setGeometry(QtCore.QRect(10, 180, 21, 16))
         self.label_6.setObjectName("label_6")
+        self.spinBox = QtWidgets.QSpinBox(parent=Form)
+        self.spinBox.setGeometry(QtCore.QRect(30, 400, 42, 22))
+        self.spinBox.setObjectName("spinBox")
+        self.label_7 = QtWidgets.QLabel(parent=Form)
+        self.label_7.setGeometry(QtCore.QRect(20, 380, 58, 16))
+        self.label_7.setObjectName("label_7")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -95,6 +101,7 @@ class Ui_Form(object):
         self.label_4.setText(_translate("Form", "1x"))
         self.label_5.setText(_translate("Form", "10x"))
         self.label_6.setText(_translate("Form", "5x"))
+        self.label_7.setText(_translate("Form", "Set Temp"))
 
 
 if __name__ == "__main__":
