@@ -61,10 +61,10 @@ class God(Home, QMainWindow):
         self.ctc = CTC()
 
         #HW Track Controller
-        self.trackController = HWTrackControllerGUI()
+        #self.trackController = HWTrackControllerGUI()
 
         #SW Track Controller
-        #self.trackController = SoftwareTrackControllerGUI()
+        self.trackController = SoftwareTrackControllerGUI()
 
         self.trackModel = functionalUI()
         self.trainInterface = train_model_interface_software()
@@ -109,14 +109,19 @@ class God(Home, QMainWindow):
         self.trackController.trackModelTrackData.connect(self.trackModel.trackModel.controlModel)
         self.trackController.trackModelStoppedTrains.connect(self.trackModel.trackModel.stopAtBlocks)
 
+        self.trackModel.trackModel.trackControllerFailureBlocks.connect(self.trackController.getFailure)
+        # self.trackController.CTCTrackFailures.connect("myles function")
+        # self.CTC.signalName.connect(self.trackController.fix)
+        self.trackController.trackModelFixes.connect(self.trackModel.trackModel.fixFailures)
+
 
 
         #Only have one of these lines commented out:
         #HW Track Controller
-        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
+        #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
         #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.redLine.setTracks)
         #SW Track Controller
-        #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.setDisplay)
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.setDisplay)
 
         
         #Between Train model and Track model
@@ -141,6 +146,7 @@ class God(Home, QMainWindow):
         #self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
         self.trackController.sendData()
+        self.trackModel.trackModel.sendFailureBlocks()
         # self.trackModel.trackModel.emitSwitchBeacon()
         # self.trackModel.trackModel.emitApproachingBeacon()
         self.trainInterface.get_occupancies()

@@ -88,6 +88,13 @@ class Track():
         #Return data
         return data
 
+    def getFailed(self,fail):
+        data = []
+        for i in range(len(self.blocks)):
+            if(fail[i]):
+                data.append(self.blocks[i].getName())
+        return data
+
     #Returns index's of occupied blocks
     def getOccupancy(self):
         #Created lists
