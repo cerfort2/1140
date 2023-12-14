@@ -498,6 +498,7 @@ class TrackModel(QObject):
         self.route_passthrough = []
         self.suggestedSpeed_passthrough= []
         self.authority_passthrough = []
+        self.temperature = 50
 
     #--------------------
     #Internal Functions
@@ -660,6 +661,10 @@ class TrackModel(QObject):
         for line in self.lines:
             line.getBlock(blockToOpen).clearOccupied()
                 
+
+    def updateTemp(self,temp):
+        self.temperature = temp
+
 
 
     #----------------
