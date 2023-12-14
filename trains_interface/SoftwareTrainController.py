@@ -109,7 +109,7 @@ class SoftwareTrainController():
         self.ui.enginefailure.setChecked(self.engineFailure)
         self.ui.dwelltime.display(self.dwellTime)
         self.ui.trainnumber.setText(str(self.trainnumber))
-
+        self.ui.announcement.setText(self.announcement)
         self.ui.externallight.setChecked(self.computeExtLights())
 
         self.ui.speedlimit.display(int(self.getSpeedLimit()*2.2369362921))
@@ -151,13 +151,18 @@ class SoftwareTrainController():
             #service brake is on if wayside sends a red signal
             if self.waysideStop:
                 self.eBrake=True
+            elif not self.engineFailure and not self.brakeFailure and not self.signalFailure:
+                self.eBrake = False
 
     def activateWaysideStop(self):
+        print("stopped")
         self.waysideStop=True    
 
     def deactivateWaysideStop(self):
+        print("starting")
         self.waysideStop=False   
         self.ebrake = False
+
 
     def setAnnouncement(self):
         if self.manualmode:

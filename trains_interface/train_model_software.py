@@ -44,6 +44,8 @@ class train_model_software():
         self.station_bools = []
         self.currentMove = 0
         self.train_number = 0
+        self.adTimer = 0
+        self.adNum = 1
         #create instance of train controller
         self.controller = SoftwareTrainController()
         # self.controller = HardwareTrainController()
@@ -416,6 +418,16 @@ class train_model_software():
             self.controller.update_time()
         if UI_flag:
             self.update_ui()
+
+        self.adTimer += 1
+        if self.adTimer == 10 and self.adNum == 1:
+            self.ui.ad.setPixmap(self.ui.ad2)
+            self.adNum = 2
+            self.adTimer = 0
+        elif self.adTimer == 10 and self.adNum == 2:
+            self.ui.ad.setPixmap(self.ui.ad1)
+            self.adNum = 1
+            self.adTimer = 0
 
     #update train ui
     def update_ui(self) -> None:
