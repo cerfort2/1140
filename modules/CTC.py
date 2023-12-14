@@ -135,19 +135,16 @@ class CTC(Ui_Form, QWidget):
 
 #inputs
     def get_block_occupancies(self, occupancies):
-        if len(occupancies == 151):
+        if len(occupancies) == 151:
             self.green_block_occupancies = occupancies
         print(occupancies)
-        if len(occupancies == 77):
+        if len(occupancies) == 77:
             self.red_block_occupanices = occupancies
         self.update_block_occupancy(self.block_occupancies)
     
     def get_ticket_sales(self, tickets):
         ticket_sales = tickets
         self.record_ticket_sales(ticket_sales)
-
-    def get_switchesw(self, switches):
-        self.switch_states = switches
         
 
     def start_threads(self):
