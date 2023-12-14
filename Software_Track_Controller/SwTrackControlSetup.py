@@ -28,17 +28,19 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
 
     #Signals sent to CTC
     CTCOccupancy = pyqtSignal(list)
-    CTCTrackFailuresHW = pyqtSignal(list)
+    CTCTrackFailures = pyqtSignal(list)
 
     def __init__(self):
         super().__init__()
         #Creates Track On initilization
         self.line:Track = Track()
 
-    def sendFailures(self): #Sends failures to CTC
+    def getFailure(self, fails): #Sends failures to CTC
         #Gets known failures
-        fail:str = []
-        self.CTCTrackFailuresHW.emit(fail)
+        self.failuresData.clear()
+        for i in fails:
+            self.failuresData.add(i)
+        self.CTCTrackFailures.emit(fails)
         
 
     def getOccupancy(self, data): #Receives occupancy from Track Model
