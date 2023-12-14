@@ -150,6 +150,7 @@ class God(Home, QMainWindow):
         self.trackModel.trackModel.updateTemp(self.spinBox.value())
         
         #self.trackController.sendSpeed()
+        self.trackModel.trackModel.getTicketsSales()
         self.trackModel.trackModel.emitOccupancy()
         self.trackController.sendData()
         self.trackModel.trackModel.sendFailureBlocks()
