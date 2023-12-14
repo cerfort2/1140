@@ -108,10 +108,14 @@ class God(Home, QMainWindow):
         self.trackController.trackModelSendRoute.connect(self.trackModel.trackModel.route)
         self.trackController.trackModelTrackData.connect(self.trackModel.trackModel.controlModel)
         self.trackController.trackModelStoppedTrains.connect(self.trackModel.trackModel.stopAtBlocks)
+        self.trackController.trackModelClose.connect(self.trackModel.trackModel.closeBlock)
+        self.trackController.trackModelFixes.connect(self.trackModel.trackModel.openBlock)
 
         self.trackModel.trackModel.trackControllerFailureBlocks.connect(self.trackController.getFailure)
-        # self.trackController.CTCTrackFailures.connect(self.ctc.getFailures)
-        # self.CTC.signalName.connect(self.trackController.fix)
+        self.trackController.CTCTrackFailures.connect(self.ctc.get_failures)
+        self.ctc.track_opened.connect(self.trackController.fix)
+        self.ctc.track_closed.connect(self.trackController.close)
+        self.ctc.toggle_switch.connect(self.trackController.changeSwitch)
         self.trackController.trackModelFixes.connect(self.trackModel.trackModel.fixFailures)
 
 

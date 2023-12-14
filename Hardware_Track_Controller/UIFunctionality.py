@@ -15,12 +15,14 @@ class HWTrackControllerGUI(Ui_Form, QObject):
     
     #Signals sent out
     CTCOccupancy = pyqtSignal(list)
-    CTCTrackFailuresHW = pyqtSignal(list)
+    CTCTrackFailures = pyqtSignal(list)
     trackModelSendRoute = pyqtSignal(list)
     trackModelSuggestedSpeed = pyqtSignal(list)
     trackModelTrackData = pyqtSignal(list)
     trackModelAuthority = pyqtSignal(list)
     trackModelStoppedTrains = pyqtSignal(list)
+    trackModelFixes = pyqtSignal(str)
+    trackModelClose = pyqtSignal(str)
 
     #Global Variables
     greenLine = GreenLine()
@@ -141,7 +143,26 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         self.trackModelAuthority.emit(Auth)
         self.trackModelSuggestedSpeed.emit(speed)
         self.trackModelSendRoute.emit(traveling)
-
+    def getFailures(self, fails): #Failures send to CTC from Track Model
+        if(len(self.pureOccupancy) == 151):
+            for i in range(32): #A1-G32
+                self.greenLine.Waysides[0].getTrack(i).setFailure([i])
+            self.greenLine.Waysides[0].getTrack(32).setFailure(fails[len(fails)-2]) #Z150
+            #All for Wayside 2
+            for i in range(41): #H33-L73
+                self.greenLine.Waysides[1].getTrack(i).setFailure(fails[i+32])
+            self.greenLine.Waysides[1].getTrack(41).setFailure(fails[len(fails)-1]) #Z151/YARD
+            #All for Wayside 3
+            for i in range(28): #M74-R101
+                self.greenLine.Waysides[2].getTrack(i).setFailure(fails[i+73])
+            #All for Wayside 4
+            for i in range(48): #S102-Y149
+                self.greenLine.Waysides[3].getTrack(i).setFailure(fails[i+101])
+        else:
+            for i in range(len(fails)):
+                self.redLine.Waysides[0].getTrack(i).setFailure(fails[i])
+        self.CTCTrackFailures.emit(fails)
+    
 
     #Sending out functions
     def sendData(self): #Data of track to be sent to CTC and Track Model
@@ -194,12 +215,45 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         self.trackModelTrackData.emit(data)
     def sendOccupancy(self): #Occupancy sent to CTC
         self.CTCOccupancy.emit(self.pureOccupancy)
-    def sendFailures(self): #Failures sent to CTC
-        failures = []
-        for i in range(len(self.greenLine.Waysides)):
-            for j in range(len(self.greenLine.Waysides[i])):
-                failures.append(self.greenLine.Waysides[i].getTrack(j).getFailure())
-        self.CTCTrackFailuresHW.emit(failures)
+    def fix(self, fixers): #Fix the tracks
+        self.trackModelFixes.emit(fixers)
+    def close(self, closers): #Close the tracks
+        self.trackModelClose.emit(closers)
+    def changeSwitch(self, name, value):
+        if(len(self.pureOccupancy) == 151):
+            #All for Wayside 1
+            for i in range(32): #A1-G32
+                if(self.greenLine.Waysides[0].getTrack(i).getName() == name):
+                    self.greenLine.Waysides[0].getTrack(i).setSwitch(value)
+                    return
+            if(self.greenLine.Waysides[0].getTrack(32).getName() == name):
+                self.greenLine.Waysides[0].getTrack(32).setSwitch(value) #Z150
+                return
+
+            #All for Wayside 2
+            for i in range(41): #H33-L73
+                if(self.greenLine.Waysides[1].getTrack(i).getName() == name):
+                    self.greenLine.Waysides[1].getTrack(i).setSwitch(value)
+                    return
+            if(self.greenLine.Waysides[1].getTrack(41).getName() == name):
+                self.greenLine.Waysides[1].getTrack(41).setSwitch(value) #Z151/YARD
+                return
+            
+            #All for Wayside 3
+            for i in range(28): #M74-R101
+                if(self.greenLine.Waysides[2].getTrack(i).getName() == name):
+                    self.greenLine.Waysides[2].getTrack(i).setSwitch(value)
+                    return
+            #All for Wayside 4
+            for i in range(48): #S102-Y149
+                if(self.greenLine.Waysides[3].getTrack(i).getName() == name):
+                    self.greenLine.Waysides[3].getTrack(i).setSwitch(value)
+                    return
+        else:
+            for i in range(self.redLine.Waysides[0].amountOfTracks()):
+                if(self.redLine.Waysides[0].getTrack(i).getName() == name):
+                    self.redLine.Waysides[0].getTrack(i).setSwitch(value)
+                    return
 
     #Functions for setting data/PLC Logic
     def setNewDataGreenLine(self, states):
@@ -561,7 +615,6 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             stoppage.append(self.redLine.Waysides[0].getTrack(65).getName())
         #Send the data out to the Track model here
         self.trackModelStoppedTrains.emit(stoppage)
-        
 
 
 
