@@ -277,7 +277,8 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         #self.greenLine.Waysides[1].getTrack(25).setLight(states[1][10])
 
         #Do switch 6 logic here
-
+        if(self.greenLine.Waysides[1].getTrack(24).getOccupancy() == True):
+            self.greenLine.Waysides[1].getTrack(25).setSwitch(False)
         
         #Crossroad logic
         if(self.greenLine.Waysides[0].getTrack(16).getOccupancy() or self.greenLine.Waysides[0].getTrack(17).getOccupancy() or self.greenLine.Waysides[0].getTrack(18).getOccupancy() or self.greenLine.Waysides[0].getTrack(19).getOccupancy() or self.greenLine.Waysides[0].getTrack(20).getOccupancy()):
