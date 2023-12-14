@@ -26,6 +26,8 @@ class Train:
         self.departure_time = departure_time
         self.arrival_time = arrival_time
         self.stops = stops
+        self.cur_stop = stops[0]
+        self.cur_position = "Z151"
         self.line = line
 
 class CTC(Ui_Form, QWidget):
@@ -45,29 +47,6 @@ class CTC(Ui_Form, QWidget):
 
     def __init__(self):
         super().__init__()
-       
-        """
-        REFERENCE:
-
-        self.dispatch_train_btn - dispatches train
-        self.schedule_train_btn - schedules train
-        self.arrival_time_dis - arrival time for dispatching train
-        self.manual_dispatch_line - selecting line for dispatch/schedule
-        self.manual_dispatch_destination - destination station
-        self.stop_box_list - stopping stations
-        self.add_stop - adds stop
-        self.departure_time - departure time for scheduling train
-        self.arrival_time - arrival time for scheduling train
-        self.schedule_lines_box - selecting schedule for line
-        self.schedule - schedule qtreewidget
-        self.dispatched - dispatched qtreewidget
-        self.block_occupancy - qtablewidget displaying block occupancy
-        self.occupancy_line_box - selecting line for block occupancy
-        self.throughput_val - value of throughput displayed
-        self.dispatched_trains_line - selecting line to show which trains have been dispatched
-        self.system_time - displays current time of system
-        self.remove_schedule - button to remove from schedule
-        """
         
     def initialize_ctc(self):
         self.num_trains_dispatched = 0
@@ -91,12 +70,14 @@ class CTC(Ui_Form, QWidget):
         self.green_line = Line("Green", 'modules/Green Line Info_.xlsx', self.green_line_stations)
         self.red_line = Line("Red", 'modules/Red Line Info.xlsx', self.red_line_stations)
         self.stops = []
-        
 
         
         self.green_line_blocks = ['A1', 'A2', 'A3', 'B4', 'B5', 'B6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12', 'D13', 'D14', 'D15', 'D16', 'E17', 'E18', 'E19', 'E20', 'F21', 'F22', 'F23', 'F24', 'F25', 'F26', 'F27', 'F28', 'G29', 'G30', 'G31', 'G32', 'H33', 'H34', 'H35', 'I36', 'I37', 'I38', 'I39', 'I40', 'I41', 'I42', 'I43', 'I44', 'I45', 'I46', 'I47', 'I48', 'I49', 'I50', 'I51', 'I52', 'I53', 'I54', 'I55', 'I56', 'I57', 'J58', 'J59', 'J60', 'J61', 'J62', 'K63', 'K64', 'K65', 'K66', 'K67', 'K68', 'L69', 'L70', 'L71', 'L72', 'L73', 'M74', 'M75', 'M76', 'N77', 'N78', 'N79', 'N80', 'N81', 'N82', 'N83', 'N84', 'N85', 'O86', 'O87', 'O88', 'P89', 'P90', 'P91', 'P92', 'P93', 'P94', 'P95', 'P96', 'P97', 'Q98', 'Q99', 'Q100', 'R101', 'S102', 'S103', 'S104', 'T105', 'T106', 'T107', 'T108', 'T109', 'U110', 'U111', 'U112', 'U113', 'U114', 'U115', 'U116', 'V117', 'V118', 'V119', 'V120', 'V121', 'W122', 'W123', 'W124', 'W125', 'W126', 'W127', 'W128', 'W129', 'W130', 'W131', 'W132', 'W133', 'W134', 'W135', 'W136', 'W137', 'W138', 'W139', 'W140', 'W141', 'W142', 'W143', 'X144', 'X145', 'X146', 'Y147', 'Y148', 'Y149', 'Z150', 'Z151']
         self.red_line_blocks = ['A1', 'A2', 'A3', 'B4', 'B5', 'B6', 'C7', 'C8', 'C9', 'D10', 'D11', 'D12', 'E13', 'E14', 'E15', 'F16', 'F17', 'F18', 'F19', 'F20', 'G21', 'G22', 'G23', 'H24', 'H25', 'H26', 'H27', 'H28', 'H29', 'H30', 'H31', 'H32', 'H33', 'H34', 'H35', 'H36', 'H37', 'H38', 'H39', 'H40', 'H41', 'H42', 'H43', 'H44', 'H45', 'I46', 'I47', 'I48', 'J49', 'J50', 'J51', 'J52', 'J53', 'J54', 'K55', 'K56', 'K57', 'L58', 'L59', 'L60', 'M61', 'M62', 'M63', 'N64', 'N65', 'KN6', 'O67', 'P68', 'P69', 'P70', 'Q71', 'R72', 'S73', 'S74', 'S75', 'T76', 'T77']
 
+        self.green_line_blocks_order = []
+        self.red_line_blocks_order = []
+        
         self.switch_states = []
 
         self.ticket_sales_log = []
@@ -237,15 +218,33 @@ class CTC(Ui_Form, QWidget):
                     occupancy_item.setBackground(color)
                     status_item.setText(status)     
     
-    def updated_dispatched_trains_info(self):
-        pass
+    def updated_dispatched_trains_info(self, queue, occupancies):
+        reversed_queue = list(reversed(queue))
+
+        # Iterate over the occupancy list in reverse
+        for i in reversed(range(len(occupancies))):
+            if occupancies[i]:
+                
+                for train in reversed_queue:
+                    train.cur_position = i
+                    
+                    reversed_queue.remove(train)
+
+                    
+                    
+                    
+                    
+            
+    def update_ui_with_new_train_positions(self, queue):
+        for train in queue:
+            
     
     def get_ticket_sales(self, tickets):
         ticket_sales = tickets
         self.record_ticket_sales(ticket_sales)
     
     def get_speed(self, speed):
-        self.speed_factor = round(1000/speed)
+        self.speed_factor = int(round(1000/speed))
     
     def start_threads(self):
         #Thread(target=self.update_occupancy_ui).start()
@@ -819,30 +818,7 @@ class CTC(Ui_Form, QWidget):
             authority = self.red_line.get_authority(station_list)
             self.trains_dispatched_red.append(train)
             self.dispatched_red.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority[0]), next_stop]))
-
-        #self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
-
-        #self.suggested_speed_tb.setText(str(speeds))
-        #self.authority_tb.setText(str(authority))
-        #self.route_tb.setText(str(route[0]))
-
-        #setting route, authority, suggested speed
-        # print("stops")
-        # print(self.stops)
-        # print("destination")
-        # print(destination)
-        # print("ctc authority")
-        # print(len(authority))
-        # print(authority)
-        # print("route")
-        # print(len(route[0]))
-        # print(len(route[1]))
-        # print(len(route[2]))
-        # print(len(route[3]))
-        # print(route)
-        # print("speeds")
-        # print(len(speeds))
-        # print(speeds)
+            
         self.stops = []
         self.update_stations()
         self.update_stops()
@@ -1003,7 +979,7 @@ class CTC(Ui_Form, QWidget):
                 else:
                     occupancy_item.setBackground(color)
                     status_item.setText(status)  
-        elif len(occupancies == 77):
+        elif len(occupancies) == 77:
             #red line
             for index, is_occupied in enumerate(occupancies):
                 # Determine the color based on occupancy
