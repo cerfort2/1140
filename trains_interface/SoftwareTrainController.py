@@ -84,6 +84,12 @@ class SoftwareTrainController():
 
 #run calculations for the swtc
     def computeVals(self):
+
+        if self.brakeFailure or self.engineFailure or self.signalFailure:
+            self.eBrake=True
+
+        print(self.eBrake)
+        
         self.computeManualSpeed()
         self.computeAuthority()
         self.computeServiceBrake()
@@ -192,10 +198,13 @@ class SoftwareTrainController():
         self.engineFailure= not self.engineFailure
 
     def eBrakePressed(self):
+        print("Made it here")
         if self.eBrake and self.currentSpeed==0:
             self.eBrake=False
         else:
-            self.eBrake=True
+            print("Made it inside here")
+            self.eBrake=Trues
+
 
     def getExteriorLights(self):
             return self.exlights
