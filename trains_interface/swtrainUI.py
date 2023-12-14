@@ -12,9 +12,9 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(1105, 584)
+        Form.resize(1004, 584)
         self.tabWidget = QtWidgets.QTabWidget(parent=Form)
-        self.tabWidget.setGeometry(QtCore.QRect(10, 10, 1071, 551))
+        self.tabWidget.setGeometry(QtCore.QRect(0, 10, 1001, 571))
         self.tabWidget.setIconSize(QtCore.QSize(32, 32))
         self.tabWidget.setObjectName("tabWidget")
         self.manual = QtWidgets.QWidget()
@@ -37,61 +37,76 @@ class Ui_Form(object):
         self.textEdit_3.setGeometry(QtCore.QRect(320, 230, 161, 41))
         self.textEdit_3.setObjectName("textEdit_3")
         self.ebrake = QtWidgets.QPushButton(parent=self.manual)
-        self.ebrake.setGeometry(QtCore.QRect(820, 10, 231, 101))
+        self.ebrake.setGeometry(QtCore.QRect(750, 10, 231, 101))
         self.ebrake.setObjectName("ebrake")
         self.textEdit_2 = QtWidgets.QTextEdit(parent=self.manual)
         self.textEdit_2.setEnabled(False)
-        self.textEdit_2.setGeometry(QtCore.QRect(320, 130, 171, 41))
+        self.textEdit_2.setGeometry(QtCore.QRect(320, 120, 211, 41))
         self.textEdit_2.setObjectName("textEdit_2")
         self.manualtrainfailures = QtWidgets.QTextEdit(parent=self.manual)
         self.manualtrainfailures.setEnabled(False)
         self.manualtrainfailures.setGeometry(QtCore.QRect(320, 320, 161, 41))
         self.manualtrainfailures.setObjectName("manualtrainfailures")
         self.gridLayoutWidget_2 = QtWidgets.QWidget(parent=self.manual)
-        self.gridLayoutWidget_2.setGeometry(QtCore.QRect(0, 10, 291, 521))
+        self.gridLayoutWidget_2.setGeometry(QtCore.QRect(0, 10, 291, 535))
         self.gridLayoutWidget_2.setObjectName("gridLayoutWidget_2")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.gridLayoutWidget_2)
         self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_2.setObjectName("gridLayout_2")
+        self.textEdit_8 = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
+        self.textEdit_8.setEnabled(False)
+        self.textEdit_8.setObjectName("textEdit_8")
+        self.gridLayout_2.addWidget(self.textEdit_8, 12, 0, 1, 1)
+        self.textEdit_18 = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
+        self.textEdit_18.setEnabled(False)
+        self.textEdit_18.setObjectName("textEdit_18")
+        self.gridLayout_2.addWidget(self.textEdit_18, 0, 0, 1, 1)
         self.temp = QtWidgets.QSpinBox(parent=self.gridLayoutWidget_2)
         self.temp.setWrapping(False)
         self.temp.setFrame(True)
         self.temp.setObjectName("temp")
         self.gridLayout_2.addWidget(self.temp, 12, 2, 1, 1)
+        self.authority = QtWidgets.QLCDNumber(parent=self.gridLayoutWidget_2)
+        self.authority.setObjectName("authority")
+        self.gridLayout_2.addWidget(self.authority, 7, 2, 1, 1)
         self.textEdit_10 = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
         self.textEdit_10.setEnabled(False)
         self.textEdit_10.setObjectName("textEdit_10")
-        self.gridLayout_2.addWidget(self.textEdit_10, 0, 0, 1, 1)
-        self.textEdit_4 = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
-        self.textEdit_4.setEnabled(False)
-        self.textEdit_4.setObjectName("textEdit_4")
-        self.gridLayout_2.addWidget(self.textEdit_4, 2, 0, 1, 1)
-        self.speedlimit = QtWidgets.QLCDNumber(parent=self.gridLayoutWidget_2)
-        self.speedlimit.setObjectName("speedlimit")
-        self.gridLayout_2.addWidget(self.speedlimit, 2, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.textEdit_10, 1, 0, 1, 1)
+        self.textEdit_16 = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
+        self.textEdit_16.setEnabled(False)
+        self.textEdit_16.setObjectName("textEdit_16")
+        self.gridLayout_2.addWidget(self.textEdit_16, 8, 0, 1, 1)
+        self.trainnumber = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
+        self.trainnumber.setEnabled(False)
+        self.trainnumber.setObjectName("trainnumber")
+        self.gridLayout_2.addWidget(self.trainnumber, 0, 2, 1, 1)
         self.textEdit_15 = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
         self.textEdit_15.setEnabled(False)
         self.textEdit_15.setObjectName("textEdit_15")
-        self.gridLayout_2.addWidget(self.textEdit_15, 6, 0, 1, 1)
-        self.authority = QtWidgets.QLCDNumber(parent=self.gridLayoutWidget_2)
-        self.authority.setObjectName("authority")
-        self.gridLayout_2.addWidget(self.authority, 6, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.textEdit_15, 7, 0, 1, 1)
+        self.dwelltime = QtWidgets.QLCDNumber(parent=self.gridLayoutWidget_2)
+        self.dwelltime.setObjectName("dwelltime")
+        self.gridLayout_2.addWidget(self.dwelltime, 8, 2, 1, 1)
+        self.textEdit_4 = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
+        self.textEdit_4.setEnabled(False)
+        self.textEdit_4.setObjectName("textEdit_4")
+        self.gridLayout_2.addWidget(self.textEdit_4, 3, 0, 1, 1)
         self.time = QtWidgets.QDateTimeEdit(parent=self.gridLayoutWidget_2)
         self.time.setEnabled(False)
         self.time.setObjectName("time")
-        self.gridLayout_2.addWidget(self.time, 0, 2, 1, 1)
-        self.textEdit_8 = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
-        self.textEdit_8.setEnabled(False)
-        self.textEdit_8.setObjectName("textEdit_8")
-        self.gridLayout_2.addWidget(self.textEdit_8, 12, 0, 1, 1)
-        self.nextstop = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
-        self.nextstop.setEnabled(False)
-        self.nextstop.setObjectName("nextstop")
-        self.gridLayout_2.addWidget(self.nextstop, 1, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.time, 1, 2, 1, 1)
+        self.speedlimit = QtWidgets.QLCDNumber(parent=self.gridLayoutWidget_2)
+        self.speedlimit.setObjectName("speedlimit")
+        self.gridLayout_2.addWidget(self.speedlimit, 3, 2, 1, 1)
         self.amanualnextstop = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
         self.amanualnextstop.setEnabled(False)
         self.amanualnextstop.setObjectName("amanualnextstop")
-        self.gridLayout_2.addWidget(self.amanualnextstop, 1, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.amanualnextstop, 2, 0, 1, 1)
+        self.nextstop = QtWidgets.QTextEdit(parent=self.gridLayoutWidget_2)
+        self.nextstop.setEnabled(False)
+        self.nextstop.setObjectName("nextstop")
+        self.gridLayout_2.addWidget(self.nextstop, 2, 2, 1, 1)
         self.brakefailure = QtWidgets.QCheckBox(parent=self.manual)
         self.brakefailure.setEnabled(False)
         self.brakefailure.setGeometry(QtCore.QRect(340, 360, 91, 20))
@@ -105,7 +120,7 @@ class Ui_Form(object):
         self.signalfailure.setGeometry(QtCore.QRect(340, 400, 91, 20))
         self.signalfailure.setObjectName("signalfailure")
         self.gridLayoutWidget_5 = QtWidgets.QWidget(parent=self.manual)
-        self.gridLayoutWidget_5.setGeometry(QtCore.QRect(830, 170, 224, 331))
+        self.gridLayoutWidget_5.setGeometry(QtCore.QRect(800, 140, 191, 331))
         self.gridLayoutWidget_5.setObjectName("gridLayoutWidget_5")
         self.gridLayout_5 = QtWidgets.QGridLayout(self.gridLayoutWidget_5)
         self.gridLayout_5.setContentsMargins(0, 0, 0, 0)
@@ -114,9 +129,9 @@ class Ui_Form(object):
         self.amanualki.setEnabled(False)
         self.amanualki.setObjectName("amanualki")
         self.gridLayout_5.addWidget(self.amanualki, 1, 0, 1, 1)
-        self.power = QtWidgets.QLCDNumber(parent=self.gridLayoutWidget_5)
-        self.power.setObjectName("power")
-        self.gridLayout_5.addWidget(self.power, 0, 1, 1, 1)
+        self.kp = QtWidgets.QSpinBox(parent=self.gridLayoutWidget_5)
+        self.kp.setObjectName("kp")
+        self.gridLayout_5.addWidget(self.kp, 2, 1, 1, 1)
         self.ki = QtWidgets.QSpinBox(parent=self.gridLayoutWidget_5)
         self.ki.setObjectName("ki")
         self.gridLayout_5.addWidget(self.ki, 1, 1, 1, 1)
@@ -128,25 +143,25 @@ class Ui_Form(object):
         self.apowertext.setEnabled(False)
         self.apowertext.setObjectName("apowertext")
         self.gridLayout_5.addWidget(self.apowertext, 0, 0, 1, 1)
-        self.kp = QtWidgets.QSpinBox(parent=self.gridLayoutWidget_5)
-        self.kp.setObjectName("kp")
-        self.gridLayout_5.addWidget(self.kp, 2, 1, 1, 1)
+        self.power = QtWidgets.QLCDNumber(parent=self.gridLayoutWidget_5)
+        self.power.setObjectName("power")
+        self.gridLayout_5.addWidget(self.power, 0, 1, 1, 1)
         self.textEdit_17 = QtWidgets.QTextEdit(parent=self.manual)
         self.textEdit_17.setEnabled(False)
-        self.textEdit_17.setGeometry(QtCore.QRect(370, 10, 161, 51))
+        self.textEdit_17.setGeometry(QtCore.QRect(320, 10, 171, 51))
         self.textEdit_17.setAutoFillBackground(False)
         self.textEdit_17.setObjectName("textEdit_17")
         self.mode = QtWidgets.QComboBox(parent=self.manual)
-        self.mode.setGeometry(QtCore.QRect(370, 60, 161, 51))
+        self.mode.setGeometry(QtCore.QRect(320, 60, 171, 41))
         self.mode.setObjectName("mode")
         self.mode.addItem("")
         self.mode.addItem("")
         self.textEdit_9 = QtWidgets.QTextEdit(parent=self.manual)
         self.textEdit_9.setEnabled(False)
-        self.textEdit_9.setGeometry(QtCore.QRect(630, 150, 181, 51))
+        self.textEdit_9.setGeometry(QtCore.QRect(570, 130, 181, 51))
         self.textEdit_9.setObjectName("textEdit_9")
         self.gridLayoutWidget_7 = QtWidgets.QWidget(parent=self.manual)
-        self.gridLayoutWidget_7.setGeometry(QtCore.QRect(510, 280, 311, 221))
+        self.gridLayoutWidget_7.setGeometry(QtCore.QRect(500, 260, 281, 231))
         self.gridLayoutWidget_7.setObjectName("gridLayoutWidget_7")
         self.gridLayout_7 = QtWidgets.QGridLayout(self.gridLayoutWidget_7)
         self.gridLayout_7.setContentsMargins(0, 0, 0, 0)
@@ -170,51 +185,21 @@ class Ui_Form(object):
         self.leftdoor.setGeometry(QtCore.QRect(340, 290, 111, 21))
         self.leftdoor.setObjectName("leftdoor")
         self.manualcommandedspeed = QtWidgets.QSpinBox(parent=self.manual)
-        self.manualcommandedspeed.setGeometry(QtCore.QRect(630, 200, 121, 41))
+        self.manualcommandedspeed.setGeometry(QtCore.QRect(570, 180, 121, 41))
         self.manualcommandedspeed.setObjectName("manualcommandedspeed")
         self.textEdit_5 = QtWidgets.QTextEdit(parent=self.manual)
-        self.textEdit_5.setGeometry(QtCore.QRect(750, 200, 61, 41))
+        self.textEdit_5.setGeometry(QtCore.QRect(690, 180, 61, 41))
         self.textEdit_5.setObjectName("textEdit_5")
         self.serviceBrake = QtWidgets.QPushButton(parent=self.manual)
-        self.serviceBrake.setGeometry(QtCore.QRect(600, 10, 201, 101))
+        self.serviceBrake.setGeometry(QtCore.QRect(530, 10, 201, 101))
         self.serviceBrake.setObjectName("serviceBrake")
-        self.announcement = QtWidgets.QTextEdit(parent=self.manual)
-        self.announcement.setGeometry(QtCore.QRect(320, 170, 241, 51))
-        self.announcement.setObjectName("announcement")
         self.notify = QtWidgets.QPushButton(parent=self.manual)
-        self.notify.setGeometry(QtCore.QRect(490, 130, 71, 41))
+        self.notify.setGeometry(QtCore.QRect(460, 160, 71, 61))
         self.notify.setObjectName("notify")
+        self.announcement = QtWidgets.QTextEdit(parent=self.manual)
+        self.announcement.setGeometry(QtCore.QRect(320, 160, 141, 61))
+        self.announcement.setObjectName("announcement")
         self.tabWidget.addTab(self.manual, "")
-        self.TestBench = QtWidgets.QWidget()
-        self.TestBench.setObjectName("TestBench")
-        self.tbapply = QtWidgets.QPushButton(parent=self.TestBench)
-        self.tbapply.setGeometry(QtCore.QRect(820, 30, 101, 51))
-        self.tbapply.setObjectName("tbapply")
-        self.textEdit_6 = QtWidgets.QTextEdit(parent=self.TestBench)
-        self.textEdit_6.setGeometry(QtCore.QRect(30, 30, 104, 71))
-        self.textEdit_6.setObjectName("textEdit_6")
-        self.tbcurrentspeed = QtWidgets.QTextEdit(parent=self.TestBench)
-        self.tbcurrentspeed.setGeometry(QtCore.QRect(130, 30, 104, 71))
-        self.tbcurrentspeed.setObjectName("tbcurrentspeed")
-        self.textEdit_12 = QtWidgets.QTextEdit(parent=self.TestBench)
-        self.textEdit_12.setGeometry(QtCore.QRect(30, 160, 104, 71))
-        self.textEdit_12.setObjectName("textEdit_12")
-        self.tbauthority = QtWidgets.QTextEdit(parent=self.TestBench)
-        self.tbauthority.setGeometry(QtCore.QRect(130, 160, 104, 71))
-        self.tbauthority.setObjectName("tbauthority")
-        self.textEdit_14 = QtWidgets.QTextEdit(parent=self.TestBench)
-        self.textEdit_14.setGeometry(QtCore.QRect(30, 270, 104, 71))
-        self.textEdit_14.setObjectName("textEdit_14")
-        self.tbbrakefailure = QtWidgets.QCheckBox(parent=self.TestBench)
-        self.tbbrakefailure.setGeometry(QtCore.QRect(140, 290, 75, 20))
-        self.tbbrakefailure.setObjectName("tbbrakefailure")
-        self.textEdit_16 = QtWidgets.QTextEdit(parent=self.TestBench)
-        self.textEdit_16.setGeometry(QtCore.QRect(30, 370, 104, 71))
-        self.textEdit_16.setObjectName("textEdit_16")
-        self.tbnextstop = QtWidgets.QTextEdit(parent=self.TestBench)
-        self.tbnextstop.setGeometry(QtCore.QRect(130, 370, 104, 71))
-        self.tbnextstop.setObjectName("tbnextstop")
-        self.tabWidget.addTab(self.TestBench, "")
 
         self.retranslateUi(Form)
         self.tabWidget.setCurrentIndex(0)
@@ -260,30 +245,6 @@ class Ui_Form(object):
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Train Failures</span></p></body></html>"))
-        self.textEdit_10.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Time:</span></p></body></html>"))
-        self.textEdit_4.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Speed Limit (miles/hr)</span></p></body></html>"))
-        self.textEdit_15.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Authority (feet)</span></p></body></html>"))
         self.textEdit_8.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -292,7 +253,31 @@ class Ui_Form(object):
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:700;\">Temperature (F)</span></p></body></html>"))
-        self.nextstop.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.textEdit_18.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Train Number</span></p></body></html>"))
+        self.textEdit_10.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Time:</span></p></body></html>"))
+        self.textEdit_16.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Dwell time</span></p></body></html>"))
+        self.trainnumber.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"
@@ -300,6 +285,22 @@ class Ui_Form(object):
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        self.textEdit_15.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Authority (feet)</span></p></body></html>"))
+        self.textEdit_4.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Speed Limit (miles/hr)</span></p></body></html>"))
         self.amanualnextstop.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -308,6 +309,14 @@ class Ui_Form(object):
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Next stop:</span></p></body></html>"))
+        self.nextstop.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.brakefailure.setText(_translate("Form", "Brake Failure"))
         self.enginefailure.setText(_translate("Form", "Engine Failure"))
         self.signalfailure.setText(_translate("Form", "Signal Failure"))
@@ -381,41 +390,6 @@ class Ui_Form(object):
         self.serviceBrake.setText(_translate("Form", "Service Brake"))
         self.notify.setText(_translate("Form", "Notify"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.manual), _translate("Form", "Main Page"))
-        self.tbapply.setText(_translate("Form", "apply"))
-        self.textEdit_6.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">current speed</p></body></html>"))
-        self.textEdit_12.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">authority</p></body></html>"))
-        self.textEdit_14.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Brake failure</p></body></html>"))
-        self.tbbrakefailure.setText(_translate("Form", "CheckBox"))
-        self.textEdit_16.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Next stop</p></body></html>"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.TestBench), _translate("Form", "Page"))
 
 
 if __name__ == "__main__":
