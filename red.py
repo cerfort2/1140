@@ -219,10 +219,10 @@ def plcc(blocks:Block = []):
     if((blocks[25].getOccupancy()) and (blocks[27].getOccupancy() or blocks[28].getOccupancy())):
         stoppage.append(blocks[25].getName())
     #Signal H28
-    if((blocks[27].getOccupancy()) and (loop1 or blocks[76].getOccupancy())):
-        stoppage.append(blocks[27].getName())
-    if((blocks[28].getOccupancy()) and (loop1 or blocks[76].getOccupancy())):
-        stoppage.append(blocks[28].getName())
+    # if((blocks[27].getOccupancy()) and (loop1 or blocks[76].getOccupancy())):
+    #     stoppage.append(blocks[27].getName())
+    # if((blocks[28].getOccupancy()) and (loop1 or blocks[76].getOccupancy())):
+    #     stoppage.append(blocks[28].getName())
     #Signal T76
     if((blocks[75].getOccupancy()) and (loop1 or blocks[76].getOccupancy())):
         stoppage.append(blocks[75].getName())
@@ -234,10 +234,10 @@ def plcc(blocks:Block = []):
     if((blocks[30].getOccupancy()) and (leg or blocks[70].getOccupancy())):
         stoppage.append(blocks[30].getName())
     #Signal H33
-    if((blocks[32].getOccupancy()) and (blocks[71].getOccupancy() or blocks[72].getOccupancy())):
-        stoppage.append(blocks[32].getName())
-    if((blocks[33].getOccupancy()) and (blocks[71].getOccupancy() or blocks[72].getOccupancy())):
-        stoppage.append(blocks[33].getName())
+    # if((blocks[32].getOccupancy()) and (blocks[71].getOccupancy() or blocks[72].getOccupancy())):
+    #     stoppage.append(blocks[32].getName())
+    # if((blocks[33].getOccupancy()) and (blocks[71].getOccupancy() or blocks[72].getOccupancy())):
+    #     stoppage.append(blocks[33].getName())
     #Signal R72
     if((blocks[71].getOccupancy()) and (blocks[32].getOccupancy() or blocks[33].getOccupancy())):
         stoppage.append(blocks[71].getName())
@@ -249,10 +249,10 @@ def plcc(blocks:Block = []):
     if((blocks[36].getOccupancy()) and (blocks[38].getOccupancy() or blocks[39].getOccupancy())):
         stoppage.append(blocks[36].getName())
     #Signal H39
-    if(blocks[38].getOccupancy()) and (blocks[37].getOccupancy() or blocks[36].getOccupancy()):
-        stoppage.append(blocks[38].getName())
-    if(blocks[39].getOccupancy()) and (blocks[37].getOccupancy() or blocks[36].getOccupancy()):
-        stoppage.append(blocks[39].getName())
+    # if(blocks[38].getOccupancy()) and (blocks[37].getOccupancy() or blocks[36].getOccupancy()):
+    #     stoppage.append(blocks[38].getName())
+    # if(blocks[39].getOccupancy()) and (blocks[37].getOccupancy() or blocks[36].getOccupancy()):
+    #     stoppage.append(blocks[39].getName())
     #Signal Q71
     if((blocks[70].getOccupancy()) and (leg)):
         stoppage.append(blocks[70].getName())
@@ -269,20 +269,20 @@ def plcc(blocks:Block = []):
     if((blocks[44].getOccupancy()) and (blocks[66].getOccupancy() or blocks[67].getOccupancy())):
         stoppage.append(blocks[44].getName())
     #Signal O67
-    if((blocks[66].getOccupancy()) and (loop2)):
-        stoppage.append(blocks[66].getName())
-    if((blocks[67].getOccupancy()) and (loop2)):
-        stoppage.append(blocks[67].getName())
+    # if((blocks[66].getOccupancy()) and (loop2)):
+    #     stoppage.append(blocks[66].getName())
+    # if((blocks[67].getOccupancy()) and (loop2)):
+    #     stoppage.append(blocks[67].getName())
     #Signal J52
     if((blocks[51].getOccupancy()) and (blocks[52].getOccupancy() or blocks[53].getOccupancy())):
         stoppage.append(blocks[51].getName())
     if((blocks[50].getOccupancy()) and (blocks[52].getOccupancy() or blocks[53].getOccupancy())):
         stoppage.append(blocks[50].getName())
     #Signal J53
-    if((blocks[52].getOccupancy()) and (loop2)):
-        stoppage.append(blocks[52].getName())
-    if((blocks[53].getOccupancy()) and (loop2)):
-        stoppage.append(blocks[53].getName())
+    # if((blocks[52].getOccupancy()) and (loop2)):
+    #     stoppage.append(blocks[52].getName())
+    # if((blocks[53].getOccupancy()) and (loop2)):
+    #     stoppage.append(blocks[53].getName())
     #Signal N66
     if((blocks[65].getOccupancy()) and (loop2)):
         stoppage.append(blocks[65].getName())
