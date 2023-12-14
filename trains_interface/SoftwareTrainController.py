@@ -38,7 +38,7 @@ class SoftwareTrainController():
         self.power=0     
         self.interval=1
         self.dwelling=False
-        self.dwellTime=5
+        self.dwellTime=60
         self.serviceBrake=False
         self.brakeAuthority=0
         self.beaconInfo=''
@@ -84,6 +84,12 @@ class SoftwareTrainController():
 
 #run calculations for the swtc
     def computeVals(self):
+
+        if self.brakeFailure or self.engineFailure or self.signalFailure:
+            self.eBrake=True
+
+        print(self.eBrake)
+        
         self.computeManualSpeed()
         self.computeAuthority()
         self.computeServiceBrake()
@@ -104,7 +110,7 @@ class SoftwareTrainController():
         self.ui.signalfailure.setChecked(self.signalFailure)
         self.ui.enginefailure.setChecked(self.engineFailure)
         self.ui.dwelltime.display(self.dwellTime)
-        self.ui.trainnumber.setText(self.trainnumber)
+        self.ui.trainnumber.setText(str(self.trainnumber))
 
         self.ui.externallight.setChecked(self.computeExtLights())
 
@@ -192,10 +198,13 @@ class SoftwareTrainController():
         self.engineFailure= not self.engineFailure
 
     def eBrakePressed(self):
+        print("Made it here")
         if self.eBrake and self.currentSpeed==0:
             self.eBrake=False
         else:
+            print("Made it inside here")
             self.eBrake=True
+
 
     def getExteriorLights(self):
             return self.exlights
@@ -319,7 +328,7 @@ class SoftwareTrainController():
                 print("done dwelling")
 
                 self.dwelling=False
-                self.dwellTime=5  
+                self.dwellTime=60 
                 self.leftDoor = False
                 self.rightDoor = False
 
@@ -331,7 +340,7 @@ class SoftwareTrainController():
 
     def toggleDwelling(self):
         self.dwelling=False
-        self.dwellTime=5
+        self.dwellTime=60
 
     def computeManualSpeed(self) ->int:
         #in automatic, manual=ctcspeed
