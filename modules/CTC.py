@@ -86,7 +86,7 @@ class CTC(Ui_Form, QWidget):
         self.old_line = None
         self.old_maintenance_line = None
         self.green_line_stations = ["K65: GLENBURY", "L73: DORMONT", "N77: MT LEBANON", "O88: POPLAR", "P96: CASTLE SHANNON", "T105: DORMONT", "U114: GLENBURY", "W123: OVERBROOK", "W132: INGLEWOOD", "W141: CENTRAL", "A2: PIONEER", "C9: EDGEBROOK", "D16: MONKEYWAY", "F22: WHITED", "G31: SOUTH BANK", "I39: CENTRAL", "I48: INGLEWOOD", "I57: OVERBROOK"]
-        self.red_line_stations = ["C7: SHADYSIDE", "F16: HERRON AVE", "G21: SWISSVILLE", "H25: PENNSTATION", "H35: STEEL PLAZA","","","","","","","","",""]
+        self.red_line_stations = ["C7: SHADYSIDE", "F16: HERRON AVE", "G21: SWISSVILLE", "H25: PENNSTATION", "H35: STEEL PLAZA","H45: FIRST AVE","I48: STATION SQUARE","L60: SOUTH HILLS JUNCTION"]
         
         
         self.green_line = Line("Green", 'modules/Green Line Info_.xlsx', self.green_line_stations)
@@ -446,6 +446,7 @@ class CTC(Ui_Form, QWidget):
         while True:
             if self.maintenance_line_sel.currentText() != self.old_maintenance_line:
                 self.old_maintenance_line = self.maintenance_line_sel.currentText()
+            time.sleep(0.5)
 
     def initialize_button_groups(self):
         self.buttonGroup1 = QButtonGroup(self)
