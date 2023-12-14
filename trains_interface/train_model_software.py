@@ -348,8 +348,7 @@ class train_model_software():
         #if self.authority == 0:
            # 1 == 1
 
-        if self.occupancy == "Z151" and self.routeList == []:
-            self.occupancy = ""
+        if self.occupancy == "Z151" and self.routeList == ["Z151"]:
             self.widget2.close()
 
         if self.currentMove > float(self.authority_list[0]):
