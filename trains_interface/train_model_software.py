@@ -445,7 +445,9 @@ class train_model_software():
         self.ui.crew_count.setText("2 People")
         self.ui.mass.setText(str(round(self.mass / 2.2, 2)) + " lbs")
 
-        self.ui.length.setText(str(round()))
+        self.ui.length.setText(str(round(32.2 * 3.28084, 2)) + " feet")
+        self.ui.length.setText(str(round(3.42 * 3.28084, 2)) + " feet")
+        self.ui.length.setText(str(round(2.65 * 3.28084, 2)) + " feet")
 
         self.ui.announcement.setText(self.announcement)
     
