@@ -15,8 +15,8 @@ from typing import List, Optional
 from PyQt6.QtCore import pyqtSignal, QEvent, Qt, QDateTime, QTimer, QObject
 from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QButtonGroup, QTableWidgetItem, QRadioButton, QLabel, QLineEdit, QHeaderView
 
-from modules.Line import Line
-from modules.CTC_ui import Ui_Form
+from Line import Line
+from CTC_ui import Ui_Form
 
 
 class Train:
@@ -544,7 +544,6 @@ class CTC(Ui_Form, QWidget):
     def check_stations(self):
         while True:
             if (self.manual_dispatch_line.currentText() != self.old_line):
-                self.stops = []
                 self.old_line = self.manual_dispatch_line.currentText()
                 self.station_update.emit()
                 self.stop_update.emit()
@@ -565,10 +564,12 @@ class CTC(Ui_Form, QWidget):
         self.stop_box_list.clear()
         if self.manual_dispatch_line.currentText() == "Green Line":
             for station in self.green_line_stations:
-                self.stop_box_list.addItem(station)
+                if station not in self.stops:
+                    self.stop_box_list.addItem(station)
         if self.manual_dispatch_line.currentText() == "Red Line":
             for station in self.red_line_stations:
-                self.stop_box_list.addItem(station)
+                if station not in self.stops:
+                    self.stop_box_list.addItem(station)
         
     
     def update_switch(self):
@@ -731,22 +732,21 @@ class CTC(Ui_Form, QWidget):
             # Update the schedule with the new data
             self.update_schedule(train_ids, destinations, dep_times, arr_times, stops, line)
 
-        return
-
-    def toggle_switch(self):
-        #left is 0
-        #right is 1
-        return
-
 
     def add_stops(self):
         stop = self.stop_box_list.currentText()
-        if stop:
-            self.stops.append(stop)
-            self.update_stations()
-            self.update_stops()
-            index = self.stop_box_list.findText(stop)
-            self.stop_box_list.removeItem(index)
+        self.stops.append(stop)
+        self.sort_stops()
+        self.update_stations()
+        self.update_stops()
+        index = self.stop_box_list.findText(stop)
+        self.stop_box_list.removeItem(index)
+        
+    def sort_stops(self):
+        # Create a dictionary to map station to its order for sorting
+        order = {station: index for index, station in enumerate(self.green_line_stations)}
+        # Sort self.stops based on the order in self.green_line_stations
+        self.stops.sort(key=lambda x: order[x])
         
     def dispatch_train(self, destination = None, stops = [], arrival_time = None, departure_time = None, dispatched_line = None):
         station_list = []
@@ -769,10 +769,7 @@ class CTC(Ui_Form, QWidget):
 
         trainID = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
         train = Train(trainID, destination, departure_time, arrival_time, self.stops, dispatched_line)
-        if len(station_list) == 1:
-            next_stop = station_list[0]
-        else:
-            next_stop = station_list[1]
+        next_stop = station_list[0]
         
         if dispatched_line == "Green Line":
             route = self.green_line.get_route(station_list)
@@ -810,8 +807,10 @@ class CTC(Ui_Form, QWidget):
         # print("speeds")
         # print(len(speeds))
         # print(speeds)
-        self.train_dispatch(route, authority, speeds)
         self.stops = []
+        self.update_stations()
+        self.update_stops()
+        self.train_dispatch(route, authority, speeds)
         #self.arrival_time_dis.clear()
         return route, authority, speeds
 
@@ -853,17 +852,18 @@ class CTC(Ui_Form, QWidget):
         
         #self.update_schedule(train)
         self.stops = []
+        self.update_stations()
+        self.update_stops()
         self.arrival_time.clear()
         self.departure_time.clear()
 
     def check_for_dispatched(self):
-        current_time = self.cur_sys_time
         for train in self.train_schedule_green:
-            if train.departure_time.toString() == self.cur_sys_time.toString():
+            if train.departure_time<= self.cur_sys_time:
                 self.dispatch_scheduled_train(train)
                 self.train_schedule_green.remove(train)
         for train in self.train_schedule_red:
-            if train.departure_time.toString() == self.cur_sys_time.toString():
+            if train.departure_time<= self.cur_sys_time:
                 self.dispatch_scheduled_train(train)
                 self.train_schedule_red.remove(train)
     
@@ -885,10 +885,7 @@ class CTC(Ui_Form, QWidget):
         station_list.append(destination)
         num_stops = len(stops)
         
-        if len(station_list) == 1:
-            next_stop = station_list[0]
-        else:
-            next_stop = station_list[1]
+        next_stop = station_list[0]
 
         if line =="Green Line":
             route = self.green_line.get_route(station_list)
