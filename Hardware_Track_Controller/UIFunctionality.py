@@ -5,11 +5,11 @@ from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6 import QtCore, QtGui, QtWidgets
 from Hardware_Track_Controller.HWTrackUI import Ui_Form
 from Hardware_Track_Controller.TrackClass import Track
-#from Hardware_Track_Controller.UI_Breadboard_Class import Operations
+from Hardware_Track_Controller.UI_Breadboard_Class import Operations
 from Hardware_Track_Controller.GreenLineWaysides import GreenLine
 from Hardware_Track_Controller.RedLineWaysides import RedLine
 
-#operate = Operations() #Class to perform operations on the breadboard
+operate = Operations() #Class to perform operations on the breadboard
 
 class HWTrackControllerGUI(Ui_Form, QObject):
     
@@ -341,7 +341,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
 
 
         #Switch H27 - H28 , H27 - T76
-        if(self.redLine.Waysides[0].getTrack(25).getOccupancy() or self.redLine.Waysides[27].getOccupancy()):
+        if(self.redLine.Waysides[0].getTrack(25).getOccupancy() or self.redLine.Waysides[0].getTrack(27).getOccupancy()):
             self.redLine.Waysides[0].getTrack(26).setSwitch(False)
         elif(self.redLine.Waysides[0].getTrack(75).getOccupancy()):
             self.redLine.Waysides[0].getTrack(15).setSwitch(True)
@@ -442,19 +442,19 @@ class HWTrackControllerGUI(Ui_Form, QObject):
             self.redLine.Waysides[0].getTrack(65).setSwitch(True)
         #Signal J52
         if(self.redLine.Waysides[0].getTrack(51).getOccupancy()):
-            self.redLine.Waysides[0].getTrack(51).setSignal(False)
+            self.redLine.Waysides[0].getTrack(51).setLight(False)
         else:
-            self.redLine.Waysides[0].getTrack(51).setSignal(True)
+            self.redLine.Waysides[0].getTrack(51).setLight(True)
         #Signal J53
         if(self.redLine.Waysides[0].getTrack(52).getOccupancy()):
-            self.redLine.Waysides[0].getTrack(52).setSignal(False)
+            self.redLine.Waysides[0].getTrack(52).setLight(False)
         else:
-            self.redLine.Waysides[0].getTrack(52).setSignal(True)
+            self.redLine.Waysides[0].getTrack(52).setLight(True)
         #Signal N66
         if(self.redLine.Waysides[0].getTrack(65).getOccupancy()):
-            self.redLine.Waysides[0].getTrack(65).setSignal(False)
+            self.redLine.Waysides[0].getTrack(65).setLight(False)
         else:
-            self.redLine.Waysides[0].getTrack(65).setSignal(True)
+            self.redLine.Waysides[0].getTrack(65).setLight(True)
     def sendStopGreen(self, occu):
         blocksStop = []
         blocks = []
