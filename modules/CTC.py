@@ -970,6 +970,8 @@ class CTC(Ui_Form, QWidget):
                     self.block_occupancy_green.setItem(index, 2, status_item)
                 if color == Qt.GlobalColor.white and occupancy_item.background().color() == Qt.GlobalColor.yellow:
                     pass
+                elif (occupancy_item.background().color() == Qt.GlobalColor.red):
+                    pass
                 else:
                     occupancy_item.setBackground(color)
                     status_item.setText(status)  
@@ -993,6 +995,8 @@ class CTC(Ui_Form, QWidget):
                     self.block_occupancy_red.setItem(index, 2, status_item)
 
                 if color == Qt.GlobalColor.white and occupancy_item.background().color() == Qt.GlobalColor.yellow:
+                    pass
+                elif (occupancy_item.background().color() == Qt.GlobalColor.red):
                     pass
                 else:
                     occupancy_item.setBackground(color)
