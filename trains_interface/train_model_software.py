@@ -50,6 +50,10 @@ class train_model_software():
 
         #create ui item
         self.ui = train_model_GUI()
+
+        self.ad1 = QPixmap("chipotle_ad.jpg")
+        self.ad2 = QPixmap("valorant_ad.jpg")
+        self.ad3 = QPixmap("zoo_ad.jpg")
     
 
 
@@ -423,6 +427,8 @@ class train_model_software():
         self.ui.elevation.setText(str(round(self.elevation, 2)) + " Feet")
         if self.underground_val == True:
             self.ui.environment.setText("In a Tunnel")
+        else:
+            self.ui.environment.setText("Outside")
         self.ui.passenger_count.setText(str(round(self.passengers, 2)) + " People")
         self.ui.power.setText(str(round(self.power, 2)) + " Watts")
         self.ui.current_velocity.setText(str(round(self.speed * 2.23694, 2)) + " MPH")
@@ -442,6 +448,10 @@ class train_model_software():
         self.ui.train_number_value.setText(str(self.train_number))
         self.ui.crew_count.setText("2 People")
         self.ui.mass.setText(str(round(self.mass / 2.2, 2)) + " lbs")
+
+        self.ui.length.setText(str(round(32.2 * 3.28084, 2)) + " feet")
+        self.ui.length.setText(str(round(3.42 * 3.28084, 2)) + " feet")
+        self.ui.length.setText(str(round(2.65 * 3.28084, 2)) + " feet")
 
         self.ui.announcement.setText(self.announcement)
     
