@@ -35,6 +35,11 @@ pip install pyqt6
 - #### You may monitor the speed using the *Train Controller* module
 
 ## Installing the Hardware Train Controller
+- #### Obtain a Arduino Mega Board A Serial Communication Cord, DFRRobot LCD2004 Screen, A breadboard with 3 red and 3 green led lights, 6 150+ ohm resistors, and wire connectors
+- #### Connect the LCD screen to the arduino, match the ports SDA, SCL, VIN, and GND to the corresponding pins on the arduino.
+- #### Connect the pins from the arduino to the breadboard according to the picture provided: https://postimg.cc/dkYF4SQB.
+- #### Plug Arduino into PC/Laptop and open working_LED and adjust board and COM port accordingly.
+- #### Click "Upload Code" button and run python script.
 
 ## Installing the Hardware Track Controller
 - #### Obtain a Arduino Mega Board, A Serial Communication Cord, DFRobot LCD2004 Screen, A breadboard with a red and light lcd, 2 150+ ohm resistors, and wire connectors
