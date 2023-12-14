@@ -147,7 +147,7 @@ class God(Home, QMainWindow):
     #on timeout emissions
     def onTimeoutFunctions(self):
         self.ctc.get_speed(self.timeStep)
-        # self.trackModel.trackModel.(self.spinBox.value())
+        self.trackModel.trackModel.updateTemp(self.spinBox.value())
         
         #self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()

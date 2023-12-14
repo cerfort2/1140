@@ -1038,18 +1038,6 @@ class CTC(Ui_Form, QWidget):
         return total_throughput
     
     
-        
-        
-    def check_redline_dispatch(self):
-        # Check the specific indices for True (1) values
-        for i, b in enumerate(self.red_block_occupancies):
-            print(i)
-            print(b)
-            
-        indices_to_check = list(range(15, 26)) + [75]  # Indices 15-25 and 75
-        return all(self.block_occupancies[index] for index in indices_to_check if index < len(self.block_occupancies))
-    
-    
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
