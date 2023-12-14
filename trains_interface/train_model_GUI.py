@@ -4,7 +4,7 @@ from PyQt6.QtCore import QTimer
 from PyQt6 import QtCore, QtGui, QtWidgets
 from datetime import datetime
 import math
-from trains_interface.train_model_GUI_format import *
+from trains_interface.final_model_ui import *
 
 
 class train_model_GUI(Ui_Form_train_model):
