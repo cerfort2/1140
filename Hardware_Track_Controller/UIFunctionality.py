@@ -120,6 +120,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
 
             self.sendStopGreen(occupancy) #Runs the light stop logic each time new occupancy given
             self.oldOccupancy = occupancy
+            self.sendOccupancy()
             self.firstRun = False
         else:
             for i in range(len(occupancy)):
@@ -133,6 +134,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                 self.setListsOccupancyAutomatic()
                 self.setListsOccupancyManual()
             self.sendStopRed()
+            self.sendOccupancy()
             self.oldOccupancy = occupancy
             self.firstRun = False
     def createNewTrainData(self, traveling, Auth, speed): #Created by CTC
@@ -406,19 +408,13 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                 for j in range (self.greenLine.Waysides[i].amountOfTracks()):
                     blocks.append(self.greenLine.Waysides[i].tracks[j])
         #Green Line
-        #G30 -> M75
-        for i in range(29, 75):
-            if(blocks[i].getOccupancy()):
-                if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy()):
-                    blocksStop.append(blocks[i].getName())
         #Collision Logic
-        #R101 -> Y148
-        for i in range(100, 148):
+        for i in range(0, 148):
             if(blocks[i].getOccupancy()):
-                if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy()):
+                if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy() or blocks[i+3].getOccupancy()):
                     blocksStop.append(blocks[i].getName())
-        print("M76 Light")
-        print(self.greenLine.Waysides[2].getTrack(2).getLight())
+
+        #Light Stop
         if(self.greenLine.Waysides[1].getTrack(41).getLight()):
             if(occu[150]):
                 blocksStop.append("Z151")

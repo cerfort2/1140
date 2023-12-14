@@ -7,6 +7,7 @@ import os
 import random
 import networkx as nx
 import matplotlib.pyplot as plt
+import matplotlib
 import mplcursors 
 
 ## TO CONVERT UI TO PY
@@ -105,6 +106,7 @@ class Line():
         plt.figure(figureNumber)
         plt.clf()
 
+        plt.margins(0)
         pos = nx.kamada_kawai_layout(self.network)
 
         colors = []
@@ -114,6 +116,7 @@ class Line():
         signalXPos = []
         signalYPos = []
         signalColor = []
+        nodeSize = []
 
         for i in range(len(self.blocks)):
             if(self.blocks[i].occupied) or (self.blocks[i].name == blockSelected):
@@ -144,14 +147,25 @@ class Line():
                 colors.append('#964B00') #brown
             else:
                 colors.append(self.name.split()[0])
+                # colors.append("black")
 
             if self.blocks[i].signal[0]:
-                signalXPos.append(pos[self.blocks[i]][0]+0.02)
+                signalXPos.append(pos[self.blocks[i]][0] + 0.03)
                 signalYPos.append(pos[self.blocks[i]][1])
                 if self.blocks[i].signal[1]:
                     signalColor.append('red')
                 else:
                     signalColor.append('green')
+
+
+            if(self.blocks[i].occupied):
+                nodeSize.append(25)
+            else:
+                nodeSize.append(5)
+
+            
+
+
         
         for edge in self.network.edges:
             blk1, blk2 = edge
@@ -164,12 +178,20 @@ class Line():
 
 
 
-        nx.draw_networkx(self.network, pos,node_size = 5,
+        nx.draw_networkx(self.network, pos,node_size = nodeSize,
                     labels = labels, with_labels=True,
-                    font_size = 12, node_color = colors, node_shape = 's', edgelist = edgesToBeDrawn)# so^>v<dph8.
+                    font_size = 8, node_color = colors, node_shape = 's', 
+                    edgelist = edgesToBeDrawn)# so^>v<dph8.
         # nx.draw_networkx_labels(self.network,pos,labels, horizontalalignment='right',verticalalignment='top')
         # nx.draw_networkx_edges(self.network,pos, edgelist=edgesToBeDrawn)
-        plt.scatter(signalXPos,signalYPos, c=signalColor)
+
+        plt.scatter(signalXPos,signalYPos, c=signalColor, s = 12)
+
+        # plt.scatter(signalXPos,[yPos - 0.001 for yPos in signalYPos], marker= 3, c = 'black')
+
+
+
+
         mplcursors.cursor(hover = 2).connect(
             "add", lambda sel: sel.annotation.set_text(annotations[sel.index]))
         
@@ -330,7 +352,7 @@ class Line():
                 
                 #Signal Updating
                 if(self.blocks[i].signal[1] != controlSignals[2][i]):
-                    self.blocks[i].toggleSignal()
+                    self.blocks[i].toggleSignal()   
 
     def initializeTrackControllerData(self):
         hasSwitch = [blk.switch[0] for blk in self.blocks]
@@ -573,12 +595,12 @@ class TrackModel(QObject):
     trackModelUpdates = pyqtSignal() # Signal for if the map should update along with all other UI
     def controlModel(self,controlSignals):
         if self.controlSignalsHolder != controlSignals:
-            self.trackModelUpdates.emit()
-
             for line in self.lines:
                 line.updateLineStatus(controlSignals)
 
             self.controlSignalsHolder = controlSignals
+
+            self.trackModelUpdates.emit()
 
 
     #Train Model --> Track Model
@@ -605,6 +627,26 @@ class TrackModel(QObject):
         self.emitApproachingBeacon()
         self.emitSwitchBeacon()
         self.emitStationBeacon()
+
+
+    def fixFailures(self, blockToFix):
+        for line in self.lines:
+
+            blk = line.getBlock(blockToFix)
+
+            if blk.brokenRail:
+                blk.brokenRail = not blk.brokenRail
+            elif blk.trackCircuitFailure:
+                blk.trackCircuitFailure = not blk.trackCircuitFailure
+            elif blk.powerFailure:
+                blk.powerFailure = not blk.powerFailure
+
+            blk.clearOccupied()
+        
+        self.trackModelUpdates.emit()
+
+                
+                
 
 
     #----------------
