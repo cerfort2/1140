@@ -196,7 +196,7 @@ class SoftwareTrainController():
 
     def eBrakePressed(self):
         print("Made it here")
-        if self.eBrake and self.currentSpeed==0 and not self.engine_failure and not self.brake_failure and not self.signal_failure:
+        if self.eBrake and self.currentSpeed==0 and not self.engineFailure and not self.brakeFailure and not self.signalFailure:
             self.eBrake=False
         else:
             print("Made it inside here")
