@@ -88,12 +88,19 @@ class Track():
         #Return data
         return data
 
+    #Get the names of failed blocks
     def getFailed(self,fail):
         data = []
         for i in range(len(self.blocks)):
             if(fail[i]):
                 data.append(self.blocks[i].getName())
         return data
+
+    #Get change the switch of given block
+    def changeSwitch(self, name, value):
+        for i in range(len(self.blocks)):
+            if(name == self.blocks[i].getName()):
+                self.blocks[i].setSwitch(value)
 
     #Returns index's of occupied blocks
     def getOccupancy(self):
