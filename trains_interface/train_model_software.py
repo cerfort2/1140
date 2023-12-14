@@ -30,7 +30,7 @@ class train_model_software():
         self.announcement = ""
         self.beacon_list = []
         self.current_polarity = True
-        self.occupancy = "Z151"
+        self.occupancy = ""
         self.underground_list = []
         self.underground_val = False
         self.speed_list = []
@@ -239,8 +239,6 @@ class train_model_software():
     #THIS DOES NOT YET ACCOUNT FOR GRAVITY
     def calculate_acceleration(self, power: float, mass: float, delta_time: float) -> float:
         self.acceleration = math.sqrt(power / (2 * mass * delta_time))
-        print("ebrake val")
-        print(self.controller.eBrake)
         if self.controller.serviceBrake or self.controller.eBrake:
             return self.acceleration - 1.2 * self.controller.serviceBrake - 2.3 * int(self.controller.eBrake) - (9.81 * math.sin(math.radians(self.slope)))
         else:
@@ -350,8 +348,9 @@ class train_model_software():
         #if self.authority == 0:
            # 1 == 1
 
-        if self.occupancy == "Z151" and self.routeList == ["Z151"]:
+        if (self.occupancy == "Z151" and self.routeList == ["Z151"]) or (self.occupancy == "T77" and self.routeList == ["T77"]):
             self.widget2.close()
+            self.controller.widget2.close()
 
         if self.currentMove > float(self.authority_list[0]):
 
@@ -369,6 +368,7 @@ class train_model_software():
                 self.suggested_speed_list = self.suggested_speed_list[1:]
             
     def unpack_route(self, monsters_data) -> None:
+        print("monsters full data")
         self.suggested_speed_list = monsters_data[1]
         self.stationAuthorities = monsters_data[2]
         self.routeList = monsters_data[0][0]
