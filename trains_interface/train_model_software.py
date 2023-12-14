@@ -426,9 +426,9 @@ class train_model_software():
         self.ui.left_door.setChecked(self.left_door)
         self.ui.right_door.setChecked(self.right_door)
 
-        self.ui.engine_button.setChecked(self.engine_failure)
-        self.ui.brake_button.setChecked(self.brake_failure)
-        self.ui.signal_button.setChecked(self.signal_failure)
+        self.ui.engine_failure.setChecked(self.engine_failure)
+        self.ui.brake_failure.setChecked(self.brake_failure)
+        self.ui.signal_failure.setChecked(self.signal_failure)
 
         self.ui.announcement.setText(self.announcement)
     
@@ -436,15 +436,15 @@ class train_model_software():
     def scrape_ui(self) -> None:
         self.ui.emergency_brake.clicked.connect(self.controller.eBrakePressed)
 
-        if self.ui.engine_button.isChecked():
+        if self.ui.engine_failure.isChecked():
             self.controller.engineFailure = True
         else:
             self.controller.engineFailure = False
-        if self.ui.brake_button.isChecked():
+        if self.ui.brake_failure.isChecked():
             self.controller.brakeFailure = True
         else:
             self.controller.brakeFailure = False
-        if self.ui.signal_button.isChecked():
+        if self.ui.signal_failure.isChecked():
             self.controller.signalFailure = True
         else:
             self.controller.signalFailure = False
