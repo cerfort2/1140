@@ -5,11 +5,11 @@ from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6 import QtCore, QtGui, QtWidgets
 from Hardware_Track_Controller.HWTrackUI import Ui_Form
 from Hardware_Track_Controller.TrackClass import Track
-#from Hardware_Track_Controller.UI_Breadboard_Class import Operations
+from Hardware_Track_Controller.UI_Breadboard_Class import Operations
 from Hardware_Track_Controller.GreenLineWaysides import GreenLine
 from Hardware_Track_Controller.RedLineWaysides import RedLine
 
-#operate = Operations() #Class to perform operations on the breadboard
+operate = Operations() #Class to perform operations on the breadboard
 
 class HWTrackControllerGUI(Ui_Form, QObject):
     
@@ -233,172 +233,172 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         loop2 = False
         leg = False
         for i in range(0, 16):
-            loop1 = loop1 or self.redLine.Waysides[i].getOccupancy()
+            loop1 = loop1 or self.redLine.Waysides[0].getTrack(i).getOccupancy()
         for i in range(43, 67):
-            loop2 = loop2 or self.redLine.Waysides[i].getOccupancy()
+            loop2 = loop2 or self.redLine.Waysides[0].getTrack(i).getOccupancy()
         for i in range(32, 38):
-            leg = leg or self.redLine.Waysides[i].getOccupancy()
+            leg = leg or self.redLine.Waysides[0].getTrack(i).getOccupancy()
 
 
         #Switch C10 - YARD(T77) , C10 - D11
-        if((True) or self.redLine.Waysides[76].getOccupancy()):
-            self.redLine.Waysides[9].setSwitch(False)
-        if(not (True) or self.redLine.Waysides[10].getOccupancy()):
-            self.redLine.Waysides[9].setSwitch(True)
+        if((True) or self.redLine.Waysides[0].getTrack(76).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(9).setSwitch(False)
+        if(not (True) or self.redLine.Waysides[0].getTrack(10).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(9).setSwitch(True)
         #Signal C10
-        if(self.redLine.Waysides[9].getOccupancy()):
-            self.redLine.Waysides[9].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(9).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(9).setLight(False)
         else:
-            self.redLine.Waysides[9].setLight(True)
+            self.redLine.Waysides[0].getTrack(9).setLight(True)
         #Signal D11
-        if(self.redLine.Waysides[10].getOccupancy()):
-            self.redLine.Waysides[10].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(10).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(10).setLight(False)
         else:
-            self.redLine.Waysides[10].setLight(True)
+            self.redLine.Waysides[0].getTrack(10).setLight(True)
         #Signal Yard
-        if(not loop1 and self.redLine.Waysides[76].getOccupancy()):
-            self.redLine.Waysides[76].setLight(False)
+        if(not loop1 and self.redLine.Waysides[0].getTrack(76).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(76).setLight(False)
         else:
-            self.redLine.Waysides[76].setLight(True)
+            self.redLine.Waysides[0].getTrack(76).setLight(True)
 
 
         #Switch  F16 - A1, F16 - E15
-        if(self.redLine.Waysides[0].getOccupancy() or self.redLine.Waysides[15].getOccupancy()):
-            self.redLine.Waysides[15].setSwitch(False)
-        if(self.redLine.Waysides[14].getOccupancy()):
-            self.redLine.Waysides[15].setSwitch(True)
+        if(self.redLine.Waysides[0].getTrack(0).getOccupancy() or self.redLine.Waysides[0].getTrack(15).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(15).setSwitch(False)
+        if(self.redLine.Waysides[0].getTrack(14).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(15).setSwitch(True)
         #Signal A1
-        if(self.redLine.Waysides[0].getOccupancy()):
-            self.redLine.Waysides[0].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(0).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(0).setLight(False)
         else:
-            self.redLine.Waysides[0].setLight(True)
+            self.redLine.Waysides[0].getTrack(0).setLight(True)
         #Signal E15
-        if(self.redLine.Waysides[14].getOccupancy()):
-            self.redLine.Waysides[14].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(14).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(14).setLight(False)
         else:
-            self.redLine.Waysides[14].setLight(True)
+            self.redLine.Waysides[0].getTrack(14).setLight(True)
         #Signal F16
-        if(self.redLine.Waysides[15].getOccupancy()):
-            self.redLine.Waysides[15].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(15).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(15).setLight(False)
         else:
-            self.redLine.Waysides[15].setLight(True)
+            self.redLine.Waysides[0].getTrack(15).setLight(True)
 
 
         #Switch H27 - H28 , H27 - T76
-        if(self.redLine.Waysides[25].getOccupancy() or self.redLine.Waysides[27].getOccupancy()):
-            self.redLine.Waysides[26].setSwitch(False)
-        elif(self.redLine.Waysides[75].getOccupancy()):
-            self.redLine.Waysides[15].setSwitch(True)
+        if(self.redLine.Waysides[0].getTrack(25).getOccupancy() or self.redLine.Waysides[27].getOccupancy()):
+            self.redLine.Waysides[0].getTrack(26).setSwitch(False)
+        elif(self.redLine.Waysides[0].getTrack(75).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(15).setSwitch(True)
         #Signal H27
-        if(self.redLine.Waysides[26].getOccupancy() and not(self.redLine.Waysides[27].getOccupancy() or self.redLine.Waysides[28].getOccupancy())):
-            self.redLine.Waysides[26].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(26).getOccupancy() and not(self.redLine.Waysides[0].getTrack(27).getOccupancy() or self.redLine.Waysides[0].getTrack(28).getOccupancy())):
+            self.redLine.Waysides[0].getTrack(26).setLight(False)
         else:
-            self.redLine.Waysides[26].setLight(True)
+            self.redLine.Waysides[0].getTrack(26).setLight(True)
         #Signal H28
-        if(self.redLine.Waysides[27].getOccupancy() and not(loop1 or self.redLine.Waysides[76].getOccupancy())):
-            self.redLine.Waysides[27].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(27).getOccupancy() and not(loop1 or self.redLine.Waysides[0].getTrack(76).getOccupancy())):
+            self.redLine.Waysides[0].getTrack(27).setLight(False)
         else:
-            self.redLine.Waysides[27].setLight(True)
+            self.redLine.Waysides[0].getTrack(27).setLight(True)
         #Signal T76
-        if(self.redLine.Waysides[75].getOccupancy() and not(loop1 or self.redLine.Waysides[76].getOccupancy())):
-            self.redLine.Waysides[75].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(75).getOccupancy() and not(loop1 or self.redLine.Waysides[0].getTrack(76).getOccupancy())):
+            self.redLine.Waysides[0].getTrack(75).setLight(False)
         else:
-            self.redLine.Waysides[75].setLight(True)
+            self.redLine.Waysides[0].getTrack(75).setLight(True)
 
         
         #Switch H33 - R72 , H33 - H32
-        if(self.redLine.Waysides[33].getOccupancy() or self.redLine.Waysides[71].getOccupancy()):
-            self.redLine.Waysides[32].setSwitch(False)
-        elif(self.redLine.Waysides[31].getOccupancy()):
-            self.redLine.Waysides[32].setSwitch(True)
+        if(self.redLine.Waysides[0].getTrack(33).getOccupancy() or self.redLine.Waysides[0].getTrack(71).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(32).setSwitch(False)
+        elif(self.redLine.Waysides[0].getTrack(31).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(32).setSwitch(True)
         #Signal H32
-        if(self.redLine.Waysides[31].getOccupancy() and not(leg or self.redLine.Waysides[70].getOccupancy())):
-            self.redLine.Waysides[31].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(31).getOccupancy() and not(leg or self.redLine.Waysides[0].getTrack(70).getOccupancy())):
+            self.redLine.Waysides[0].getTrack(31).setLight(False)
         else:
-            self.redLine.Waysides[31].setLight(True)
+            self.redLine.Waysides[0].getTrack(31).setLight(True)
         #Signal H33
-        if(self.redLine.Waysides[32].getOccupancy() and not(self.redLine.Waysides[71].getOccupancy() or self.redLine.Waysides[72].getOccupancy())):
-            self.redLine.Waysides[32].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(32).getOccupancy() and not(self.redLine.Waysides[0].getTrack(71).getOccupancy() or self.redLine.Waysides[0].getTrack(72).getOccupancy())):
+            self.redLine.Waysides[0].getTrack(32).setLight(False)
         else:
-            self.redLine.Waysides[32].setLight(True)
+            self.redLine.Waysides[0].getTrack(32).setLight(True)
         #Signal R72
-        if(self.redLine.Waysides[71].getOccupancy() and not(self.redLine.Waysides[32].getOccupancy() or self.redLine.Waysides[33].getOccupancy())):
-            self.redLine.Waysides[71].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(71).getOccupancy() and not(self.redLine.Waysides[0].getTrack(32).getOccupancy() or self.redLine.Waysides[0].getTrack(33).getOccupancy())):
+            self.redLine.Waysides[0].getTrack(71).setLight(False)
         else:
-            self.redLine.Waysides[71].setLight(True)
+            self.redLine.Waysides[0].getTrack(71).setLight(True)
         
 
         #Switch H38 - H39 , H38 - Q71
-        if(self.redLine.Waysides[36].getOccupancy() or self.redLine.Waysides[38].getOccupancy()):
-            self.redLine.Waysides[37].setSwitch(False)
-        elif(self.redLine.Waysides[70].getOccupancy()):
-            self.redLine.Waysides[37].setSwitch(True)
+        if(self.redLine.Waysides[0].getTrack(36).getOccupancy() or self.redLine.Waysides[0].getTrack(38).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(37).setSwitch(False)
+        elif(self.redLine.Waysides[0].getTrack(70).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(37).setSwitch(True)
         #Signal H38
-        if(self.redLine.Waysides[37].getOccupancy() and not(self.redLine.Waysides[38].getOccupancy() or self.redLine.Waysides[39].getOccupancy())):
-            self.redLine.Waysides[37].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(37).getOccupancy() and not(self.redLine.Waysides[0].getTrack(38).getOccupancy() or self.redLine.Waysides[0].getTrack(39).getOccupancy())):
+            self.redLine.Waysides[0].getTrack(37).setLight(False)
         else:
-            self.redLine.Waysides[37].setLight(True)
+            self.redLine.Waysides[0].getTrack(37).setLight(True)
         #Signal H39
-        if(self.redLine.Waysides[38].getOccupancy() and not(self.redLine.Waysides[37].getOccupancy() or self.redLine.Waysides[36].getOccupancy())):
-            self.redLine.Waysides[38].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(38).getOccupancy() and not(self.redLine.Waysides[0].getTrack(37).getOccupancy() or self.redLine.Waysides[0].getTrack(36).getOccupancy())):
+            self.redLine.Waysides[0].getTrack(38).setLight(False)
         else:
-            self.redLine.Waysides[38].setLight(True)
+            self.redLine.Waysides[0].getTrack(38).setLight(True)
         #Signal Q71
-        if(self.redLine.Waysides[70].getOccupancy() and not(leg)):
-            self.redLine.Waysides[70].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(70).getOccupancy() and not(leg)):
+            self.redLine.Waysides[0].getTrack(70).setLight(False)
         else:
-            self.redLine.Waysides[70].setLight(True)
+            self.redLine.Waysides[0].getTrack(70).setLight(True)
 
 
         #Switch H44 - O67 , H44 - H43
-        if(self.redLine.Waysides[44].getOccupancy() or self.redLine.Waysides[66].getOccupancy()):
-            self.redLine.Waysides[43].setSwitch(False)
-        elif(self.redLine.Waysides[42].getOccupancy()):
-            self.redLine.Waysides[43].setSwitch(True)
+        if(self.redLine.Waysides[0].getTrack(44).getOccupancy() or self.redLine.Waysides[0].getTrack(66).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(43).setSwitch(False)
+        elif(self.redLine.Waysides[0].getTrack(42).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(43).setSwitch(True)
         #Signal H43
-        if(self.redLine.Waysides[42].getOccupancy() and not(loop2)):
-            self.redLine.Waysides[42].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(42).getOccupancy() and not(loop2)):
+            self.redLine.Waysides[0].getTrack(42).setLight(False)
         else:
-            self.redLine.Waysides[42].setLight(True)
+            self.redLine.Waysides[0].getTrack(42).setLight(True)
         #Signal H44
-        if(self.redLine.Waysides[43].getOccupancy() and not(self.redLine.Waysides[66].getOccupancy() or self.redLine.Waysides[67].getOccupancy())):
-            self.redLine.Waysides[43].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(43).getOccupancy() and not(self.redLine.Waysides[0].getTrack(66).getOccupancy() or self.redLine.Waysides[0].getTrack(67).getOccupancy())):
+            self.redLine.Waysides[0].getTrack(43).setLight(False)
         else:
-            self.redLine.Waysides[43].setLight(True)
+            self.redLine.Waysides[0].getTrack(43).setLight(True)
         #Signal O67
-        if(self.redLine.Waysides[66].getOccupancy() and not(loop2)):
-            self.redLine.Waysides[66].setLight(False)
+        if(self.redLine.Waysides[0].getTrack(66).getOccupancy() and not(loop2)):
+            self.redLine.Waysides[0].getTrack(66).setLight(False)
         else:
-            self.redLine.Waysides[66].setLight(True)
+            self.redLine.Waysides[0].getTrack(66).setLight(True)
 
 
         #Crossroad I47
-        if(self.redLine.Waysides[45].getOccupancy() or self.redLine.Waysides[46].getOccupancy() or self.redLine.Waysides[47].getOccupancy()):
-            self.redLine.Waysides[46].setCrossroad(True)
+        if(self.redLine.Waysides[0].getTrack(45).getOccupancy() or self.redLine.Waysides[0].getTrack(46).getOccupancy() or self.redLine.Waysides[0].getTrack(47).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(46).setCrossroad(True)
         else:
-            self.redLine.Waysides[46].setCrossroad(False)
+            self.redLine.Waysides[0].getTrack(46).setCrossroad(False)
 
 
         #Switch J52 - J53 , J52 - N66
-        if(self.redLine.Waysides[50].getOccupancy()):
-            self.redLine.Waysides[43].setSwitch(False)
-        if(self.redLine.Waysides[50].getOccupancy()):
-            self.redLine.Waysides[65].setSwitch(True)
+        if(self.redLine.Waysides[0].getTrack(50).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(43).setSwitch(False)
+        if(self.redLine.Waysides[0].getTrack(50).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(65).setSwitch(True)
         #Signal J52
-        if(self.redLine.Waysides[51].getOccupancy()):
-            self.redLine.Waysides[51].setSignal(False)
+        if(self.redLine.Waysides[0].getTrack(51).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(51).setSignal(False)
         else:
-            self.redLine.Waysides[51].setSignal(True)
+            self.redLine.Waysides[0].getTrack(51).setSignal(True)
         #Signal J53
-        if(self.redLine.Waysides[52].getOccupancy()):
-            self.redLine.Waysides[52].setSignal(False)
+        if(self.redLine.Waysides[0].getTrack(52).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(52).setSignal(False)
         else:
-            self.redLine.Waysides[52].setSignal(True)
+            self.redLine.Waysides[0].getTrack(52).setSignal(True)
         #Signal N66
-        if(self.redLine.Waysides[65].getOccupancy()):
-            self.redLine.Waysides[65].setSignal(False)
+        if(self.redLine.Waysides[0].getTrack(65).getOccupancy()):
+            self.redLine.Waysides[0].getTrack(65).setSignal(False)
         else:
-            self.redLine.Waysides[65].setSignal(True)
+            self.redLine.Waysides[0].getTrack(65).setSignal(True)
     def sendStopGreen(self, occu):
         blocksStop = []
         blocks = []
