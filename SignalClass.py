@@ -146,6 +146,7 @@ class God(Home, QMainWindow):
         #self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
         self.trackController.sendData()
+        self.trackModel.trackModel.sendFailureBlocks()
         # self.trackModel.trackModel.emitSwitchBeacon()
         # self.trackModel.trackModel.emitApproachingBeacon()
         self.trainInterface.get_occupancies()
