@@ -120,6 +120,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
 
             self.sendStopGreen(occupancy) #Runs the light stop logic each time new occupancy given
             self.oldOccupancy = occupancy
+            self.sendOccupancy()
             self.firstRun = False
         else:
             for i in range(len(occupancy)):
@@ -133,6 +134,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                 self.setListsOccupancyAutomatic()
                 self.setListsOccupancyManual()
             self.sendStopRed()
+            self.sendOccupancy()
             self.oldOccupancy = occupancy
             self.firstRun = False
     def createNewTrainData(self, traveling, Auth, speed): #Created by CTC
