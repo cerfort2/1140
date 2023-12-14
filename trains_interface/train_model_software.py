@@ -313,7 +313,7 @@ class train_model_software():
             self.right_door = True
             self.left_door = True
         else:
-            if firstPacket[1] == True:
+            if firstPacket[1] == 'Right':
                 self.right_door = True
             else:
                 self.left_door = True
