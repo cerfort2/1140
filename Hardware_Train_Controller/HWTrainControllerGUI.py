@@ -1,12 +1,11 @@
 
 from time import sleep
-# import I2C_LCD_driver
 from datetime import datetime
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import QTimer
 from PyQt6.QtCore import QObject
-from Hardware_Train_Controller.HWTrainControllerUI import Ui_Form
 from PyQt6.QtWidgets import QApplication
+from Hardware_Train_Controller.HWTrainControllerUI import *
 import serial
 # arduinoData = serial.Serial('/dev/cu.usbmodem1101',115200)
 import sys
@@ -52,6 +51,8 @@ class HWTrainControllerGUI(Ui_Form):
         self.integral_gain.setMaximum(999)
         self.proportional_gain.setValue(400)
         self.integral_gain.setValue(20)
+        self.manual_temperature.setMinimum(65)
+        self.manual_temperature.setMaximum(80)
 
 
 

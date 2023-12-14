@@ -2,11 +2,8 @@ from PyQt6.QtWidgets import *
 from Hardware_Train_Controller.HWTrainControllerGUI import *
 import serial
 import time
-#arduinoData = serial.Serial('/dev/cu.usbmodem11101',115200)
-
-
-
-
+arduinoData = serial.Serial('/dev/cu.usbmodem1401',115200, timeout = 1)
+time.sleep(1)
 
 class HardwareTrainController():
     
@@ -30,8 +27,8 @@ class HardwareTrainController():
         self.service_clicked = 0
         self.beaconInfo = []
         self.nextstop = ""
-        self.annoucement = ""
-        self.authority = 0
+        self.announcement = ""
+        self.authority = 100
         self.brakeFailure = False
         self.signalFailure = False
         self.engineFailure = False
@@ -40,43 +37,99 @@ class HardwareTrainController():
         self.stationOnRight = False
         self.rightdoor = False
         self.leftdoor = False
-        self.manualcommandedspeed = 0
+        self.manualcommandedspeed = 5
         self.temperature = 0
         self.power = 0
-        self.ctcSpeed = 0
-        self.currentSpeed = 0
+        self.ctcSpeed = 5
+        self.currentSpeed = 3
         self.speedLimit = 43
         self.dwelling = False
         self.manualmode = False
-        self.exterior = False
+        self.exterior = True
         self.interior = False
         self.brakeAuthority = 0
         self.brakeSpeed = 0
         self.serviceBrake= False
         self.eBrake = False
-        self.dwellTime = 10
+        self.dwellTime = 60
         self.e_k = 0
         self.e_k_prev = 0
         self.u_k = 0
         self.u_k_prev = 0
         self.kp = 400
         self.ki = 20
-        self.service_button = False
         self.brakedistance = 0
         self.interval = 1
-
-
+        self.waysideStop = False
+        self.stationOnLeft = 'l'
+        self.stationOnRight = 'l'
+        
         self.ui = HWTrainControllerGUI()
 
+    def setCommandedSpeed(self,s):
+        self.ctcSpeed=min(s, self.speedLimit)
+
+    def getAnnouncement(self):
+        return self.announcement
+    def getLeftDoor(self):
+    #open door based on where the station is and if you are dwelling
+        if self.dwelling and self.stationOnLeft=='l':
+            self.leftdoor=True
+            self.rightdoor=False
+            return True
+        if self.dwelling and self.stationOnLeft=='r':
+            self.rightdoor=True
+            self.leftdoor=False
+            return False
+        else:
+            return self.leftdoor
+            
+    def getRightDoor(self):
+    #open door based on where the station is and if you are dwelling
+        if self.dwelling and self.stationOnLeft=='l':
+            self.leftdoor=True
+            self.rightdoor=False
+            return False
+        if self.dwelling and self.stationOnLeft=='r':
+            self.rightdoor=True
+            self.leftdoor=False
+            return True
+        if self.dwelling and self.stationOnLeft=='b':
+            self.rightdoor=True
+            self.leftdoor=True
+            return True
+        else:
+            return self.rightdoor
+        
+    def getExteriorLights(self):
+        return self.exterior
+    def getIntLights(self):
+        return self.interior
+
+    def setTrainNumber(self,n):
+        self.trainnumber=n
     
-    def configure_service(self):
+    def activateWaysideStop(self):
+        self.waysideStop=True    
+
+    def deactivateWaysideStop(self):
+        self.waysideStop=False 
+        self.eBrake = False
+
+    def setTemperature(self,x):
+        self.temperature = x
+
+    def configure_UI(self):
+        self.ui.right_door.stateChanged.connect(self.getRD)
+        self.ui.left_door.stateChanged.connect(self.getLD)
+        self.ui.exterior_lights.stateChanged.connect(self.getExternal)
+        self.ui.interior_lights.stateChanged.connect(self.getInterior)
         self.ui.service_brake.setCheckable(True)
         self.ui.service_brake.clicked.connect(self.getServiceBrake)
-    
-    def configure_ebrake(self):
         self.ui.ebrake.setCheckable(True)
         self.ui.ebrake.clicked.connect(self.getEbrake)
 
+    
     def getServiceBrake(self):
         #self.service_clicked = self.service_clicked + 1
         self.serviceBrake = not self.serviceBrake
@@ -84,23 +137,62 @@ class HardwareTrainController():
     def getEbrake(self):
         self.eBrake = not self.eBrake
 
+    def getRD(self,status):
+        if status == 2:
+            self.rightdoor = True
+        else:
+            self.rightdoor = False
+    
+    def getLD(self,status):
+        if status == 2:
+            self.leftdoor = True
+        else:
+            self.leftdoor = False
 
     
-    
-
-    
-
-
+    def getExternal(self,status):
+        if status == 2:
+            self.exterior = True
+        else:
+            self.exterior = False
+        
+    def getInterior(self,status):
+        if status == 2:
+            self.interior = True
+        else:
+            self.interior = False
 
 
     def update_time(self):
 
-        self.configure_service()
-        self.configure_ebrake()
-        #self.ui.service_brake.pressed.connect(self.manual_service)
-        #retreive values
+        self.configure_UI()
+
         self.ki=self.ui.integral_gain.value()
-        self.kp=self.ui.proportional_gain.value()
+        self.kp=self.ui.proportional_gain.value()  
+        self.temperature = self.ui.manual_temperature.value()
+        self.manualcommandedspeed = self.ui.manual_speed.value()
+
+        if(self.engineFailure or self.signalFailure or self.brakeFailure):
+            self.eBrake = True
+        #calculate power, update_power() uses arduino logic to calculate power, calcPower() uses software. When implementing update_vals() the is problems seeing trains on the line, but engine failure function is present via leds
+        self.calcPower()
+        #self.update_vals()
+        #self.update_power()
+        self.computeAuthority()
+        self.computeDwellTime()
+        self.computeServiceBrake()
+
+        if(self.currentSpeed < 1):
+            self.currentSpeed = 0
+        print(self.eBrake)
+
+
+        #update values on UI
+        self.ui.power.display(self.power)
+        self.ui.current_speed.display(self.currentSpeed*2.2369362921)
+        self.ui.speed_limit.display(self.speedLimit)
+        self.ui.authority.display(self.authority)
+        self.ui.temperature.display(self.temperature)
 
         if(self.ui.mode.currentText() == "Manual"):
             self.setManualMode(True)
@@ -109,86 +201,6 @@ class HardwareTrainController():
             self.setManualMode(False)
             self.ui.commanded_speed.display(self.ctcSpeed*2.2369362)
 
-
-        self.manualcommandedspeed = self.ui.manual_speed.value()
-
-        
-        
-        #Switching
-
-        #calculate
-        #use self.calcPower() if manual does not work.
-        self.calcPower()
-        #self.update_power()
-        self.computeAuthority()
-        self.computeDwellTime()
-        self.computeServiceBrake()
-        
-        
-        #if(not self.manualmode):
-           # self.computeServiceBrake()
-        
-      
-        #self.eBrakePressed()
-
-
-
-        #update values
-        self.ui.power.display(self.power)
-        self.ui.current_speed.display(self.currentSpeed*2.2369362921)
-        #self.ui.commanded_speed.display(self.manualcommandedspeed*2.2369362921)
-        self.ui.speed_limit.display(self.speedLimit)
-        self.ui.authority.display(self.authority)
-        #arduino
-        #self.engine_status()
-        # self.signal_status()
-
-
-
-
-    
-
-    #emitting signals for both modes automatic/manual
-
-    # def getServiceBrake(self):
-    #     self.trainmodel_HW_servicebrake(self.serviceBrakeFlag)
-
-    # def getPower(self):
-    #     self.trainmodel_HW_power.emit(self.power)
-    
-    # def getEbrake(self):
-    #     self.trainmodel_HW_ebrake.emit(self.eBrakeFlag)
-
-    # #emitting manual signals
-
-    # def getRD(self):
-    #     self.trainmodel_HW_rightdoor.emit(self.rightdoor)
-    
-    # def getLD(self):
-    #     self.trainmodel_HW_leftdoor.emit(self.leftdoor)
-
-    # def getExterior(self):
-    #     self.trainmodel_HW_exterior.emit(self.exterior)
-
-    # def getInterior(self):
-    #     self.trainmodel_HW_interior.emit(self.interior)
-    
-    # def getTemperature(self):
-    #     self.trainmodel_HW_temperature(self.temperature)
-
-    # def getAnnoucements(self):
-    #     self.trainmodel_HW_temperature(self.annoucement)
-
-    def getIntLights(self):
-        return True
-    def getExteriorLights(self):
-        return True
-    def getRightDoor(self):
-        return True
-    def getLeftDoor(self):
-        return True
-    def getAnnouncement(self):
-        return "Yo yo yo its victor"
 
 
     def getPower(self):
@@ -213,7 +225,7 @@ class HardwareTrainController():
             self.exlights=False
         return self.exlights
 
-    def setCommandedSpeed(self,x):
+    def setCTC(self,x):
         self.ctcSpeed = x
         
     def setBeaconInfo(self,s):
@@ -265,29 +277,6 @@ class HardwareTrainController():
     
 
     def calcPower(self):
-        
-        # pmax = 10
-
-        # self.e_k_prev = self.e_k
-
-        # self.u_k_prev = self.u_k
-
-        # if(self.manualmode == False):
-        #     self.e_k = self.ctcSpeed - self.currentSpeed
-        # else:
-        #     self.e_k = self.manualcommandedspeed - self.currentSpeed
-
-
-        # self.u_k = self.u_k_prev + (.05)/2 * (self.e_k+self.e_k_prev)
-
-        # val = self.kp*self.e_k + self.ki*self.u_k
-        
-        # altPower = self.kp * self.e_k + self.ki * self.u_k_prev
-
-        # if(val >= pmax):
-        #     self.power = altPower
-        # else:
-        #     self.power = val
 
         if self.manualmode==True:
             self.ek_prev=self.e_k
@@ -307,11 +296,13 @@ class HardwareTrainController():
 
         if self.brakeFailure or self.signalFailure or self.engineFailure or self.eBrake or self.power < 0 or self.serviceBrake or self.authority <= 0: #must change, this does not support failures
             self.power=0
-            print(self.authority)
-            print("power is set to 0")
+            self.eBrake=0
 
 
-        # arduinoData.write(values.encode())
+
+
+
+
 
     def setKi(self, k):
         self.ki=k
@@ -335,35 +326,41 @@ class HardwareTrainController():
         return self.authority
     
     def computeServiceBrake(self):
+        
         if not self.manualmode:
-            
+            #determine the min distance to brake comfortably and get to the station
             self.brakedistance = self.currentSpeed**2/(1.2)
 
-            if self.brakedistance >= self.authority:
-                
-                self.serviceBrake=True 
-
-
+            if self.brakedistance>=self.authority or self.currentSpeed > self.ctcSpeed:
+                self.serviceBrake=True
             else:
                 self.serviceBrake=False
 
+            #servicebrake is off if dwelling
             if self.dwelling:
                 self.serviceBrake = False
-
-            if self.serviceBrake==True:
-                self.manualcommandedspeed=self.currentSpeed
+            #service brake is on if wayside sends a red signal
+            if self.waysideStop:
+                self.eBrake=True
+            elif not self.engineFailure and not self.brakeFailure and not self.signalFailure:
+                self.eBrake = False
 
     def computeDwellTime(self):
         if self.dwelling and not self.manualmode:
             if (self.dwellTime-self.interval)>=0:   #subtract the time that it takes the timer to time out
                 self.dwellTime-=self.interval
                 print(self.dwellTime)
-        else:
-            self.dwelling=False
-            self.serviceBrake = False
-            self.eBrake = False
-            self.brakedistance = 0
-            # self.authority = 100
+            else:
+                self.dwelling=False
+                self.serviceBrake = False
+                self.eBrake = False
+                self.brakedistance = 0
+                self.authority = 100
+
+            if self.waysideStop:
+                self.eBrake = True
+            else:
+                self.eBrake = False
 
 
 
@@ -381,30 +378,53 @@ class HardwareTrainController():
             if not self.manualmode:
                 self.dwelling=True
     
-    
-    # def engine_status(self):
-    #     if(self.engineFailure == True):
-    #         arduinoData.write("True/end".encode())
-    #     elif(self.engineFailure == False):
-    #         arduinoData.write("False/end".encode())
+    def update_vals(self):
+        self.mode_as_int = 0
+        
+        if self.manualmode:
+            self.mode_as_int = 1
+        else:
+            self.mode_as_int = 0
 
-    # def signal_status(self):
-    #     if(self.signalFailure == True):
-    #         signalStatus = "True/end"
-    #         arduinoData.write(signalStatus.encode())
-    #     elif(self.signalFailure == False):
-    #         signalStatus = "False/end"
-    #         arduinoData.write(signalStatus.encode())
-    
-    # def brake_status(self):
+        self.serviceb = int(self.serviceBrake)
+        self.emergencybrake = int(self.eBrake)
+        self.RD = int(self.rightdoor)
+        self.LD = int(self.leftdoor)
+        self.e_light = int(self.exterior)
+        self.i_light = int(self.interior)
+        self.e_failure = int(self.engineFailure)
+        self.s_failure = int(self.signalFailure)
+        self.b_failure = int(self.brakeFailure)
 
-    # def update_power(self):
-    #     values = f"{self.manualmode},{self.currentSpeed},{self.manualcommandedspeed},{self.ctcSpeed},{self.kp},{self.ki}\n"
-    #     arduinoData.write(values.encode())
+        values = f"{self.mode_as_int},{self.currentSpeed},{self.manualcommandedspeed},{self.ctcSpeed},{self.serviceb},{self.emergencybrake},{self.authority},{self.RD},{self.LD},{self.e_light},{self.i_light},{self.e_failure},{self.s_failure},{self.b_failure},{self.temperature}\n"
+        arduinoData.write(values.encode())
+        time.sleep(1)
 
-    #     arduino_data = arduinoData.readline().decode().strip()
-    #     self.power = float(arduino_data)
-    #     print(self.power)
+    def update_power(self):
+        #try to close and open arduino in this function to allow speed ups
+        self.mode_as_int = 0
+        
+        if self.manualmode:
+            self.mode_as_int = 1
+        else:
+            self.mode_as_int = 0
+
+        self.serviceb = int(self.serviceBrake)
+        self.emergencybrake = int(self.eBrake)
+        self.RD = int(self.rightdoor)
+        self.LD = int(self.leftdoor)
+        self.e_light = int(self.exterior)
+        self.i_light = int(self.interior)
+        self.e_failure = int(self.engineFailure)
+        self.s_failure = int(self.signalFailure)
+        self.b_failure = int(self.brakeFailure)
+
+        values = f"{self.mode_as_int},{self.currentSpeed},{self.manualcommandedspeed},{self.ctcSpeed},{self.serviceb},{self.emergencybrake},{self.authority},{self.RD},{self.LD},{self.e_light},{self.i_light},{self.e_failure},{self.s_failure},{self.b_failure},{self.temperature}\n"
+        arduinoData.write(values.encode())
+        time.sleep(1)
+
+        arduino_data = arduinoData.readline().decode().strip()
+        self.power = float(arduino_data)
 
 
     def open_GUI(self):
