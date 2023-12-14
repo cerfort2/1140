@@ -151,13 +151,18 @@ class SoftwareTrainController():
             #service brake is on if wayside sends a red signal
             if self.waysideStop:
                 self.eBrake=True
+            elif not self.engineFailure and not self.brakeFailure and not self.signalFailure:
+                self.eBrake = False
 
     def activateWaysideStop(self):
+        print("stopped")
         self.waysideStop=True    
 
     def deactivateWaysideStop(self):
+        print("starting")
         self.waysideStop=False   
         self.ebrake = False
+
 
     def setAnnouncement(self):
         if self.manualmode:
