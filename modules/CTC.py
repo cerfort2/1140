@@ -114,7 +114,6 @@ class CTC(Ui_Form, QWidget):
         self.initialize_connections()
         self.start_threads()
         self.initialize_ui()
-        self.
 
 
 #outputs
@@ -129,14 +128,20 @@ class CTC(Ui_Form, QWidget):
         color=Qt.GlobalColor.white
         if line == "Green Line":
             occupancy_item = self.block_occupancy_green.item(number, 0)
+            status_item = self.block_occupancy_green.item(number, 2)
+            
         if line == "Red Line":
             occupancy_item = self.block_occupancy_red.item(number, 0)
+            status_item = self.block_occupancy_red.item(number, 2)
+        status = "Opened"
         if not occupancy_item:  # If the item doesn't exist, create it
             occupancy_item = QTableWidgetItem()
             if line == "Green Line":
                 self.block_occupancy_green.setItem(number, 0, occupancy_item)
+                self.block_occupancy_green.setItem(number, 2, status_item)
             if line == "Red Line":
                 self.block_occupancy_red.setItem(number, 0, occupancy_item)
+                self.block_occupancy_red.setItem(number, 2, status_item)
             # Set the background color for the block
         occupancy_item.setBackground(color)
         self.track_opened.emit(track)
@@ -146,18 +151,21 @@ class CTC(Ui_Form, QWidget):
         number = int(track[1:]) - 1
         line = self.maintenance_line_sel.currentText()
         color=Qt.GlobalColor.yellow
+        status = "Closed"
+
         if line == "Green Line":
             occupancy_item = self.block_occupancy_green.item(number, 0)
+            self.block_occupancy_green.setItem(number, 0, occupancy_item)
+            status_item = self.block_occupancy_green.item(number, 2)
+            self.block_occupancy_green.setItem(number, 2, status_item)
         if line == "Red Line":
             occupancy_item = self.block_occupancy_red.item(number, 0)
-        if not occupancy_item:  # If the item doesn't exist, create it
-            occupancy_item = QTableWidgetItem()
-            if line == "Green Line":
-                self.block_occupancy_green.setItem(number, 0, occupancy_item)
-            if line == "Red Line":
-                self.block_occupancy_red.setItem(number, 0, occupancy_item)
+            self.block_occupancy_red.setItem(number, 0, occupancy_item)
+            status_item = self.block_occupancy_red.item(number, 2)
+            self.block_occupancy_red.setItem(number, 2, status_item)
 
-            # Set the background color for the block
+        
+        status_item.setText(status)
         occupancy_item.setBackground(color)
         self.track_closed.emit(track)
 
@@ -181,31 +189,49 @@ class CTC(Ui_Form, QWidget):
             #green line
             for index, fail in enumerate(failures):
                 # Determine the color based on occupancy
+                
                 color = Qt.GlobalColor.red if fail else Qt.GlobalColor.white
+                status = "Failure" if fail else "Open"
                 # Assuming the "Occupancy" column is the first column (0-indexed)
                 occupancy_item = self.block_occupancy_green.item(index, 0)
                 if not occupancy_item:  # If the item doesn't exist, create it
                     occupancy_item = QTableWidgetItem()
                     self.block_occupancy_green.setItem(index, 0, occupancy_item)
-
+                status_item = self.block_occupancy_green.item(index, 2)  # Assuming the "Block Status" column is the third column
+                if not status_item:
+                    status_item = QTableWidgetItem()
+                    self.block_occupancy_green.setItem(index, 2, status_item)
+                
                 # Set the background color for the block
                 if color == Qt.GlobalColor.white and occupancy_item.background().color() == Qt.GlobalColor.yellow:
+                    pass
+                else:
                     occupancy_item.setBackground(color)
-
+                    status_item.setText(status)
+           
+            
         elif len(failures == 77):
             #red line
             for index, is_occupied in enumerate(failures):
                 # Determine the color based on occupancy
                 color = Qt.GlobalColor.red if is_occupied else Qt.GlobalColor.white
+                status = "Failure" if fail else "Open"
                 # Assuming the "Occupancy" column is the first column (0-indexed)
                 occupancy_item = self.block_occupancy_red.item(index, 0)
                 if not occupancy_item:  # If the item doesn't exist, create it
                     occupancy_item = QTableWidgetItem()
                     self.block_occupancy_red.setItem(index, 0, occupancy_item)
+                status_item = self.block_occupancy_red.item(index, 2)  # Assuming the "Block Status" column is the third column
+                if not status_item:
+                    status_item = QTableWidgetItem()
+                    self.block_occupancy_red.setItem(index, 2, status_item)
 
                 # Set the background color for the block
                 if color == Qt.GlobalColor.white and occupancy_item.background().color() == Qt.GlobalColor.yellow:
-                    occupancy_item.setBackground(color)     
+                    pass
+                else:
+                    occupancy_item.setBackground(color)
+                    status_item.setText(status)     
     
     def updated_dispatched_trains_info(self):
         pass
@@ -215,7 +241,7 @@ class CTC(Ui_Form, QWidget):
         self.record_ticket_sales(ticket_sales)
     
     def get_speed(self, speed):
-        self.speed_factor = speed
+        self.speed_factor = round(1000/speed)
     
     def start_threads(self):
         #Thread(target=self.update_occupancy_ui).start()
@@ -963,15 +989,16 @@ class CTC(Ui_Form, QWidget):
                     occupancy_item = QTableWidgetItem()
                     self.block_occupancy_green.setItem(index, 0, occupancy_item)
 
-                # Set the background color for the block
-                occupancy_item.setBackground(color)
-
                 # Update the "Block Status" in the third column
                 status_item = self.block_occupancy_green.item(index, 2)  # Assuming the "Block Status" column is the third column
                 if not status_item:
                     status_item = QTableWidgetItem()
                     self.block_occupancy_green.setItem(index, 2, status_item)
-                status_item.setText(status)
+                if color == Qt.GlobalColor.white and occupancy_item.background().color() == Qt.GlobalColor.yellow:
+                    pass
+                else:
+                    occupancy_item.setBackground(color)
+                    status_item.setText(status)  
         elif len(occupancies == 77):
             #red line
             for index, is_occupied in enumerate(occupancies):
@@ -985,15 +1012,17 @@ class CTC(Ui_Form, QWidget):
                     occupancy_item = QTableWidgetItem()
                     self.block_occupancy_red.setItem(index, 0, occupancy_item)
 
-                # Set the background color for the block
-                occupancy_item.setBackground(color)
-
                 # Update the "Block Status" in the third column
                 status_item = self.block_occupancy_red.item(index, 2)  # Assuming the "Block Status" column is the third column
                 if not status_item:
                     status_item = QTableWidgetItem()
                     self.block_occupancy_red.setItem(index, 2, status_item)
-                status_item.setText(status)
+
+                if color == Qt.GlobalColor.white and occupancy_item.background().color() == Qt.GlobalColor.yellow:
+                    pass
+                else:
+                    occupancy_item.setBackground(color)
+                    status_item.setText(status)  
 
 
     def record_ticket_sales(self, new_ticket_sales_list):
