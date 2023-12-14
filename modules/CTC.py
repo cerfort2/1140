@@ -550,10 +550,8 @@ class CTC(Ui_Form, QWidget):
     def update_time(self):
         #updating current system time based on speed factor
         self.cur_sys_time = self.cur_sys_time.addSecs(self.speed_factor)
-        self.
         # Update the QLabel with the new timeW
         self.system_time.setText(self.cur_sys_time.toString("HH:mm:ss"))
-
         # Emit signals if other classes need to be notified of the time change
         # self.time_updated.emit(self.cur_sys_time)
 
