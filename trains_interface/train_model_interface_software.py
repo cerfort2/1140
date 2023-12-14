@@ -53,6 +53,8 @@ class train_model_interface_software(QObject):
     #wayside stop function
     def wayside_stops(self, stops: list) -> None:
         current_occupancies = []
+        print("stoppages:")
+        print(stops)
 
         for train in self.trains:
             current_occupancies.append(train.get_occupancy())
