@@ -283,7 +283,6 @@ class SoftwareTrainController():
             self.rightDoor=True
             self.leftDoor=False
             return False
-        if self.dwelling and self.stationOnLeft=='b':
             self.rightDoor=True
             self.leftDoor=True
             return True
