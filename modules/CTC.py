@@ -70,9 +70,6 @@ class CTC(Ui_Form, QWidget):
         
         self.green_line_blocks = ['A1', 'A2', 'A3', 'B4', 'B5', 'B6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12', 'D13', 'D14', 'D15', 'D16', 'E17', 'E18', 'E19', 'E20', 'F21', 'F22', 'F23', 'F24', 'F25', 'F26', 'F27', 'F28', 'G29', 'G30', 'G31', 'G32', 'H33', 'H34', 'H35', 'I36', 'I37', 'I38', 'I39', 'I40', 'I41', 'I42', 'I43', 'I44', 'I45', 'I46', 'I47', 'I48', 'I49', 'I50', 'I51', 'I52', 'I53', 'I54', 'I55', 'I56', 'I57', 'J58', 'J59', 'J60', 'J61', 'J62', 'K63', 'K64', 'K65', 'K66', 'K67', 'K68', 'L69', 'L70', 'L71', 'L72', 'L73', 'M74', 'M75', 'M76', 'N77', 'N78', 'N79', 'N80', 'N81', 'N82', 'N83', 'N84', 'N85', 'O86', 'O87', 'O88', 'P89', 'P90', 'P91', 'P92', 'P93', 'P94', 'P95', 'P96', 'P97', 'Q98', 'Q99', 'Q100', 'R101', 'S102', 'S103', 'S104', 'T105', 'T106', 'T107', 'T108', 'T109', 'U110', 'U111', 'U112', 'U113', 'U114', 'U115', 'U116', 'V117', 'V118', 'V119', 'V120', 'V121', 'W122', 'W123', 'W124', 'W125', 'W126', 'W127', 'W128', 'W129', 'W130', 'W131', 'W132', 'W133', 'W134', 'W135', 'W136', 'W137', 'W138', 'W139', 'W140', 'W141', 'W142', 'W143', 'X144', 'X145', 'X146', 'Y147', 'Y148', 'Y149', 'Z150', 'Z151']
         self.red_line_blocks = ['A1', 'A2', 'A3', 'B4', 'B5', 'B6', 'C7', 'C8', 'C9', 'D10', 'D11', 'D12', 'E13', 'E14', 'E15', 'F16', 'F17', 'F18', 'F19', 'F20', 'G21', 'G22', 'G23', 'H24', 'H25', 'H26', 'H27', 'H28', 'H29', 'H30', 'H31', 'H32', 'H33', 'H34', 'H35', 'H36', 'H37', 'H38', 'H39', 'H40', 'H41', 'H42', 'H43', 'H44', 'H45', 'I46', 'I47', 'I48', 'J49', 'J50', 'J51', 'J52', 'J53', 'J54', 'K55', 'K56', 'K57', 'L58', 'L59', 'L60', 'M61', 'M62', 'M63', 'N64', 'N65', 'KN6', 'O67', 'P68', 'P69', 'P70', 'Q71', 'R72', 'S73', 'S74', 'S75', 'T76', 'T77']
-
-        self.green_line_blocks_order = []
-        self.red_line_blocks_order = []
         
         self.switch_states = []
 
@@ -103,6 +100,7 @@ class CTC(Ui_Form, QWidget):
         line = self.maintenance_line_sel.currentText()
         number = int(track[1:]) - 1
         color=Qt.GlobalColor.white
+        status = "Open"
         if line == "Green Line":
             occupancy_item = self.block_occupancy_green.item(number, 0)
             status_item = self.block_occupancy_green.item(number, 2)
@@ -110,17 +108,22 @@ class CTC(Ui_Form, QWidget):
         if line == "Red Line":
             occupancy_item = self.block_occupancy_red.item(number, 0)
             status_item = self.block_occupancy_red.item(number, 2)
-        status = "Opened"
+        
         if not occupancy_item:  # If the item doesn't exist, create it
             occupancy_item = QTableWidgetItem()
             if line == "Green Line":
                 self.block_occupancy_green.setItem(number, 0, occupancy_item)
                 self.block_occupancy_green.setItem(number, 2, status_item)
+                status_item = self.block_occupancy_green.item(number, 2)
+                self.block_occupancy_green.setItem(number, 2, status_item)
             if line == "Red Line":
                 self.block_occupancy_red.setItem(number, 0, occupancy_item)
                 self.block_occupancy_red.setItem(number, 2, status_item)
+                status_item = self.block_occupancy_red.item(number, 2)
+                self.block_occupancy_red.setItem(number, 2, status_item)
             # Set the background color for the block
         occupancy_item.setBackground(color)
+        status_item.setText(status)
         self.track_opened.emit(track)
 
     def close_track(self, track):
@@ -291,6 +294,7 @@ class CTC(Ui_Form, QWidget):
         self.manual_mode_btn.setChecked(True)
         self.import_schedule_btn.hide()
         self.maintenance_widget.hide()
+        self.tabWidget.removeTab(1)
         green_station_info = ["",
             "PIONEER",
             "",
@@ -748,8 +752,12 @@ class CTC(Ui_Form, QWidget):
                 # Add each value to its respective list
                 train_ids.append(train_id)
                 destinations.append(dest)
-                dep_times.append(d_time)
-                arr_times.append(a_time)
+                dep_time_qtime = QDateTime.fromString(str(d_time), "HH:mm:ss").time()
+                arr_time_qtime = QDateTime.fromString(str(a_time), "HH:mm:ss").time()
+                dep_time_str = dep_time_qtime.toString("HH:mm:ss")
+                arr_time_str = arr_time_qtime.toString("HH:mm:ss")
+                dep_times.append(dep_time_str)
+                arr_times.append(arr_time_str)
                 stops.append([stop.strip() for stop in stop.split(',')])
 
             # Update the schedule with the new data
@@ -810,7 +818,6 @@ class CTC(Ui_Form, QWidget):
             authority = self.red_line.get_authority(station_list)
             self.trains_dispatched_red.append(train)
             self.dispatched_red.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority[0]), next_stop]))
-            
         self.stops = []
         self.update_stations()
         self.update_stops()
@@ -897,9 +904,6 @@ class CTC(Ui_Form, QWidget):
             authority = self.red_line.get_authority(station_list)
             self.dispatched_red.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority[0]), next_stop]))
     
-        self.suggested_speed_tb.setText(str(speeds))
-        self.authority_tb.setText(str(authority))
-        self.route_tb.setText(str(route[0]))
         
         
         self.remove_train_from_schedule(train)
@@ -927,13 +931,21 @@ class CTC(Ui_Form, QWidget):
             #     dep_time_obj = dep_time
             
             #self.blue_line_schedule.append(QTreeWidgetItem([str(t_id), dest, str(dep_time_obj), str(eta)]))
-            train = Train(t_id, dest, dep_time, arr_time, stop, line)
+            dep_time_qtime = QDateTime.fromString(str(dep_time), "HH:mm:ss").time()
+            arr_time_qtime = QDateTime.fromString(str(arr_time), "HH:mm:ss").time()
+            train = Train(t_id, dest, dep_time_qtime, arr_time_qtime, stop, line)
+            stop_string = ""
+            for sto in stop:
+                if sto == stop[-1]:
+                    stop_string += sto
+                else:
+                    stop_string += sto + ","
             if line =="Green Line":
                 self.train_schedule_green.append(train)
-                self.schedule_green.addTopLevelItem(QTreeWidgetItem([str(t_id), str(dest), str(dep_time), str(arr_time), str(stop)]))
+                self.schedule_green.addTopLevelItem(QTreeWidgetItem([str(t_id), str(dest), str(dep_time), str(arr_time), stop_string]))
             if line =="Red Line":
                 self.train_schedule_red.append(train)
-                self.schedule_red.addTopLevelItem(QTreeWidgetItem([str(t_id), str(dest), str(dep_time), str(arr_time), str(stop)]))
+                self.schedule_red.addTopLevelItem(QTreeWidgetItem([str(t_id), str(dest), str(dep_time), str(arr_time), stop_string]))
         return
     
 
