@@ -114,7 +114,6 @@ class CTC(Ui_Form, QWidget):
         self.initialize_connections()
         self.start_threads()
         self.initialize_ui()
-        self.
 
 
 #outputs

@@ -129,7 +129,11 @@ def plcc(blocks:Block = []):
     for i in range(76, 85):
         loop2 = loop2 or blocks[i].getOccupancy()
     #Line
-    for i in range(0, 148):
+    for i in range(3, 15):
+        if(blocks[i].getOccupancy()):
+            if(blocks[i-1].getOccupancy() or blocks[i-2].getOccupancy()):
+                stoppage.append(blocks[i].getName())
+    for i in range(14, 148):
         if(blocks[i].getOccupancy()):
             if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy() or blocks[i+3].getOccupancy()):
                 stoppage.append(blocks[i].getName())
