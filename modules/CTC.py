@@ -114,6 +114,7 @@ class CTC(Ui_Form, QWidget):
         self.initialize_connections()
         self.start_threads()
         self.initialize_ui()
+        self.
 
 
 #outputs
@@ -188,7 +189,8 @@ class CTC(Ui_Form, QWidget):
                     self.block_occupancy_green.setItem(index, 0, occupancy_item)
 
                 # Set the background color for the block
-                occupancy_item.setBackground(color)
+                if color == Qt.GlobalColor.white and occupancy_item.background().color() == Qt.GlobalColor.yellow:
+                    occupancy_item.setBackground(color)
 
         elif len(failures == 77):
             #red line
@@ -202,7 +204,8 @@ class CTC(Ui_Form, QWidget):
                     self.block_occupancy_red.setItem(index, 0, occupancy_item)
 
                 # Set the background color for the block
-                occupancy_item.setBackground(color)      
+                if color == Qt.GlobalColor.white and occupancy_item.background().color() == Qt.GlobalColor.yellow:
+                    occupancy_item.setBackground(color)     
     
     def updated_dispatched_trains_info(self):
         pass
@@ -734,16 +737,20 @@ class CTC(Ui_Form, QWidget):
 
     def add_stops(self):
         stop = self.stop_box_list.currentText()
+        line = self.manual_dispatch_line.currentText()
         self.stops.append(stop)
-        self.sort_stops()
+        self.sort_stops(line)
         self.update_stations()
         self.update_stops()
         index = self.stop_box_list.findText(stop)
         self.stop_box_list.removeItem(index)
         
-    def sort_stops(self):
+    def sort_stops(self, line):
         # Create a dictionary to map station to its order for sorting
-        order = {station: index for index, station in enumerate(self.green_line_stations)}
+        if line == "Green Line":
+            order = {station: index for index, station in enumerate(self.green_line_stations)}
+        if line == "Red Line":
+            order = {station: index for index, station in enumerate(self.red_line_stations)}    
         # Sort self.stops based on the order in self.green_line_stations
         self.stops.sort(key=lambda x: order[x])
         
@@ -890,13 +897,13 @@ class CTC(Ui_Form, QWidget):
             route = self.green_line.get_route(station_list)
             speeds = self.green_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
             authority = self.green_line.get_authority(station_list)
-            self.dispatched_green.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
+            self.dispatched_green.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority[0]), next_stop]))
     
         if line =="Red Line":
             route = self.red_line.get_route(station_list)
             speeds = self.red_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
             authority = self.red_line.get_authority(station_list)
-            self.dispatched_red.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
+            self.dispatched_red.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority[0]), next_stop]))
     
         self.suggested_speed_tb.setText(str(speeds))
         self.authority_tb.setText(str(authority))
