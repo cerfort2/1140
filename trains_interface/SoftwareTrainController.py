@@ -38,7 +38,7 @@ class SoftwareTrainController():
         self.power=0     
         self.interval=1
         self.dwelling=False
-        self.dwellTime=5
+        self.dwellTime=60
         self.serviceBrake=False
         self.brakeAuthority=0
         self.beaconInfo=''
@@ -104,7 +104,7 @@ class SoftwareTrainController():
         self.ui.signalfailure.setChecked(self.signalFailure)
         self.ui.enginefailure.setChecked(self.engineFailure)
         self.ui.dwelltime.display(self.dwellTime)
-        self.ui.trainnumber.setText(self.trainnumber)
+        self.ui.trainnumber.setText(str(self.trainnumber))
 
         self.ui.externallight.setChecked(self.computeExtLights())
 
@@ -319,7 +319,7 @@ class SoftwareTrainController():
                 print("done dwelling")
 
                 self.dwelling=False
-                self.dwellTime=5  
+                self.dwellTime=60 
                 self.leftDoor = False
                 self.rightDoor = False
 
@@ -331,7 +331,7 @@ class SoftwareTrainController():
 
     def toggleDwelling(self):
         self.dwelling=False
-        self.dwellTime=5
+        self.dwellTime=60
 
     def computeManualSpeed(self) ->int:
         #in automatic, manual=ctcspeed
