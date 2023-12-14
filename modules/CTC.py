@@ -151,7 +151,7 @@ class CTC(Ui_Form, QWidget):
         self.import_schedule_btn.hide()
         for block in self.green_line_blocks:
             self.maintenance_block_sel.addItem(block)
-        "STATION; PIONEER",
+        green_station_info=["STATION; PIONEER",
         "",
         "",
         "",
@@ -174,7 +174,7 @@ class CTC(Ui_Form, QWidget):
         "UNDERGROUND",
         "UNDERGROUND",
         "UNDERGROUND",
-        "STATION; CENTRAL; UNDERDROUND",
+        "STATION; CENTRAL; UNDERGROUND",
         "UNDERGROUND",
         "UNDERGROUND",
         "UNDERGROUND",
@@ -256,7 +256,7 @@ class CTC(Ui_Form, QWidget):
         "UNDERGROUND",
         "STATION; CENTRAL; UNDERDROUND"]
 
-        for row,value in enumerate(station_info):
+        for row,value in enumerate(green_station_info):
             item = QTableWidgetItem(value)
             self.block_occupancy_green.setItem(row, 1, item)
 
