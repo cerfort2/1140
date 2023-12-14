@@ -44,6 +44,8 @@ class train_model_software():
         self.station_bools = []
         self.currentMove = 0
         self.train_number = 0
+        self.adTimer = 0
+        self.adNum = 1
         #create instance of train controller
         self.controller = SoftwareTrainController()
         # self.controller = HardwareTrainController()

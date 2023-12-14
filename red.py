@@ -60,7 +60,7 @@ def plc(blocks:Block = []):
         if(blocks[25].getOccupancy() or blocks[27].getOccupancy()):
             blocks[26].setSwitch(False)
         elif(blocks[75].getOccupancy()):
-            blocks[15].setSwitch(True)
+            blocks[26].setSwitch(True)
         #Signal H27
         if((blocks[25].getOccupancy() or blocks[26].getOccupancy()) and not(blocks[27].getOccupancy() or blocks[28].getOccupancy())):
             blocks[26].setSignal(False)
