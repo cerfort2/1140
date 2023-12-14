@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from PyQt6.QtCore import pyqtSignal, QEvent, Qt, QDateTime, QTimer, QObject
-from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QButtonGroup, QTableWidgetItem, QLabel, QLineEdit, QHeaderView
+from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QButtonGroup, QTableWidgetItem, QRadioButton, QLabel, QLineEdit, QHeaderView
 
 from Line import Line
 from CTC_ui import Ui_Form
@@ -140,7 +140,7 @@ class CTC(Ui_Form, QWidget):
         print(occupancies)
         if len(occupancies) == 77:
             self.red_block_occupanices = occupancies
-        self.update_block_occupancy(self.block_occupancies)
+        self.update_block_occupancy(occupancies)
     
     def get_ticket_sales(self, tickets):
         ticket_sales = tickets
@@ -829,7 +829,7 @@ class CTC(Ui_Form, QWidget):
                 status = "Occupied" if is_occupied else "Open"
 
                 # Assuming the "Occupancy" column is the first column (0-indexed)
-                occupancy_item = self.block_occupancy.item(index, 0)
+                occupancy_item = self.block_occupancy_green.item(index, 0)
                 if not occupancy_item:  # If the item doesn't exist, create it
                     occupancy_item = QTableWidgetItem()
                     self.block_occupancy_green.setItem(index, 0, occupancy_item)
@@ -851,42 +851,20 @@ class CTC(Ui_Form, QWidget):
                 status = "Occupied" if is_occupied else "Open"
 
                 # Assuming the "Occupancy" column is the first column (0-indexed)
-                occupancy_item = self.block_occupancy.item(index, 0)
+                occupancy_item = self.block_occupancy_red.item(index, 0)
                 if not occupancy_item:  # If the item doesn't exist, create it
                     occupancy_item = QTableWidgetItem()
-                    self.block_occupancy_green.setItem(index, 0, occupancy_item)
+                    self.block_occupancy_red.setItem(index, 0, occupancy_item)
 
                 # Set the background color for the block
                 occupancy_item.setBackground(color)
 
                 # Update the "Block Status" in the third column
-                status_item = self.block_occupancy_green.item(index, 2)  # Assuming the "Block Status" column is the third column
+                status_item = self.block_occupancy_red.item(index, 2)  # Assuming the "Block Status" column is the third column
                 if not status_item:
                     status_item = QTableWidgetItem()
                     self.block_occupancy_red.setItem(index, 2, status_item)
                 status_item.setText(status)
-            pass
-        
-        for index, is_occupied in enumerate(occupancies):
-            # Determine the color based on occupancy
-            color = Qt.GlobalColor.green if is_occupied else Qt.GlobalColor.white
-            status = "Occupied" if is_occupied else "Open"
-
-            # Assuming the "Occupancy" column is the first column (0-indexed)
-            occupancy_item = self.block_occupancy.item(index, 0)
-            if not occupancy_item:  # If the item doesn't exist, create it
-                occupancy_item = QTableWidgetItem()
-                self.block_occupancy_green.setItem(index, 0, occupancy_item)
-
-            # Set the background color for the block
-            occupancy_item.setBackground(color)
-
-            # Update the "Block Status" in the third column
-            status_item = self.block_occupancy_green.item(index, 2)  # Assuming the "Block Status" column is the third column
-            if not status_item:
-                status_item = QTableWidgetItem()
-                self.block_occupancy_green.setItem(index, 2, status_item)
-            status_item.setText(status)
 
 
     def record_ticket_sales(self, new_ticket_sales_list):
