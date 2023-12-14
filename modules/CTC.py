@@ -150,7 +150,7 @@ class CTC(Ui_Form, QWidget):
         self.add_stop.clicked.connect(self.add_stops)
         self.stop_update.connect(self.update_stops)
         self.schedule_dispatch.connect(self.dispatch_scheduled_train)
-        self.open_track_btn.clicked.connect(self.open_track(self.maintenance_block_sel))
+        self.open_track_btn.clicked.connect(self.open_track(self.maintenance_block_sel.currentText()))
 
     def check_for_loop(self):
         return
