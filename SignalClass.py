@@ -110,7 +110,7 @@ class God(Home, QMainWindow):
         self.trackController.trackModelStoppedTrains.connect(self.trackModel.trackModel.stopAtBlocks)
 
         self.trackModel.trackModel.trackControllerFailureBlocks.connect(self.trackController.getFailure)
-        # self.trackController.CTCTrackFailures.connect("myles function")
+        # self.trackController.CTCTrackFailures.connect(self.ctc.getFailures)
         # self.CTC.signalName.connect(self.trackController.fix)
         self.trackController.trackModelFixes.connect(self.trackModel.trackModel.fixFailures)
 
@@ -143,6 +143,7 @@ class God(Home, QMainWindow):
 
     #on timeout emissions
     def onTimeoutFunctions(self):
+        self.ctc.get_speed(self.verticalSlider.value())
         #self.trackController.sendSpeed()
         self.trackModel.trackModel.emitOccupancy()
         self.trackController.sendData()
@@ -155,14 +156,12 @@ class God(Home, QMainWindow):
             self.trainInterface.update_trains()
             self.trackModel.trackModel.polarity()
             self.trackModel.trackModel.getOccupiedBlockInfo()
-        
-        #self.ctc.get_speed(self.timeStep)
+    
     
     def simulationSpeedCalculation(self):
         if self.checkBox.isChecked():
             self.timeStep = 9999999 #large time step to simulate pause
         else:
-            print(self.verticalSlider.value())
             self.timeStep = 1000/self.verticalSlider.value()
 
         self.MainTimer.start(int(self.timeStep))
