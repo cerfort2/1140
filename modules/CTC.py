@@ -36,6 +36,7 @@ class CTC(Ui_Form, QWidget):
     train_dispatched = pyqtSignal(list, list, list)
     schedule_dispatch = pyqtSignal()
     stop_update = pyqtSignal()
+    track_closed = pyqtSignal(bool)
     #output_speed = pyqtSignal(list)
     #output_route = pyqtSignal(list)
     #output_authority = pyqtSignal(int)
@@ -82,9 +83,9 @@ class CTC(Ui_Form, QWidget):
         self.old_station = None
         #self.red_line = Line("Red")
         self.green_line = Line("Green", 'Green Line Info_.xlsx')
-
+        self.red_line = Line("Red", 'Red Line Info.xlsx')
         self.stops = []
-        self.green_line_stations = ["K65: GLENBURY", "L73: DORMONT", "N77: MT LEBANON", "O88: POPLAR", "P96: CASTLE SHANNON", "T105: DORMONT","U114: GLENBURY", "W123: OVERBROOK", "W132: INGLEWOOD", "W141: CENTRAL", "A2: PIONEER", "C9: EDGEBROOK", "D16: MONKEYWAY", "F22: WHITED", "G31: SOUTH BANK", "I39: CENTRAL", "I48: INGLEWOOD", "I57: OVERBROOK"]
+        self.green_line_stations = ["K65: GLENBURY", "L73: DORMONT", "N77: MT LEBANON", "O88: POPLAR", "P96: CASTLE SHANNON", "T105: DORMONT", "U114: GLENBURY", "W123: OVERBROOK", "W132: INGLEWOOD", "W141: CENTRAL", "A2: PIONEER", "C9: EDGEBROOK", "D16: MONKEYWAY", "F22: WHITED", "G31: SOUTH BANK", "I39: CENTRAL", "I48: INGLEWOOD", "I57: OVERBROOK"]
         
         self.ticket_sales_log = []
         self.block_occupancies = []
@@ -103,6 +104,12 @@ class CTC(Ui_Form, QWidget):
 #outputs
     def train_dispatch(self, route, authority, speed):
         self.train_dispatched.emit(route, authority, speed)
+    
+    def close_track(self, track):
+        #output signal to track controller for closed track
+        #update on block occupancy ui
+        self.block_occupancies
+        self.close_track.emit(track)
     """
     def set_suggested_speed(self, speeds):
         self.output_speed.emit(speeds)
@@ -621,10 +628,19 @@ class CTC(Ui_Form, QWidget):
         # Return or update the UI with the total throughput
         return total_throughput
     
-    def close_tracks(self, track_list):
-        for track in track_list:
-            return
-
+    
+        
+        
+    def check_redline_dispatch(self):
+        # Check the specific indices for True (1) values
+        for i, b in enumerate(self.block_occupancies):
+            print(i)
+            print(b)
+            
+        indices_to_check = list(range(15, 26)) + [75]  # Indices 15-25 and 75
+        return all(self.block_occupancies[index] for index in indices_to_check if index < len(self.block_occupancies))
+    
+    
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
