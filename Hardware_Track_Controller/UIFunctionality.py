@@ -5,11 +5,11 @@ from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6 import QtCore, QtGui, QtWidgets
 from Hardware_Track_Controller.HWTrackUI import Ui_Form
 from Hardware_Track_Controller.TrackClass import Track
-#from Hardware_Track_Controller.UI_Breadboard_Class import Operations
+from Hardware_Track_Controller.UI_Breadboard_Class import Operations
 from Hardware_Track_Controller.GreenLineWaysides import GreenLine
 from Hardware_Track_Controller.RedLineWaysides import RedLine
 
-#operate = Operations() #Class to perform operations on the breadboard
+operate = Operations() #Class to perform operations on the breadboard
 
 class HWTrackControllerGUI(Ui_Form, QObject):
     
@@ -143,7 +143,7 @@ class HWTrackControllerGUI(Ui_Form, QObject):
         self.trackModelAuthority.emit(Auth)
         self.trackModelSuggestedSpeed.emit(speed)
         self.trackModelSendRoute.emit(traveling)
-    def getFailures(self, fails): #Failures send to CTC from Track Model
+    def getFailure(self, fails): #Failures send to CTC from Track Model
         if(len(self.pureOccupancy) == 151):
             for i in range(32): #A1-G32
                 self.greenLine.Waysides[0].getTrack(i).setFailure([i])

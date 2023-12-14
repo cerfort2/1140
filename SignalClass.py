@@ -61,10 +61,10 @@ class God(Home, QMainWindow):
         self.ctc = CTC()
 
         #HW Track Controller
-        #self.trackController = HWTrackControllerGUI()
+        self.trackController = HWTrackControllerGUI()
 
         #SW Track Controller
-        self.trackController = SoftwareTrackControllerGUI()
+        #self.trackController = SoftwareTrackControllerGUI()
 
         self.trackModel = functionalUI()
         self.trainInterface = train_model_interface_software()
@@ -122,10 +122,10 @@ class God(Home, QMainWindow):
 
         #Only have one of these lines commented out:
         #HW Track Controller
-        #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
+        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.greenLine.setTracks)
         #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.redLine.setTracks)
         #SW Track Controller
-        self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.setDisplay)
+        #self.trackModel.trackModel.trackControllerInitializeLine.connect(self.trackController.setDisplay)
 
         
         #Between Train model and Track model
@@ -136,9 +136,8 @@ class God(Home, QMainWindow):
         self.trackModel.trackModel.trainModelBlockInfo.connect(self.trainInterface.unpack_blocks)
         #must add this connection
         # self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.?)
-
         
-        #self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
+        self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
         
 
     def init_train(self):

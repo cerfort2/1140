@@ -188,7 +188,8 @@ class CTC(Ui_Form, QWidget):
                     self.block_occupancy_green.setItem(index, 0, occupancy_item)
 
                 # Set the background color for the block
-                occupancy_item.setBackground(color)
+                if color == Qt.GlobalColor.white and occupancy_item.background().color() == Qt.GlobalColor.yellow:
+                    occupancy_item.setBackground(color)
 
         elif len(failures == 77):
             #red line
@@ -202,12 +203,16 @@ class CTC(Ui_Form, QWidget):
                     self.block_occupancy_red.setItem(index, 0, occupancy_item)
 
                 # Set the background color for the block
-                occupancy_item.setBackground(color)      
+                if color == Qt.GlobalColor.white and occupancy_item.background().color() == Qt.GlobalColor.yellow:
+                    occupancy_item.setBackground(color)     
+    
+    def updated_dispatched_trains_info(self):
+        pass
     
     def get_ticket_sales(self, tickets):
         ticket_sales = tickets
         self.record_ticket_sales(ticket_sales)
-        
+    
     def get_speed(self, speed):
         self.speed_factor = speed
     
@@ -527,10 +532,6 @@ class CTC(Ui_Form, QWidget):
     def update_throughput(self):
         while True:
             return
-
-    def updated_dispatched_trains_info(self):
-        while True:
-            return
         
     def check_maintenance_line(self):
         while True:
@@ -574,57 +575,57 @@ class CTC(Ui_Form, QWidget):
     
     def update_switch(self):
         if self._12_13.isChecked():
-            self.toggle_switch("D13", 0)
+            self.toggle_switch.emit("D13", 0)
         elif self._1_13.isChecked():
-            self.toggle_switch("D13", 1)
+            self.toggle_switch.emit("D13", 1)
         if self._29_30.isChecked():
-            self.toggle_switch("G29", 0)
+            self.toggle_switch.emit("G29", 0)
         elif self._29_150.isChecked():
-            self.toggle_switch("G29", 1)
+            self.toggle_switch.emit("G29", 1)
         if self._57_yard.isChecked():
-            self.toggle_switch("J58", 0)
+            self.toggle_switch.emit("J58", 0)
         elif self._57_58.isChecked():
-            self.toggle_switch("J58", 1)
+            self.toggle_switch.emit("J58", 1)
         if self._62_63.isChecked():
-            self.toggle_switch("J62", 0)
+            self.toggle_switch.emit("J62", 0)
         elif self._yard_63.isChecked():
-            self.toggle_switch("J62", 1)
+            self.toggle_switch.emit("J62", 1)
         if self._76_77.isChecked():
-            self.toggle_switch("N77", 1)
+            self.toggle_switch.emit("N77", 1)
         elif self._77_101.isChecked():
-            self.toggle_switch("N77", 0)
+            self.toggle_switch.emit("N77", 0)
         if self._85_86.isChecked():
-            self.toggle_switch("N85", 0)
+            self.toggle_switch.emit("N85", 0)
         elif self._85_100.isChecked():
-            self.toggle_switch("N85", 1)
+            self.toggle_switch.emit("N85", 1)
         if self._9_10.isChecked():
-            self.toggle_switch("C10", 1)
+            self.toggle_switch.emit("C10", 1)
         elif self._9_yard.isChecked():
-            self.toggle_switch("C10", 0)
+            self.toggle_switch.emit("C10", 0)
         if self._15_16.isChecked():
-            self.toggle_switch("F16", 1)
+            self.toggle_switch.emit("F16", 1)
         elif self._1_16.isChecked():
-            self.toggle_switch("F16", 0)
+            self.toggle_switch.emit("F16", 0)
         if self._27_28.isChecked():
-            self.toggle_switch("H27", 0)
+            self.toggle_switch.emit("H27", 0)
         elif self._27_76.isChecked():
-            self.toggle_switch("H27", 1)
+            self.toggle_switch.emit("H27", 1)
         if self._32_33.isChecked():
-            self.toggle_switch("H33", 1)
+            self.toggle_switch.emit("H33", 1)
         elif self._32_72.isChecked():
-            self.toggle_switch("H33", 0)
+            self.toggle_switch.emit("H33", 0)
         if self._38_39.isChecked():
-            self.toggle_switch("H38", 0)
+            self.toggle_switch.emit("H38", 0)
         elif self._38_71.isChecked():
-            self.toggle_switch("H38", 1)
+            self.toggle_switch.emit("H38", 1)
         if self._43_44.isChecked():
-            self.toggle_switch("H44", 1)
+            self.toggle_switch.emit("H44", 1)
         elif self._43_67.isChecked():
-            self.toggle_switch("H44", 0)
+            self.toggle_switch.emit("H44", 0)
         if self._52_53.isChecked():
-            self.toggle_switch("J52", 0)
+            self.toggle_switch.emit("J52", 0)
         elif self._52_66.isChecked():
-            self.toggle_switch("J52", 1)
+            self.toggle_switch.emit("J52", 1)
 
     def check_mode(self):
         while True:
@@ -735,16 +736,20 @@ class CTC(Ui_Form, QWidget):
 
     def add_stops(self):
         stop = self.stop_box_list.currentText()
+        line = self.manual_dispatch_line.currentText()
         self.stops.append(stop)
-        self.sort_stops()
+        self.sort_stops(line)
         self.update_stations()
         self.update_stops()
         index = self.stop_box_list.findText(stop)
         self.stop_box_list.removeItem(index)
         
-    def sort_stops(self):
+    def sort_stops(self, line):
         # Create a dictionary to map station to its order for sorting
-        order = {station: index for index, station in enumerate(self.green_line_stations)}
+        if line == "Green Line":
+            order = {station: index for index, station in enumerate(self.green_line_stations)}
+        if line == "Red Line":
+            order = {station: index for index, station in enumerate(self.red_line_stations)}    
         # Sort self.stops based on the order in self.green_line_stations
         self.stops.sort(key=lambda x: order[x])
         
@@ -891,13 +896,13 @@ class CTC(Ui_Form, QWidget):
             route = self.green_line.get_route(station_list)
             speeds = self.green_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
             authority = self.green_line.get_authority(station_list)
-            self.dispatched_green.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
+            self.dispatched_green.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority[0]), next_stop]))
     
         if line =="Red Line":
             route = self.red_line.get_route(station_list)
             speeds = self.red_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
             authority = self.red_line.get_authority(station_list)
-            self.dispatched_red.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
+            self.dispatched_red.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority[0]), next_stop]))
     
         self.suggested_speed_tb.setText(str(speeds))
         self.authority_tb.setText(str(authority))
@@ -1025,7 +1030,7 @@ class CTC(Ui_Form, QWidget):
         
     def check_redline_dispatch(self):
         # Check the specific indices for True (1) values
-        for i, b in enumerate(self.block_occupancies):
+        for i, b in enumerate(self.red_block_occupancies):
             print(i)
             print(b)
             
