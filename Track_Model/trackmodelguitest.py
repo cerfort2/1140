@@ -498,6 +498,7 @@ class TrackModel(QObject):
         self.route_passthrough = []
         self.suggestedSpeed_passthrough= []
         self.authority_passthrough = []
+        self.temperature = 50
 
     #--------------------
     #Internal Functions
@@ -594,10 +595,11 @@ class TrackModel(QObject):
             self.trackControllerFailureBlocks.emit(failedBlocks)
 
 
+    trackModelUpdates = pyqtSignal() # Signal for if the map should update along with all other UI
     #------------------
     #Receiving Signals
     #------------------
-    trackModelUpdates = pyqtSignal() # Signal for if the map should update along with all other UI
+    
     def controlModel(self,controlSignals):
         if self.controlSignalsHolder != controlSignals:
             for line in self.lines:
@@ -632,7 +634,7 @@ class TrackModel(QObject):
         self.emitSwitchBeacon()
         self.emitStationBeacon()
 
-
+    #Track Model --> Track Controller
     def fixFailures(self, blockToFix):
         for line in self.lines:
 
@@ -649,8 +651,26 @@ class TrackModel(QObject):
         
         self.trackModelUpdates.emit()
 
+    #Track Controller --> Track Model
+    def closeBlock(self, blockToClose):
+        for line in self.lines:
+            line.getBlock(blockToClose).setOccupied()
+
+    #Track Controller --> Track Model
+    def openBlock(self, blockToOpen):
+        for line in self.lines:
+            line.getBlock(blockToOpen).clearOccupied()
                 
-                
+
+    def updateTemp(self,temp):
+        self.temperature = temp
+        for line in self.lines:
+            for block in line.blocks:
+                if self.temperature > 32:
+                    block.trackHeater = True
+                else:
+                    block.trackHeater = False
+
 
 
     #----------------
@@ -681,6 +701,8 @@ class TrackModel(QObject):
     def stopAtBlocks(self,stopBlocks):
         self.trainModelStopAtBlocks.emit(stopBlocks)
         
+
+
 class functionalUI(Ui_Form):
     def __init__(self) -> None:
         super().__init__()

@@ -15,8 +15,8 @@ from typing import List, Optional
 from PyQt6.QtCore import pyqtSignal, QEvent, Qt, QDateTime, QTimer, QObject
 from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QButtonGroup, QTableWidgetItem, QRadioButton, QLabel, QLineEdit, QHeaderView
 
-from modules.Line import Line
-from modules.CTC_ui import Ui_Form
+from Line import Line
+from CTC_ui import Ui_Form
 
 
 class Train:
@@ -39,7 +39,6 @@ class CTC(Ui_Form, QWidget):
     track_opened = pyqtSignal(str)
     track_closed = pyqtSignal(str)
     toggle_switch = pyqtSignal(str, bool)
-    looping = pyqtSignal(bool)
     #output_speed = pyqtSignal(list)
     #output_route = pyqtSignal(list)
     #output_authority = pyqtSignal(int)
@@ -124,12 +123,42 @@ class CTC(Ui_Form, QWidget):
     def open_track(self, track):
         #output signal to track controller for closed track
         #update on block occupancy ui
+        line = self.maintenance_line_sel.currentText()
+        number = int(track[1:]) - 1
+        color=Qt.GlobalColor.white
+        if line == "Green Line":
+            occupancy_item = self.block_occupancy_green.item(number, 0)
+        if line == "Red Line":
+            occupancy_item = self.block_occupancy_red.item(number, 0)
+        if not occupancy_item:  # If the item doesn't exist, create it
+            occupancy_item = QTableWidgetItem()
+            if line == "Green Line":
+                self.block_occupancy_green.setItem(number, 0, occupancy_item)
+            if line == "Red Line":
+                self.block_occupancy_red.setItem(number, 0, occupancy_item)
+            # Set the background color for the block
+        occupancy_item.setBackground(color)
         self.track_opened.emit(track)
 
     def close_track(self, track):
         #self.track_closed.emit(track)
-        number = track[1:]
-        color=Qt.GlobalColor
+        number = int(track[1:]) - 1
+        line = self.maintenance_line_sel.currentText()
+        color=Qt.GlobalColor.yellow
+        if line == "Green Line":
+            occupancy_item = self.block_occupancy_green.item(number, 0)
+        if line == "Red Line":
+            occupancy_item = self.block_occupancy_red.item(number, 0)
+        if not occupancy_item:  # If the item doesn't exist, create it
+            occupancy_item = QTableWidgetItem()
+            if line == "Green Line":
+                self.block_occupancy_green.setItem(number, 0, occupancy_item)
+            if line == "Red Line":
+                self.block_occupancy_red.setItem(number, 0, occupancy_item)
+
+            # Set the background color for the block
+        occupancy_item.setBackground(color)
+        self.track_closed.emit(track)
 
     def send_switch(self, block, b):
         self.toggle_switch.emit(block, b)
@@ -203,6 +232,32 @@ class CTC(Ui_Form, QWidget):
         self.schedule_dispatch.connect(self.dispatch_scheduled_train)
         self.open_track_btn.clicked.connect(lambda: self.open_track(self.maintenance_block_sel.currentText()))
         self.close_track_btn.clicked.connect(lambda: self.close_track(self.maintenance_block_sel.currentText()))
+        self._12_13.toggled.connect(self.update_switch)
+        self._1_13.toggled.connect(self.update_switch)
+        self._29_30.toggled.connect(self.update_switch)
+        self._29_150.toggled.connect(self.update_switch)
+        self._57_yard.toggled.connect(self.update_switch)
+        self._57_58.toggled.connect(self.update_switch)
+        self._62_63.toggled.connect(self.update_switch)
+        self._yard_63.toggled.connect(self.update_switch)
+        self._76_77.toggled.connect(self.update_switch)
+        self._77_101.toggled.connect(self.update_switch)
+        self._85_86.toggled.connect(self.update_switch)
+        self._85_100.toggled.connect(self.update_switch)
+        self._9_10.toggled.connect(self.update_switch)
+        self._9_yard.toggled.connect(self.update_switch)
+        self._15_16.toggled.connect(self.update_switch)
+        self._1_16.toggled.connect(self.update_switch)
+        self._27_28.toggled.connect(self.update_switch)
+        self._27_76.toggled.connect(self.update_switch)
+        self._32_33.toggled.connect(self.update_switch)
+        self._32_72.toggled.connect(self.update_switch)
+        self._38_39.toggled.connect(self.update_switch)
+        self._38_71.toggled.connect(self.update_switch)
+        self._43_44.toggled.connect(self.update_switch)
+        self._43_67.toggled.connect(self.update_switch)
+        self._52_53.toggled.connect(self.update_switch)
+        self._52_66.toggled.connect(self.update_switch)
 
     
     def initialize_ui(self):
@@ -210,36 +265,36 @@ class CTC(Ui_Form, QWidget):
         self.import_schedule_btn.hide()
         self.maintenance_widget.hide()
         green_station_info = ["",
-            "PIONEER STATION",
+            "PIONEER",
             "",
             "",
             "",
             "",
             "",
             "",
-            "EDGEBROOK STATION",
-            "",
-            "",
-            "SWITCH",
-            "",
-            "",
-            "",
-            "MONKEYWAY STATION",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "WHITED STATION",
-            "",
-            "",
-            "",
-            "",
+            "EDGEBROOK",
             "",
             "",
             "SWITCH",
             "",
-            "STATION; SOUTH BANK",
+            "",
+            "",
+            "MONKEYWAY",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "WHITED",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "SWITCH",
+            "",
+            "SOUTH BANK",
             "",
             "",
             "",
@@ -247,7 +302,7 @@ class CTC(Ui_Form, QWidget):
             "UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
-            "CENTRAL STATION; UNDERGROUND",
+            "CENTRAL; UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
@@ -256,7 +311,7 @@ class CTC(Ui_Form, QWidget):
             "UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
-            "INGLEWOOD STATION; UNDERGROUND",
+            "INGLEWOOD; UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
@@ -265,7 +320,7 @@ class CTC(Ui_Form, QWidget):
             "UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
-            "OVERBROOK STATION; UNDERGROUND",
+            "OVERBROOK; UNDERGROUND",
             "SWITCH TO YARD",
             "",
             "",
@@ -273,7 +328,7 @@ class CTC(Ui_Form, QWidget):
             "SWITCH FROM YARD",
             "",
             "",
-            "STATION; GLENBURY",
+            "GLENBURY",
             "",
             "",
             "",
@@ -281,30 +336,11 @@ class CTC(Ui_Form, QWidget):
             "",
             "",
             "",
-            "DORMONT STATION",
-            "",
-            "",
-            "SWITCH",
-            "MT LEBANON STATION",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
+            "DORMONT",
             "",
             "",
             "SWITCH",
-            "",
-            "POPLAR STATION",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "CASTLE SHANNON STATION",
+            "MT LEBANON",
             "",
             "",
             "",
@@ -313,7 +349,17 @@ class CTC(Ui_Form, QWidget):
             "",
             "",
             "",
-            "DORMONT STATION",
+            "SWITCH",
+            "",
+            "POPLAR",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "CASTLE SHANNON",
             "",
             "",
             "",
@@ -322,7 +368,16 @@ class CTC(Ui_Form, QWidget):
             "",
             "",
             "",
-            "GLENBURY STATION",
+            "DORMONT",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "GLENBURY",
             "",
             "",
             "",
@@ -331,7 +386,7 @@ class CTC(Ui_Form, QWidget):
             "",
             "",
             "UNDERGROUND",
-            "STATION; OVERBROOK; UNDERGROUND",
+            "OVERBROOK; UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
@@ -340,7 +395,7 @@ class CTC(Ui_Form, QWidget):
             "UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
-            "INGLEWOOD STATION; UNDERGROUND",
+            "INGLEWOOD; UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
@@ -349,7 +404,7 @@ class CTC(Ui_Form, QWidget):
             "UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
-            "CENTRAL STATION; UNDERGROUND",
+            "CENTRAL; UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
             "",
@@ -372,7 +427,7 @@ class CTC(Ui_Form, QWidget):
             "",
             "",
             "",
-            "SHADYSIDE STATION",
+            "SHADYSIDE",
             "",
             "SWITCH TO/FROM YARD",
             "",
@@ -381,12 +436,12 @@ class CTC(Ui_Form, QWidget):
             "",
             "",
             "SWITCH",
-            "HERRON AVE STATION",
+            "HERRON AVE",
             "",
             "",
             "",
             "",
-            "SWISSVILLE STATION",
+            "SWISSVILLE",
             "",
             "",
             "UNDERGROUND",
@@ -400,7 +455,7 @@ class CTC(Ui_Form, QWidget):
             "SWITCH; UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
-            "STEEL PLAZA STATION; UNDERGROUND",
+            "STEEL PLAZA; UNDERGROUND",
             "UNDERGROUND",
             "UNDERGROUND",
             "SWITCH; UNDERGROUND",
@@ -410,7 +465,7 @@ class CTC(Ui_Form, QWidget):
             "UNDERGROUND",
             "SWITCH; UNDERGROUND",
             "UNDERGROUND",
-            "FIRST AVE STATION; UNDERGROUND",
+            "FIRST AVE; UNDERGROUND",
             "UNDERGROUND",
             "",
             "STATION SQUARE",
@@ -489,8 +544,7 @@ class CTC(Ui_Form, QWidget):
     def check_stations(self):
         while True:
             if (self.manual_dispatch_line.currentText() != self.old_line):
-                self.stops = []
-                self.old_station = self.manual_dispatch_destination
+                self.old_line = self.manual_dispatch_line.currentText()
                 self.station_update.emit()
                 self.stop_update.emit()
             time.sleep(0.5)
@@ -510,16 +564,67 @@ class CTC(Ui_Form, QWidget):
         self.stop_box_list.clear()
         if self.manual_dispatch_line.currentText() == "Green Line":
             for station in self.green_line_stations:
-                self.stop_box_list.addItem(station)
+                if station not in self.stops:
+                    self.stop_box_list.addItem(station)
         if self.manual_dispatch_line.currentText() == "Red Line":
             for station in self.red_line_stations:
-                self.stop_box_list.addItem(station)
-    def switch_updates(self):
+                if station not in self.stops:
+                    self.stop_box_list.addItem(station)
         
-    def check_switches(self):
-        while True:
-            if self._12_13.
-        return
+    
+    def update_switch(self):
+        if self._12_13.isChecked():
+            self.toggle_switch("D13", 0)
+        elif self._1_13.isChecked():
+            self.toggle_switch("D13", 1)
+        if self._29_30.isChecked():
+            self.toggle_switch("G29", 0)
+        elif self._29_150.isChecked():
+            self.toggle_switch("G29", 1)
+        if self._57_yard.isChecked():
+            self.toggle_switch("J58", 0)
+        elif self._57_58.isChecked():
+            self.toggle_switch("J58", 1)
+        if self._62_63.isChecked():
+            self.toggle_switch("J62", 0)
+        elif self._yard_63.isChecked():
+            self.toggle_switch("J62", 1)
+        if self._76_77.isChecked():
+            self.toggle_switch("N77", 1)
+        elif self._77_101.isChecked():
+            self.toggle_switch("N77", 0)
+        if self._85_86.isChecked():
+            self.toggle_switch("N85", 0)
+        elif self._85_100.isChecked():
+            self.toggle_switch("N85", 1)
+        if self._9_10.isChecked():
+            self.toggle_switch("C10", 1)
+        elif self._9_yard.isChecked():
+            self.toggle_switch("C10", 0)
+        if self._15_16.isChecked():
+            self.toggle_switch("F16", 1)
+        elif self._1_16.isChecked():
+            self.toggle_switch("F16", 0)
+        if self._27_28.isChecked():
+            self.toggle_switch("H27", 0)
+        elif self._27_76.isChecked():
+            self.toggle_switch("H27", 1)
+        if self._32_33.isChecked():
+            self.toggle_switch("H33", 1)
+        elif self._32_72.isChecked():
+            self.toggle_switch("H33", 0)
+        if self._38_39.isChecked():
+            self.toggle_switch("H38", 0)
+        elif self._38_71.isChecked():
+            self.toggle_switch("H38", 1)
+        if self._43_44.isChecked():
+            self.toggle_switch("H44", 1)
+        elif self._43_67.isChecked():
+            self.toggle_switch("H44", 0)
+        if self._52_53.isChecked():
+            self.toggle_switch("J52", 0)
+        elif self._52_66.isChecked():
+            self.toggle_switch("J52", 1)
 
     def check_mode(self):
         while True:
@@ -627,22 +732,21 @@ class CTC(Ui_Form, QWidget):
             # Update the schedule with the new data
             self.update_schedule(train_ids, destinations, dep_times, arr_times, stops, line)
 
-        return
-
-    def toggle_switch(self):
-        #left is 0
-        #right is 1
-        return
-
 
     def add_stops(self):
         stop = self.stop_box_list.currentText()
-        if stop:
-            self.stops.append(stop)
-            self.update_stations()
-            self.update_stops()
-            index = self.stop_box_list.findText(stop)
-            self.stop_box_list.removeItem(index)
+        self.stops.append(stop)
+        self.sort_stops()
+        self.update_stations()
+        self.update_stops()
+        index = self.stop_box_list.findText(stop)
+        self.stop_box_list.removeItem(index)
+        
+    def sort_stops(self):
+        # Create a dictionary to map station to its order for sorting
+        order = {station: index for index, station in enumerate(self.green_line_stations)}
+        # Sort self.stops based on the order in self.green_line_stations
+        self.stops.sort(key=lambda x: order[x])
         
     def dispatch_train(self, destination = None, stops = [], arrival_time = None, departure_time = None, dispatched_line = None):
         station_list = []
@@ -665,10 +769,7 @@ class CTC(Ui_Form, QWidget):
 
         trainID = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
         train = Train(trainID, destination, departure_time, arrival_time, self.stops, dispatched_line)
-        if len(station_list) == 1:
-            next_stop = station_list[0]
-        else:
-            next_stop = station_list[1]
+        next_stop = station_list[0]
         
         if dispatched_line == "Green Line":
             route = self.green_line.get_route(station_list)
@@ -706,8 +807,10 @@ class CTC(Ui_Form, QWidget):
         # print("speeds")
         # print(len(speeds))
         # print(speeds)
-        self.train_dispatch(route, authority, speeds)
         self.stops = []
+        self.update_stations()
+        self.update_stops()
+        self.train_dispatch(route, authority, speeds)
         #self.arrival_time_dis.clear()
         return route, authority, speeds
 
@@ -749,17 +852,18 @@ class CTC(Ui_Form, QWidget):
         
         #self.update_schedule(train)
         self.stops = []
+        self.update_stations()
+        self.update_stops()
         self.arrival_time.clear()
         self.departure_time.clear()
 
     def check_for_dispatched(self):
-        current_time = self.cur_sys_time
         for train in self.train_schedule_green:
-            if train.departure_time.toString() == self.cur_sys_time.toString():
+            if train.departure_time<= self.cur_sys_time:
                 self.dispatch_scheduled_train(train)
                 self.train_schedule_green.remove(train)
         for train in self.train_schedule_red:
-            if train.departure_time.toString() == self.cur_sys_time.toString():
+            if train.departure_time<= self.cur_sys_time:
                 self.dispatch_scheduled_train(train)
                 self.train_schedule_red.remove(train)
     
@@ -774,21 +878,27 @@ class CTC(Ui_Form, QWidget):
         trainID = train.trainID
         destination = train.destination
         stops = train.stops
+        line = train.line
         station_list = []
         for stop in self.stops:
             station_list.append(stop)
         station_list.append(destination)
-        route = self.green_line.get_route(station_list)
         num_stops = len(stops)
+        
+        next_stop = station_list[0]
 
-        speeds = self.green_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
-        if len(station_list) == 1:
-            next_stop = station_list[0]
-        else:
-            next_stop = station_list[1]
-
-        authority = self.green_line.get_authority(station_list)
-        self.dispatched_green.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
+        if line =="Green Line":
+            route = self.green_line.get_route(station_list)
+            speeds = self.green_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
+            authority = self.green_line.get_authority(station_list)
+            self.dispatched_green.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
+    
+        if line =="Red Line":
+            route = self.red_line.get_route(station_list)
+            speeds = self.red_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
+            authority = self.red_line.get_authority(station_list)
+            self.dispatched_red.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
+    
         self.suggested_speed_tb.setText(str(speeds))
         self.authority_tb.setText(str(authority))
         self.route_tb.setText(str(route[0]))
