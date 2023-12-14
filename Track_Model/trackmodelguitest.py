@@ -664,7 +664,7 @@ class TrackModel(QObject):
         self.temperature = temp
         for line in self.lines:
             for block in line.blocks:
-                if self.temperature > 32:
+                if self.temperature < 32:
                     block.trackHeater = True
                 else:
                     block.trackHeater = False
