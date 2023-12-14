@@ -38,7 +38,8 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
     def getFailure(self, fails): #Sends failures to CTC
         #Gets known failures
         self.failuresData.clear()
-        for i in fails:
+        names = self.line.getFailed(fails)
+        for i in names:
             self.failuresData.add(i)
         self.CTCTrackFailures.emit(fails)
     

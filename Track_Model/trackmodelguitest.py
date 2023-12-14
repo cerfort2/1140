@@ -590,7 +590,7 @@ class TrackModel(QObject):
     trackControllerFailureBlocks = pyqtSignal(list)
     def sendFailureBlocks(self):
         for line in self.lines:
-            failedBlocks = [blk.name for blk in line.blocks if (blk.brokenRail or blk.trackCircuitFailure or blk.powerFailure)]
+            failedBlocks = [(blk.brokenRail or blk.trackCircuitFailure or blk.powerFailure) for blk in line.blocks]
             self.trackControllerFailureBlocks.emit(failedBlocks)
 
 
