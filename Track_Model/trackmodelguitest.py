@@ -570,11 +570,13 @@ class TrackModel(QObject):
     #Send ticket sales of occupied stations
     CTCticketSales = pyqtSignal(list)
     def getTicketsSales(self):
+        tickets = []
         for line in self.lines:
             tickets = [blk.station[2] for blk in line.getOccupiedBlocks() if blk.station[0]]
 
-        if len(tickets) != 0:
-            self.CTCticketSales.emit(tickets)
+            if len(tickets) != 0:
+                tickets.insert(0,line.name + " Line")
+                self.CTCticketSales.emit(tickets)
      
     trainModelBlockInfo = pyqtSignal(list)
     def getOccupiedBlockInfo(self):
