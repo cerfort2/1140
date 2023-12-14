@@ -437,9 +437,9 @@ class HWTrackControllerGUI(Ui_Form, QObject):
 
         #Switch J52 - J53 , J52 - N66
         if(self.redLine.Waysides[0].getTrack(50).getOccupancy()):
-            self.redLine.Waysides[0].getTrack(43).setSwitch(False)
+            self.redLine.Waysides[0].getTrack(51).setSwitch(False)
         if(self.redLine.Waysides[0].getTrack(50).getOccupancy()):
-            self.redLine.Waysides[0].getTrack(65).setSwitch(True)
+            self.redLine.Waysides[0].getTrack(51).setSwitch(True)
         #Signal J52
         if(self.redLine.Waysides[0].getTrack(51).getOccupancy()):
             self.redLine.Waysides[0].getTrack(51).setLight(False)
