@@ -5,64 +5,80 @@ from PyQt6.QtCore import QTimer, pyqtSignal, QObject
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QTableWidgetItem
-from TrackController import Ui_Form
+from Software_Track_Controller.TrackController import Ui_Form
 
-import Track
-from Track import *
-import Wayside
-from Wayside import *
-import Block
-from Block import *
-import PLC
-from PLC import *
+import Software_Track_Controller.Track
+from Software_Track_Controller.Track import *
+import Software_Track_Controller.Wayside
+from Software_Track_Controller.Wayside import *
+import Software_Track_Controller.Block
+from Software_Track_Controller.Block import *
+import Software_Track_Controller.PLC
+from Software_Track_Controller.PLC import *
 
 
 class SoftwareTrackControllerGUI(Ui_Form, QObject):
 
-    trackModelTrackDataHW = pyqtSignal(list)
-    trackModelSendRouteHW = pyqtSignal(list)
-    trackModelSuggestedSpeedHW = pyqtSignal(list)
-    trackModelAuthorityHW = pyqtSignal(list)
+    #Signals sent to track model
+    trackModelTrackData = pyqtSignal(list)
+    trackModelSendRoute = pyqtSignal(list)
+    trackModelSuggestedSpeed = pyqtSignal(list)
+    trackModelAuthority = pyqtSignal(list)
+    trackModelStoppedTrains = pyqtSignal(list)
+    trackModelFixes = pyqtSignal(str)
+    trackModelClose = pyqtSignal(str)
 
-    CTCOccupancyHW = pyqtSignal(list)
-    CTCTrackFailuresHW = pyqtSignal(list)
-
-
+    #Signals sent to CTC
+    CTCOccupancy = pyqtSignal(list)
+    CTCTrackFailures = pyqtSignal(list)
+   
 
     def __init__(self):
         super().__init__()
         #Creates Track On initilization
         self.line:Track = Track()
 
-    def sendFailures(self): #Sends failures to CTC
-        #Senses failures using PLC and
-        fail:str = []
-        self.CTCTrackFailuresHW.emit(fail)
+    def getFailure(self, fails): #Sends failures to CTC
+        #Gets known failures
+        self.failuresData.clear()
+        names = self.line.getFailed(fails)
+        for i in names:
+            self.failuresData.addItem(i)
+        self.CTCTrackFailures.emit(fails)
+    
+    
+    def fix(self, blockToFix): #sends blocks to fix
+        self.trackModelFixes.emit(blockToFix)
+
+    def close(self, blockToClose): #sends blocks to close
+        self.trackModelClose.emit(blockToClose)
+
+    def changeSwitch(self, name, value): #Change switch from CTC
+        self.line.changeSwitch(name, value)
+        
         
 
     def getOccupancy(self, data): #Receives occupancy from Track Model
         #Gets occupancy and sets occupancy
         self.line.setOccupancy(data)
-        #Sets new states in automatic
+        #Sets new states if needed
         self.mode_handler()
         #Sets occupied list
         self.setOccupied()
-        #sends occupancy to ctc
-        self.CTCOccupancyHW.emit(self.line.getOccupancy())
+        #Sends trains that need to be stopped to track model
+        self.trackModelStoppedTrains.emit(self.create.collision(self.line.getName()))
+        #Sends occupancy to ctc
+        self.CTCOccupancy.emit(self.line.getOccupancy())
 
     def createNewTrainData(self, route, auth, speed): 
         #Receives train dispatch data from CTC and sends to Track Model
-        self.trackModelAuthorityHW.emit(auth)
-        self.trackModelSuggestedSpeedHW.emit(speed)
-        self.trackModelSendRouteHW.emit(route)
-
-    # def getAuth(self): 
-    #     #Sends only auth to track model
-    #     self.trackModelAuthority.emit(self.trainAuth.getAuth(0))
+        self.trackModelAuthority.emit(auth)
+        self.trackModelSuggestedSpeed.emit(speed)
+        self.trackModelSendRoute.emit(route)
 
     def sendData(self): 
         #Sends track states to track Model
-        self.trackModelTrackDataHW.emit(self.line.getData())
+        self.trackModelTrackData.emit(self.line.getData())
         
     def setDisplay(self, data): 
         #Inililizes waysides from Track Model
@@ -75,11 +91,9 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         #Sets the list of waysides
         for i in range(len(self.side)):
             self.wayside.addItem(self.side[i].getName())
-            # self.waysideTB.addItem(self.side[i].getName())
-        #Sets the lists of block for the first wayside
-        for i in range(len(self.side[0].getBlocks())):
-            self.block.addItem(self.side[0].getBlock(i).getName())
-            # self.blockTB.addItem(self.side[0].getBlock(i).getName())
+        
+        
+
         
 
 
@@ -89,10 +103,6 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         self.right = QPixmap("light.jpg")
         self.open = QPixmap("crosso.jpg")
         self.closed = QPixmap("crossc.jpg")
-        #Hide frames by default
-        # self.switchFrame.hide()
-        # self.crossroadFrame.hide()
-        # self.signalFrame.hide()
         #Switch Toggle Signal
         self.toggleDirection.clicked.connect(self.toggle_direction_handler)
         #Crossroad Toggle Signal
@@ -107,29 +117,6 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
         self.block.currentIndexChanged.connect(self.new_block)
         #Mode
         self.modeButton.toggled.connect(self.mode_handler)
-        #TB
-        # self.occupationTB.stateChanged.connect(self.TB_o_handler)
-        # self.waysideTB.currentIndexChanged.connect(self.TB_w_handler)
-        # self.blockTB.currentIndexChanged.connect(self.TB_b_handler)
-
-    # def TB_o_handler(self):
-    #     way = self.waysideTB.currentIndex()
-    #     blo = self.blockTB.currentIndex()
-    #     self.side[way].getBlock(blo).setOccupancy(self.occupationTB.isChecked())
-
-    # def TB_w_handler(self):
-    #     way = self.waysideTB.currentIndex()
-    #     blo = 0
-    #     self.blockTB.clear()
-    #     for i in range(len(self.side[way].getBlocks())):
-    #         self.blockTB.addItem(self.side[way].getBlock(i).name)
-    #     self.occupationTB.setChecked(self.side[way].getBlock(blo).getOccupied())
-    
-    # def TB_b_handler(self):
-    #     way = self.waysideTB.currentIndex()
-    #     blo = self.blockTB.currentIndex()
-    #     self.occupationTB.setChecked(self.side[way].getBlock(blo).getOccupied())
-
     
 
     def toggle_direction_handler(self):
@@ -256,10 +243,12 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             self.signalFrame.hide()
 
     def mode_handler(self):
+        #Gets the currnt block and wayside index
         way = self.wayside.currentIndex()
         blo = self.block.currentIndex()
-        colides = self.create.collision()
-        self.create.logic()
+        #Runs PLC logic
+        self.create.logic(self.line.getName())
+        
         if(self.side[way].getBlock(blo).getHasSwitch()):
             #If there is a switch set data and show frame
             if(self.side[way].getBlock(blo).getSwitch()):
@@ -290,7 +279,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             self.signalFrame.show()
         else:
             self.signalFrame.hide()
-        #Mode button show/hide
+        #Mode button show/hide controls
         if(self.modeButton.isChecked()):
             self.toggleDirection.hide()
             self.toggleCrossroad.hide()
@@ -303,6 +292,7 @@ class SoftwareTrackControllerGUI(Ui_Form, QObject):
             self.greenButton.show()
 
     def setOccupied(self):
+        #Sets the names of occupied blocks on display
         self.occupationData.clear()
         names = self.line.getOccupied()
         for i in names:
