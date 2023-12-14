@@ -463,7 +463,11 @@ class HWTrackControllerGUI(Ui_Form, QObject):
                     blocks.append(self.greenLine.Waysides[i].tracks[j])
         #Green Line
         #Collision Logic
-        for i in range(0, 148):
+        for i in range(3, 15):
+            if(blocks[i].getOccupancy()):
+                if(blocks[i-1].getOccupancy() or blocks[i-2].getOccupancy()):
+                    blocksStop.append(blocks[i].getName())
+        for i in range(14, 148):
             if(blocks[i].getOccupancy()):
                 if(blocks[i+1].getOccupancy() or blocks[i+2].getOccupancy() or blocks[i+3].getOccupancy()):
                     blocksStop.append(blocks[i].getName())

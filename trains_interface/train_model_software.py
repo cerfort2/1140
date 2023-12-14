@@ -421,13 +421,14 @@ class train_model_software():
     def update_ui(self) -> None:
         self.ui.slope.setText(str(self.slope) + " Degrees")
         self.ui.elevation.setText(str(round(self.elevation, 2)) + " Feet")
-        self.ui.environment.setText(str(self.environment))
+        if self.underground_val == True:
+            self.ui.environment.setText("In a Tunnel")
         self.ui.passenger_count.setText(str(round(self.passengers, 2)) + " People")
         self.ui.power.setText(str(round(self.power, 2)) + " Watts")
         self.ui.current_velocity.setText(str(round(self.speed * 2.23694, 2)) + " MPH")
         self.ui.authority.setText(str(round(self.authority * 3.28084, 2)) + " Feet")
         self.ui.acceleration.setText(str(round(self.acceleration * 3.280839895013123, 2)) + "Ft/s^2")
-        self.ui.air_conditioning.setText(str(self.temperature) + "Degrees")
+        self.ui.air_conditioning.setText("71 Degrees")
 
         self.ui.inside_lights.setChecked(self.inside_lights)
         self.ui.outside_lights.setChecked(self.outside_lights)
