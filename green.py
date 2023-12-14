@@ -11,7 +11,7 @@ def plc(blocks:Block = []):
     #Switch D13 - C12 , D13 - A1
     if(blocks[13].getOccupancy()): 
         blocks[12].setSwitch(False)
-    if(blocks[0].getOccupancy() and not (loop1)):
+    elif(blocks[0].getOccupancy() and not (loop1)):
         blocks[12].setSwitch(True)
     #Signal A1
     if(blocks[0].getOccupancy() or blocks[1].getOccupancy() or blocks[2].getOccupancy() or loop1):
@@ -21,7 +21,7 @@ def plc(blocks:Block = []):
             blocks[0].setSignal(True)
     #Signal D13
     if (blocks[11].getOccupancy() or blocks[12].getOccupancy() or blocks[13].getOccupancy() or blocks[14].getOccupancy() or blocks[15].getOccupancy()):
-        if(blocks[13].getOccupancy() or blocks[14].getOccupancy()):
+        if((blocks[12].getOccupancy() or blocks[13].getOccupancy()) and not (blocks[10].getOccupancy() or blocks[11].getOccupancy())):
             blocks[12].setSignal(False)
         else:
             blocks[12].setSignal(True)
@@ -34,7 +34,7 @@ def plc(blocks:Block = []):
             blocks[18].setCrossroad(False)
 
     #Switch G29 - G30 , G29 - Z150
-    if(blocks[27].getOccupancy()):
+    if(blocks[27].getOccupancy() or loop1):
         blocks[28].setSwitch(False)
     elif(blocks[149].getOccupancy()):
         blocks[28].setSwitch(True)
@@ -84,7 +84,7 @@ def plc(blocks:Block = []):
 
         
     #Switch N77 - R101 , N77 - M76
-    if(blocks[77].getOccupancy()):
+    if(blocks[77].getOccupancy() or loop1):
         blocks[76].setSwitch(False)
     elif(blocks[75].getOccupancy()):
         blocks[76].setSwitch(True)
@@ -137,6 +137,8 @@ def plcc(blocks:Block = []):
         stoppage.append(blocks[0].getName())
     if(blocks[1].getOccupancy() and loop1):
         stoppage.append(blocks[1].getName())
+    if(blocks[2].getOccupancy() and loop1):
+        stoppage.append(blocks[2].getName())
 
     #Signal Z150
     if(blocks[146].getOccupancy() and loop1):
@@ -149,15 +151,21 @@ def plcc(blocks:Block = []):
     #Signal G29
     if(blocks[28].getOccupancy() and (blocks[29].getOccupancy() or blocks[30].getOccupancy())):
         stoppage.append(blocks[28].getName())
+    if(blocks[27].getOccupancy() and (blocks[29].getOccupancy() or blocks[30].getOccupancy())):
+        stoppage.append(blocks[27].getName())
     #Signal J58
     if(blocks[57].getOccupancy() and (blocks[58].getOccupancy() or blocks[59].getOccupancy())):
         stoppage.append(blocks[57].getName())
+    if(blocks[56].getOccupancy() and (blocks[58].getOccupancy() or blocks[59].getOccupancy())):
+        stoppage.append(blocks[56].getName())
     #Signal yard
     if(blocks[150].getOccupancy() and (blocks[61].getOccupancy() or blocks[62].getOccupancy())):
         stoppage.append(blocks[150].getName())
     #signal J61
     if(blocks[60].getOccupancy() and (blocks[61].getOccupancy() or blocks[62].getOccupancy() or blocks[150].getOccupancy())):
         stoppage.append(blocks[60].getName())
+    if(blocks[59].getOccupancy() and (blocks[61].getOccupancy() or blocks[62].getOccupancy() or blocks[150].getOccupancy())):
+        stoppage.append(blocks[59].getName())
     #Signal M76
     if(blocks[73].getOccupancy() and loop2):
         stoppage.append(blocks[73].getName())
@@ -168,6 +176,8 @@ def plcc(blocks:Block = []):
     #N77
     if(blocks[76].getOccupancy() and (blocks[100].getOccupancy() or blocks[101].getOccupancy())):
         stoppage.append(blocks[76].getName())
+    if(blocks[77].getOccupancy() and (blocks[100].getOccupancy() or blocks[101].getOccupancy())):
+        stoppage.append(blocks[77].getName())
     #Signal Q100
     if(blocks[97].getOccupancy() and loop2):
         stoppage.append(blocks[97].getName())
