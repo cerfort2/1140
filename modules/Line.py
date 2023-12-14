@@ -162,25 +162,7 @@ class Line():
             suggested_speeds.append(speed_initial)
 
         return suggested_speeds
-    #returns the authority from the yard given an input station  
-    # def get_authority(self, stop_list):
-    #     authorities = []
-    #     cur_block_index = 0
-    #     total_blocks = len(self.blocks)
-    #     for stop in stop_list:
-    #         authority_sum = 0
-    #         while cur_block_index < total_blocks:
-    #             block = self.blocks[cur_block_index]
-    #             station_check = str(block.get_section())+str(block.get_number())+": " +str(block.get_station())
-                
-    #             if station_check == stop:
-    #                 authorities.append(authority_sum)
-    #                 break
-    #             authority_sum += 1
-    #             cur_block_index +=1
-    #             #block.get_length()
-    #     print(authorities)
-    #     return authorities
+
     def get_authority(self, stop_list):
         authorities = []
         cur_block_index = 0

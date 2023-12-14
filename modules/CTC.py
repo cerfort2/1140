@@ -36,8 +36,9 @@ class CTC(Ui_Form, QWidget):
     train_dispatched = pyqtSignal(list, list, list)
     schedule_dispatch = pyqtSignal()
     stop_update = pyqtSignal()
-    track_open = pyqtSignal(string)
-    toggle_switch = pyqtSignal(string, bool)
+    track_open = pyqtSignal(str)
+    toggle_switch = pyqtSignal(str, bool)
+    looping = pyqtSignal(bool)
     #output_speed = pyqtSignal(list)
     #output_route = pyqtSignal(list)
     #output_authority = pyqtSignal(int)
@@ -124,6 +125,7 @@ class CTC(Ui_Form, QWidget):
 #inputs
     def get_block_occupancies(self, occupancies):
         self.block_occupancies = occupancies
+        print(occupancies)
         self.update_block_occupancy(self.block_occupancies)
     
     def get_ticket_sales(self, tickets):
@@ -150,6 +152,8 @@ class CTC(Ui_Form, QWidget):
         self.schedule_dispatch.connect(self.dispatch_scheduled_train)
         self.open_track_btn.connect(self.open_track(self.maintenance_block_sel))
 
+    def check_for_loop(self):
+        return
     
     def initialize_ui(self):
         self.manual_mode_btn.setChecked(True)
@@ -532,7 +536,7 @@ class CTC(Ui_Form, QWidget):
             next_stop = station_list[1]
 
         authority = self.green_line.get_authority(station_list)
-        self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
+        self.dispatched_green.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
         self.suggested_speed_tb.setText(str(speeds))
         self.authority_tb.setText(str(authority))
         self.route_tb.setText(str(route[0]))
@@ -556,8 +560,6 @@ class CTC(Ui_Form, QWidget):
     def update_schedule(self, train_ids="0", destination_="0", departure_time_="0", arrival_time_="0", stops_="0"):
         if(self.manual_mode_btn.isChecked()):
             train = self.trainID
-            self.trainID+=1
-            departure = self.manual_dispatch_departure.currentText()
             destination = self.manual_dispatch_destination.currentText()
             delta = self.calculate_time(departure, destination)
             dep_time = datetime.strptime(datetime.now().strftime("%H:%M:%S"), "%H:%M:%S")
