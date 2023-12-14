@@ -425,10 +425,6 @@ class train_model_software():
             self.adNum = 2
             self.adTimer = 0
         elif self.adTimer == 10 and self.adNum == 2:
-            self.ui.ad.setPixmap(self.ui.ad3)
-            self.adNum = 3
-            self.adTimer = 0
-        elif self.adTimer == 10 and self.adNum == 3:
             self.ui.ad.setPixmap(self.ui.ad1)
             self.adNum = 1
             self.adTimer = 0
