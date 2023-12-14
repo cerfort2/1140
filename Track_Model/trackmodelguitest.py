@@ -115,9 +115,9 @@ class Line():
         signalYPos = []
         signalColor = []
         nodeSize = []
-
+        # (self.blocks[i].name != "Z151" or self.blocks[i].name != "T77")
         for i in range(len(self.blocks)):
-            if(self.blocks[i].occupied and (self.blocks[i].name != "Z151" or self.blocks[i].name != "T77")) or (self.blocks[i].name == blockSelected):
+            if(self.blocks[i].occupied) or (self.blocks[i].name == blockSelected):
                 labels[self.blocks[i]] = self.blocks[i].name
             else:
                 labels[self.blocks[i]] = ""
@@ -135,7 +135,7 @@ class Line():
                 dataToAnnotate += "\n" + str(self.blocks[i].station[1]) + "\n" + "Tickets Sold:" + str(self.blocks[i].station[2])
             annotations.append(dataToAnnotate)
 
-            if (self.blocks[i].occupied and (self.blocks[i].name != "Z151" or self.blocks[i].name != "T77")) :
+            if (self.blocks[i].occupied) :
                 colors.append('#FFA500') #Orange
             elif self.blocks[i].station[0]:
                 colors.append("#40E0D0")
@@ -156,7 +156,7 @@ class Line():
                     signalColor.append('green')
 
 
-            if(self.blocks[i].occupied and (self.blocks[i].name != "Z151" or self.blocks[i].name != "T77")):
+            if(self.blocks[i].occupied):
                 nodeSize.append(25)
             else:
                 nodeSize.append(5)
@@ -577,6 +577,12 @@ class TrackModel(QObject):
             if len(tickets) != 0:
                 tickets.insert(0,line.name + " Line")
                 self.CTCticketSales.emit(tickets)
+
+            for blk in line.blocks:
+                if(blk.station[0] and blk.occupied):
+                    passengers = random.randint(0,10)
+                    if blk.station[2] > passengers:
+                        blk.station[2] = blk.station[2] - passengers
      
     trainModelBlockInfo = pyqtSignal(list)
     def getOccupiedBlockInfo(self):
