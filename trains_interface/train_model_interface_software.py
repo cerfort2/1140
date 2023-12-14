@@ -17,6 +17,7 @@ class train_model_interface_software(QObject):
     def new_train(self) -> None:
         self.trains.append(train_model_software())
         self.access_train(len(self.trains)).train_number = len(self.trains)
+        self.access_train(len(self.trains)).controller.setTrainNumber(len(self.trains))
 
     #access a single train object in the list
     def access_train(self, train_num: int) -> train_model_software:

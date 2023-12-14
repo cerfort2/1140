@@ -239,8 +239,10 @@ class train_model_software():
     #THIS DOES NOT YET ACCOUNT FOR GRAVITY
     def calculate_acceleration(self, power: float, mass: float, delta_time: float) -> float:
         self.acceleration = math.sqrt(power / (2 * mass * delta_time))
+        print("ebrake val")
+        print(self.controller.eBrake)
         if self.controller.serviceBrake or self.controller.eBrake:
-            return self.acceleration - 1.2 * self.controller.serviceBrake - 2.3 * self.controller.eBrake - (9.81 * math.sin(math.radians(self.slope)))
+            return self.acceleration - 1.2 * self.controller.serviceBrake - 2.3 * int(self.controller.eBrake) - (9.81 * math.sin(math.radians(self.slope)))
         else:
             return self.acceleration - (9.81 * math.sin(math.radians(self.slope)))
     
