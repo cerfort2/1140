@@ -49,6 +49,7 @@ pip install pyqt6
 - #### To import a schedule file, enter automatic mode by selecting the labeled radio button. Select the Import Schedule Flie button. A file explorer window will open, allowing you to select a .xlsx or .csv file to import a schedule for the trains. This file must have four headers in this order: departure time, arrival time, arrival station, and a list of stops, separated by commas. The stations should be in the following format block_#: station_name (e.g. C9: EDGEBROOK).
 - #### To schedule a train, enter an arrival time, departure time, destination station, and input as many stops as you like. Click the "Schedule Train" button, and a train will be added to the schedule for the selected line.
 - #### To open or close a track section, first enter maintenance mode by selecting the corresponding radio button. To open or close a track section, select the block in the dropdown or in the block occupancy display and click the "Toggle Track Closure" button.
+- #### To toggle a switch, select the corresponding radio button in each pair that you would like to change the switch position to.
 
 ## Using the Software Train Controller
 - #### Change the mode the train by selecting the drop down at the top of the user interface
