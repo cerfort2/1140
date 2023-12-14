@@ -61,10 +61,10 @@ class God(Home, QMainWindow):
         self.ctc = CTC()
 
         #HW Track Controller
-        #self.trackController = HWTrackControllerGUI()
+        self.trackController = HWTrackControllerGUI()
 
         #SW Track Controller
-        self.trackController = SoftwareTrackControllerGUI()
+        #self.trackController = SoftwareTrackControllerGUI()
 
         self.trackModel = functionalUI()
         self.trainInterface = train_model_interface_software()
@@ -136,9 +136,8 @@ class God(Home, QMainWindow):
         self.trackModel.trackModel.trainModelBlockInfo.connect(self.trainInterface.unpack_blocks)
         #must add this connection
         # self.trackModel.trackModel.trainModelStationBeacon.connect(self.trainInterface.?)
-
         
-        #self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
+        self.trackModel.trackModel.CTCticketSales.connect(self.ctc.record_ticket_sales)
         
 
     def init_train(self):
@@ -147,7 +146,7 @@ class God(Home, QMainWindow):
 
     #on timeout emissions
     def onTimeoutFunctions(self):
-        self.ctc.get_speed(self.verticalSlider.value())
+        self.ctc.get_speed(self.timeStep)
         # self.trackModel.trackModel.(self.spinBox.value())
         
         #self.trackController.sendSpeed()

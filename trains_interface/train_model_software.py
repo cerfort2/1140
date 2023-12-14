@@ -436,9 +436,9 @@ class train_model_software():
         self.ui.brake_failure.setChecked(self.brake_failure)
         self.ui.signal_failure.setChecked(self.signal_failure)
 
-        self.ui.train_number.setText(str(self.train_number))
+        self.ui.train_number_value.setText(str(self.train_number))
         self.ui.crew_count.setText("2 People")
-        self.ui.mass.setText(str(self.mass / 2.2) + " lbs")
+        self.ui.mass.setText(str(round(self.mass / 2.2, 2)) + " lbs")
 
         self.ui.announcement.setText(self.announcement)
     
