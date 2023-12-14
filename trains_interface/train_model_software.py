@@ -50,6 +50,10 @@ class train_model_software():
 
         #create ui item
         self.ui = train_model_GUI()
+
+        self.ad1 = QPixmap("chipotle_ad.jpg")
+        self.ad2 = QPixmap("valorant_ad.jpg")
+        self.ad3 = QPixmap("zoo_ad.jpg")
     
 
 
