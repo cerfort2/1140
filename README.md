@@ -63,13 +63,13 @@ pip install pyqt6
 - #### To change the speed of the train, type or use the up and down arrows to adjust it.
 - #### Change the Proportional and Integral gains of the train by typing or using the up and down arrows to adjust it
 
-## Using SW Track Controller
+## Using Software Track Controller
 - #### Select "Track Controller" tab in the God Module to access the Track Controller UI
 - #### To update PLC logic you need to go to the (line name).py file and adjust the plc function for switch, signal, and crossload logic and plcc function for any train collision logic
 - #### In the manual mode PLC logic will be executed in safety critical situatiuons such as train at a switch, signal, or crossroad but you will have access to the buttons
 - #### In the automatic mode PLC logic will be executed every time occupancy updates and you will not be able to control current states
 
-## Using HW Track Controller
+## Using Hardware Track Controller
 - #### Select "Track Controller" tab in the God Module to access the Track Controller UI
 - #### To upload a PLC logic via .ino Arduino file, press "Open PLC File" button on the UI and navigate to the file to launch the .ino file. Once in Arduino IDE you can select "Upload Code" to upload the code to the connected Arduino Board
 - #### In Manual mode PLC Logic will still be executed, but selection of Lights, Switches, and Crossroads can be manually changed. Select a certain line you would like to control and select A wayside you would like to select. On wayside selection the current blocks and failures that are occupied are displayed on the right hand side. Selection of each in that certain wayside will be populated where you can select the signal you would like to change and change statuses
