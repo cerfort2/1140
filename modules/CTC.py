@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from PyQt6.QtCore import pyqtSignal, QEvent, Qt, QDateTime, QTimer, QObject
-from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QTableWidgetItem, QLabel, QLineEdit, QHeaderView
+from PyQt6.QtWidgets import QTreeWidgetItem, QWidget, QFileDialog, QMainWindow, QApplication, QButtonGroup, QTableWidgetItem, QLabel, QLineEdit, QHeaderView
 
 from Line import Line
 from CTC_ui import Ui_Form
@@ -83,7 +83,8 @@ class CTC(Ui_Form, QWidget):
         self.timer.start(1000)
         
         self.occupancy_old_text = None
-        self.old_station = None
+        self.old_line = None
+        self.old_maintenance_line = None
         self.green_line_stations = ["K65: GLENBURY", "L73: DORMONT", "N77: MT LEBANON", "O88: POPLAR", "P96: CASTLE SHANNON", "T105: DORMONT", "U114: GLENBURY", "W123: OVERBROOK", "W132: INGLEWOOD", "W141: CENTRAL", "A2: PIONEER", "C9: EDGEBROOK", "D16: MONKEYWAY", "F22: WHITED", "G31: SOUTH BANK", "I39: CENTRAL", "I48: INGLEWOOD", "I57: OVERBROOK"]
         self.red_line_stations = ["C7: SHADYSIDE", "F16: HERRON AVE", "G21: SWISSVILLE", "H25: PENNSTATION", "H35: STEEL PLAZA","","","","","","","","",""]
         
@@ -95,14 +96,13 @@ class CTC(Ui_Form, QWidget):
 
         
         self.green_line_blocks = ['A1', 'A2', 'A3', 'B4', 'B5', 'B6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12', 'D13', 'D14', 'D15', 'D16', 'E17', 'E18', 'E19', 'E20', 'F21', 'F22', 'F23', 'F24', 'F25', 'F26', 'F27', 'F28', 'G29', 'G30', 'G31', 'G32', 'H33', 'H34', 'H35', 'I36', 'I37', 'I38', 'I39', 'I40', 'I41', 'I42', 'I43', 'I44', 'I45', 'I46', 'I47', 'I48', 'I49', 'I50', 'I51', 'I52', 'I53', 'I54', 'I55', 'I56', 'I57', 'J58', 'J59', 'J60', 'J61', 'J62', 'K63', 'K64', 'K65', 'K66', 'K67', 'K68', 'L69', 'L70', 'L71', 'L72', 'L73', 'M74', 'M75', 'M76', 'N77', 'N78', 'N79', 'N80', 'N81', 'N82', 'N83', 'N84', 'N85', 'O86', 'O87', 'O88', 'P89', 'P90', 'P91', 'P92', 'P93', 'P94', 'P95', 'P96', 'P97', 'Q98', 'Q99', 'Q100', 'R101', 'S102', 'S103', 'S104', 'T105', 'T106', 'T107', 'T108', 'T109', 'U110', 'U111', 'U112', 'U113', 'U114', 'U115', 'U116', 'V117', 'V118', 'V119', 'V120', 'V121', 'W122', 'W123', 'W124', 'W125', 'W126', 'W127', 'W128', 'W129', 'W130', 'W131', 'W132', 'W133', 'W134', 'W135', 'W136', 'W137', 'W138', 'W139', 'W140', 'W141', 'W142', 'W143', 'X144', 'X145', 'X146', 'Y147', 'Y148', 'Y149', 'Z150', 'Z151']
-        self.green_line_infrastructure = []
-        self.red_line_blocks = ['A1', 'A2', 'A3', 'B4', 'B5', 'B6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12', 'D13', 'D14', 'D15', 'D16', 'E17', 'E18', 'E19', 'E20', 'F21', 'F22', 'F23', 'F24', 'F25', 'F26', 'F27', 'F28', 'G29', 'G30', 'G31', 'G32', 'H33', 'H34', 'H35', 'I36', 'I37', 'I38', 'I39', 'I40', 'I41', 'I42', 'I43', 'I44', 'I45', 'I46', 'I47', 'I48', 'I49', 'I50', 'I51', 'I52', 'I53', 'I54', 'I55', 'I56', 'I57', 'J58', 'J59', 'J60', 'J61', 'J62', 'K63', 'K64', 'K65', 'K66', 'K67', 'K68', 'L69', 'L70', 'L71', 'L72', 'L73', 'M74', 'M75', 'M76', 'N77', 'N78', 'N79', 'N80', 'N81', 'N82', 'N83', 'N84', 'N85', 'O86', 'O87', 'O88', 'P89', 'P90', 'P91', 'P92', 'P93', 'P94', 'P95', 'P96', 'P97', 'Q98', 'Q99', 'Q100', 'R101', 'S102', 'S103', 'S104', 'T105', 'T106', 'T107', 'T108', 'T109', 'U110', 'U111', 'U112', 'U113', 'U114', 'U115', 'U116', 'V117', 'V118', 'V119', 'V120', 'V121', 'W122', 'W123', 'W124', 'W125', 'W126', 'W127', 'W128', 'W129', 'W130', 'W131', 'W132', 'W133', 'W134', 'W135', 'W136', 'W137', 'W138', 'W139', 'W140', 'W141', 'W142', 'W143', 'X144', 'X145', 'X146', 'Y147', 'Y148', 'Y149', 'Z150', 'Z151']
-        self.red_line_infrastructure = []
+        self.red_line_blocks = ['A1', 'A2', 'A3', 'B4', 'B5', 'B6', 'C7', 'C8', 'C9', 'D10', 'D11', 'D12', 'E13', 'E14', 'E15', 'F16', 'F17', 'F18', 'F19', 'F20', 'G21', 'G22', 'G23', 'H24', 'H25', 'H26', 'H27', 'H28', 'H29', 'H30', 'H31', 'H32', 'H33', 'H34', 'H35', 'H36', 'H37', 'H38', 'H39', 'H40', 'H41', 'H42', 'H43', 'H44', 'H45', 'I46', 'I47', 'I48', 'J49', 'J50', 'J51', 'J52', 'J53', 'J54', 'K55', 'K56', 'K57', 'L58', 'L59', 'L60', 'M61', 'M62', 'M63', 'N64', 'N65', 'KN6', 'O67', 'P68', 'P69', 'P70', 'Q71', 'R72', 'S73', 'S74', 'S75', 'T76', 'T77']
 
         self.switch_states = []
 
         self.ticket_sales_log = []
-        self.block_occupancies = []
+        self.green_block_occupancies = []
+        self.red_block_occupanices = []
         self.last_ts_updated = None
         self.throughput = 0
         
@@ -130,10 +130,16 @@ class CTC(Ui_Form, QWidget):
     def close_track(self, track):
         self.track_closed.emit(track)
 
+    def send_switch(self, block, b):
+        self.toggle_switch.emit(block, b)
+
 #inputs
     def get_block_occupancies(self, occupancies):
-        self.block_occupancies = occupancies
+        if len(occupancies == 151):
+            self.green_block_occupancies = occupancies
         print(occupancies)
+        if len(occupancies == 77):
+            self.red_block_occupanices = occupancies
         self.update_block_occupancy(self.block_occupancies)
     
     def get_ticket_sales(self, tickets):
@@ -150,6 +156,7 @@ class CTC(Ui_Form, QWidget):
         Thread(target=self.check_stations).start()
         Thread(target=self.update_throughput).start()
         Thread(target=self.start_dispatch_check).start()
+        Thread(target=self.check_maintenance_line).start()
 
     def initialize_connections(self):
         self.dispatch_train_btn.clicked.connect(self.dispatch_train)
@@ -165,8 +172,6 @@ class CTC(Ui_Form, QWidget):
         self.open_track_btn.clicked.connect(lambda: self.open_track(self.maintenance_block_sel.currentText()))
         self.close_track_btn.clicked.connect(lambda: self.close_track(self.maintenance_block_sel.currentText()))
 
-    def check_for_loop(self):
-        return
     
     def initialize_ui(self):
         self.manual_mode_btn.setChecked(True)
@@ -412,6 +417,17 @@ class CTC(Ui_Form, QWidget):
             self.block_occupancy_red.setItem(row, 1, item)
 
 
+    def update_maintenance_line_blocks(self):
+        self.maintenance_block_sel.clear()
+        if self.maintenance_line_sel.currentText() == "Green Line":
+            for row, value in enumerate(self.green_line_blocks):
+                self.maintenance_block_sel.addItem(value)
+        if self.maintenance_line_sel.currentText() == "Red Line":
+            for row, value in enumerate(self.red_line_blocks):
+                self.maintenance_block_sel.addItem(value)
+
+
+
     def update_time(self):
         #updating current system time based on speed factor
         self.cur_sys_time = self.cur_sys_time.addSecs(self.speed_factor)
@@ -429,9 +445,41 @@ class CTC(Ui_Form, QWidget):
         while True:
             return
         
+    def check_maintenance_line(self):
+        while True:
+            if self.maintenance_line_sel.currentText() != self.old_maintenance_line:
+                self.old_maintenance_line = self.maintenance_line_sel.currentText()
+
+    def initialize_button_groups(self):
+        self.buttonGroup1 = QButtonGroup(self)
+        self.buttonGroup2 = QButtonGroup(self)
+        self.buttonGroup4 = QButtonGroup(self)
+        self.buttonGroup3 = QButtonGroup(self)
+        
+        # Assuming groupBox contains radio buttons
+        for button in self.groupBox.findChildren(QRadioButton):
+            self.buttonGroup1.addButton(button)
+        
+        for button in self.groupBox_2.findChildren(QRadioButton):
+            self.buttonGroup2.addButton(button)
+        
+        for button in self.groupBox_4.findChildren(QRadioButton):
+            self.buttonGroup4.addButton(button)
+        
+        for button in self.groupBox_3.findChildren(QRadioButton):
+            self.buttonGroup3.addButton(button)
+        
+        # Connect the buttonToggled signal to the slot for each group
+        self.buttonGroup1.buttonToggled.connect(self.onButtonToggled)
+        self.buttonGroup2.buttonToggled.connect(self.onButtonToggled)
+        self.buttonGroup4.buttonToggled.connect(self.onButtonToggled)
+        self.buttonGroup3.buttonToggled.connect(self.onButtonToggled)
+
+
     def check_stations(self):
         while True:
-            if (self.manual_dispatch_destination.currentText() != self.old_station):
+            if (self.manual_dispatch_line.currentText() != self.old_line):
+                self.stops = []
                 self.old_station = self.manual_dispatch_destination
                 self.station_update.emit()
                 self.stop_update.emit()
@@ -441,10 +489,12 @@ class CTC(Ui_Form, QWidget):
         self.manual_dispatch_destination.clear()
         if self.manual_dispatch_line.currentText() == "Green Line":
             for station in self.green_line_stations:
-                self.manual_dispatch_destination.addItem(station)
+                if station not in self.stops:
+                    self.manual_dispatch_destination.addItem(station)
         if self.manual_dispatch_line.currentText() == "Red Line":
             for station in self.red_line_stations:
-                self.manual_dispatch_destination.addItem(station)
+                if station not in self.stops:
+                    self.manual_dispatch_destination.addItem(station)
 
     def update_stops(self):
         self.stop_box_list.clear()
@@ -455,6 +505,11 @@ class CTC(Ui_Form, QWidget):
             for station in self.red_line_stations:
                 self.stop_box_list.addItem(station)
 
+    def check_switches(self):
+        #while True:
+            #if self.
+                #if self._12_13.
+        return
 
     def check_mode(self):
         while True:
@@ -472,10 +527,6 @@ class CTC(Ui_Form, QWidget):
         self.dispatch_train_btn.setEnabled(True)
         self.manual_widget.show()
         self.maintenance_widget.hide()
-        # for i in range(self.manual_layout.count()):
-        #     widget = self.manual_layout.itemAt(i).widget()
-        #     if widget is not None:
-        #         widget.show()
         self.schedule_train_btn.show()
         self.departure_time.show()
         self.departure_time_label.show()
@@ -490,10 +541,6 @@ class CTC(Ui_Form, QWidget):
         self.manual_widget.hide()
         self.maintenance_widget.hide()
         self.add_stop.hide()
-        # for i in range(self.manual_layout.count()):
-        #     widget = self.manual_layout.itemAt(i).widget()
-        #     if widget is not None:
-        #         widget.hide()
         self.schedule_train_btn.hide()
         self.departure_time.hide()
         self.departure_time_label.hide()
@@ -507,10 +554,6 @@ class CTC(Ui_Form, QWidget):
         self.manual_widget.hide()
         self.maintenance_widget.show()
         self.add_stop.hide()
-        # for i in range(self.manual_layout.count()):
-        #     widget = self.manual_layout.itemAt(i).widget()
-        #     if widget is not None:
-        #         widget.hide()
         self._9_10.setEnabled(True)
         self._15_16.setEnabled(True)
         self._27_28.setEnabled(True)
@@ -557,7 +600,11 @@ class CTC(Ui_Form, QWidget):
             dep_times = []
             arr_times = []
             stops = []
-
+            line = ""
+            if 'green' in filePath:
+                line = "Green Line"
+            elif 'red' in filePath:
+                line = "Red Line"
             for dest, d_time, a_time, stop in zip(arrival_stations, departure_times, arrival_times, stopping_at):
                 train_id = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
                 # Add each value to its respective list
@@ -568,7 +615,7 @@ class CTC(Ui_Form, QWidget):
                 stops.append([stop.strip() for stop in stop.split(',')])
 
             # Update the schedule with the new data
-            self.update_schedule(train_ids, destinations, dep_times, arr_times, stops)
+            self.update_schedule(train_ids, destinations, dep_times, arr_times, stops, line)
 
         return
 
@@ -580,10 +627,12 @@ class CTC(Ui_Form, QWidget):
 
     def add_stops(self):
         stop = self.stop_box_list.currentText()
-
-        self.stops.append(stop)
-        index = self.stop_box_list.findText(stop)
-        self.stop_box_list.removeItem(index)
+        if stop:
+            self.stops.append(stop)
+            self.update_stations()
+            self.update_stops()
+            index = self.stop_box_list.findText(stop)
+            self.stop_box_list.removeItem(index)
         
     def dispatch_train(self, destination = None, stops = [], arrival_time = None, departure_time = None, dispatched_line = None):
         station_list = []
@@ -606,18 +655,24 @@ class CTC(Ui_Form, QWidget):
 
         trainID = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
         train = Train(trainID, destination, departure_time, arrival_time, self.stops, dispatched_line)
-
+        if len(station_list) == 1:
+            next_stop = station_list[0]
+        else:
+            next_stop = station_list[1]
         
         if dispatched_line == "Green Line":
             route = self.green_line.get_route(station_list)
-            speeds = self.green_line.get_velocities(route[0], departure_time, arrival_time, num_stops)
+            speeds = self.green_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
             authority = self.green_line.get_authority(station_list)
             self.trains_dispatched_green.append(train)
+            self.dispatched_green.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority[0]), next_stop]))
         if dispatched_line == "Red Line":
             route = self.red_line.get_route(station_list)
-            speeds = self.red_line.get_velocities(route[0], departure_time, arrival_time, num_stops)
+            speeds = self.red_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
             authority = self.red_line.get_authority(station_list)
             self.trains_dispatched_red.append(train)
+            self.dispatched_red.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority[0]), next_stop]))
+
         #self.dispatched.addTopLevelItem(QTreeWidgetItem([str(trainID), "YARD", str(authority), next_stop]))
 
         #self.suggested_speed_tb.setText(str(speeds))
@@ -630,9 +685,17 @@ class CTC(Ui_Form, QWidget):
         print("destination")
         print(destination)
         print("ctc authority")
+        print(len(authority))
         print(authority)
         print("route")
+        print(len(route[0]))
+        print(len(route[1]))
+        print(len(route[2]))
+        print(len(route[3]))
         print(route)
+        print("speeds")
+        print(len(speeds))
+        print(speeds)
         self.train_dispatch(route, authority, speeds)
         self.stops = []
         #self.arrival_time_dis.clear()
@@ -653,7 +716,6 @@ class CTC(Ui_Form, QWidget):
         dispatched_line = self.manual_dispatch_line.currentText()
         num_stops = len(self.stops)
         
-
         trainID = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices(string.digits, k=4))
         stop_string = ""
         for stop in self.stops:
@@ -661,16 +723,16 @@ class CTC(Ui_Form, QWidget):
                 stop_string += stop
             else:
                 stop_string += stop + ","
-        train = Train(trainID, destination, departure_time, arrival_time, self.stops)
+        train = Train(trainID, destination, departure_time, arrival_time, self.stops, dispatched_line)
         if dispatched_line == "Green Line":
             route = self.green_line.get_route(station_list)
-            speeds = self.green_line.get_velocities(route[0], departure_time, arrival_time, num_stops)
+            speeds = self.green_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
             authority = self.green_line.get_authority(station_list)
             self.schedule_green.addTopLevelItem(QTreeWidgetItem([str(trainID), destination, departure_time.toString(), arrival_time.toString(), stop_string]))
             self.train_schedule_green.append(train)
         if dispatched_line == "Red Line":
             route = self.red_line.get_route(station_list)
-            speeds = self.red_line.get_velocities(route[0], departure_time, arrival_time, num_stops)
+            speeds = self.red_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
             authority = self.red_line.get_authority(station_list)
             self.schedule_red.addTopLevelItem(QTreeWidgetItem([str(trainID), destination, departure_time.toString(), arrival_time.toString(), stop_string]))
             self.train_schedule_red.append(train)
@@ -709,7 +771,7 @@ class CTC(Ui_Form, QWidget):
         route = self.green_line.get_route(station_list)
         num_stops = len(stops)
 
-        speeds = self.green_line.get_velocities(route[0], departure_time, arrival_time, num_stops)
+        speeds = self.green_line.get_velocities(route[3], departure_time, arrival_time, num_stops)
         if len(station_list) == 1:
             next_stop = station_list[0]
         else:
@@ -747,7 +809,7 @@ class CTC(Ui_Form, QWidget):
             #     dep_time_obj = dep_time
             
             #self.blue_line_schedule.append(QTreeWidgetItem([str(t_id), dest, str(dep_time_obj), str(eta)]))
-            train = Train(t_id, dest, dep_time, arr_time, stop)
+            train = Train(t_id, dest, dep_time, arr_time, stop, line)
             if line =="Green Line":
                 self.train_schedule_green.append(train)
                 self.schedule_green.addTopLevelItem(QTreeWidgetItem([str(t_id), str(dest), str(dep_time), str(arr_time), str(stop)]))
