@@ -193,11 +193,11 @@ class CTC(Ui_Form, QWidget):
                     status_item.setText(status)
            
             
-        elif len(failures == 77):
+        elif len(failures) == 77:
             #red line
-            for index, is_occupied in enumerate(failures):
+            for index, fail in enumerate(failures):
                 # Determine the color based on occupancy
-                color = Qt.GlobalColor.red if is_occupied else Qt.GlobalColor.white
+                color = Qt.GlobalColor.red if fail else Qt.GlobalColor.white
                 status = "Failure" if fail else "Open"
                 # Assuming the "Occupancy" column is the first column (0-indexed)
                 occupancy_item = self.block_occupancy_red.item(index, 0)
@@ -227,10 +227,6 @@ class CTC(Ui_Form, QWidget):
                     train.cur_position = i
                     
                     reversed_queue.remove(train)
-
-                    
-                    
-                    
                     
             
     def update_ui_with_new_train_positions(self, queue):
