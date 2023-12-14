@@ -86,7 +86,7 @@ class CTC(Ui_Form, QWidget):
         self.old_line = None
         self.old_maintenance_line = None
         self.green_line_stations = ["K65: GLENBURY", "L73: DORMONT", "N77: MT LEBANON", "O88: POPLAR", "P96: CASTLE SHANNON", "T105: DORMONT", "U114: GLENBURY", "W123: OVERBROOK", "W132: INGLEWOOD", "W141: CENTRAL", "A2: PIONEER", "C9: EDGEBROOK", "D16: MONKEYWAY", "F22: WHITED", "G31: SOUTH BANK", "I39: CENTRAL", "I48: INGLEWOOD", "I57: OVERBROOK"]
-        self.red_line_stations = ["C7: SHADYSIDE", "F16: HERRON AVE", "G21: SWISSVILLE", "H25: PENNSTATION", "H35: STEEL PLAZA","H45: FIRST AVE","I48: STATION SQUARE","L60: SOUTH HILLS JUNCTION"]
+        self.red_line_stations = ["C7: SHADYSIDE", "F16: HERRON AVE", "G21: SWISSVILLE", "H25: PENN STATION", "H35: STEEL PLAZA","H45: FIRST AVE","I48: STATION SQUARE","L60: SOUTH HILLS JUNCTION"]
         
         
         self.green_line = Line("Green", 'modules/Green Line Info_.xlsx', self.green_line_stations)
@@ -124,11 +124,12 @@ class CTC(Ui_Form, QWidget):
     def open_track(self, track):
         #output signal to track controller for closed track
         #update on block occupancy ui
-        
         self.track_opened.emit(track)
 
     def close_track(self, track):
-        self.track_closed.emit(track)
+        #self.track_closed.emit(track)
+        number = track[1:]
+        color=Qt.GlobalColor
 
     def send_switch(self, block, b):
         self.toggle_switch.emit(block, b)
@@ -142,11 +143,46 @@ class CTC(Ui_Form, QWidget):
             self.red_block_occupanices = occupancies
         self.update_block_occupancy(occupancies)
     
+    def get_failures(self, failures):
+        self.update_failures(failures)
+        
+    def update_failures(self, failures):
+        # Assuming 'occupancies' is a list of bools where True represents occupied and False represents open
+        if len(failures) == 151:
+            #green line
+            for index, fail in enumerate(failures):
+                # Determine the color based on occupancy
+                color = Qt.GlobalColor.red if fail else Qt.GlobalColor.white
+                # Assuming the "Occupancy" column is the first column (0-indexed)
+                occupancy_item = self.block_occupancy_green.item(index, 0)
+                if not occupancy_item:  # If the item doesn't exist, create it
+                    occupancy_item = QTableWidgetItem()
+                    self.block_occupancy_green.setItem(index, 0, occupancy_item)
+
+                # Set the background color for the block
+                occupancy_item.setBackground(color)
+
+        elif len(failures == 77):
+            #red line
+            for index, is_occupied in enumerate(failures):
+                # Determine the color based on occupancy
+                color = Qt.GlobalColor.red if is_occupied else Qt.GlobalColor.white
+                # Assuming the "Occupancy" column is the first column (0-indexed)
+                occupancy_item = self.block_occupancy_red.item(index, 0)
+                if not occupancy_item:  # If the item doesn't exist, create it
+                    occupancy_item = QTableWidgetItem()
+                    self.block_occupancy_red.setItem(index, 0, occupancy_item)
+
+                # Set the background color for the block
+                occupancy_item.setBackground(color)      
+    
     def get_ticket_sales(self, tickets):
         ticket_sales = tickets
         self.record_ticket_sales(ticket_sales)
         
-
+    def get_speed(self, speed):
+        self.speed_factor = speed
+    
     def start_threads(self):
         #Thread(target=self.update_occupancy_ui).start()
         Thread(target=self.check_mode).start()
@@ -446,32 +482,9 @@ class CTC(Ui_Form, QWidget):
         while True:
             if self.maintenance_line_sel.currentText() != self.old_maintenance_line:
                 self.old_maintenance_line = self.maintenance_line_sel.currentText()
+                self.update_maintenance_line_blocks()
             time.sleep(0.5)
 
-    def initialize_button_groups(self):
-        self.buttonGroup1 = QButtonGroup(self)
-        self.buttonGroup2 = QButtonGroup(self)
-        self.buttonGroup4 = QButtonGroup(self)
-        self.buttonGroup3 = QButtonGroup(self)
-        
-        # Assuming groupBox contains radio buttons
-        for button in self.groupBox.findChildren(QRadioButton):
-            self.buttonGroup1.addButton(button)
-        
-        for button in self.groupBox_2.findChildren(QRadioButton):
-            self.buttonGroup2.addButton(button)
-        
-        for button in self.groupBox_4.findChildren(QRadioButton):
-            self.buttonGroup4.addButton(button)
-        
-        for button in self.groupBox_3.findChildren(QRadioButton):
-            self.buttonGroup3.addButton(button)
-        
-        # Connect the buttonToggled signal to the slot for each group
-        self.buttonGroup1.buttonToggled.connect(self.onButtonToggled)
-        self.buttonGroup2.buttonToggled.connect(self.onButtonToggled)
-        self.buttonGroup4.buttonToggled.connect(self.onButtonToggled)
-        self.buttonGroup3.buttonToggled.connect(self.onButtonToggled)
 
 
     def check_stations(self):
@@ -502,11 +515,11 @@ class CTC(Ui_Form, QWidget):
         if self.manual_dispatch_line.currentText() == "Red Line":
             for station in self.red_line_stations:
                 self.stop_box_list.addItem(station)
-
+    def switch_updates(self):
+        
     def check_switches(self):
-        #while True:
-            #if self.
-                #if self._12_13.
+        while True:
+            if self._12_13.
         return
 
     def check_mode(self):
@@ -678,22 +691,22 @@ class CTC(Ui_Form, QWidget):
         #self.route_tb.setText(str(route[0]))
 
         #setting route, authority, suggested speed
-        print("stops")
-        print(self.stops)
-        print("destination")
-        print(destination)
-        print("ctc authority")
-        print(len(authority))
-        print(authority)
-        print("route")
-        print(len(route[0]))
-        print(len(route[1]))
-        print(len(route[2]))
-        print(len(route[3]))
-        print(route)
-        print("speeds")
-        print(len(speeds))
-        print(speeds)
+        # print("stops")
+        # print(self.stops)
+        # print("destination")
+        # print(destination)
+        # print("ctc authority")
+        # print(len(authority))
+        # print(authority)
+        # print("route")
+        # print(len(route[0]))
+        # print(len(route[1]))
+        # print(len(route[2]))
+        # print(len(route[3]))
+        # print(route)
+        # print("speeds")
+        # print(len(speeds))
+        # print(speeds)
         self.train_dispatch(route, authority, speeds)
         self.stops = []
         #self.arrival_time_dis.clear()

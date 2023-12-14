@@ -149,6 +149,8 @@ class God(Home, QMainWindow):
             self.trainInterface.update_trains()
             self.trackModel.trackModel.polarity()
             self.trackModel.trackModel.getOccupiedBlockInfo()
+        
+        #self.ctc.get_speed(self.timeStep)
     
     def simulationSpeedCalculation(self):
         if self.checkBox.isChecked():

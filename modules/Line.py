@@ -12,6 +12,10 @@ class Line():
         self.name = name
         self.stations = stations
         
+        if name == "Red":
+            self.blocks[19].set_station("PENN STATION")
+            self.blocks[42].set_station("STATION SQUARE")
+        
     def read_data(self, filePath):
         df = pd.read_excel(filePath)
         blocks_list = []
@@ -231,13 +235,12 @@ class Line():
         total_blocks = len(self.blocks)
         
         for stop in stop_list:
-            print(stop)
             authority_sum = 0
             
             while cur_block_index < total_blocks:
                 block = self.blocks[cur_block_index]
                 station_check = str(block.get_section())+str(block.get_number())+": " +str(block.get_station())
-                
+                print(station_check)
                 if station_check == stop:
                     authorities.append(authority_sum)
                     break
@@ -248,7 +251,9 @@ class Line():
         authority_sum = 0
         while cur_block_index < total_blocks:
             block = self.blocks[cur_block_index]
-            if str(block.get_section())+str(block.get_number()) == "Z151":
+            if self.name == "Green" and str(block.get_section())+str(block.get_number()) == "Z151":
+                authorities.append(authority_sum)
+            if self.name == "Red" and str(block.get_section())+str(block.get_number()) == "T77":
                 authorities.append(authority_sum)
             authority_sum+=self.blocks[cur_block_index].get_length()
             
