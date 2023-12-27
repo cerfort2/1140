@@ -48,7 +48,7 @@ class train_model_software():
         self.adNum = 1
         #create instance of train controller
         self.controller = SoftwareTrainController()
-        # self.controller = HardwareTrainController()
+       # self.controller = HardwareTrainController()
 
         #create ui item
         self.ui = train_model_GUI()

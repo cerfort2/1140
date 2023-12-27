@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import *
 from Hardware_Train_Controller.HWTrainControllerGUI import *
 import serial
 import time
-arduinoData = serial.Serial('/dev/cu.usbmodem1401',115200, timeout = 1)
+#arduinoData = serial.Serial('COM3',115200, timeout = 1)
 time.sleep(1)
 
 class HardwareTrainController():
