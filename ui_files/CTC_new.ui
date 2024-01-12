@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1149</width>
-    <height>763</height>
+    <width>1512</width>
+    <height>967</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,8 +18,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1151</width>
-     <height>761</height>
+     <width>1511</width>
+     <height>961</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -36,49 +36,14 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>100</y>
+       <y>20</y>
        <width>231</width>
-       <height>91</height>
+       <height>171</height>
       </rect>
      </property>
      <property name="text">
       <string>Import Schedule</string>
      </property>
-    </widget>
-    <widget class="QTreeWidget" name="schedule">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>500</y>
-       <width>551</width>
-       <height>231</height>
-      </rect>
-     </property>
-     <column>
-      <property name="text">
-       <string>Train ID</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Arriving At</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Departure Time</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>ETA</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Stops</string>
-      </property>
-     </column>
     </widget>
     <widget class="QPushButton" name="dispatch_train_btn">
      <property name="geometry">
@@ -97,9 +62,9 @@
      <property name="geometry">
       <rect>
        <x>530</x>
-       <y>280</y>
+       <y>550</y>
        <width>181</width>
-       <height>81</height>
+       <height>111</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
@@ -126,70 +91,12 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="horizontalLayoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>460</y>
-       <width>461</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QLabel" name="label_4">
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Current Schedule</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="schedule_lines_box">
-        <item>
-         <property name="text">
-          <string>Green Line</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Red Line</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QComboBox" name="occupancy_line_box">
-     <property name="geometry">
-      <rect>
-       <x>700</x>
-       <y>0</y>
-       <width>81</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <item>
-      <property name="text">
-       <string>Green Line</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Red Line</string>
-      </property>
-     </item>
-    </widget>
     <widget class="QWidget" name="verticalLayoutWidget_4">
      <property name="geometry">
       <rect>
        <x>780</x>
        <y>0</y>
-       <width>341</width>
+       <width>701</width>
        <height>501</height>
       </rect>
      </property>
@@ -210,160 +117,278 @@
        </widget>
       </item>
       <item>
-       <widget class="QTableWidget" name="block_occupancy">
-        <row/>
-        <row/>
-        <row/>
-        <row/>
-        <row/>
-        <row/>
-        <row/>
-        <row/>
-        <row/>
-        <row/>
-        <row/>
-        <row/>
-        <row/>
-        <row/>
-        <row/>
-        <column>
-         <property name="text">
-          <string>Occupancy</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Infrastructure</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Block Status</string>
-         </property>
-        </column>
-        <item row="0" column="1">
-         <property name="text">
-          <string>Station A</string>
-         </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QTableWidget" name="block_occupancy_green">
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <column>
+           <property name="text">
+            <string>Occupancy</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Infrastructure</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Block Status</string>
+           </property>
+          </column>
+          <item row="0" column="1">
+           <property name="text">
+            <string>STATION; PIONEER
+</string>
+           </property>
+          </item>
+          <item row="0" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="1" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="2" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="3" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="4" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="5" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="6" column="1">
+           <property name="text">
+            <string>SWITCH</string>
+           </property>
+          </item>
+          <item row="6" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="7" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="8" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="9" column="1">
+           <property name="text">
+            <string/>
+           </property>
+          </item>
+          <item row="9" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="10" column="1">
+           <property name="text">
+            <string>STATION B</string>
+           </property>
+          </item>
+          <item row="10" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="11" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="12" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="13" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="14" column="1">
+           <property name="text">
+            <string>STATION C</string>
+           </property>
+          </item>
+          <item row="14" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+         </widget>
         </item>
-        <item row="0" column="2">
-         <property name="text">
-          <string>Open</string>
-         </property>
+        <item>
+         <widget class="QTableWidget" name="block_occupancy_red">
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <row/>
+          <column>
+           <property name="text">
+            <string>Occupancy</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Infrastructure</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Block Status</string>
+           </property>
+          </column>
+          <item row="0" column="1">
+           <property name="text">
+            <string>STATION; PIONEER
+</string>
+           </property>
+          </item>
+          <item row="0" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="1" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="2" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="3" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="4" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="5" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="6" column="1">
+           <property name="text">
+            <string>SWITCH</string>
+           </property>
+          </item>
+          <item row="6" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="7" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="8" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="9" column="1">
+           <property name="text">
+            <string/>
+           </property>
+          </item>
+          <item row="9" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="10" column="1">
+           <property name="text">
+            <string>STATION B</string>
+           </property>
+          </item>
+          <item row="10" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="11" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="12" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="13" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+          <item row="14" column="1">
+           <property name="text">
+            <string>STATION C</string>
+           </property>
+          </item>
+          <item row="14" column="2">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </item>
+         </widget>
         </item>
-        <item row="1" column="2">
-         <property name="text">
-          <string>Open</string>
-         </property>
-        </item>
-        <item row="2" column="2">
-         <property name="text">
-          <string>Open</string>
-         </property>
-        </item>
-        <item row="3" column="2">
-         <property name="text">
-          <string>Open</string>
-         </property>
-        </item>
-        <item row="4" column="2">
-         <property name="text">
-          <string>Open</string>
-         </property>
-        </item>
-        <item row="5" column="2">
-         <property name="text">
-          <string>Open</string>
-         </property>
-        </item>
-        <item row="6" column="1">
-         <property name="text">
-          <string>SWITCH</string>
-         </property>
-        </item>
-        <item row="6" column="2">
-         <property name="text">
-          <string>Open</string>
-         </property>
-        </item>
-        <item row="7" column="2">
-         <property name="text">
-          <string>Open</string>
-         </property>
-        </item>
-        <item row="8" column="2">
-         <property name="text">
-          <string>Open</string>
-         </property>
-        </item>
-        <item row="9" column="1">
-         <property name="text">
-          <string/>
-         </property>
-        </item>
-        <item row="9" column="2">
-         <property name="text">
-          <string>Open</string>
-         </property>
-        </item>
-        <item row="10" column="1">
-         <property name="text">
-          <string>STATION B</string>
-         </property>
-        </item>
-        <item row="10" column="2">
-         <property name="text">
-          <string>Open</string>
-         </property>
-        </item>
-        <item row="11" column="2">
-         <property name="text">
-          <string>Open</string>
-         </property>
-        </item>
-        <item row="12" column="2">
-         <property name="text">
-          <string>Open</string>
-         </property>
-        </item>
-        <item row="13" column="2">
-         <property name="text">
-          <string>Open</string>
-         </property>
-        </item>
-        <item row="14" column="1">
-         <property name="text">
-          <string>STATION C</string>
-         </property>
-        </item>
-        <item row="14" column="2">
-         <property name="text">
-          <string>Open</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="verticalLayoutWidget_10">
-     <property name="geometry">
-      <rect>
-       <x>530</x>
-       <y>190</y>
-       <width>184</width>
-       <height>80</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_10">
-      <item>
-       <widget class="QLabel" name="label_30">
-        <property name="text">
-         <string>Throughput (passengers per hour)</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLCDNumber" name="throughput_val"/>
+       </layout>
       </item>
      </layout>
     </widget>
@@ -453,39 +478,82 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>90</y>
-       <width>371</width>
-       <height>191</height>
+       <y>120</y>
+       <width>401</width>
+       <height>201</height>
       </rect>
      </property>
-    </widget>
-    <widget class="QComboBox" name="dispatched_trains_line">
-     <property name="geometry">
-      <rect>
-       <x>590</x>
-       <y>480</y>
-       <width>101</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <item>
-      <property name="text">
-       <string>Green Line</string>
+     <widget class="QWidget" name="gridLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>361</width>
+        <height>201</height>
+       </rect>
       </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Red Line</string>
-      </property>
-     </item>
+      <layout class="QGridLayout" name="manual_layout">
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string>Add Stop Stations</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="manual_dispatch_line">
+         <item>
+          <property name="text">
+           <string>Green Line</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Red Line</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>Select Line</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="manual_dispatch_destination"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Arrival Time (HH:MM:DD)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="arrival_time_dis"/>
+       </item>
+       <item row="4" column="1">
+        <widget class="QComboBox" name="stop_box_list"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>Select Destination Station</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
     <widget class="QWidget" name="gridLayoutWidget_3">
      <property name="geometry">
       <rect>
-       <x>590</x>
-       <y>500</y>
-       <width>551</width>
-       <height>231</height>
+       <x>10</x>
+       <y>550</y>
+       <width>441</width>
+       <height>371</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
@@ -502,7 +570,31 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QTreeWidget" name="dispatched">
+       <widget class="QTreeWidget" name="dispatched_green">
+        <column>
+         <property name="text">
+          <string>Train ID</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Current Block</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Authority</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Next Stop</string>
+         </property>
+        </column>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QTreeWidget" name="dispatched_red">
         <column>
          <property name="text">
           <string>Train ID</string>
@@ -532,9 +624,14 @@
       <rect>
        <x>410</x>
        <y>10</y>
-       <width>121</width>
-       <height>31</height>
+       <width>141</width>
+       <height>51</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>24</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>00:07:00</string>
@@ -562,7 +659,7 @@
        <x>10</x>
        <y>400</y>
        <width>321</width>
-       <height>51</height>
+       <height>66</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="schedule_layout">
@@ -592,7 +689,7 @@
      <property name="geometry">
       <rect>
        <x>380</x>
-       <y>270</y>
+       <y>260</y>
        <width>75</width>
        <height>24</height>
       </rect>
@@ -601,79 +698,738 @@
       <string>Add Stop</string>
      </property>
     </widget>
-    <widget class="QWidget" name="horizontalLayoutWidget_2">
+    <widget class="QPushButton" name="remove_schedule">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>40</y>
-       <width>160</width>
-       <height>80</height>
+       <x>1340</x>
+       <y>850</y>
+       <width>141</width>
+       <height>24</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_3"/>
+     <property name="text">
+      <string>Remove from Schedule</string>
+     </property>
     </widget>
-    <widget class="QWidget" name="gridLayoutWidget_2">
+    <widget class="QWidget" name="verticalLayoutWidget_6">
+     <property name="geometry">
+      <rect>
+       <x>780</x>
+       <y>510</y>
+       <width>701</width>
+       <height>341</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_5">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Current Schedule</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTreeWidget" name="schedule_green">
+          <column>
+           <property name="text">
+            <string>Train ID</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Arriving At</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Departure Time</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Arrival Time</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Stops</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTreeWidget" name="schedule_red">
+          <column>
+           <property name="text">
+            <string>Train ID</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Arriving At</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Departure Time</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Arrival Time</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Stops</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="verticalLayoutWidget_8">
+     <property name="geometry">
+      <rect>
+       <x>490</x>
+       <y>140</y>
+       <width>201</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_8">
+      <item>
+       <widget class="QLabel" name="label_30">
+        <property name="text">
+         <string>Throughput (Green Line)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLCDNumber" name="throughput_green"/>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="verticalLayoutWidget_10">
+     <property name="geometry">
+      <rect>
+       <x>490</x>
+       <y>280</y>
+       <width>201</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_10">
+      <item>
+       <widget class="QLabel" name="label_31">
+        <property name="text">
+         <string>Throughput (Red Line)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLCDNumber" name="throughput_red"/>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="maintenance_widget" native="true">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>110</y>
-       <width>361</width>
-       <height>201</height>
+       <y>10</y>
+       <width>301</width>
+       <height>551</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="manual_layout">
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="arrival_time_dis"/>
-      </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="manual_dispatch_line">
-        <item>
+     <widget class="QWidget" name="formLayoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>181</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <layout class="QFormLayout" name="formLayout_2">
+       <item row="0" column="0">
+        <widget class="QComboBox" name="maintenance_line_sel">
+         <item>
+          <property name="text">
+           <string>Red Line</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Green Line</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="maintenance_block_sel"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="close_track_btn">
          <property name="text">
-          <string>Green Line</string>
+          <string>Close Track</string>
          </property>
-        </item>
-        <item>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="open_track_btn">
          <property name="text">
-          <string>Red Line</string>
+          <string>Open Track</string>
          </property>
-        </item>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QComboBox" name="stop_box_list"/>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_10">
-        <property name="text">
-         <string>Select Destination Station</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="manual_dispatch_destination"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_8">
-        <property name="text">
-         <string>Select Line</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_12">
-        <property name="text">
-         <string>Add Stop Stations</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_9">
-        <property name="text">
-         <string>Arrival Time (HH:MM:DD)</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>100</y>
+        <width>70</width>
+        <height>70</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>C</string>
+      </property>
+      <widget class="QRadioButton" name="_12_13">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>12-13</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="_1_13">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>1-13</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>170</y>
+        <width>70</width>
+        <height>70</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>G</string>
+      </property>
+      <widget class="QRadioButton" name="_29_30">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>29-30</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="_29_150">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>29-150</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_4">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>240</y>
+        <width>70</width>
+        <height>70</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>J</string>
+      </property>
+      <widget class="QRadioButton" name="_57_yard">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>57-yard</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="_57_58">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>57-58</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>310</y>
+        <width>70</width>
+        <height>70</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>J</string>
+      </property>
+      <widget class="QRadioButton" name="_62_63">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>62-63</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="_yard_63">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Yard-63</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_5">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>380</y>
+        <width>70</width>
+        <height>70</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>M</string>
+      </property>
+      <widget class="QRadioButton" name="_76_77">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>76-77</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="_77_101">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>77-101</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_6">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>460</y>
+        <width>70</width>
+        <height>70</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>N</string>
+      </property>
+      <widget class="QRadioButton" name="_85_86">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>85-86</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="_85_100">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>85-100</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_7">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>30</y>
+        <width>70</width>
+        <height>70</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>C</string>
+      </property>
+      <widget class="QRadioButton" name="_9_10">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>89</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>9-10</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="_9_yard">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>89</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>9-Yard</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_9">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>170</y>
+        <width>70</width>
+        <height>70</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>H</string>
+      </property>
+      <widget class="QRadioButton" name="_27_28">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>89</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>27-28</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="_27_76">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>89</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>27-76</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_8">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>100</y>
+        <width>70</width>
+        <height>70</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>E</string>
+      </property>
+      <widget class="QRadioButton" name="_15_16">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>89</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>15-16</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="_1_16">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>89</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>1-16</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_10">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>250</y>
+        <width>70</width>
+        <height>70</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>H</string>
+      </property>
+      <widget class="QRadioButton" name="_32_33">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>89</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>32-33</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="_32_72">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>89</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>32-72</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_11">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>320</y>
+        <width>70</width>
+        <height>70</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>H</string>
+      </property>
+      <widget class="QRadioButton" name="_38_39">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>89</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>38-39</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="_38_71">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>89</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>38-71</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_12">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>390</y>
+        <width>70</width>
+        <height>70</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>H</string>
+      </property>
+      <widget class="QRadioButton" name="_43_44">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>89</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>43-44</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="_43_67">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>89</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>43-67</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_13">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>470</y>
+        <width>70</width>
+        <height>70</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>C</string>
+      </property>
+      <widget class="QRadioButton" name="_52_53">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>89</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>52-53</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="_52_66">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>89</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>52-66</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_23">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>80</y>
+        <width>81</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Green Line</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_25">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>10</y>
+        <width>81</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Red Line</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="ctc_testbench">
@@ -1184,7 +1940,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Change Train Data</string>
+      <string>Output Train Data</string>
      </property>
      <property name="textFormat">
       <enum>Qt::AutoText</enum>
@@ -1193,95 +1949,56 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QWidget" name="gridLayoutWidget">
+    <widget class="QWidget" name="formLayoutWidget_2">
      <property name="geometry">
       <rect>
-       <x>370</x>
+       <x>330</x>
        <y>270</y>
-       <width>521</width>
-       <height>181</height>
+       <width>851</width>
+       <height>341</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="1" column="2">
-       <widget class="QComboBox" name="comboBox_11">
-        <item>
-         <property name="text">
-          <string>Alternate Route</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="comboBox_10">
-        <item>
-         <property name="text">
-          <string>Train ID</string>
-         </property>
-        </item>
-       </widget>
-      </item>
+     <layout class="QFormLayout" name="output_data_tb">
       <item row="0" column="0">
-       <widget class="QComboBox" name="comboBox_4">
-        <item>
-         <property name="text">
-          <string>Select Line</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QComboBox" name="comboBox_6">
-        <item>
-         <property name="text">
-          <string>Delays</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QComboBox" name="comboBox_7">
-        <item>
-         <property name="text">
-          <string>Select Line</string>
-         </property>
-        </item>
+       <widget class="QLabel" name="label_22">
+        <property name="text">
+         <string>Suggested Speed (per block) (m/s):</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="comboBox_5">
-        <item>
-         <property name="text">
-          <string>Train ID</string>
-         </property>
-        </item>
+       <widget class="QLabel" name="suggested_speed_tb">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_24">
+        <property name="text">
+         <string>Authority</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="authority_tb">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QComboBox" name="comboBox_12">
-        <item>
-         <property name="text">
-          <string>Select Line</string>
-         </property>
-        </item>
+       <widget class="QLabel" name="label_26">
+        <property name="text">
+         <string>Route</string>
+        </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QComboBox" name="comboBox_13">
-        <item>
-         <property name="text">
-          <string>Train ID</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QComboBox" name="comboBox_14">
-        <item>
-         <property name="text">
-          <string>Emergency Stop</string>
-         </property>
-        </item>
+       <widget class="QLabel" name="route_tb">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
        </widget>
       </item>
      </layout>
