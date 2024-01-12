@@ -57,7 +57,7 @@ pip install pyqt6
 - #### To toggle a switch, select the corresponding radio button in each pair that you would like to change the switch position to.
 
 ## Using the Software Train Controller
-- #### Change the mode the train by selecting the drop down at the top of the user interface
+- #### Change the mode of the train by selecting the drop down at the top of the user interface
 - #### The emergency brake and service brakes are toggles. This means you must click the service/emergency brake twice for the train to move again
 - #### Send an announcement to the Train Model by typing in the announcement box and pressing *Notify*
 - #### To change the speed of the train, type or use the up and down arrows to adjust it.
